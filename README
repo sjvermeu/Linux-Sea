@@ -1,0 +1,14 @@
+The book "Linux Sea" offers a gentle yet technical (from end-user
+perspective) introduction to the Linux operating system, using Gentoo 
+Linux as the example Linux distribution. It does not nor will it ever 
+talk about the history of the Linux kernel or Linux distributions or 
+dive into details that are less interesting for Linux users.
+
+For various topics, the online Gentoo Handbook offers a very detailed
+approach and as such is mandatory reading for any Gentoo Linux user who
+wants to know the full power of this Operating System. Although there is
+definitely overlap between "Linux Sea" and the online Gentoo Handbook,
+"Linux Sea" is by no means meant to replace the online Gentoo Handbook.
+
+"Linux Sea" will attempt to focus on topics that everyday users would
+probably need to know to continue working with Gentoo Linux.
