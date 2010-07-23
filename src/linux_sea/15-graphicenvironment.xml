@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Introducing the Graphical Environment</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Linux is often seen as a command-only operating system. This is far
+    from true: although its command-line is a powerful interface, you can also
+    launch graphical environments on Linux. In this chapter, we briefly cover
+    the graphical environments in Linux.</para>
+
+    <para>Graphical environments are the defacto standard for working with a
+    workstation. Many users know the Microsoft Windows family or the Apple
+    MacOS series. However, those two aren't the only providers of a graphical
+    environment. When the Intel-compliant PCs were hardly known to the world,
+    consoles and other personal computers already provided a graphical
+    environment to their users.</para>
+
+    <para>It comes to no surprise to hear that the free software community
+    also provides graphical environments. And, just like you have choice
+    amongst distributions, you have choice amongst graphical environments:
+    GNOME, KDE, XFCE4 are popular desktop graphical environments;
+    enlightenment, fluxbox, window maker, icewm, ... are window
+    managers.</para>
+
+    <para>Although most readers will be sufficiently fluent in using a
+    graphical environment, this book wouldn't be complete if it didn't cover
+    it. As such, and with the danger of being overly simple on the subject,
+    this chapter will briefly cover the concept of graphical
+    environments.</para>
+  </section>
+
+  <section>
+    <title>The Structure of X</title>
+
+    <para>On Linux, a graphical environment consists of many
+    components:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Applications</para>
+      </listitem>
+
+      <listitem>
+        <para>Widget Toolkits</para>
+      </listitem>
+
+      <listitem>
+        <para>Window Manager</para>
+      </listitem>
+
+      <listitem>
+        <para>X Server</para>
+      </listitem>
+
+      <listitem>
+        <para>Hardware</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Each of those components interacts with others through specific
+    interfaces.</para>
+
+    <figure>
+      <title>A possible representation of how X is structured</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/xschema.png" scale="75" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>An application is able to draw graphic components (buttons, windows,
+    progress bars, labels etc.) through a common API called a <emphasis>widget
+    toolkit</emphasis><indexterm>
+        <primary>widget toolkit</primary>
+      </indexterm>. Popular widget toolkits on Linux are GTK+ and Qt. However,
+    not all applications require a widget toolkit - they can also talk to the
+    X server immediately. Using such toolkits however facilitates the
+    development of graphical applications.</para>
+
+    <para>The widget toolkits communicate with the X server through an
+    interface which basically drives all commands to a <emphasis>window
+    manager</emphasis><indexterm>
+        <primary>window manager</primary>
+      </indexterm>. A window manager manages the layout of the users' screen:
+    where are the windows positioned, can he drag windows from one location to
+    another, how are buttons rendered, ... Popular window managers are
+    metacity (used by the GNOME desktop environment), KWin (used by the KDE
+    desktop environment), fluxbox, enlightenment, ...</para>
+
+    <para>Most window managers are written for specific widget toolkits, but
+    some of their functionality extends beyond one particular window manager:
+    this allows window managers to support not only rendering of applications
+    built with different widget toolkits, but also interoperability between
+    these applications (copy/paste, drag 'n drop ...).</para>
+
+    <para>The window manager receives commands from the <emphasis>X
+    server</emphasis><indexterm>
+        <primary>X server</primary>
+      </indexterm>. The X server is responsible for turning requests into
+    hardware-specific actions (draw window means to render a window through
+    the graphic card, mouse movements are events coming from the mouse device
+    and directed to the window manager to move the cursor, ...).</para>
+
+    <para>In the following sections, we dive a little bit deeper into each of
+    those components...</para>
+  </section>
+
+  <section>
+    <title>The X Window System</title>
+
+    <para>On a Unix/Linux system, the <emphasis>X server</emphasis><indexterm>
+        <primary>X server</primary>
+      </indexterm> is a tool which manages the graphical card on your system
+    and offers services to draw things on your screen. These services are
+    defined in the X11 protocol, an industry open standard. Because the
+    interface is open, many X servers exist, one more powerful than the other.
+    Popular X servers are Xorg and XFree86. However, on Gentoo Linux, Xorg is
+    the only available X server (due to legal restrictions as well as support
+    base).</para>
+
+    <section>
+      <title>Installing Xorg</title>
+
+      <para>To install Xorg on Gentoo Linux, I suggest to read the <ulink
+      url="http://www.gentoo.org/doc/en/xorg-config.xml">X Server
+      Configuration HOWTO</ulink> from Gentoo's documentation repository. It
+      describes how to install Xorg, configure it to work with your hardware
+      and more. This chapter only gives a quick introduction to this.</para>
+
+      <para>You should understand that the Xorg configuration defines, amongst
+      other things,</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the resolution and refresh rates of your screen(s)</para>
+        </listitem>
+
+        <listitem>
+          <para>the language used by your input (keyboard)</para>
+        </listitem>
+
+        <listitem>
+          <para>the drivers used to render stuff (i810, vesa, but also closed,
+          propriatary drivers like nVidia and ATIs)</para>
+        </listitem>
+
+        <listitem>
+          <para>...</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Once configured to your likings, do not forget to take a backup of
+      your configuration (hint: some people place their X configuration online
+      for others to see - there is nothing personal inside anyway).</para>
+
+      <section>
+        <title>Installing Xorg</title>
+
+        <para>Before installing Xorg, first make sure that the
+        <parameter>VIDEO_CARDS</parameter><indexterm>
+            <primary>VIDEO_CARDS</primary>
+          </indexterm> and <parameter>INPUT_DEVICES</parameter><indexterm>
+            <primary>INPUT_DEVICES</primary>
+          </indexterm> variables are set in
+        <filename>/etc/make.conf</filename>:</para>
+
+        <programlisting>INPUT_DEVICES="evdev keyboard mouse"
+VIDEO_CARDS="vesa intel"</programlisting>
+
+        <para>In the above example, I selected the vesa video driver (a
+        default driver that is supported by most video cards, but with little
+        functionality) and intel video driver (as I have an Intel graphic
+        card).</para>
+
+        <para>Next, install <package>x11-base/xorg-server</package><indexterm>
+            <primary>xorg-server</primary>
+          </indexterm>:</para>
+
+        <programlisting># <command>emerge x11-base/xorg-server</command></programlisting>
+
+        <para>Once finished, it is time to check out the graphical server
+        environment.</para>
+      </section>
+
+      <section>
+        <title>Testing Xorg</title>
+
+        <para>Try out Xorg without using any configuration file. The Xorg
+        server will try to autodetect the necessary settings and, to be
+        honest, does a fine job at that. Don't test out things as root
+        though!</para>
+
+        <programlisting>$ <command>startx</command></programlisting>
+
+        <para>If you haven't configured a graphical environment yet, you'll be
+        greeted with a console and an ugly background. However, that alone
+        should suffice to verify if your mouse and keyboard are working as
+        well as do a preliminary verification of the resolution of your
+        screen.</para>
+
+        <para>If the graphical server doesn't seem to function properly, make
+        sure to read up on Gentoo's <ulink
+        url="http://www.gentoo.org/doc/en/xorg-config.xml">Xorg Server
+        Configuration HOWTO</ulink>.</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Window Managers</title>
+
+    <para>Window managers interact with the X server using the X11 interface
+    and manage how your graphical environment looks like, but also how it
+    behaves (for instance, there are window managers that do not support
+    dragging windows).</para>
+
+    <para>Certain window managers are accompanied by various other tools that
+    integrate nicely with the window manager. These tools offer services like
+    a panel (from which you can launch commands or programs immediately),
+    application menus, file manager etc. The aggregation of these tools is
+    often called a <emphasis>desktop environment</emphasis><indexterm>
+        <primary>desktop environment</primary>
+      </indexterm> because it offers a complete desktop to the user.</para>
+
+    <section>
+      <title>Installing a Window Manager</title>
+
+      <para>Gentoo supports many window managers. To install one, simply
+      emerge it.</para>
+
+      <para>For fluxbox, a popular, lightweight window manager, Gentoo even
+      has official documentation available: the <ulink
+      url="http://www.gentoo.org/doc/en/fluxbox-config.xml">Fluxbox
+      Configuration HOWTO</ulink>.</para>
+    </section>
+
+    <section>
+      <title>Activating a Window Manager</title>
+
+      <para>To activate a window manager for your end user, create a file
+      called <filename>.xinitrc</filename><indexterm>
+          <primary>.xinitrc</primary>
+        </indexterm> in your home directory. Inside it, you just add "exec
+      &lt;manager&gt;" where &lt;manager&gt; is the command to launch the
+      window manager.</para>
+
+      <para>For instance, for fluxbox:</para>
+
+      <programlisting>exec fluxbox</programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Desktop Environments</title>
+
+    <para>The majority of Linux users use a desktop environment to work with
+    their work station. The two most used desktop environments are KDE and
+    GNOME. The third environment, XFCE4, is gaining momentum as a lightweight
+    yet powerful desktop environment.</para>
+
+    <section>
+      <title>GNOME</title>
+
+      <para>The GNOME<indexterm>
+          <primary>GNOME</primary>
+        </indexterm> desktop environment is the default desktop environment
+      for many Linux distributions, including Ubuntu and Fedora. Its desktop
+      is very simple to use: the number of visible options is kept low to not
+      confuse users, and all applications that want to integrate with the
+      GNOME desktop should adhere to various guidelines such as the user
+      interface guideline.</para>
+
+      <para>The GNOME community offers a good introduction to the graphical
+      environment called the <ulink
+      url="http://www.gnome.org/learn/users-guide/latest/">GNOME User
+      Guide</ulink>.</para>
+
+      <para>Gentoo has a <ulink
+      url="http://www.gentoo.org/doc/en/gnome-config.xml">GNOME Configuration
+      HOWTO</ulink> available as well.</para>
+
+      <figure>
+        <title>An example view of a GNOME desktop</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/gnomedesktop.png" scale="75"
+                       width="13cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section>
+      <title>KDE</title>
+
+      <para>The KDE desktop is a fully featured desktop environment which
+      offers all the functionality a regular user might expect from his
+      system. KDE comes with many tools, ranging from network related tools
+      (browsers, IM, P2P) to office tools, multimedia tools, authoring and
+      even development environments.</para>
+
+      <para>Gentoo provides a <ulink
+      url="http://www.gentoo.org/doc/en/kde-config.xml">KDE Configuration
+      HOWTO</ulink>.</para>
+
+      <figure>
+        <title>An example view of a KDE desktop</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/kdedesktop.png" scale="75" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section>
+      <title>XFCE4</title>
+
+      <para>The XFCE4 desktop is designed to still run smoothly on low memory
+      systems (32 Mbytes and more). Often, power users use XFCE4 even on large
+      memory systems just to reduce the memory overhead of the graphical
+      environment.</para>
+
+      <para>Gentoo provides an <ulink
+      url="http://www.gentoo.org/doc/en/xfce-config.xml">XFCE Configuration
+      Howto</ulink>.</para>
+
+      <figure>
+        <title>An example view of an XFCE4 desktop</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/xfce4desktop.png" scale="75"
+                       scalefit="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section>
+      <title>Activating a Desktop Environment</title>
+
+      <para>To activate a desktop environment for your end user, create a file
+      called <filename>.xinitrc</filename><indexterm>
+          <primary>.xinitrc</primary>
+        </indexterm> in your home directory. Inside it, you just add "exec
+      &lt;environment&gt;" where &lt;environment&gt; is the command to launch
+      the desktop environment.</para>
+
+      <para>For instance, for Xfce4:</para>
+
+      <programlisting>exec xfce4-session</programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Logging on Graphically</title>
+
+    <para>If you want to log on to your system using a graphical logon
+    manager, you need to do two things:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Install a graphical logon manager</para>
+      </listitem>
+
+      <listitem>
+        <para>Setup the default graphical environment</para>
+      </listitem>
+    </itemizedlist>
+
+    <section>
+      <title>Install Graphical Logon Manager</title>
+
+      <para>The desktop environments KDE and GNOME provide their own graphical
+      logon manager (which are called kdm and gdm respectively). If you don't
+      have them or want to use a different one, I recommend x11-misc/slim. It
+      is a lightweight graphical logon manager.</para>
+
+      <programlisting># <command>emerge x11-misc/slim</command></programlisting>
+
+      <para>Once a graphical logon manager is available, configure the xdm
+      service to use it.</para>
+
+      <para>In <filename>/etc/conf.d/xdm</filename>:</para>
+
+      <programlisting>DISPLAYMANAGER="slim"</programlisting>
+
+      <para>Finally, add the xdm service to the default runlevel.</para>
+
+      <programlisting># <command>rc-update add xdm default</command></programlisting>
+    </section>
+
+    <section>
+      <title>Setup the Default Graphical Environment</title>
+
+      <para>To setup the default graphical environment for a user, you need to
+      create your .xinitrc file as mentioned before (Activating a Window
+      Manager or Desktop Environment).</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Supporting 3D Acceleration</title>
+
+    <para>The graphical environment can also use 3D acceleration.</para>
+
+    <para>Now, 3D acceleration is a tricky subject because there are many
+    implementations that offer 3D services. For instance, you can have 3D
+    services with software rendering (i.e. no delegation of rendering to
+    specific 3D hardware) but this usually isn't seen as 3D
+    acceleration.</para>
+
+    <para>When you have a graphic card capable of rendering 3D, you will need
+    to configure the X Window System to hand over 3D rendering tasks to the
+    graphic card. This can happen through either open standards or
+    specifications (such as OpenGL) or through closed, propriatary drivers
+    (such as the nVidia drivers).</para>
+  </section>
+</chapter>

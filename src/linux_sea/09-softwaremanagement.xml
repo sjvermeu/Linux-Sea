@@ -1,0 +1,2177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Software Management</title>
+
+  <section>
+    <title>Gentoo Portage</title>
+
+    <para>In this section, we describe how to install software on Gentoo and
+    what Gentoo's Portage and Portage tree are. This chapter is very
+    Gentoo-specific - in fact, if you're not using Gentoo or a Gentoo-derived
+    Linux distribution, you'll find most of this chapter entertaining yet not
+    usable. If you are in this scenario, please do check the documentation of
+    your distribution: software management is a part of a distributions'
+    responsibilities which isn't standard(ised) in the free software community
+    yet (because there are so many different ways, policies, politics and
+    functionalities).</para>
+
+    <para>I'm also not saying standardisation here is needed right now - the
+    functionalities offered by the various distributions are too different to
+    make standardisation possible at this point.</para>
+
+    <section>
+      <title>Introduction</title>
+
+      <para>Gentoo is primarily a source-code based Linux distribution. This
+      means that, unlike most operating systems (including other Linux
+      distributions), Gentoo does not just place compiled files on your file
+      system but actually fetches the source code for the software you need
+      from the Internet, configures the compilation environment and builds the
+      software before it finally moves the resulting build onto the file
+      system.</para>
+
+      <para>Of course, Gentoo does support binary package installations, and
+      this on two levels:</para>
+
+      <orderedlist>
+        <listitem>
+          <para>Software titles that would take a very long time to build on a
+          users' system (such as the popular OpenOffice.org office suite) are
+          available as binary packages. In this case, Gentoo downloads the
+          binary files and installs those on the file system.</para>
+        </listitem>
+
+        <listitem>
+          <para>Prebuilt packages are supported as well: software built on a
+          different Gentoo system, stored in a binary format file and made
+          available to other Gentoo systems <emphasis>with</emphasis> the same
+          settngs (otherwise the binary packages might not be compatible with
+          the system).</para>
+        </listitem>
+      </orderedlist>
+
+      <para>The second level is a more advanced approach as Gentoo doesn't
+      provide binary packages itself - you'll need to create and maintain a
+      build environment yourself or use a third-party repository. As such, I
+      am going to focus on source-code installations and the first binary
+      package level (which is automatically supported).</para>
+    </section>
+
+    <section>
+      <title>Package Management: Portage</title>
+
+      <para>The software that is responsible for managing installed software
+      is called a package manager<indexterm>
+          <primary>package manager</primary>
+        </indexterm>. It is the interface to the user to install and uninstall
+      software, upgrade the system, search through the available software and
+      help with the configuration of the various software titles.</para>
+
+      <para>For Gentoo, the default package manager is called
+      Portage<indexterm>
+          <primary>Portage</primary>
+        </indexterm>. I say "default" because there are other package managers
+      available for Gentoo as well (like Paludis<indexterm>
+          <primary>Paludis</primary>
+        </indexterm> and pkgcore<indexterm>
+          <primary>pkgcore</primary>
+        </indexterm>). These other package managers generally have the same
+      features, but behave a bit differently. They are all compatible though,
+      thanks to a standard approach to the packaging structure Gentoo
+      uses.</para>
+
+      <para>The package manager manages a local package repository called the
+      Portage tree<indexterm>
+          <primary>Portage tree</primary>
+        </indexterm>. This package repository is a set of package metadata (so
+      no source code or binary package) about software that can be installed
+      on Gentoo.</para>
+
+      <para>You can find the Portage tree at
+      <filename>/usr/portage</filename>.</para>
+    </section>
+
+    <section>
+      <title>Package Structure: Ebuilds</title>
+
+      <para>The package metadata files are called
+      <emphasis>ebuilds</emphasis><indexterm>
+          <primary>ebuild</primary>
+        </indexterm>. Ebuilds contain information about the package:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the name of the package, the internet site where you can find
+          information about the software and the version of the software
+          package</para>
+        </listitem>
+
+        <listitem>
+          <para>the <emphasis>dependencies</emphasis><indexterm>
+              <primary>dependency</primary>
+            </indexterm> of the package (what other software is needed in
+          order to succesfully build or run this software)</para>
+        </listitem>
+
+        <listitem>
+          <para>the location where the software source code (or binary files
+          in case of binary packages - first level) can be downloaded
+          from</para>
+        </listitem>
+
+        <listitem>
+          <para>the build instructions for the software (remember, Gentoo is
+          primarily a source code based distribution)</para>
+        </listitem>
+
+        <listitem>
+          <para>the license the software uses</para>
+        </listitem>
+
+        <listitem>
+          <para>the USE flags the package supports (USE flags are described
+          later)</para>
+        </listitem>
+
+        <listitem>
+          <para>the configuration instructions needed to finalize the
+          installation after building and installing the software</para>
+        </listitem>
+
+        <listitem>
+          <para>...</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Because all this information is simple, the ebuild file is a text
+      file. This allows users to easily read what an ebuild actually does
+      (although this does require knowledge about scripting and the ebuild
+      format itself which isn't in the scope of this chapter).</para>
+
+      <para>These packages are the main source for software installation and
+      management. In order to keep track of new software releases, you will
+      need to update the collection of ebuilds (Portage tree).</para>
+    </section>
+
+    <section>
+      <title>USE Flags</title>
+
+      <para>A USE<indexterm>
+          <primary>USE</primary>
+        </indexterm> flag is one of Gentoo's main strengths. USE flags are
+      simple terms (such as "dvd", "X", "mysql" ...) and are used by ebuilds
+      to detect what options you want enabled (or disabled) while building
+      software.</para>
+
+      <para>Most applications have optional support for one or more tools and
+      libraries. For instance, at the time of writing, the Mozilla Firefox
+      application in Gentoo supports the following USE flags:</para>
+
+      <table>
+        <title>USE flags in use by Mozilla Firefox version 2.0.0.12</title>
+
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>USE flag</entry>
+
+              <entry>Support description</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>gnome</entry>
+
+              <entry>Enables support for the GNOME user interface (within
+              Firefox) as well as GNOME file system event support</entry>
+            </row>
+
+            <row>
+              <entry>ipv6</entry>
+
+              <entry>Enables support for the IPv6 protocol</entry>
+            </row>
+
+            <row>
+              <entry>java</entry>
+
+              <entry>Enables support for the java plug-in</entry>
+            </row>
+
+            <row>
+              <entry>bindist</entry>
+
+              <entry>Disables the official Mozilla Firefox branding (unless
+              USE="iceweasel" is selected) so that you can distribute prebuilt
+              versions of the package across your network or even across the
+              Internet.</entry>
+            </row>
+
+            <row>
+              <entry>debug</entry>
+
+              <entry>Enables debugging support (which makes the software
+              larger and slower, but allows developers to debug possible bugs
+              in the software)</entry>
+            </row>
+
+            <row>
+              <entry>filepicker</entry>
+
+              <entry>Enables the old GTK filepicker from Firefox
+              1.0.x.</entry>
+            </row>
+
+            <row>
+              <entry>iceweasel</entry>
+
+              <entry>Use the Ice Weasel branding (look and feel) instead of
+              the default Bon Echo.</entry>
+            </row>
+
+            <row>
+              <entry>mozdevelop</entry>
+
+              <entry>Enables features for web developers</entry>
+            </row>
+
+            <row>
+              <entry>moznopango</entry>
+
+              <entry>Disables support for the Pango text rendering library.
+              This increases Firefox' rendering of pages</entry>
+            </row>
+
+            <row>
+              <entry>restrict-javascript</entry>
+
+              <entry>Enables support for the noscript extension, disabling
+              javascript globally</entry>
+            </row>
+
+            <row>
+              <entry>xforms</entry>
+
+              <entry>Enables support for the XForms standard (which splits up
+              XHTML into XForms, instance data and user interface)</entry>
+            </row>
+
+            <row>
+              <entry>xinerama</entry>
+
+              <entry>Enables support for the X11 Xinerama extension, allowing
+              you to stretch your display across multiple monitors</entry>
+            </row>
+
+            <row>
+              <entry>xprint</entry>
+
+              <entry>Enables support for xprint (a common printing API
+              developed by Mozilla)</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>Other distributions choose what support they want enabled and what
+      not when building the software. Because with Gentoo, you build the
+      software yourself, you have the opportunity to enable or disable these
+      features based on your USE flags.</para>
+
+      <para>You can set your global USE flags inside
+      <filename>/etc/make.conf</filename>. To disable a USE flag, prepend it
+      with the minus sign.</para>
+
+      <programlisting># <command>nano -w /etc/make.conf</command>
+<remark>(...)</remark>
+USE="acpi apm pmu sasl howl -cdr -dvdread ..."</programlisting>
+
+      <para>Because of the vast amount of USE flags that Gentoo supports, it
+      is not your job to know and understand every single one of them. Gentoo
+      is shipped with a sane default for your USE variable. To find out what
+      your current USE flags are (based on Gentoo's default USE flags plus the
+      USE flags you enabled or disabled in
+      <filename>/etc/make.conf</filename>), use <command>emerge
+      --info</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>info</secondary>
+        </indexterm>, filtering on the USE term:</para>
+
+      <programlisting>$ <command>emerge --info | grep USE</command>
+<emphasis>USE="X acl acpi alsa apache2 apm arts berkdb bitmap-fonts cairo cdr
+cli cracklib crypt cscope css cups dbus dri dvd dvdr dvdread eds
+emboss encode esd evo fam firefox fortran gdbm gif gnome gpm
+gstreamer gtk hal howl iconv imap innodb ipv6 isdnlog java jpeg kde
+kerberos ldap libwww mad maildir midi mikmod mp3 mpeg mudflap mysql
+ncurses nls nptl nptlonly nsplugin odbc ogg opengl openmp oss pam
+pcre pdf perl pmu png pppd python qt3 qt3support qt4 quicktime readline
+reflection sasl sdl session spell spl ssl svg tcpd tetex tiff truetype
+truetype-fonts type1-fonts unicode vcd vhosts vorbis win32codecs x86
+xml xorg xv zlib"</emphasis> ALSA_CARDS="ali5451 als4000 atiixp atiixp-modem
+bt87x ca0106 cmipci emu10k1 emu10k1x ens1370 ens1371 es1938 es1968
+fm801 hda-intel intel8x0 intel8x0m maestro3 trident usb-audio via82xx
+via82xx-modem ymfpci" ALSA_PCM_PLUGINS="adpcm alaw asym copy dmix
+dshare dsnoop empty extplug file hooks iec958 ioplug ladspa lfloat
+linear meter mulaw multi null plug rate route share shm softvol" 
+APACHE2_MODULES="actions alias auth_basic authn_alias authn_anon 
+authn_dbm authn_default authn_file authz_dbm authz_default
+authz_groupfile authz_host authz_owner authz_user autoindex
+cache dav dav_fs dav_lock deflate dir disk_cache env expires
+ext_filter file_cache filter headers include info log_config logio
+mem_cache mime mime_magic negotiation rewrite setenvif speling
+status unique_id userdir usertrack vhost_alias" ELIBC="glibc" 
+INPUT_DEVICES="keyboard mouse" KERNEL="linux" LCD_DEVICES="bayrad
+cfontz cfontz633 glk hd44780 lb216 lcdm001 mtxorb ncurses text"
+LINGUAS="en nl fr de" USERLAND="GNU" VIDEO_CARDS="i810 i915 vesa"</programlisting>
+
+      <para>To obtain some information on a USE flag, you can use the
+      <command>euse</command><indexterm>
+          <primary>euse</primary>
+        </indexterm> command:</para>
+
+      <programlisting>$ <command>euse --info mp3</command>
+global use flags (searching: mp3)
+************************************************************
+[+  D ] mp3 - Add support for reading mp3 files
+
+local use flags (searching: mp3)
+************************************************************
+no matching entries found</programlisting>
+
+      <para>If you want to manage USE flags on a per-package level (say you
+      want to include MP3 support in mplayer but not in vlc) you can set
+      per-package USE flags in
+      <filename>/etc/portage/package.use</filename><indexterm>
+          <primary>package.use</primary>
+        </indexterm>. This location can either be a simple text file, but you
+      can also make it a directory which contains many text files. This latter
+      feature is very interesting if you want to manage the USE definitions
+      more easily (say by aggregating media-related USE flag settings).
+      Gentoo's Portage will read all files inside this directory.</para>
+
+      <programlisting># <command>mkdir /etc/portage/package.use</command>
+# <command>nano -w /etc/portage/package.use/media-flags</command>
+media-video/vlc +mp3</programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Maintaining your Software Stack</title>
+
+    <para>With software stack maintenance, I mean installing and deinstalling
+    software, updating your system and keeping track of the security patches
+    for your system.</para>
+
+    <section>
+      <title>Obtaining the Latest Portage Tree</title>
+
+      <para>As stated before, the Portage tree is the collection of ebuilds
+      (which we will call "packages" from now onwards) that you can install on
+      your system. Whether you want to update your system, install new
+      software or obtain the latest security fixes, you will first need to
+      update your Portage tree.</para>
+
+      <para>The command to update the Portage tree is <command>emerge
+      --sync</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>sync</secondary>
+        </indexterm>. The sync comes from synchronisation and gives you an
+      idea on what <command>emerge</command> (Portage' main tool for software
+      management) will do: it will synchronise your local Portage tree with
+      the Portage tree available on one of Gentoo's mirrors.</para>
+
+      <programlisting># <command>emerge --sync</command></programlisting>
+
+      <para>You can easily configure what mirror <command>emerge</command>
+      should use. For this, open up <filename>/etc/make.conf</filename>
+      (Gentoo Portage's main configuration file) and locate the SYNC
+      setting:</para>
+
+      <programlisting># <command>nano -w /etc/make.conf</command>
+<remark>(...)</remark>
+SYNC="rsync://rsync.us.gentoo.org/gentoo-portage"</programlisting>
+
+      <para>The SYNC setting is set to a public Portage mirror. In the
+      example, SYNC is set to a round-robin address which covers all mirrors
+      in the United States of America. You can substitute the "us" country
+      code with your country ("be" for Belgium, for instance) to use the
+      round-robin address for the mirrors in your country.</para>
+
+      <para>You notice that the setting references the rsync protocol. Indeed,
+      rsync<indexterm>
+          <primary>rsync</primary>
+        </indexterm> is used to synchronise your local Portage tree. The tool
+      (and protocol) has been selected because it only transfers the
+      differences between two files rather than downloading the entire new
+      tree.</para>
+
+      <para>If you cannot use rsync (for instance because of a firewall
+      setting) you can use <command>emerge-webrsync</command><indexterm>
+          <primary>emerge-webrsync</primary>
+        </indexterm> (without any options). This tool will fetch an archive
+      which contains the entire Portage tree using the HTTP or FTP protocol
+      and synchronise this archive locally. Of course, this will take more
+      network traffic as an entire tree is downloaded.</para>
+
+      <para>Also, Gentoo rsync mirrors update their Portage tree hourly. The
+      snapshots retrieved using <command>emerge-webrsync</command> are updated
+      daily.</para>
+    </section>
+
+    <section>
+      <title>Getting Gentoo News</title>
+
+      <para>With an up to date Portage tree, you will also receive Gentoo's
+      latest announcements for its users. Gentoo's news system allows Gentoo
+      to inform its users about changes that the end user should read before
+      blindly starting with an upgrade.</para>
+
+      <para>When a news item is added, you will be notified of this at the end
+      of a Portage update session:</para>
+
+      <programlisting>* IMPORTANT: 2 news items need reading for repository 'gentoo'.
+* Use eselect news to read news items.</programlisting>
+
+      <para>When you find such a notice at the end of your update, you can use
+      Gentoo's <command>eselect</command><indexterm>
+          <primary>eselect</primary>
+        </indexterm> tool to find out more:</para>
+
+      <programlisting># <command>eselect news list</command>
+News items:
+  [1]   unread  2010-03-23  New desktop subprofiles for GNOME and KDE
+  [2]   unread  2010-02-28  Layman storage path changed from version 1.3.0 on
+  [3]   read    2009-04-06  Migration from teTeX to TeXLive
+  [4]   read    2009-04-06  Migration to X.org Server 1.5
+  [5]   read    2009-04-18  Generation 1 Java Setup Deprecated
+  [6]   read    2009-07-02  kdeprefix and monolithic ebuilds issues
+  [7]   read    2009-07-12  xorg-x11-7.4 and xorg-server-1.5 kernel support
+  [8]   read    2009-09-27  Qt 4.5.2 default USE flag changes
+  [9]   read    2009-10-02  Migration to X.org Server 1.6 and libxcb 1.4
+  [10]  read    2009-10-08  Upgrade to GNOME 2.26
+  [11]  read    2009-11-02  KDE3 to be masked and removed from portage
+  [12]  read    2010-01-31  Removal of libGL.la</programlisting>
+
+      <para>You can then read the news items one by one (<command>eselect news
+      read &lt;number&gt;</command>) but I prefer to just tell eselect to
+      display the content of the unread news items:</para>
+
+      <programlisting># <command>eselect news read new</command></programlisting>
+    </section>
+
+    <section>
+      <title>Updating your System</title>
+
+      <para>Before installing new software, let us first look at how to update
+      your system.</para>
+
+      <section>
+        <title>Updating All Installed Packages</title>
+
+        <para>If you want to update all installed packages to their latest,
+        stable version, first update your Portage tree as mentioned before.
+        Then, run the following command to see what packages will be updated,
+        installed or removed<indexterm>
+            <primary>emerge</primary>
+
+            <secondary>world</secondary>
+          </indexterm>:</para>
+
+        <programlisting># <command>emerge --update --deep --new world --pretend</command></programlisting>
+
+        <para>The options you pass on to emerge are:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><command>--update</command> (or <command>-u</command>),
+            asking emerge to update software,</para>
+          </listitem>
+
+          <listitem>
+            <para><command>--deep</command> (or <command>-D</command>), asking
+            emerge to select not only the software selected, but also all of
+            its dependencies,</para>
+          </listitem>
+
+          <listitem>
+            <para><command>--new</command> (or <command>-N</command>), asking
+            emerge to update software when new dynamic switches are used (USE
+            flags),</para>
+          </listitem>
+
+          <listitem>
+            <para>world, asking emerge to select all software that the user
+            has installed, and</para>
+          </listitem>
+
+          <listitem>
+            <para><command>--pretend</command> (or <command>-p</command>),
+            asking emerge to display what it would install, update or
+            remove</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>To really perform the update, use the same command without
+        <command>--pretend</command>. The next example does this using the
+        single letter arguments:</para>
+
+        <programlisting># <command>emerge -uDN world</command></programlisting>
+
+        <para>Now, if you're tired of continuously running a command with
+        <command>--pretend</command> only to remove the
+        <command>--pretend</command> after verifying the output, use
+        <command>--ask</command><indexterm>
+            <primary>emerge</primary>
+
+            <secondary>ask</secondary>
+          </indexterm> instead. This will have the <command>emerge</command>
+        command show you what it would do, but instead of finishing, it will
+        ask you if you want to proceed with the updates or not.</para>
+
+        <para>From now onwards, I will be using the <command>--ask</command>
+        argument where appropriate.</para>
+      </section>
+
+      <section>
+        <title>Updating All User-Installed Packages</title>
+
+        <para>If you don't want to upgrade every single package on your
+        system, but only the packages you've selected to install previously,
+        don't use the <command>--deep</command> argument. User installed
+        packages are the packages you've asked to install excluding the
+        dependencies that were pulled in to satisfy the application
+        requirements.</para>
+
+        <programlisting># <command>emerge --update --new --ask world</command></programlisting>
+      </section>
+
+      <section>
+        <title>Do not Stop Installing after Build Failures</title>
+
+        <para>By default, Gentoo Portage stops the installation / upgrade
+        process when one package fails to build properly. Although this
+        definitely needs some attention, you can ask Gentoo Portage to resume
+        building the other packages first. At the end of the final build
+        process, you will be greeted with a small report informing you which
+        packages have failed and why.</para>
+
+        <para>To ask Portage to keep going after failure, use
+        <command>--keep-going</command><indexterm>
+            <primary>emerge</primary>
+
+            <secondary>keep-going</secondary>
+          </indexterm>:</para>
+
+        <programlisting># <command>emerge -uDN --keep-going world</command></programlisting>
+      </section>
+
+      <section>
+        <title>Pulling Security Fixes</title>
+
+        <para>Gentoo also supports building the software affected by security
+        issues<indexterm>
+            <primary>security updates</primary>
+          </indexterm> alone. In this case, none of your unaffected software
+        is upgraded (unless requires as a dependency of a security upgrade).
+        Gentoo provides GLSA<indexterm>
+            <primary>GLSA</primary>
+          </indexterm> (<emphasis>Gentoo Linux Security
+        Advisory</emphasis><indexterm>
+            <primary>Gentoo Linux Security Advisory</primary>
+          </indexterm>) documents to inform its users about possible sucurity
+        issues (except kernel issues). These GLSA documents are parsed by the
+        <command>glsa-check</command><indexterm>
+            <primary>glsa-check</primary>
+          </indexterm> command which can apply the necessary fixes.</para>
+
+        <para>To verify if your system is affected by one or more security
+        advisories, first update your Portage tree and then run
+        <command>glsa-check --test all</command>:</para>
+
+        <programlisting># <command>glsa-check --test all</command>
+This system is affected by the following GLSAs:
+200711-10</programlisting>
+
+        <para>In the example, one security advisory matches my system. I can
+        obtain more information about the advisory using <command>glsa-check
+        --dump 200711-10</command>. To fix the system, I can run glsa-check's
+        --fix:</para>
+
+        <programlisting># <command>glsa-check --fix all</command>
+<remark>(This will iterate over all GLSAs, including the matching one(s))</remark></programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Installing New Software</title>
+
+      <para>You've seen already that emerge is Gentoo's main tool to work with
+      Portage. You also use this tool to install or remove software and,
+      likewise, use <command>--pretend</command> to have emerge show you what
+      it would do. You can even add the <command>--verbose</command>
+      flag<indexterm>
+          <primary>emerge</primary>
+
+          <secondary>verbose</secondary>
+        </indexterm> so that emerge tells you what additional settings the
+      package supports.</para>
+
+      <para>For instance, to install Adobe's Acrobat Reader on your
+      system:</para>
+
+      <programlisting># <command>emerge --ask --verbose acroread</command>
+These are the packages that would be merged, in order:
+
+Calculating dependencies   ... done!
+[ebuild  N    ] app-text/acroread-8.1.2  USE="cups ldap nsplugin" 
+  LINGUAS="de en fr nl -da -es -fi -it -ja -ko -nb -pt -sv -zh_CN -zh_TW" 
+
+Would you like to merge these packages? [Yes/No] </programlisting>
+
+      <note>
+        <para>Sometimes it might be necessary to use the category/package-name
+        syntax (in this case, <command>emerge --ask --verbose
+        app-text/acroread</command>). This could happen when two packages
+        share the same name but are part of different categories.</para>
+      </note>
+
+      <para>In this example, emerge tells you that it will install Adobe
+      Acrobat Reader version 8.1.2 and that it doesn't need any other
+      dependencies (otherwise you'll have more lines in the same line as the
+      one you see). Emerge also tells you that the acroread package supports
+      three USE flags:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>cups (support for the Common Unix Printing System),</para>
+        </listitem>
+
+        <listitem>
+          <para>ldap (support for the Lightweight Directory Access Protocol)
+          and</para>
+        </listitem>
+
+        <listitem>
+          <para>nsplugin (creating Acrobat Reader plugins for the
+          Mozilla-based browsers)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>All three flags are in this case enabled on this system.</para>
+
+      <para>Also, the acroread package supports various languages: de
+      (German), en (English), fr (French), nl (Dutch), da (Danish), es
+      (Spanish), fi (Finnish), it (Italian), ja (Japanese), ko (Korean), nb
+      (Norwegian Bokmal), pt (Portugese), sv (Swedish), zh_CN (Simplified
+      Chinese) and zn_TW (Taiwanese Mandarin). Of all these languages, Portage
+      will only include support for German, English, French and Dutch (the
+      languages I want supported on my system).</para>
+
+      <para>To install the software, accept the merge. This will, for every
+      package:</para>
+
+      <orderedlist>
+        <listitem>
+          <para>download the source code from the Internet,</para>
+        </listitem>
+
+        <listitem>
+          <para>verify the source code with the checksum stored in the Portage
+          tree (to ensure that the downloaded file isn't corrupt),</para>
+        </listitem>
+
+        <listitem>
+          <para>extract the source code to a temporary location on the system
+          (<filename>/var/tmp/portage</filename>),</para>
+        </listitem>
+
+        <listitem>
+          <para>patch the source code with Gentoo-specific patches,</para>
+        </listitem>
+
+        <listitem>
+          <para>configure the source code based on the USE flags you
+          use,</para>
+        </listitem>
+
+        <listitem>
+          <para>build the source code into a temporary location,</para>
+        </listitem>
+
+        <listitem>
+          <para>register the files it has created in this location, and
+          finally</para>
+        </listitem>
+
+        <listitem>
+          <para>move the files to the system (making the application available
+          to the end user)</para>
+        </listitem>
+      </orderedlist>
+
+      <para>This installation process will take some time (compared to
+      distributions who use prebuilt packages), mainly because of the build
+      step. There are tools that show the user how long the emerge phase of a
+      package took in average, but these are only for informational purposes
+      and give no guarantee whatsoever about future emerge phase durations (as
+      this depends on USE flags, source code size, CPU speed, system resource
+      availability ...).</para>
+
+      <para><command>qlop</command><indexterm>
+          <primary>qlop</primary>
+        </indexterm> (part of the <filename>portage-utils</filename><indexterm>
+          <primary>portage-utils</primary>
+        </indexterm> package) is such a tool. In the next example, it shows
+      the build duration averaged over 27 merges:</para>
+
+      <programlisting>$ <command>qlop --time --human mozilla-firefox</command>
+mozilla-firefox: 1 hour, 15 minutes, 22 seconds for 27 merges</programlisting>
+    </section>
+
+    <section>
+      <title>Issues While Installing</title>
+
+      <para>During installation, a few issues can occur which need
+      intervention. Those are:<itemizedlist>
+          <listitem>
+            <para>Blocked packages (a package that needs installing is blocked
+            by an already installed package or another package on the
+            installation list)</para>
+          </listitem>
+
+          <listitem>
+            <para>Masked packages (a package is not available for your profile
+            or environment)</para>
+          </listitem>
+
+          <listitem>
+            <para>Build failures (which we will discuss in the next
+            section)</para>
+          </listitem>
+
+          <listitem>
+            <para>Other issues (catch-all)</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <section>
+        <title>Blocked Packages</title>
+
+        <para>Sometimes a package offers a functionality that another package
+        also offers and where the two packages cannot coexist with each other.
+        When this occurs, you get the following two error:</para>
+
+        <programlisting>[blocks B     ] mail-mta/ssmtp (is blocking mail-mta/postfix-2.2.2-r1)</programlisting>
+
+        <para>In this example, the postfix package is on the installation
+        list, but cannot coexist with ssmtp (which is already installed). As a
+        result, the installation fails.</para>
+
+        <para>To resolve this, the easiest approach is to unmerge (remove) the
+        ssmtp package from the system and retry.</para>
+      </section>
+
+      <section>
+        <title>Masked Packages</title>
+
+        <para>A package can fail to install if it is masked. A mask on a
+        package means that the package is in a state that it shouldn't be
+        installed on your system. Package states are described further in this
+        chapter. Package masks are one of the more common causes of
+        installation failures. This is either because</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>the end user was instructed through a document or another
+            user to unmask one package, causing a possible failure on the
+            dependency integrity</para>
+          </listitem>
+
+          <listitem>
+            <para>a developer wrongfully made a package available which has
+            dependencies on packages that aren't available in this particular
+            state</para>
+          </listitem>
+
+          <listitem>
+            <para>the package just doesn't fit the profile that the users
+            system requires</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>If you have a masked package, read "Package States" and, if
+        necessary, "Unmasking Packages" further down this chapter.</para>
+      </section>
+
+      <section>
+        <title>Verification of download results in failure</title>
+
+        <para>When Gentoo Portage attempts to install software, it will verify
+        the downloaded files with the checksums and file sizes that the Gentoo
+        developer has recorded when he added the software package to the
+        Portage tree. When the downloaded file and the checksum/file size
+        doesn't match, an error is shown:</para>
+
+        <programlisting>('Filesize does not match recorded size', 97003L, 952)
+!!! Fetched file: genpatches-2.6.33-1.base.tar.bz2 VERIFY FAILED!
+!!! Reason: Filesize does not match recorded size
+!!! Got: 97003
+!!! Expected: 952
+...
+&gt;&gt;&gt; Failed to emerge sys-kernel/gentoo-sources-2.6.33, Log file:
+
+&gt;&gt;&gt; '/var/tmp/portage/sys-kernel/gentoo-sources-2.6.33/temp/build.log'</programlisting>
+
+        <para>In the above example, the file size as recorded by the developer
+        (952 bytes) is different from the file size of the downloaded file
+        (97003 bytes). As a result, Gentoo Portage refuses to install the
+        software as it might be corrupted, contain malicious code, etc.</para>
+
+        <para>Most of the time this occurs when the developer has made a
+        mistake. In this case, the problem will most likely be reported to
+        <ulink url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>
+        and quickly resolved. Try synchronising the Portage tree after a few
+        hours and retry.</para>
+
+        <para>If it isn't, check if the problem has been reported or not. You
+        can also try synchronising the Portage tree from a different Gentoo
+        mirror (change the value of the <parameter>SYNC</parameter> variable
+        in <filename>/etc/make.conf</filename>) as it might be possible that
+        the rsync server you are synchronising with is corrupt.</para>
+      </section>
+
+      <section>
+        <title>Kernel configuration mismatch</title>
+
+        <para>Some packages require certain kernel configurations. To ensure
+        you don't install the packages without running a kernel with the right
+        configurations, these packages verify your kernel configuration
+        settings. If they find a mismatch, they will report it and abort the
+        installation:</para>
+
+        <programlisting>&gt;&gt;&gt; Emerging (1 of 1) net-wireless/broadcom-sta-5.60.48.36
+...
+ * Determining the location of the kernel source code
+ * Found kernel source directory:
+ *     /usr/src/linux
+ * Found kernel object directory:
+ *     /lib/modules/2.6.33-rc8/build
+ * Found sources for kernel version:
+ *     2.6.33-rc8
+ * Checking for suitable kernel configuration options...
+ *   CONFIG_WIRELESS_EXT:    is not set when it should be.
+ *   CONFIG_WEXT_PRIV:    is not set when it should be.
+ * Please check to make sure these options are set correctly.:
+ *   Incorrect kernel configuration options</programlisting>
+
+        <para>When such an error occurs, you will need to reconfigure your
+        kernel to contain the appropriate configuration parameters (quick
+        hint: during the kernel configuration process, search for the settings
+        using the / help search system).</para>
+      </section>
+
+      <section>
+        <title>Other Issues</title>
+
+        <para>A few other issues can come up:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>When a package depends on another package which isn't
+            available, you will get a warning "<emphasis>there are no ebuilds
+            to satisfy &lt;dependency&gt;</emphasis>". This shouldn't occur as
+            this means an ebuild has a missing dependency or dependency which
+            isn't available for you. If it does occur, please file a bug at
+            <ulink
+            url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>.</para>
+          </listitem>
+
+          <listitem>
+            <para>When two packages exist with the same name (but different
+            category), you will get a warning that the name is ambiguous. In
+            this case, Portage will ask you to specify the full name (category
+            + packagename) and give you a list of candidates.</para>
+          </listitem>
+
+          <listitem>
+            <para>Required sourcecode for the given package cannot be
+            downloaded. When this occurs, you get an error as such:</para>
+
+            <programlisting>!!! Fetch failed for sys-libs/ncurses-5.4-r5, continuing...
+(...)
+!!! Some fetch errors were encountered.  Please see above for details.</programlisting>
+
+            <para>If your network connection is up and running, it is possible
+            that the mirror where Portage wants to download the source code
+            from is temporarily down. You can try again later or search for a
+            different mirror (see the Gentoo Handbook for more
+            information).</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>Package States</title>
+
+      <para>Gentoo packages, which are called ebuilds, are always in a certain
+      state. Although this state is never explicitly defined in the package,
+      it is a result of a set of rules set forth by developers to keep track
+      of a package's stability, security, license rules, ...</para>
+
+      <para>When you install packages, those rules are checked to make sure
+      you are not installing a package that shouldn't be installed on your
+      system. These various rules can trigger installation errors, most of the
+      time described as being a <emphasis>package mask</emphasis><indexterm>
+          <primary>package mask</primary>
+        </indexterm><indexterm>
+          <primary>mask</primary>
+        </indexterm>.</para>
+
+      <para>Whenever an installation is triggered, Gentoo Portage tries to
+      install the highest version of a package which matches all possible
+      validity rules. Only when no such version exists, or when you explicitly
+      asked to install a certain version, Gentoo aborts the installation with
+      a failure message.</para>
+
+      <para>The following sections describe the various states / rules that
+      are checked when an installation is triggered. If you want to work
+      around such a rule, see the section on "Unmasking Packages".</para>
+
+      <section>
+        <title>Architecture Availability</title>
+
+        <para>Gentoo is a multi-architecture operating system. Packages
+        available within Gentoo can be installed on several architectures,
+        ranging from the popular x86/amd64 onto sparc, mips, powerpc, ... But
+        of course, most packages can't be installed on any platform. Some
+        tools are only supported on the Intel-like platforms (x86, amd64) or
+        on a specific platform (like the silo boot loader, which is explicitly
+        made for the sparc platform).</para>
+
+        <para>Packages are marked as being available for a particular platform
+        using their <varname>KEYWORDS</varname><indexterm>
+            <primary>KEYWORDS</primary>
+          </indexterm> variable. An example, taken from sys-apps/iproute2
+        version 2.6.29-r1:</para>
+
+        <programlisting>KEYWORDS="alpha amd64 arm hppa ia64 m68k ~mips ppc ppc64 s390 sh sparc x86"</programlisting>
+
+        <para>When you install a package, its platform keywords are checked
+        against the keywords that your system accepts. These keywords are
+        defined in the <varname>ACCEPT_KEYWORDS</varname><indexterm>
+            <primary>ACCEPT_KEYWORDS</primary>
+          </indexterm> variable, which you can query with <command>emerge
+        --info</command>:</para>
+
+        <programlisting>$ <command>emerge --info | grep ACCEPT_KEYWORDS</command>
+ACCEPT_KEYWORDS="x86"</programlisting>
+
+        <para>Whenever a mismatch occurs (the package doesn't have the keyword
+        that you have defined in <varname>ACCEPT_KEYWORDS</varname>) you get
+        an error message like so:</para>
+
+        <programlisting>!!! All ebuilds that could satisfy "sys-boot/silo" have been masked.
+!!! One of the following masked packages is required to complete your request:
+- sys-boot/silo-1.4.14 (masked by: missing keyword)</programlisting>
+
+        <para>Having an error due to an unsupported architecture, it is not
+        adviseable to try and work around this (forcing the package to be
+        installable). It will most likely not work anyhow.</para>
+
+        <para>Other related error messages that you might receive are:</para>
+
+        <programlisting>- lm-sensors/lm-sensors-2.8.7 (masked by: -sparc keyword)
+- sys-libs/glibc-2.3.4.20040808 (masked by: -* keyword)</programlisting>
+
+        <para>These error messages are similar to the one above (missing
+        keyword). The differences are:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>"missing keyword" means that the architecture isn't set in
+            the KEYWORDS variable.</para>
+
+            <para>The architecture might be supported by the package, but no
+            developer has tried to install it on this platform yet.</para>
+          </listitem>
+
+          <listitem>
+            <para>"-sparc keyword" (or other architecture) means that that
+            particular architecture is explicitly denied in the KEYWORDS
+            variable.</para>
+
+            <para>In this case, the developer has either tried to install it,
+            but it destroyed its system, or the package itself is known not to
+            work on the mentioned platform.</para>
+          </listitem>
+
+          <listitem>
+            <para>"-* keyword" means that all architectures are explicitly
+            denied in the KEYWORDS variable except a few.</para>
+
+            <para>This case is mostly used for packages that are meant to be
+            available on a single platform only. The developer marks the
+            package as unavailable for any other architecture, hence the
+            "-*".</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Stabilization of Gentoo Packages</title>
+
+        <para>When a developer creates or edits a Gentoo package, the software
+        isn't immediately available for the general public. First, it is put
+        through a sort of <emphasis>staging period</emphasis><indexterm>
+            <primary>staging period</primary>
+          </indexterm>. During this time, testers try out the package, finding
+        possible package definition bugs (like wrong dependencies) and helping
+        the further development until the package is deemed stable.</para>
+
+        <para>There is an unwritten rule that sais that packages should
+        "linger" in the staging period for 30 bug-free days (no additional
+        bugs found by the architecture testers) before it is released to the
+        general public.</para>
+
+        <para>WIthin Gentoo, this staging period is described by prepending
+        the tilde (~) sign in front of the architecture in the
+        <varname>KEYWORDS</varname> variable. In the KEYWORDS example above
+        (of the iproute2 package) you notice that this is done for the mips
+        architecture. In other words, the package most likely is supported on
+        the MIPS architecture, but it is currently under review (in staging
+        period). It is well possible that within a month, the package is made
+        available for the general MIPS public as well.</para>
+
+        <para>Whenever you try to install a package that is in the staging
+        period, you get an error message as follows:</para>
+
+        <programlisting>!!! All ebuilds that could satisfy "&gt;=sys-apps/portage-2.1.8" have been masked.
+!!! One of the following masked packages is required to complete your request:
+- sys-apps/portage-2.2_rc62 (masked by: ~x86 keyword)</programlisting>
+
+        <para>If you get such an error message, I recommend to wait until the
+        package is generally available (and let the architecture testers bring
+        out most of the bugs for you).</para>
+      </section>
+
+      <section>
+        <title>Critical Bugs or Security Issues</title>
+
+        <para>Whenever a package has a critical bug (critical = breaks your
+        system severely), a security issue (like having an exploitable
+        vulnerability that might grant malicious users access to your system)
+        or just isn't maintained anymore, the Gentoo developer might mask the
+        package explicitly.</para>
+
+        <para>Explicit masks do not only disallow the installation of the
+        software, they usually also contain a comment as to why the
+        installation is prohibited. These explicit masks (and their comments)
+        are stored in a file called
+        <filename>package.mask</filename><indexterm>
+            <primary>package.mask</primary>
+          </indexterm>. By default, this file is available in
+        <filename>/usr/portage/profiles</filename>.</para>
+
+        <para>An example would be:</para>
+
+        <programlisting>!!! All ebuilds that could satisfy "games-roguelike/slashem" have been masked.
+!!! One of the following masked packages is required to complete your request:
+- games-roguelike/slashem-0.0.772 (masked by: package.mask)
+/usr/portage/profiles/package.mask:
+# Tavis Ormandy &lt;taviso@gentoo.org&gt; (21 Mar 2006)
+# masked pending unresolved security issues #127167</programlisting>
+
+        <para>In this example, you find out who masked the package, when the
+        mask occurs, and why (including a bug number which can be checked at
+        <ulink
+        url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>).</para>
+      </section>
+
+      <section>
+        <title>License Approval</title>
+
+        <para>Gentoo packages always keep track of the license under which the
+        software is distributed / allowed to be used. Like the architecture
+        available cases, this is done through a variable called
+        <varname>LICENSE</varname><indexterm>
+            <primary>LICENSE</primary>
+          </indexterm>. For instance, for the <package>net-im/skype</package>
+        package:</para>
+
+        <programlisting>LICENSE="skype-eula"</programlisting>
+
+        <para>And, just like the KEYWORDS case, your system has a variable
+        called <varname>ACCEPT_LICENSE</varname><indexterm>
+            <primary>ACCEPT_LICENSE</primary>
+          </indexterm> in which you set which software licenses you want on
+        your system. The default setting on Gentoo systems is quite liberal,
+        but you can set it to your liking. For instance, you can accept only
+        FSF approved licenses:</para>
+
+        <programlisting>$ <command>emerge --info | grep ACCEPT_LICENSE</command>
+ACCEPT_LICENSE="-* @FSF-APPROVED"</programlisting>
+
+        <para>The use of the @-sign allows Gentoo to group similar licenses
+        together. The list of license groups can be obtained from
+        <filename>/usr/portage/profiles/license_groups</filename><indexterm>
+            <primary>license_groups</primary>
+          </indexterm>.</para>
+
+        <para>If you ever want to install a software which doesn't match the
+        license(s) you allow, you will get an error like so:</para>
+
+        <programlisting>!!! All ebuilds that could satisfy "net-im/skype" have been masked.
+!!! One of the following masked packages is required to complete your request:
+- net-im/skype-2.0.0.72 (masked by: skype-eula license)</programlisting>
+
+        <para>In this example, the package I want to install uses the
+        "skype-eula" license which doesn't match the licenses I allow (which
+        are only the <varname>FSF-APPROVED</varname> ones).</para>
+      </section>
+
+      <section>
+        <title>Profile Supported Software</title>
+
+        <para>Gentoo supports several profiles. A
+        <emphasis>profile</emphasis><indexterm>
+            <primary>profile</primary>
+          </indexterm> should be seen as a collection of predefined settings
+        for your Gentoo Linux environment. These settings include default USE
+        flags, default license acceptance, default package choices, etc. Such
+        profiles can also have masks against certain packages because they
+        don't fit in the spirit of the profile.</para>
+
+        <para>An example is the selinux/v2refpolicy/x86/hardened profile,
+        which masks out glibc-2.4 as it doesn't match the security measures
+        that the profile wants to enforce.</para>
+
+        <para>Whenever you try to install a package that isn't allowed due to
+        your profile, you get a message like so:</para>
+
+        <programlisting>!!! All ebuilds that could satisfy "=sys-libs/glibc-2.4*" have been masked.
+!!! One of the following masked packages is required to complete your request:
+- sys-libs/glibc-2.4-r2 (masked by: profile)</programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Unmasking Packages</title>
+
+      <para>When you get an installation failure because the package you want
+      to install is considered masked, you <emphasis>can</emphasis> opt to
+      install it anyway. I recommend that you consider this step carefully -
+      masking of packages is done with a reason.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>If it is because of a critical bug or security issue, I
+          seriously discourage you to install it (for obvious reasons).</para>
+        </listitem>
+
+        <listitem>
+          <para>If the package is masked due to the stabilization track, I
+          urge you to wait until it is generally available.</para>
+        </listitem>
+
+        <listitem>
+          <para>If the package is masked due to architecture unavailability, I
+          suggest that you investigate if the package supports your
+          architecture. If it doesn't, there's no point in trying to install
+          it anyway. If it does, you might want to ask the architecture
+          testing team of Gentoo to investigate the package.</para>
+        </listitem>
+
+        <listitem>
+          <para>If the package is masked due to profile mismatch, you're
+          either running the wrong profile or have made a mistake in trying to
+          install the package and will now continue with your life as it
+          is.</para>
+        </listitem>
+
+        <listitem>
+          <para>If the package is masked due to license mismatch, then your
+          license setting is incorrect.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Now, the last reason (license settings) is (in my opinion) the
+      only one that warrants a change in the configuration, but the way on
+      dealing with these blocks is similar.</para>
+
+      <section>
+        <title>System-wide or Package Specific?</title>
+
+        <para>Whenever you want to resolve a masking issue, you need to ask
+        yourself if you want to resolve this for this particular package only
+        (or a set of packages) or if you want to alter the settings for the
+        entire system. In the majority of cases (except for licenses) it is
+        for a particular package (or set of packages).</para>
+
+        <para>Portage has a specific configuration directory
+        (<filename>/etc/portage</filename>) in which deviation settings can be
+        stored. Each type of deviation has its own file or directory:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><filename>/etc/portage/package.license</filename><indexterm>
+                <primary>package.license</primary>
+              </indexterm> allows you to set license-deviations (approve or
+            deny a license on a per-package basis)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/etc/portage/package.mask</filename><indexterm>
+                <primary>package.mask</primary>
+              </indexterm> allows you to mask packages (deny packages on a
+            per-package basis)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/etc/portage/package.unmask</filename><indexterm>
+                <primary>package.unmask</primary>
+              </indexterm> allows you to unmask packages (allow packages that
+            are disapproved due to critical bugs, security issues or profile
+            mismatches, on a per-package basis)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/etc/portage/package.keywords</filename><indexterm>
+                <primary>package.keywords</primary>
+              </indexterm> allows you to set keyword deviations (inform
+            Portage that for this package, other keywords are accepted as
+            well)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Now, I did say "file or directory" in the previous paragraph.
+        That's right: Portage allows you to either put the information in
+        files that are called as mentioned above, or in files that reside in a
+        directory called as mentioned above.</para>
+
+        <para>The most proper way, in my opinion, is to create directories.
+        Within each directory, you can then group deviations based on the
+        reason.</para>
+
+        <para>If you want to make a system-wide deviation, you need to edit
+        the <filename>/etc/make.conf</filename> file.</para>
+      </section>
+
+      <section>
+        <title>Example: Allow the Skype-EULA License for the net-im/skype
+        package</title>
+
+        <para>As an example, let's allow the skype EULA license for the skype
+        package (and only for the skype package).</para>
+
+        <procedure>
+          <step>
+            <para>Create a directory called
+            <filename>package.license</filename> within
+            <filename>/etc/portage</filename>.</para>
+
+            <programlisting># <command>mkdir -p /etc/portage/package.license</command></programlisting>
+          </step>
+
+          <step>
+            <para>Create a file called "skype" inside this directory, and
+            enter "net-im/skype skype-eula".</para>
+
+            <programlisting># <command>nano -w /etc/portage/package.license/skype</command>
+net-im/skype skype-eula</programlisting>
+          </step>
+        </procedure>
+
+        <para>That's it. If you now would launch the installation of the skype
+        package, it will not abort saying that the license is masked because
+        you explicitly allowed the license on this package. However, if for
+        some reason another package uses the same license, it will still fail
+        installing because that particular package isn't mentioned as a valid
+        deviation.</para>
+      </section>
+
+      <section>
+        <title>Example: Allow the Skype-EULA License System-wide</title>
+
+        <para>The other way is to allow the skype EULA system-wide.</para>
+
+        <procedure>
+          <step>
+            <para>Find out what your current license acceptance rule
+            is.</para>
+
+            <programlisting>$ <command>emerge --info | grep ACCEPT_LICENSE</command>
+ACCEPT_LICENSE="-* @FSF-APPROVED"</programlisting>
+          </step>
+
+          <step>
+            <para>Open <filename>/etc/make.conf</filename> in your favorite
+            text editor:</para>
+
+            <programlisting># <command>nano -w /etc/make.conf</command></programlisting>
+          </step>
+
+          <step>
+            <para>Navigate to the place where ACCEPT_LICENSE is defined or, if
+            it isn't defined, create a new line and make it so that it looks
+            like the current setting as obtained from the first step:</para>
+
+            <programlisting>ACCEPT_LICENSE="-* @FSF-APPROVED"</programlisting>
+          </step>
+
+          <step>
+            <para>Now add the skype-eula license:</para>
+
+            <programlisting>ACCEPT_LICENSE="-* @FSF-APPROVED<command> skype-eula</command>"</programlisting>
+          </step>
+
+          <step>
+            <para>Save the file and exit.</para>
+          </step>
+        </procedure>
+
+        <para>If you now install the skype package, it will not fail due to
+        the license, as you now state that you accept this license. If any
+        other package also works with the skype EULA license, it will also be
+        installable now.</para>
+      </section>
+
+      <section>
+        <title>Example: Allow bonnie++ Version 1.96 (Staging State) to be
+        Installable</title>
+
+        <para>If you want to install app-benchmarks/bonnie++-1.96 but find out
+        that the package is masked (say ~x86 keyword mask), you can inform
+        Portage to allow the installation of this particular package
+        regardless of it being in the staging state or not:</para>
+
+        <procedure>
+          <step>
+            <para>Create the
+            <filename>/etc/portage/package.keywords</filename>
+            directory</para>
+
+            <programlisting># <command>mkdir -p /etc/portage/package.keywords</command></programlisting>
+          </step>
+
+          <step>
+            <para>Create a file (say benchmarks) and add
+            "app-benchmarks/bonnie++" to it:</para>
+
+            <programlisting># <command>nano -w /etc/portage/package.keywords/benchmarks</command>
+app-benchmarks/bonnie++</programlisting>
+          </step>
+        </procedure>
+
+        <para>With this setting in place, Portage will allow you to install
+        bonnie++ (any version) regardless if it is still in the staging state
+        or not.</para>
+
+        <para>If you only want to allow this for the 1.96 version, use the
+        following line instead:</para>
+
+        <programlisting>=app-benchmarks/bonnie++-1.96</programlisting>
+      </section>
+
+      <section>
+        <title>Example: Allow All Staging State Packages to be
+        Installable</title>
+
+        <warning>
+          <para>Setting this is greatly discouraged. You do not get support
+          from Gentoo developers if you do this!</para>
+
+          <para>Oh, and if you do it, your next system update will pull in a
+          lot of packages, and chances are slim that you can safely downgrade
+          (so this step is difficult to undo).</para>
+        </warning>
+
+        <para>To allow the staging packages to be installable on your system
+        (any package in the staging state), edit
+        <filename>/etc/make.conf</filename> accordingly:</para>
+
+        <procedure>
+          <step>
+            <para>Find out your current ACCEPT_KEYWORDS value.</para>
+
+            <programlisting>$ <command>emerge --info | grep ACCEPT_KEYWORDS</command>
+ACCEPT_KEYWORDS="x86"</programlisting>
+          </step>
+
+          <step>
+            <para>Open <filename>/etc/make.conf</filename> in your favorite
+            editor</para>
+
+            <programlisting># <command>nano -w /etc/make.conf</command></programlisting>
+          </step>
+
+          <step>
+            <para>Navigate to the ACCEPT_KEYWORDS variable or, if it doesn't
+            exist, create it with the value obtained in the first step:</para>
+
+            <programlisting>ACCEPT_KEYWORDS="x86"</programlisting>
+          </step>
+
+          <step>
+            <para>Now add the staging sign as well:</para>
+
+            <programlisting>ACCEPT_KEYWORDS="x86<command> ~x86</command>"</programlisting>
+          </step>
+
+          <step>
+            <para>Save the file and exit.</para>
+          </step>
+        </procedure>
+
+        <para>From this point onwards, Portage will install the highest
+        available version of a package regardless of it being in the staging
+        state or not.</para>
+      </section>
+
+      <section>
+        <title>Other Examples...</title>
+
+        <para>From the previous examples, you should get a grip on how to
+        handle masked packages:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>either create a file in a <filename>/etc/portage</filename>
+            subdirectory, or</para>
+          </listitem>
+
+          <listitem>
+            <para>edit the make.conf file to make things globally</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>You can find more information on the syntax used within the
+        <filename>/etc/portage</filename> subdirectories through the portage
+        manpage:</para>
+
+        <programlisting>$ <command>man portage</command>
+<emphasis>(...)
+(Type in "/" followed by the filename you want to know more about)</emphasis>
+<command>/package.mask</command>
+<emphasis>(Type "n" (next) until you get the section information)</emphasis>
+
+package.mask
+  A list of package atoms to mask. Useful if specific ver-
+  sions of packages do not work well for you. For example,
+  if you swear ...</programlisting>
+      </section>
+
+      <section>
+        <title>Automatically unmasking packages</title>
+
+        <para>More than often, a staging-state masked package has dependencies
+        upon other masked packages, who have dependencies upon other masked
+        packages, etc. To manually enter these dependencies in
+        /<filename>etc/portage/package.keywords</filename> and, more
+        importantly, finding out about these packages, you would need to retry
+        installing over and over again until you have met and resolved all
+        errors.</para>
+
+        <para>A more automated way of dealing with this is to use
+        <command>autounmask</command><indexterm>
+            <primary>autounmask</primary>
+          </indexterm>. <command>autounmask</command> allows you to select the
+        main package you want, and it will automatically create a file inside
+        <filename>/etc/portage/package.keywords</filename> that unmasks all
+        depending packages as well.</para>
+
+        <programlisting># <command>emerge autounmask</command>
+# <command>autounmask x11-misc/googleearth</command></programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Resolving Build Failures</title>
+
+      <para>One of the most troublesome issue is when a package fails to build
+      properly. There can be a plethora on issues that is causing this, so
+      this section is definitely going to be updated frequently. In any case,
+      chances that you're the only one having the issue is very small, so a
+      build failure now can be resolved if you sync and retry (say) a day
+      later...</para>
+
+      <section>
+        <title>Catch-all solution: revdep-rebuild</title>
+
+        <para>Before you start investigating possible build failures, run
+        <command>revdep-rebuild</command> first. This tool will check and see
+        if all library dependencies are still correct on your system. Really,
+        this is a time-saver in case of most build errors. This tool is
+        described more in-depth at <link linkend="revdep-rebuild">Dynamic
+        Linking Inconsistency</link>.</para>
+
+        <programlisting># <command>revdep-rebuild</command></programlisting>
+      </section>
+
+      <section>
+        <title>Missing .la file</title>
+
+        <para>A .la file is a libtool archive file. Its use is becoming
+        obsolete, so this error is most likely going to disappear in the near
+        future. However, if you have an error similar to the following:</para>
+
+        <programlisting>/bin/sh ../libtool --tag=CC   --mode=link i686-pc-linux-gnu-gcc  -O2 -march=pentium4 -pipe 
+-fomit-frame-pointer -Wall -version-info 2600:1:2600 -export-symbols-regex "^pango_.*"   
+-Wl,-O1 -o libpangocairo-1.0.la -rpath /usr/lib libpangocairo_1_0_la-pangocairo-context.lo 
+libpangocairo_1_0_la-pangocairo-font.lo libpangocairo_1_0_la-pangocairo-fontmap.lo 
+libpangocairo_1_0_la-pangocairo-render.lo  libpangocairo_1_0_la-pangocairo-fcfont.lo 
+libpangocairo_1_0_la-pangocairo-fcfontmap.lo  libpango-1.0.la -lgobject-2.0 -lgmodule-2.0 
+-lglib-2.0   -lcairo   -lm  libpangoft2-1.0.la -lfreetype   -lfontconfig   
+
+grep: /usr/lib/libGL.la: No such file or directory
+/bin/sed: can't read <emphasis>/usr/lib/libGL.la: No such file or directory</emphasis>
+libtool: link: `/usr/lib/libGL.la' is not a valid libtool archive
+make[4]: *** [libpangocairo-1.0.la] Error 1 </programlisting>
+
+        <para>then running the lafilefixer command might help you out:</para>
+
+        <programlisting># <command>emerge lafilefixer</command>
+# <command>lafilefixer --justfixit</command></programlisting>
+      </section>
+
+      <section>
+        <title>Compiler errors</title>
+
+        <para>Compiler errors are almost always due to a bug in the package
+        itself, not your system. An example would be:</para>
+
+        <programlisting>/var/tmp/portage/app-misc/lirc-0.8.6-r2/work/lirc-0.8.6/drivers/lirc_i2c/lirc_i2c.c:402:
+<emphasis>error: unknown field 'id' specified in initializer</emphasis>
+/var/tmp/portage/app-misc/lirc-0.8.6-r2/work/lirc-0.8.6/drivers/lirc_i2c/lirc_i2c.c:402:
+warning: initialization makes pointer from integer without a cast
+make[5]: ***
+[/var/tmp/portage/app-misc/lirc-0.8.6-r2/work/lirc-0.8.6/drivers/lirc_i2c/lirc_i2c.o]
+Error 1
+make[4]: ***
+[_module_/var/tmp/portage/app-misc/lirc-0.8.6-r2/work/lirc-0.8.6/drivers/lirc_i2c]
+Error 2</programlisting>
+
+        <para>The important part here is the error statement prefixed by the
+        filename (usually ending in .c or .cpp) and a number (which is the
+        line number in the file where the compiler found an error). Whenever
+        you get such error messages, chances are that the package itself is
+        broken. You should check <ulink url="https://bugs.gentoo.org">Gentoo's
+        Bugzilla</ulink> to see if it is a known error (usually is) and if a
+        fix is already available (or a workaround).</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Querying for Software</title>
+
+      <para>With all these possible software titles at your fingertips, how do
+      you know what software is available (or what software you currently have
+      installed)? Or what about querying information about software itself
+      (like installed or installable files, dependencies ...), even when that
+      software is or is not installed on your system? There are quite a few
+      tools that help you with this...</para>
+
+      <section>
+        <title>Searching for Software Using emerge</title>
+
+        <para>With emerge, you can query for software using
+        <command>--search</command><indexterm>
+            <primary>emerge</primary>
+
+            <secondary>search</secondary>
+          </indexterm> or <command>--searchdesc</command>.</para>
+
+        <para>With <command>emerge --search</command>, you can look for
+        software whose title (or part of) matches the selection you
+        passed:</para>
+
+        <programlisting>$ <command>emerge --search acroread</command>
+Searching...  
+[ Results for search key : acroread ]
+[ Applications found : 2 ]
+ 
+*  app-text/acroread
+      Latest version available: 8.1.2
+      Latest version installed: [ Not Installed ]
+      Size of files: 747,975 kB
+      Homepage:      http://www.adobe.com/products/acrobat/
+      Description:   Adobe's PDF reader
+      License:       Adobe
+
+*  media-fonts/acroread-asianfonts
+      Latest version available: 7.0.8
+      Latest version installed: [ Not Installed ]
+      Size of files: 40,076 kB
+      Homepage:      http://www.adobe.com/products/acrobat/acrrasianfontpack.html
+      Description:   Asian font packs for Adobe Acrobat Reader
+      License:       Adobe</programlisting>
+
+        <para>In the resulting output, you can find the (in this case two)
+        packages that match the given selection, together with</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>the latest, installable version</para>
+          </listitem>
+
+          <listitem>
+            <para>the currently installed version (if applicable)</para>
+          </listitem>
+
+          <listitem>
+            <para>the size of the files that the installation needs to
+            download</para>
+          </listitem>
+
+          <listitem>
+            <para>the homepage of the application (where you can usually find
+            more information about the tool)</para>
+          </listitem>
+
+          <listitem>
+            <para>the description of the software</para>
+          </listitem>
+
+          <listitem>
+            <para>the software license</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>If you use <command>--searchdesc</command>, the search also
+        tries to match the description fields:</para>
+
+        <programlisting>$ <command>emerge --searchdesc acrobat</command>
+Searching...  
+[ Results for search key : acrobat ]
+[ Applications found : 3 ]
+ 
+*  app-admin/watchfolder
+      Latest version available: 0.3.1.1
+      Latest version installed: [ Not Installed ]
+      Size of files: 93 kB
+      Homepage:      http://freshmeat.net/projects/watchd/
+      Description:   Watches directories and processes files, similar to the watchfolder option of Acrobat Distiller.
+      License:       GPL-2
+
+*  app-text/fdftk
+      Latest version available: 6.0-r1
+      Latest version installed: [ Not Installed ]
+      Size of files: 5,591 kB
+      Homepage:      http://www.adobe.com/devnet/acrobat/fdftoolkit.html
+      Description:   Acrobat FDF Toolkit
+      License:       Adobe
+
+*  media-fonts/acroread-asianfonts
+      Latest version available: 7.0.8
+      Latest version installed: [ Not Installed ]
+      Size of files: 40,076 kB
+      Homepage:      http://www.adobe.com/products/acrobat/acrrasianfontpack.html
+      Description:   Asian font packs for Adobe Acrobat Reader
+      License:       Adobe</programlisting>
+
+        <para>Running <command>--searchdesc</command> takes quite some time. I
+        advise you to use an indexing tool to speed up searches...</para>
+      </section>
+
+      <section>
+        <title>Searching for Software Using eix</title>
+
+        <para>The eix<indexterm>
+            <primary>eix</primary>
+          </indexterm> tool (not available by default, you will need to
+        install it: <command>emerge --ask eix</command>) indexes the
+        searchable application information to allow you to quickly search
+        through the portage tree.</para>
+
+        <para>Once installed, you will need to run
+        <command>update-eix</command><indexterm>
+            <primary>update-eix</primary>
+          </indexterm> (which will index all the information) after every
+        <command>emerge --sync</command> (as this pulls in new packages which
+        you want to index). You can also use
+        <command>eix-sync</command><indexterm>
+            <primary>eix-sync</primary>
+          </indexterm> which will synchronise portage first and then update
+        its indexing tables immediately afterwards.</para>
+
+        <para>Once the index is built, you can quickly search through the
+        Portage tree using eix. I frequently use <command>-HAS</command>
+        (<command>--homepage --category-name --description</command>) as this
+        also matches the homepage URI next to the application name and
+        description:</para>
+
+        <programlisting>$ <command>eix -HAS acrobat</command></programlisting>
+      </section>
+
+      <section>
+        <title>Searching Installed Software Based on File(s)</title>
+
+        <para>The <command>qfile</command><indexterm>
+            <primary>qfile</primary>
+          </indexterm> tool (part of
+        <package>app-portage/portage-utils</package>) allows you to find out
+        which package has delivered a certain file. That can be interesting if
+        someone is asking you which package provided that particular file at
+        your system.</para>
+
+        <programlisting>$ <command>qfile /usr/bin/qfile</command>
+app-portage/portage-utils (/usr/bin/qfile)</programlisting>
+      </section>
+
+      <section>
+        <title>Searching Uninstalled Software Based on File(s)</title>
+
+        <para>A Gentoo community project, called <ulink
+        url="http://www.portagefilelist.de">PortageFileList</ulink>, is
+        attempting to store information about files provided by all packages.
+        This isn't as simple as it sounds, since the files in a package depend
+        heavily on the user his system: USE flags, other installed packages
+        etc. The project asks users to run one of their tools to upload the
+        local file information (file + package + USE flags) to the server.
+        Other users can then use the tool <command>e-file</command><indexterm>
+            <primary>e-file</primary>
+          </indexterm> (part of <package>app-portage/pfl</package>) to query
+        for packages.</para>
+
+        <para>The command supports SQL-like wildcards. For instance,
+        <filename>%bin/xdm</filename> matches
+        <filename>/usr/sbin/xdm</filename> and
+        <filename>/bin/xdm</filename>.</para>
+
+        <programlisting>$ <command>e-file '%bin/xdm'</command>
+ * x11-apps/xdm
+      Available versions: 1.1.8 1.1.9-r0
+      Description:        X.Org xdm application
+      Matched files:      /usr/bin/xdm;</programlisting>
+
+        <para>Okay, this one was an easy guess as well ;-)</para>
+      </section>
+
+      <section>
+        <title>Listing Installed Files</title>
+
+        <para>To list which files are provided by a package, you can use
+        <command>qlist</command><indexterm>
+            <primary>qlist</primary>
+          </indexterm> (also part of
+        <package>app-portage/portage-utils</package>):</para>
+
+        <programlisting>$ <command>qlist portage-utils</command>
+/usr/bin/q
+/usr/bin/qatom
+...
+/usr/share/doc/portage-utils-0.2.1/qsync</programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Uninstalling Software</title>
+
+      <para>Now suppose you've found some software installed on your system
+      that you want to remove. With <command>emerge
+      --unmerge</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>unmerge</secondary>
+        </indexterm> (<command>-C</command> in short) you can remove installed
+      software from your system.</para>
+
+      <programlisting># <command>emerge --unmerge acroread --ask</command></programlisting>
+
+      <para>However, if this software is a dependency of an installed software
+      title, your next system update will pull the software back in. Even
+      worse, software that depends on it that is still being used / running
+      might even stop functioning properly or crash. A safer way of persuing
+      the desinstallation of a package is by asking Portage not to consider
+      the package as your "main" requirement using the
+      <command>--deselect</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>deselect</secondary>
+        </indexterm> option:</para>
+
+      <programlisting># <command>emerge --deselect acroread</command></programlisting>
+
+      <para>This will not remove the package by itself. To actually remove it,
+      run <command>emerge --depclean</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>depclean</secondary>
+        </indexterm>. The <command>depclean</command> instruction asks Portage
+      to look for package that are installed but are not required anymore
+      (meaning: you haven't installed it yourself explicitly or the package is
+      no dependency of another package):</para>
+
+      <programlisting># <command>emerge --depclean --ask</command></programlisting>
+
+      <para>With this command, Portage will remove packages that are not in
+      use. In other words, if no other package depends upon acroread, it will
+      remove acroread as you explicitly told Portage that you don't want to
+      consider it anymore. However, if some package still depends upon
+      acroread, Portage will let acroread remain on your system (until the
+      package that depends on acroread is removed or deselected as
+      well).</para>
+
+      <warning>
+        <para>Always first verify depclean's output before resuming. Never run
+        depclean if your system isn't fully up to date.</para>
+      </warning>
+    </section>
+
+    <section>
+      <title>Switching System Profiles</title>
+
+      <para>Gentoo Linux uses profiles to define defaults for your system
+      environment. The profile a system uses is defined by the
+      <filename>/etc/make.profile</filename><indexterm>
+          <primary>make.profile</primary>
+        </indexterm> symbolic link:</para>
+
+      <programlisting># <command>ls -l /etc/make.profile</command>
+lrwxrwxrwx 1 root root 57 Dec 2007 make.profile -&gt; 
+  /usr/portage/profiles/default-linux/x86/20O7.0/desktop</programlisting>
+
+      <para>A Gentoo profile defines, amongst other things:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>what USE flags are activated by default</para>
+        </listitem>
+
+        <listitem>
+          <para>what applications are default installed when you select a
+          virtual<footnote>
+              <para>A virtual is a placeholder for an application. For
+              instance, Gentoo offers several Java runtimes; they all
+              implement the virtual/jre. A Gentoo profiles marks a specific
+              package as default for such virtual.</para>
+            </footnote></para>
+        </listitem>
+
+        <listitem>
+          <para>what packages are not available for the profile (for instance,
+          a uclibc profile doesn't support glibc) or should have a certain
+          version (for instance, glibc higher than or equal to 2.4).</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Users can easily switch between profiles. A handy tool for this is
+      eselect:</para>
+
+      <programlisting># <command>eselect profile list</command>
+Available profile symlink targets:
+  [1]   default-linux/x86/2006.1
+  [2]   default-linux/x86/2006.1/desktop
+  [3]   default-linux/x86/2007.0
+  [4]   default-linux/x86/2007.0/desktop *
+  [5]   hardened/x86/2.6
+  [6]   selinux/2007.0/x86
+  [7]   selinux/2007.0/x86/hardened
+  [8]   default/linux/x86/2008.0
+  [9]   default/linux/x86/2008.0/desktop
+  [10]  default/linux/x86/2008.0/developer
+  [11]  default/linux/x86/2008.0/server
+  [12]  hardened/linux/x86
+
+# <command>eselect profile set 8</command></programlisting>
+
+      <para>As you can see from the profile names, one profile can be a child
+      of another; if this is the case (for instance, profile number 9 from the
+      above list has profile number 8 as parent), the profile inherits the
+      settings from its parent.</para>
+    </section>
+
+    <section>
+      <title>Using Third Party Software Repositories</title>
+
+      <para>Next to Gentoo's main Portage tree, you can also select third
+      party software repositories. Those are trees of developers, users and
+      organisations that offer ebuilds for you to use which aren't available
+      in Gentoo's Portage tree (yet).</para>
+
+      <para>A great tool for managing third party software repositories is
+      <command>layman</command><indexterm>
+          <primary>layman</primary>
+        </indexterm>. Install <command>layman</command> and then see what
+      repositories layman supports:</para>
+
+      <programlisting># <command>layman -L</command>
+(...)
+xen          [Subversion] (source: http://overlays....)</programlisting>
+
+      <para>The output of this layman command shows you what third party
+      repositories are configured for use with layman. If you want to select
+      one, add it to your system:</para>
+
+      <programlisting># <command>layman -a xen</command></programlisting>
+
+      <para>Likewise, to stop using a repository, remove it with
+      <command>layman -d</command>. If you want to see what repositories you
+      are currently using, use <command>layman -l</command>.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Changing Configuration Files</title>
+
+    <para>When Portage installs or upgrades software which provides
+    configuration files, the files themselves aren't automatically updated.
+    This is to prevent Portage from overwriting changes you made to the
+    configuration files. However, package upgrades might require configuration
+    file upgrades as well.</para>
+
+    <note>
+      <para>The setting that defines which locations are "protected" from
+      automated updates and which aren't is the CONFIG_PROTECT (list of
+      directories or files that are not automatically updated) and
+      CONFIG_PROTECT_MASK (list of directories or files, inside those defined
+      by CONFIG_PROTECT, which are automatically updated).</para>
+
+      <para>Both variables are defined by the profile used by your system and
+      expanded by the environment files offered by various applications and,
+      optionally, the setting you gave inside
+      <filename>/etc/make.conf</filename>.</para>
+    </note>
+
+    <para>To be able to identify possible configuration file upgrades, Portage
+    warns you when configuration file updates are available. There are a few
+    tools available that help you "merge" these updates with your existing
+    configuration files. It is important to understand their limitations
+    though.</para>
+
+    <section>
+      <title>Configuration File Updates</title>
+
+      <para>Whenever a configuration file update is available, the file itself
+      is stored on the file system next to the current configuration file.
+      These files (whose filename starts with <filename>.cfg_</filename>) can
+      then be compared with the current configuration file.</para>
+
+      <para>There are no tools available that do this automatically for you.
+      Most functionality that the tools provide is a view on the differences
+      and the possibility to merge these changes automatically. In this book I
+      describe the <command>dispatch-conf</command> tool. Another tool is
+      etc-update.</para>
+    </section>
+
+    <section>
+      <title>dispatch-conf</title>
+
+      <para>The <command>dispatch-conf</command><indexterm>
+          <primary>dispatch-conf</primary>
+        </indexterm> tool allows you to view the differences between a
+      configuration file and its update and merge updates automatically if the
+      only differences are comments.</para>
+
+      <para>To view the list of updates, launch
+      <command>dispatch-conf</command>. It will first perform the automated
+      updates and then show you the differences between the rest of the
+      available updates:</para>
+
+      <programlisting>--- /etc/conf.d/bootmisc           2007-12-26 14:41:35.000000000 +0100
++++ /etc/conf.d/._cfg0000_bootmisc 2008-02-29 18:40:02.000000000 +0100
+@@ -9,4 +9,4 @@
+# Should we completely wipe out /tmp or just selectively remove known
+# locks / files / etc... ?
+   
+-WIPE_TMP="no"
++WIPE_TMP="yes"
+
+&gt;&gt; (1 of 4) -- /etc/conf.d/bootmisc
+&gt;&gt; q quit, h help, n next, e edit-new, z zap-new, u use-new
+   m merge, t toggle-merge, l look-merge:</programlisting>
+
+      <para>In this example, the <filename>/etc/conf.d/bootmisc</filename>
+      file has an update where the <varname>WIPE_TMP</varname> variable is set
+      to "yes". If you want to keep the "no" setting, press
+      <command>z</command> (zap-new) to keep the current configuration file.
+      If you want to use the "yes" value, press "<command>u</command>"
+      (use-new) to use the new configuration file.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Modifying Build Decisions</title>
+
+    <para>I have already covered the use of USE flags to help Portage decide
+    which features you want (or don't want) in a package. However, there are
+    more items that Portage needs to decide upon and you can offer your choice
+    inside <filename>/etc/make.conf</filename><indexterm>
+        <primary>make.conf</primary>
+      </indexterm>, Portage' main configuration file.</para>
+
+    <section>
+      <title>Languages</title>
+
+      <para>Some packages support several languages. Portage can help you
+      select what languages you want supported on your system through the
+      <varname>LINGUAS</varname><indexterm>
+          <primary>LINGUAS</primary>
+        </indexterm> variable. You set the LINGUAS variable in /etc/make.conf
+      with the languages of your choice. In the next example, I select the
+      English (en), Dutch (nl), French (fr) and German (de) languages.</para>
+
+      <programlisting>~# <command>nano -w /etc/make.conf</command>
+LINGUAS="en nl fr de"</programlisting>
+
+      <para>For instance, when enabled, OpenOffice.org's ebuild will pull in
+      the language packs for those languages.</para>
+    </section>
+
+    <section>
+      <title>Video Cards</title>
+
+      <para>Some packages might need video card information. Examples are the
+      X11 server but also some games or rendering engines. In these cases, you
+      should set the VIDEO_CARDS variable to your video card architecture. You
+      might want to include several in case your architecture is quite new
+      (you can then select the earlier architectures as well).</para>
+
+      <programlisting>VIDEO_CARDS="i915 i810 intel vesa"</programlisting>
+    </section>
+
+    <section>
+      <title id="compilerdirectives">Compiler Directives</title>
+
+      <para>When building packages, Portage offers optimization directives to
+      the compiler, telling the compiler for which architecture it should
+      build and what optimizations the compiler can try to run. These
+      optimization flags are set in the <varname>CFLAGS</varname><indexterm>
+          <primary>CFLAGS</primary>
+        </indexterm> (C-code) and <varname>CXXFLAGS</varname><indexterm>
+          <primary>CXXFLAGS</primary>
+        </indexterm> (C++-code) variables, again inside
+      <filename>/etc/make.conf</filename>.</para>
+
+      <para>I'll start off with my example CFLAGS (CXXFLAGS is the
+      same):</para>
+
+      <programlisting>CFLAGS="-O2 -march=pentium3 -pipe"
+CXXFLAGS="${CFLAGS}"</programlisting>
+
+      <para>Let's start off with the architecture selection: march. With
+      <varname>-march=pentium3</varname>, the compiler is asked to optimize
+      code for the pentium 3 architecture. Also, because I select
+      <varname>-march=</varname>, it will only run on pentium3 (or higher). If
+      you want to optimize code for a specific x86 architecture but want to be
+      able to run the code on any x86 architecture, use
+      <varname>-mcpu=</varname> instead. Since GCC 4.2, you can also use
+      <varname>-march=native</varname>: the compiler will then select the
+      architecture of the current system (your system), saving you the trouble
+      of finding out what your architecture is.</para>
+
+      <para>With <varname>-O2</varname> (<emphasis>O</emphasis>ptimizations,
+      not zero) I ask GCC to use a list of optimization flags (-O2 is
+      shorthand for a whole set of optimizations) which are documented in the
+      GCC info manual (<command>info gcc</command>, select <emphasis>Invoking
+      GCC</emphasis>, <emphasis>Optimize Options</emphasis>).</para>
+
+      <para>I also ask the compiler to pass on information between various
+      stages of compilation using pipes (<parameter>-pipe</parameter>) rather
+      than temporary files.</para>
+    </section>
+
+    <section>
+      <title>Portage Behavior</title>
+
+      <para>Portage itself also has a lot of features it supports. You can set
+      them through the <parameter>FEATURES</parameter> variable.</para>
+
+      <programlisting>FEATURES="sign buildpkg"</programlisting>
+
+      <para>You can find all possible features in the
+      <filename>make.conf</filename> manual page (<command>man
+      make.conf</command>). A small selection of supported features is given
+      next.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><parameter>buildpkg</parameter> creates binary packages of
+          every succesful build. These binary packages can be reused, even on
+          other systems (as long as they have the same build decision
+          parameters).</para>
+        </listitem>
+
+        <listitem>
+          <para><parameter>collision-protect</parameter> ensures that a
+          package doesn't overwrite files during its installation that it
+          doesn't own. You might want to use
+          <parameter>protect-owned</parameter> instead (this is the default)
+          as it allows overwriting files if they aren't currently owned by any
+          package.</para>
+        </listitem>
+
+        <listitem>
+          <para><parameter>nodoc</parameter> to tell Portage not to install
+          doc files (/usr/share/doc), with <parameter>noinfo</parameter> and
+          <parameter>noman</parameter> having similar functions</para>
+        </listitem>
+
+        <listitem>
+          <para><parameter>parallel-fetch</parameter> will have Portage
+          download files in the background while it is building</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+
+  <section>
+    <title>Fixing Postinstall Problems</title>
+
+    <para>Even when software installation has finished succesfully, you can
+    still get into trouble.</para>
+
+    <section>
+      <title id="revdep-rebuild">Dynamic Linking Inconsistency</title>
+
+      <para>When Portage (prior to 2.2) upgrades a library, it removes the old
+      shared libraries from the system. As a result, some applications who
+      rely on these libraries might fail with a message like the
+      following:</para>
+
+      <programlisting>error while loading shared libraries: libcom_err.so.2: cannot
+  open object file: no such file or directory</programlisting>
+
+      <para>If this is the case, you will need to run
+      <command>revdep-rebuild</command><indexterm>
+          <primary>revdep-rebuild</primary>
+        </indexterm> to fix this. <command>revdep-rebuild</command> is a tool
+      that scans your system for applications that rely on (removed) libraries
+      and will rebuild those packages so that they get linked with the new
+      libraries.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Portage is not the only package manager that works on Gentoo.
+        There are at least two others. Look up what these packages are and
+        where they differ with Portage.</para>
+      </listitem>
+
+      <listitem>
+        <para>USE flags can also be enabled as an environment variable during
+        your emerge process itself, like so:</para>
+
+        <programlisting>~# <command>USE="-ssl" emerge irssi</command></programlisting>
+
+        <para>Try to find out where Portage reads all possible USE flags from
+        (you know <filename>make.conf</filename> and environment variable now,
+        but there are others) and in what order.</para>
+      </listitem>
+
+      <listitem>
+        <para>Try to find information regarding Gentoo's architecture testing
+        program.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

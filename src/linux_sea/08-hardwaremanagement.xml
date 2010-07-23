@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Hardware Support</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Some hardware is automatically enabled once you have configured it
+    inside the Linux kernel: access to PCI chipsets, graphical card, disks,
+    USB storage, etc. Yet, most hardware requires additional work. After all,
+    the Linux kernel provides you with a programmatical interface to access
+    the devices, but you still need the necessary tooling to get the device to
+    function properly. Good examples are network cards and printers, but also
+    sound cards.</para>
+  </section>
+
+  <section>
+    <title>ALSA - Advanced Linux Sound Architecture</title>
+
+    <para>ALSA<indexterm>
+        <primary>ALSA</primary>
+      </indexterm> is an open source project that provides audio functionality
+    to the Linux kernel. It supports professional audio hardware (next to the
+    consumer audio hardware, including sound cards) and provides a powerful,
+    standard interface which allows, for instance, multiple software access to
+    a single audio device. For programmers, ALSA's API is well documented and
+    you'll quickly find that the ALSA library provides thread-safe access to
+    the device(s).</para>
+
+    <para>The project also provides tools to manage the audio devices such as
+    a simple mixer program (<command>alsamixer</command>), modular sound
+    drivers which allow users to fine-tune the drivers' configuration aspects
+    and of course support for the older OSS/Free implementation (Linux'
+    previous open sound system).</para>
+
+    <section>
+      <title>Installing ALSA</title>
+
+      <para>Installing ALSA consists of two distinct steps:</para>
+
+      <orderedlist>
+        <listitem>
+          <para>Configure the Linux kernel with ALSA support and with support
+          for your sound card(s)</para>
+        </listitem>
+
+        <listitem>
+          <para>Install the ALSA utilities</para>
+        </listitem>
+      </orderedlist>
+
+      <para>If you configure your kernel, you can either opt to install the
+      sound card drivers in your kernel or as a kernel module. ALSA's
+      configuration utility (<command>alsaconf</command>) assumes that you use
+      kernel modules for your sound cards. However, this is not a requirement
+      - you can still configure ALSA sound card drivers if they are built
+      inside the kernel. The interface to do so however is a bit more
+      complex.</para>
+
+      <para>To install the ALSA utilities, it is sufficient to emerge
+      alsa-utils:</para>
+
+      <programlisting># <command>emerge alsa-utils</command></programlisting>
+    </section>
+
+    <section>
+      <title>Basic ALSA Configuration</title>
+
+      <para>The basic ALSA configuration starts with detecting your sound card
+      and enabling the channels on it (sound channels) as ALSA will, by
+      default, mute the channels (this is for precautionary reasons - you
+      don't want to blow your speakers the first time you launch your computer
+      do you?).</para>
+
+      <para>The first part (detecting the sound card) can be done using
+      <command>alsaconf</command>. The <command>alsaconf</command><indexterm>
+          <primary>alsaconf</primary>
+        </indexterm> tool will attempt to detect your sound card(s), load the
+      necessary modules and configure those with sane settings. It will save
+      whatever it found to a general file which is read by your favorite
+      distribution (which is undoubtedly Gentoo ;-) at start up so you don't
+      have to rerun <command>alsaconf</command> after every boot.</para>
+
+      <programlisting># <command>alsaconf</command></programlisting>
+
+      <para>With your sound card(s) detected, launch
+      <command>alsamixer</command> to view the available channels. The
+      <command>alsamixer</command><indexterm>
+          <primary>alsamixer</primary>
+        </indexterm> tool will show you all channels associated with your
+      sound card. You will find that, by default, all channels are muted.
+      Unmute them, but bring the volume of the channels to a safe setting.
+      Don't worry, you can increase them whenever you want later.</para>
+
+      <programlisting># <command>alsamixer</command></programlisting>
+
+      <para>Inside alsamixer, you can</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>move from one channel to the other with the arrow keys
+          (left/right)</para>
+        </listitem>
+
+        <listitem>
+          <para>increase/decrease the volume of each channel with the arrow
+          keys (up/down)</para>
+        </listitem>
+
+        <listitem>
+          <para>mute/unmute the channel using the 'M' key</para>
+        </listitem>
+
+        <listitem>
+          <para>exit the application using the Escape key (or Alt+Q)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>If your sound card has particular features you can't seem to find
+      inside the mixer application, you will need to turn to the
+      <command>alsactl</command> command. The
+      <command>alsactl</command><indexterm>
+          <primary>alsactl</primary>
+        </indexterm> utility supports multiple devices and allows you to tweak
+      every supported feature of your sound card. Its interface is quite
+      simple: use alsactl to dump the sound card information to a file, then
+      edit the file to your likings. Once finished, use alsactl to read the
+      (modified) file back.</para>
+
+      <programlisting># <command>alsactl -f /path/to/asound.state store</command>
+(Now edit /path/to/asound.state)
+# <command>alsactl -f /path/to/asound.state restore</command></programlisting>
+
+      <para>If you have changed the file to such an extend that you can't get
+      the sound to work again, you can re-initialize the settings using
+      <command>alsactl init</command>.</para>
+
+      <para>Finally, if you have multiple devices, use a sequence number to
+      identify them. You can find your list of numbers in
+      /proc/asound/cards:</para>
+
+      <programlisting>$ <command>cat /proc/asound/cards</command>
+ 0 [ICH6           ]: ICH4 - Intel ICH6
+                      Intel ICH6 with Cx20468-31 at irq 17</programlisting>
+
+      <para>The number (I only have one card, so mine is 0) can then be passed
+      on to the various alsa utilities, like so:</para>
+
+      <programlisting>$ <command>alsamixer -c 0</command></programlisting>
+    </section>
+
+    <section>
+      <title>Keeping your Changes</title>
+
+      <para>When you booted your system, you unmuted the channels and set the
+      mixer channels according to your likings. However, if you do nothing
+      more now, you'll have to redo all this again after every boot. To solve
+      this, you need to store the current settings in a state file (yes, using
+      alsactl) and automatically read those in at boot time.</para>
+
+      <para>This is exactly what the alsasound init script does (as provided
+      by Gentoo's alsa-utils package). So, add alsasound to your boot
+      runlevel, save your current settings and then start the initialization
+      script:</para>
+
+      <programlisting># <command>rc-update add alsasound boot</command>
+# <command>alsactl -f /var/lib/alsa/asound.state store</command>
+# <command>/etc/init.d/alsasound start</command></programlisting>
+    </section>
+
+    <section>
+      <title>Using Sound Servers</title>
+
+      <para>I mentioned before that ALSA supports multiple software access to
+      a single device. With the above configuration, you're still not able to
+      do so. To provide such multiplexing capabilities, you can create a new
+      audio device (some sort of mixer) which aggregates information to/from
+      the device and sends/reads it from as many software processes as you
+      like.</para>
+
+      <para>This is one of the tasks that sound servers do: these programs
+      manage access to the sound card (interfaces) and allow multiple software
+      processes to use the sound facilities of your system. Some well known
+      sound servers are esd, aRTs (deprecated), JACK and PulseAudio.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>esd<indexterm>
+              <primary>esd</primary>
+            </indexterm> (Enlightenment Sound Daemon) is GNOME's sound
+          management daemon. esd, also known as ESounD, not only supports the
+          abovementioned mixing, but can also manage network-transparent
+          audio: audio played on one system can be heard on another. To this
+          end, any application supporting esd can stream its audio to any
+          system running esd on the network.</para>
+        </listitem>
+
+        <listitem>
+          <para>aRTs<indexterm>
+              <primary>aRTs</primary>
+            </indexterm> (Analog RealTime Synthesizer) is KDE's former sound
+          daemon. Although development has been abandoned, you will still find
+          references to aRTs here and there on the Internet. Its main power
+          was its real-time audio streaming capabilities.</para>
+        </listitem>
+
+        <listitem>
+          <para>JACK<indexterm>
+              <primary>JACK</primary>
+            </indexterm> (JACK Audio Connection Kit) is a real-time sound
+          server which supports various operating systems (including GNU/Linux
+          and Apple's OS X). It also supports network-transparent audio,
+          real-time mixing, etc.</para>
+        </listitem>
+
+        <listitem>
+          <para>PulseAudio<indexterm>
+              <primary>PulseAudio</primary>
+            </indexterm> (PulseAudio) is another sound daemon. It is meant to
+          be a replacement for esd but with a wider support field (including
+          Microsoft Windows and POSIX-compliant operating systems).</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>If you'd like to use one of these sound servers (you do need to
+      pick one if you don't want to get confused), install one of the
+      following packages:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>esd can be installed from
+          <package>media-sound/esound</package>, although most people will
+          already have it installed if they are running GNOME (it is a
+          dependency of the GNOME installation)</para>
+        </listitem>
+
+        <listitem>
+          <para>JACK can be installed with
+          <package>media-sound/jack</package></para>
+        </listitem>
+
+        <listitem>
+          <para>PulseAudio can be installed from
+          <package>media-sound/pulseaudio</package>.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Enable the corresponding USE flag (esd, jack or pulseaudio) and
+      update your system. Portage will automatically rebuild those packages
+      that are influenced by the USE flag change and incorporate support for
+      the selected sound daemon in those packages:</para>
+
+      <programlisting># <command>nano -w /etc/make.conf</command>
+<emphasis>(Edit USE, add the appropriate USE flag)</emphasis>
+# <command>emerge --update --deep --newuse world</command></programlisting>
+
+      <para>You can also ask euse which packages are affected by a USE flag
+      change:</para>
+
+      <programlisting># <command>euse -I pulseaudio</command></programlisting>
+
+      <para>If you want to know which packages all use a specific USE flag
+      (even uninstalled packages), use <command>euse -i</command>:</para>
+
+      <programlisting># <command>euse -i pulseaudio</command></programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>CUPS - former "Common Printing Unix System"</title>
+
+    <para>If you need to connect your Linux system to a printer, using the
+    CUPS<indexterm>
+        <primary>CUPS</primary>
+      </indexterm> tool is advised. With CUPS you can both connect to locally
+    attached printers (USB, LPT) as well as remote (through Windows sharing or
+    IPP). You can also use CUPS to build a print server yourself, although
+    this is definitely outside the scope of this book.</para>
+
+    <section>
+      <title>Installing CUPS</title>
+
+      <para>Before you start installing the software, you will first need to
+      make sure that your kernel configuration supports the printer:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>for locally attached printers using the (old) LPT interface,
+          look for "Parallel port support -&gt; PC-style hardware" and
+          "Parallel printer support -&gt; IEEE 1284 transfer modes")</para>
+        </listitem>
+
+        <listitem>
+          <para>for locally attached printers using the USB interface, look
+          for "USB Printer support" (as well as all other USB-required
+          settings such as one of the xHCI supports)</para>
+        </listitem>
+
+        <listitem>
+          <para>for remote printers using the Windows sharing
+          (SMB-CIFS<indexterm>
+              <primary>SMB-CIFS</primary>
+            </indexterm> protocol), look for "Network File Systems -&gt; SMB
+          file system support" and "CIFS support")</para>
+        </listitem>
+
+        <listitem>
+          <para>for remote printers using the IPP protocol, you generally do
+          not need to enable any additional settings in the kernel</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>If you notice that you have not selected the right configuration
+      yet, you'll need to rebuild the kernel and reboot (see our chapter on
+      "<link linkend="configuringkernel">Configuring a Linux
+      Kernel</link>").</para>
+
+      <para>Next, install the <package>net-print/cups</package> package,
+      making sure you select the correct USE flags (this is discussed in a
+      different chapter).</para>
+
+      <programlisting>~# <command>emerge net-print/cups</command></programlisting>
+
+      <para>Don't worry if you do not have all USE flags correct from the
+      first run. As I will mention later, it is always possible to update USE
+      flags afterwards and then have Gentoo rebuild those packages affected by
+      that change.</para>
+
+      <para>If your printer is locally attached, you need to start the CUPS
+      service:</para>
+
+      <programlisting>~# <command>/etc/init.d/cups start</command></programlisting>
+
+      <para>Also, make sure it is started upon every (re)boot:</para>
+
+      <programlisting>~# <command>rc-update add cups default</command></programlisting>
+    </section>
+
+    <section>
+      <title>Configuring CUPS</title>
+
+      <para>CUPS offers a web interface to configure CUPS (and configure your
+      printer). You can reach it through <ulink
+      url="http://localhost:631">http://localhost:631</ulink>. In the
+      Administration page, enter your root login and password information and
+      you can get started with the configuration. <ulink
+      url="http://www.gentoo.org/doc/en/printing-howto.xml">The Gentoo
+      Printing HOWTO</ulink> offers a great walkthrough of the
+      configuration.</para>
+
+      <para>You probably hoped for a more elaborate discussion on printer
+      configuration. Perhaps in the far future I will discuss printer
+      configuration more, but for the time being I'm going to limit this and
+      refer to Gentoo's guide and the main <ulink
+      url="http://www.cups.org">CUPS</ulink> site.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Managing Device Files</title>
+
+    <para>Almost every device on your system is represented by a device file.
+    The <command>udev</command><indexterm>
+        <primary>udev</primary>
+      </indexterm> device manager discovers attached devices, creates device
+    files in <filename>/dev</filename> (yes, you can create them - take a look
+    at the <command>mknod</command><indexterm>
+        <primary>mknod</primary>
+      </indexterm> manpage) and often also creates symbolic links to those
+    device files so you can find the correct device file more easily.</para>
+
+    <para>The <command>udev</command> tool receives events from the Linux
+    kernel; the moment such an event is received, <command>udev</command>
+    matches the device attributes as offered by sysfs (you can browse through
+    <filename>/sys</filename> if you want to see what
+    <emphasis>sysfs</emphasis><indexterm>
+        <primary>sysfs</primary>
+      </indexterm> offers) against a set of rules. These rules you can view at
+    <filename>/lib/udev/rules.d</filename> (provided by the udev distribution)
+    and <filename>/etc/udev/rules.d</filename> (provided by third-party
+    packages and, of course, your own rules if you write them
+    yourself).</para>
+
+    <para>Gentoo offers a set of default rules which should be sufficient for
+    most users. For instance, they create links to the (removable) disks
+    inside <filename>/dev/disk/by-id</filename>, <filename>by-path</filename>
+    and <filename>by-uuid</filename>, which should allow you to have a device
+    link for fstab which will be the same regardless of when you plug it in
+    (in case of a hot pluggable device, of course). This is important, because
+    if you have, for instance, two USB storage devices, the order in which
+    they are plugged in defines the <filename>/dev/sd*</filename> device
+    naming. By using the links at <filename>/dev/disk/by-*</filename> you can
+    make sure that the correct device is targeted.</para>
+  </section>
+
+  <section>
+    <title>Further Resources</title>
+
+    <itemizedlist>
+      <listitem>
+        <para><ulink url="http://www.gentoo.org/doc/en/alsa-guide.xml">Gentoo
+        ALSA Guide</ulink>, an excellent resource on configuring ALSA within
+        Gentoo.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink
+        url="http://www.reactivated.net/writing_udev_rules.html">Writing udev
+        rules</ulink>, written by Daniel Drake</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink
+        url="http://www.gentoo.org/doc/en/printing-howto.xml">Gentoo Printing
+        HOWTO</ulink>, another excellent resource by Gentoo, now on printer
+        configuration.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

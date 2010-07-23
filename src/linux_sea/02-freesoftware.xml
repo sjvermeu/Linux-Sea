@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>How does Free Software affect Linux?</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The Linux OS has become increasingly popular mainly due to the
+    freedom it allows (and of course also the low or zero-fee price of the
+    entire operating system). In this chapter we see how these freedoms come
+    to life and how they are protected and sustained.</para>
+
+    <para>We also take a look at the development model used by free software
+    projects in general because it is a major result of said freedoms, one
+    that makes free software projects often more interesting than
+    closed-source commercial software projects. The development model is also
+    one of the major strengths of free software.</para>
+  </section>
+
+  <section>
+    <title>Free Software</title>
+
+    <para>If we take a step back from all technical aspects, Linux differs
+    from the closed-source commercial software in an important aspect:
+    licensing. Licensing is what drives free software...</para>
+
+    <section>
+      <title>What are Software Licenses?</title>
+
+      <para>Software is someone's intellectual property. Intellectual
+      property<indexterm>
+          <primary>intellectual property</primary>
+        </indexterm> is a heavy word that shouldn't be interpreted to anything
+      else than the result of some effort to create something that is not a
+      plain copy. If you write some text, the resulting text is your
+      intellectual property (unless you've copied it from somewhere).</para>
+
+      <para>Intellectual property is protected by law. Copyright<indexterm>
+          <primary>copyright</primary>
+        </indexterm> protects your intellectual property by prohibiting others
+      to copy, adapt, reproduce and/or redistribute your ``thing'' without
+      your consent. Mind you though that not every intellectual property is
+      copyright protected and copyright differs from country to country. An
+      example of intellectual property that isn't copyright protected is a
+      mathematical method: even though the inventor of the method had to
+      ponder years and years on it, his method isn't copyright protected (but
+      if he wrote a text about this method, the text itself is). Copyright is
+      automatically assigned: it doesn't cost you anything and it is broadly
+      accepted.</para>
+
+      <para>Another protection is a patent<indexterm>
+          <primary>patent</primary>
+        </indexterm>. Patents are (or should be) granted to new inventions who
+      are not known to the public at the time of the patent request. Patents
+      are often used to protect intellectual property that isn't protected by
+      the copyright: methods for doing stuff (including medical compositions).
+      Sadly, the industry is often abusing patents for much more when they
+      have a patent with a broad action field: the patent covers too much,
+      allowing the company to force others not to use a method they actually
+      do have the right to use. Also, both the request and the patent grant
+      are very costly and only larger companies have the abilities to obtain
+      (and protect) several patents. Smaller companies or individuals don't
+      have the means to obtain a patent, let alone protect themselves in a
+      court because they might have used a method that is described in one or
+      more patents.</para>
+
+      <para>I use the word <emphasis>abuse</emphasis> because companies often
+      get patents for methods that are broadly used or are so silly that you'd
+      wonder what patent office (patent requests are - or should be - checked
+      for their validity before they are granted) has granted those
+      patents.</para>
+
+      <para>I'll abstain from elaborating on this (politically sensitive)
+      topic more and move on to <emphasis>software
+      licenses</emphasis><indexterm>
+          <primary>software license</primary>
+        </indexterm>. A software license is a contract between you, the
+      software user, and the software copyright owner. It tells you what you
+      can and cannot do with the software. Any software that is not licensed
+      is fully copyright protected, meaning you shouldn't even have it, let
+      alone run it.</para>
+
+      <para>Most commercial-grade licenses are often called the
+      EULAs<indexterm>
+          <primary>EULA</primary>
+        </indexterm>, or End User License Agreements. They usually say what
+      you are allowed to do with the software (often including what you are
+      allowed to use the software for). The EULAs more often stress what is
+      denied rather than allow anything. One of the many topics is
+      redistribution of the software. Most EULAs explicitly disallow
+      redistribution.</para>
+
+      <para>Linux (and free software in general) is different. The
+      accompanying license grants you the right to copy the software, obtain
+      the source code, modify it and redistribute it (with or without
+      modifications) and even sell it. Because there are many variations
+      possible there are many popular licenses.</para>
+    </section>
+
+    <section>
+      <title>What Licenses Exist?</title>
+
+      <para>I'll list a few of the more popular licenses here, but be advised,
+      there are more than 800 licenses around. Many of those licenses are
+      quite similar (or are exactly the same) and the free software community
+      should start to consolidate all those licenses in a much smaller set.
+      Sadly, they haven't done so yet. Luckily, the 90-10 rule here applies:
+      90% of all free software uses 10% of the free software (or other)
+      licenses. The other licenses are only marginally used, sometimes just
+      for a single application.</para>
+
+      <section>
+        <title>Public Domain</title>
+
+        <para>When software is placed under the public domain, you're free to
+        do whatever you want with it: the author waves any right he can to
+        allow for full freedom of his software.</para>
+      </section>
+
+      <section>
+        <title>MIT License and some BSD-like Licenses</title>
+
+        <para>The MIT license and some BSD-like licenses are almost like the
+        public domain, but ask you to keep the copyright notice intact. This
+        is a very popular license because the author allows you to do whatever
+        you want as long as you keep his name on the product copyright notice
+        as well.</para>
+      </section>
+
+      <section>
+        <title>GPL</title>
+
+        <para>The GNU Public License<indexterm>
+            <primary>GPL</primary>
+          </indexterm> is the most widely used free software license, but for
+        some people also the most restrictive free software license. The GPL
+        tells you that you can do whatever you want with the software, as long
+        as you provide the source code of your modifications to whoever you
+        distributed the modified version to and as long as this modification
+        is under the GPL as well.</para>
+
+        <para>The Linux kernel is GPL licensed.</para>
+      </section>
+
+      <section>
+        <title>OSI Approved Licenses</title>
+
+        <para>An OSI approved license is a license that adheres to the
+        <emphasis>Open Source Definition</emphasis><indexterm>
+            <primary>Open Source Definition</primary>
+          </indexterm> written down by the <emphasis>Open Source
+        Initiative</emphasis><indexterm>
+            <primary>Open Source Initiative</primary>
+          </indexterm><indexterm>
+            <primary>OSI</primary>
+          </indexterm> of which the following points are a free
+        interpretation:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>free redistribution</para>
+          </listitem>
+
+          <listitem>
+            <para>source code available</para>
+          </listitem>
+
+          <listitem>
+            <para>modifications are allowed (including redistribution)</para>
+          </listitem>
+
+          <listitem>
+            <para>no discrimination (people, fields ...)</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>FSF Approved Licenses</title>
+
+        <para>An FSF<indexterm>
+            <primary>FSF</primary>
+          </indexterm> approved license adheres to the <emphasis>Free Software
+        </emphasis><indexterm>
+            <primary>free software</primary>
+          </indexterm>definition written down by the <emphasis>Free Software
+        Foundation</emphasis> of which the following points are the core of
+        the definition:</para>
+
+        <para>You should be free to ...</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>run the program for any purpose</para>
+          </listitem>
+
+          <listitem>
+            <para>study how the program works and adapt it to your
+            needs</para>
+          </listitem>
+
+          <listitem>
+            <para>redistribute copies</para>
+          </listitem>
+
+          <listitem>
+            <para>improve the program and release your changes to the
+            public</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>Free Software isn't Non-Commercial</title>
+
+      <para>Free software is often perceived to be a pure hobbyist project: it
+      would not be commercially viable to bring free software to the
+      enterprise world. After all, if software is freely available, what kind
+      of profit could a company make from it. Nothing could be further from
+      the truth...</para>
+
+      <para>It is true that free software requires a different look on
+      software in a commercial environment (including companies). Companies
+      who <emphasis>use</emphasis> software want to be assured that they have
+      support for the software when things go wrong. They often close (costly)
+      support contracts with the software company where service level
+      agreements (abbreviated to SLAs) are defined. Based on these contracts,
+      the company has the assurance that if certain services become
+      unavailable, the supporting company will do whatever it can to bring the
+      service back or, in some occasions, compensate the financial damage that
+      the downfall has caused.</para>
+
+      <para>Most of the time, these support contracts are closed with the
+      software company itself because it has the most knowledge of the
+      software (as it is probably the only company with access to the software
+      code). Sadly, as good as this reason is, companies don't look at free
+      software ``because there is no support''. This isn't true; support for
+      free software is still (commercially) available, but most of the time
+      not from the creators themselves. And although this scares the
+      companies, the reason why this support is still as good as with
+      off-the-shelf software remains the same: the supporting company has
+      access to the source code of the tool and has professional knowledge
+      about the tool. It probably has developers in the software project
+      itself.</para>
+
+      <para>Companies that <emphasis>sell</emphasis> software are of course
+      often against free software. When these companies major income depends
+      on the sales of their software, it would not be viable to make the
+      software free. If they would, competiting companies would have full
+      access to the source code and improve their own product with it.</para>
+
+      <para>I don't think this is a disadvantage though. Software companies
+      should use their main strength: knowledge about the tool. As mentioned
+      before, other companies often want to close support contracts to ensure
+      the service that the software delivers; if the software company creates
+      free software, this wouldn't change. For many software companies,
+      support contracts are the main source of income.</para>
+
+      <para>It is still possible to sell free software; some pioneering
+      companies are payed to made modifications to free software because
+      companies don't have the resources to do so themselves. These companies
+      can keep the modifications private if the free software license allows
+      this) but can also bring these modifications to the public by
+      contributing it to the software project itself.</para>
+
+      <para>A major proof of this is the acceptance of free software by major
+      software players such as Sun Microsystems and IBM, and the emergance of
+      new software players that build their business upon free software, such
+      as RedHat or MySQL<indexterm>
+          <primary>MySQL</primary>
+        </indexterm> (recently acquired by Sun Microsystems). The latter
+      company uses a dual-licensed software approach: the MySQL source code is
+      available in two licenses, a free software one for the public and a more
+      closed one for companies who want support from MySQL itself. Using a
+      dual-licensed approach allows the company to support a fixed state of
+      their product while keeping the software free. Supporting a fixed state
+      of the product is of course much easier than to support the software in
+      general.</para>
+
+      <para>However, don't think that every free software project is
+      enterprise-ready or that you will be able to find (paid) support for
+      every software project. You should carefully check out every software
+      title you want to use if you want to use software, free or not. For end
+      users, distributions help you to pick software. If a distribution
+      packages a certain software title, it feels that the software title is
+      stable and well supported.</para>
+    </section>
+
+    <section>
+      <title>So Linux is Free?</title>
+
+      <para>Yes, Linux is free. It is certainly free in the sense of ``free
+      speech'' and although most software titles are also free in the sense of
+      ``free beer'', you shouldn't be surprised to see distributions you can
+      or have to pay for. In that case, you can be paying for the software
+      medium (the burned DVD), accompanying printed documentation, 30-day
+      installation and usage support or for the resources that the
+      distribution has to acquire itself (like infrastructure).</para>
+
+      <para>Most distributions have free downloads with online documentation
+      and wonderfull community support (active mailing lists or Internet
+      fora), which is why Linux is that popular: you can download, install and
+      use several distributions to decide which one is best for you. You can
+      try the software (without loosing any functionality) and you don't even
+      have to pay for it to continue using it (as is the case with
+      shareware<indexterm>
+          <primary>shareware</primary>
+        </indexterm>). Gentoo is one of those distribution projects. Such
+      distributions get their financial backing (for infrastructure and
+      organisational needs, including juridical support and bureaucratic
+      paperwork) from user donations or sales of pressed DVDs. Companies also
+      tend to support distributions financially or with hardware / bandwidth
+      donations.</para>
+
+      <para>Some distributions are only available when you pay for it. In that
+      case you often pay for the support or for additional software in the
+      distribution which isn't freely available. A popular distribution is
+      RedHat Enterprise Linux, a Linux distribution specifically targetting
+      companies who want to set up Linux servers. You don't just pay for the
+      support, but also for the resources that RedHat has put in the
+      distribution to make it certified for other software (such as Oracle and
+      SAP) so that you can run (with support from the software company) this
+      software on your RHEL installations.</para>
+
+      <para>It is important however to understand that distribution projects
+      only develop a very small part of the software that you install on your
+      system. Most software comes from other free software projects and these
+      projects often don't get gifts from the distribution projects.
+      Nonetheless they do face the same problems as any other (larger) free
+      software project: bureaucratic paperwork, juridical support,
+      infrastructure needs, ... So it comes to no surprise that these projects
+      also have the same income streams as the distribution projects: user
+      gifts, commercial sponsorship and software / support sales.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Development Model</title>
+
+    <para>Due to the nature of free software projects, you'll find that it has
+    quite some differences with closed-source commercial, off the shelf
+    software...</para>
+
+    <section>
+      <title>Multi-Project Development</title>
+
+      <para>One distribution provides an aggregation of software. Each of
+      those software titles is built by a software project which usually
+      differs from the distribution project. Hence, when you install a
+      distribution on your system, it contains software from hundreds of
+      software projects around the world.</para>
+
+      <para>So to obtain support for a flaw you found, or an issue you come
+      across, the first place to seek support would be the distribution, but
+      chances are that the distribution will put the support question
+      <emphasis>upstream</emphasis><indexterm>
+          <primary>upstream</primary>
+        </indexterm>, meaning that it forwards the request to the software
+      project that develops the software you have an issue with.</para>
+    </section>
+
+    <section>
+      <title>Transparent Development</title>
+
+      <para>Free software is usually developed transparently: if you are
+      interested in the development of your favorite software title, you can
+      quickly find out how its development works and how to
+      participate.</para>
+
+      <para>Usually, software projects use a <emphasis>concurrent versioning
+      system</emphasis><indexterm>
+          <primary>concurrent versioning system</primary>
+        </indexterm> such as CVS<indexterm>
+          <primary>CVS</primary>
+        </indexterm> or SVN<indexterm>
+          <primary>SVN</primary>
+        </indexterm> to keep the source code in. Such systems allow for dozens
+      (or even hundreds) of developers to work on the same source code
+      simultaneously and keep track of all changes that have happened (so they
+      can easily be reverted). This isn't just for free software projects -
+      almost all software projects use such a system. However, free software
+      projects usually allow non-developers to see the progress of the
+      development by giving them read-only access to the system. This way, you
+      can track every change to the software personally.</para>
+
+      <para>To discuss the future of the software, or to take software design
+      decisions, most free software projects can't use real-life meetings:
+      their developers are scattered around the world. A solution to this
+      problem are communication systems such as mailing lists, IRC (chat) or
+      forums (Internet or Usenet). Most of these communication systems are
+      also open for non-developers to participate in the discussions, meaning
+      that end users have direct communication with developers.</para>
+
+      <para>The latter has a major advantage: changes requested by the users
+      are directly communicated to the developers so that misinterpretation is
+      less frequent, allowing for projects to update their software more
+      accurate and frequent.</para>
+    </section>
+
+    <section>
+      <title>Fast Release Cycles</title>
+
+      <para>Larger free software projects have hundreds of contributors and
+      several dozens of developers. Those developers are very motivated to
+      work on the software by passion. If they weren't, they wouldn't be
+      working on the software as there usually is no other incentive to work
+      for (such as a nice pay check) although it must be said that there are
+      software projects (and they aren't small in numbers) who have paid
+      developers as well. As a result, the software is quickly progressing and
+      new features are added quickly (some projects even have new features on
+      an almost daily basis).</para>
+
+      <para>To make sure that new features and fixes are tested properly,
+      software development snapshots are communicated to a broad community of
+      testers and stable snapshots are often released to the general public as
+      a new release of the software. Different release types are commonly used
+      in free software environments:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis>nightly snapshots</emphasis><indexterm>
+              <primary>release</primary>
+
+              <secondary>nightly snapshot</secondary>
+            </indexterm> are extracts of the source code at a certain period
+          in time which are built and put online for everyone to use. These
+          releases are automatically generated and are bleeding-edge as they
+          represent the state of the software title only a few moments ago.
+          They are highly experimental and only meant for developers or
+          experienced contributors</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>development releases</emphasis> are intermediate
+          releases, similar to nightly snapshots, but somewhat more
+          coördinated by the developers. They usually have a
+          ChangeLog<indexterm>
+              <primary>ChangeLog</primary>
+            </indexterm> which lists the changes in it since the previous
+          release. Such releases are meant for experienced contributors and
+          testers who don't mind the software to be broken from time to
+          time.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>beta releases</emphasis><indexterm>
+              <primary>release</primary>
+
+              <secondary>beta</secondary>
+            </indexterm> contain a preliminary vision of how the final release
+          will look like. It might not be fully stable or complete but
+          individuals who don't participate in the frequent tests can try and
+          see if the new release would still work for them and contain the
+          fixes they requested. Beta releases are also important for
+          distributions as they can now start developing packages for the
+          software so that they are ready when the final release of the
+          software is made.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>release candidates</emphasis><indexterm>
+              <primary>release</primary>
+
+              <secondary>candidate</secondary>
+            </indexterm> are proposals for final releases. They contain the
+          software such as the developers would like to release it. They now
+          wait for a certain period so that the testers and general public can
+          run their tests to ensure no bugs are in it anymore. New features
+          aren't added to the software now, only bug fixes. When no new (or
+          major) bugs are found, the release candidate is converted to a new
+          release</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>stable release</emphasis><indexterm>
+              <primary>release</primary>
+
+              <secondary>stable</secondary>
+            </indexterm> are the final releases of the entire development
+          process. These releases are now used by the users and distributions
+          and the entire development process can start over.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Stable releases also tend to be released in specific gradations,
+      reflected by their version number. A popular numbering scheme is x.y.z
+      where:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>x is the major version; this version number is only updated
+          when the software has been substantially changed. Often such
+          releases also require all packages that depend on it to be updated
+          as well because they might use features or libraries that are
+          changed.</para>
+        </listitem>
+
+        <listitem>
+          <para>y is the minor version; this version number is updated every
+          time the software has been updated with lots of new features</para>
+        </listitem>
+
+        <listitem>
+          <para>z is the bugfix version; this version number is updated
+          whenever mainly bug fixes have been added to the software</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>As an example I'll list the release dates for the KDE 4.1 release.
+      Since KDE is a complete graphical environment its release cycle is
+      ``slower'' than others. Yet if you compare it with the release cycle of
+      for instance Microsoft Windows its still blazingly fast. Of course, that
+      would be like comparing apples with glass...</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>2008-04-29: KDE 4.1.0 alpha1 is released</para>
+        </listitem>
+
+        <listitem>
+          <para>2008-05-27: KDE 4.1.0 beta1 is released</para>
+        </listitem>
+
+        <listitem>
+          <para>2008-06-24: KDE 4.1.0 beta2 is released</para>
+        </listitem>
+
+        <listitem>
+          <para>2008-07-15: KDE 4.1.0 release candidate is released</para>
+        </listitem>
+
+        <listitem>
+          <para>2008-07-29: KDE 4.1.0 is released</para>
+        </listitem>
+
+        <listitem>
+          <para>2008-09-03: KDE 4.1.1 is released</para>
+        </listitem>
+
+        <listitem>
+          <para>2008-10-03: KDE 4.1.2 is released</para>
+        </listitem>
+
+        <listitem>
+          <para>2008-11-05: KDE 4.1.3 is released</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Just for your information, KDE 4.2 beta 1 is released on November
+      26th, 2008, merely 7 months after KDE 4.1's alpha release.</para>
+    </section>
+
+    <section>
+      <title>Large Documentation Base</title>
+
+      <para>Because the project often can't deliver human, paid support for
+      the software, its success is largely based on the documentation the
+      project delivers. If the accompanying documentation contains all
+      information about the software, experienced or independent users can
+      find all user related answers in the documentation.</para>
+
+      <para>Free software projects usually have high profile documentation,
+      often better than the online available documentation of closed-source
+      off the shelf software. Many larger projects even have all this
+      documentation available in several languages. And if you don't find your
+      answer in the project documentation, chances are that one or more users
+      have written independent guides on the software elsewhere.</para>
+
+      <para>There are many sites on the internet that link to the various
+      documentation resources and the same problem as with free software
+      itself arises: often you have too many resources making it harder to
+      find the correct document to guide you through your end user experience
+      of the software. However, unlike the plethora on software titles around
+      (making it difficult to find the right software for the right job) it is
+      easier for a user to know if documentation is good or not so there is no
+      need for a ``documentation distribution''.</para>
+    </section>
+
+    <section>
+      <title>Software Life Cycle</title>
+
+      <para>If you buy software of an unknown, smaller company, you have the
+      chance that after a number of years, the company doesn't exist anymore
+      or is taken over and doesn't support that software since. Something
+      similar is true with free software: if the project decides that there
+      aren't enough resources to continue the development of the software
+      (usually due to a shortage on developers) it can stop the development of
+      the software, usually resulting in a drop of support from users as
+      well.</para>
+
+      <para>However, unlike the case of the software company, the free
+      software source code remains available to the public. If you desperately
+      need the software to work for you, you can just pick the source code and
+      continue the development of it yourself (or pay others to do it for
+      you). You're also confident that the software will remain free.</para>
+
+      <para>If at any time all the copyright owners of the free software
+      decide that the software falls under a different license which you don't
+      agree after, you can take the sourcecode of the moment right before the
+      copyright holders decided to switch the licenses and continue the
+      development under that license (as that software is still under the
+      original license and not the new one). This process (where a group of
+      developers disagree with the development plans of the software and start
+      a new project based on the same source code) is called
+      <emphasis>forking</emphasis><indexterm>
+          <primary>fork</primary>
+        </indexterm> the project.</para>
+
+      <para>A well known example of such a fork is the creation of the X.org
+      project, a fork of the XFree86 project which at a certain point in time
+      decided to change their license. The license change wasn't the only
+      reason for that fork: some developers were also unhappy with the
+      development policy on new features and the development pace. Both
+      projects are currently still around although X.org is now the most
+      popular one.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Open Standards</title>
+
+    <para>Because so many projects are involved, it is important that each
+    project uses standards as much as possible. Only by complying to open
+    standards can projects easily and efficiently work together. Next are a
+    few important standards or well perceived specifications in the free
+    software world.</para>
+
+    <section>
+      <title id="fhs" xreflabel="Filesystem Hierarchy Standard">Filesystem
+      Hierarchy Standard</title>
+
+      <para>The first standard I discuss is the <emphasis>Filesystem Hierarchy
+      Standard</emphasis><indexterm>
+          <primary>Filesystem Hierarchy Standard</primary>
+        </indexterm>, abbreviated to FHS<indexterm>
+          <primary>FHS</primary>
+        </indexterm>. This standard is used by almost all distributions and
+      discusses the file locations on a Linux file system. One can read the
+      FHS online at <ulink
+      url="http://www.pathname.com/fhs"><uri>http://www.pathname.com/fhs/</uri></ulink>
+      but many other resources describe the FHS layout as well.</para>
+
+      <para>The file system layout for Unix/Linux is quite different from the
+      file system layout as seen from within Microsoft Windows. Instead of
+      marking partitions by a drive letter, Unix/Linux sees a file system as a
+      tree-like structure, starting with a root and building up through
+      directories and files. You could say that the branches in the structure
+      are the directories and the leaves are the files. If you think you have
+      not encountered a Unix/Linux file system before, think again: URLs that
+      you use on the Internet are based upon this structure. For instance, the
+      URL <ulink
+      url="http://www.gentoo.org/doc/en/faq.xml">http://www.gentoo.org/doc/en/faq.xml</ulink>
+      denotes the file called <filename>faq.xml</filename> which can be found
+      on the server of <ulink
+      url="http://www.gentoo.org">www.gentoo.org</ulink>, in the directory
+      <filename>/doc/en</filename>. So, / is the root, "doc" is a branch of
+      this root and "en" is a branch of "doc".</para>
+
+      <para>Distributions that adhere to the FHS allow their Linux users to
+      easily switch between distributions: the file system structure remains
+      the same so navigation between folders, device files ... doesn't change.
+      It also enables independent packagers to create packages for several
+      distributions at once (as long as the distributions use the same package
+      format). But foremost, it allows Linux users of one distribution to help
+      users of other distributions as there isn't actually any difference
+      between their file system layouts.</para>
+
+      <para>The current version of this standard is 2.3, released on January
+      29th, 2004.</para>
+    </section>
+
+    <section>
+      <title>Linux Standard Base</title>
+
+      <para>The <emphasis>Linux Standard Base</emphasis><indexterm>
+          <primary>Linux Standard Base</primary>
+        </indexterm>, or LSB<indexterm>
+          <primary>LSB</primary>
+        </indexterm> sets the layout, binary compatibility, required
+      libraries, required commands and more for a Linux operating system. If a
+      distribution adheres to the LSB standard it can install, run and
+      maintain LSB compliant (software) packages.</para>
+
+      <para>Distributions should adhere to the LSB if they want to ensure that
+      they don't deviate from a good Linux standard. As a consequence, the LSB
+      is an effort to ensure that distributions stay similar with regards to
+      libraries, commands ... or in overall, user experience. It is a good
+      effort to ensure that no fragmentation occurs in the Linux world.</para>
+
+      <para>Because the LSB is a broad standard, it comprises of other
+      standards, including the forementioned FHS but also the <emphasis>Single
+      Unix Specification</emphasis><indexterm>
+          <primary>Single Unix Specification</primary>
+        </indexterm> (SUS<indexterm>
+          <primary>SUS</primary>
+        </indexterm>) which defines how a Unix system should be. However, one
+      cannot say that his Linux operating system is Unix because he would need
+      to certify the OS (which requires serious financial support) and this
+      certification wouldn't last long because the Linux OS changes
+      often.</para>
+
+      <para>One of LSBs' largest advantages is that ISVs (Independent Software
+      Vendors) such as Oracle, IBM, Sybase ... can package their software in
+      an LSB-compatible software package which can then be installed on any
+      LSB-compliant distribution.</para>
+    </section>
+
+    <section>
+      <title>Free Desktop Specifications</title>
+
+      <para>On <uri>http://www.freedesktop.org</uri> you'll find a set of
+      desktop specifications that are well known in the free software
+      community. Although they aren't standards (as freedesktop<indexterm>
+          <primary>freedesktop</primary>
+        </indexterm> is no standards body and the specifications haven't been
+      converted into OASIS or ISO standards) many distributions adhere to
+      them.</para>
+
+      <para>These specifications define how menu entries are created and
+      maintained, where icons should reside, but also how drag and drop
+      between different libraries (most notably Qt<indexterm>
+          <primary>Qt</primary>
+        </indexterm> and GTK+<indexterm>
+          <primary>GTK+</primary>
+        </indexterm>, the graphical libraries for KDE and GNOME) should be
+      made possible.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>What is the difference between GPLv2 and GPLv3?</para>
+      </listitem>
+
+      <listitem>
+        <para>Part of LSBs standard is the ELF or Executable and Linking
+        Format, the binary format for executable, compiled code used by
+        various Linux/Unix distributions. Can you find other operating systems
+        that support the ELF format beyond Linux/Unix?</para>
+      </listitem>
+
+      <listitem>
+        <para>Some people see fast releases as a weakness in the free software
+        community: users are "forced" to upgrade their software more often and
+        even though it is free, it still takes time (and sometimes headaches)
+        to upgrade the software this often. Some distributions tend to help
+        those users by offering stable (both in stability and in version
+        releases) software only. How is this possible?</para>
+      </listitem>
+
+      <listitem>
+        <para>How is it possible that many distributions allow you to upgrade
+        to the latest version without needing an installation CD or
+        reinstallation from scratch?</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Further Resources</title>
+
+    <itemizedlist>
+      <listitem>
+        <para><ulink
+        url="http://www.catb.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">The
+        Cathedral and The Bazaar</ulink>, by Eric Steven Raymond - an essay on
+        two different development models used in the Free Software
+        community.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.ffii.org">Foundation for a Free
+        Information Infrastructure</ulink>, a NPO dedicated to establishing a
+        free market in information technology.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink
+        url="http://www.gnu.org/philosophy/fighting-software-patents.htmlhttp://www.gnu.org/philosophy/fighting-software-patents.html">Fighting
+        Software Patents</ulink>, by Richard Stallman - GNUs vision on
+        software patents.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

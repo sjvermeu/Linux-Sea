@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Working with Processes</title>
+
+  <section>
+    <title>Process Trees</title>
+
+    <section>
+      <title>Parent and Child Relationships</title>
+
+      <para>Each Linux (and Unix) process has a parent (except for the top
+      process) and can have one or more childs. The relationship is crafted
+      when a process is launched: the process that launched the new process
+      becomes the parent of that process. As a user, you might not know what
+      process you are currently working in. Every program is a process, being
+      it the shell you're typing the commands in or the graphical environment
+      you're working with.</para>
+
+      <para>For instance, a user who has a terminal open can have the
+      following process structure for this terminal:</para>
+
+      <programlisting>init
+`- xterm
+   `- bash</programlisting>
+
+      <para>You can obtain a tree of running processes using the
+      <command>pstree</command> command:</para>
+
+      <programlisting>$ <command>pstree</command>
+init-+-acpid
+     |-4*[agetty]
+     |-agiletrack---java---19*[{java}]
+     |-apache2---8*[apache2]
+     |-bonobo-activati---{bonobo-activati}
+     |-5*[dbus-daemon]
+     |-dhcpcd
+     |-gconfd-2
+     |-gnome-keyring-d
+     |-gnome-power-man
+     |-gnome-screensav
+     |-gnome-settings----{gnome-settings-}
+     |-4*[gnome-vfs-daemo]
+     |-gnome-volume-ma
+     |-gpg-agent
+     |-hald---hald-runner-+-hald-addon-acpi
+     |                    |-hald-addon-cpuf
+     |                    `-hald-addon-stor
+     |-java---15*[{java}]
+     |-login---bash---startx---xinit-+-X
+     |                               `-gnome-session-+-gnome-panel
+     |                                               |-metacity
+     |                                               |-nautilus
+     |                                               `-{gnome-session}
+[...]</programlisting>
+
+      <para>Now, not every process launched immediately becomes a child of the
+      process where it was launched from. Some processes might immediately
+      become child of the root process, most often called
+      <command>init</command><indexterm>
+          <primary>init</primary>
+        </indexterm>. The root process is the first process launched by the
+      kernel when it boots up. It is responsible for running the necessary
+      startup services and prepare the system for its duties.</para>
+
+      <para>Processes that become child of the root process usually do this
+      because they don't want to be terminated when their parent process exits
+      or dies: when this happens, the child processes become orphaned and the
+      init process will terminate these processes as well. So, becoming a
+      child of the init process will ensure that the process remains
+      available. In the above example you'll find a good example: the
+      <command>dhcpcd</command> command governs the IP address of the network
+      interface through the DHCP protocol. If the process didn't continuously
+      run, your IP address would be dismissed after a few minutes (or
+      hours).</para>
+    </section>
+
+    <section>
+      <title>Process Ownership</title>
+
+      <para>When a process is launched (usually through a command the user
+      entered) it, by default, obtains the user id and group id of its parent
+      process. When a user logs on to the system, the <command>login</command>
+      process launches a shell process with the user id and group id of the
+      user that logged on, so every command the user launches takes the user
+      id and group id of that user, since the parent process of every launched
+      command is either the beforementioned shell process or one of its child
+      processes.</para>
+
+      <para>Some processes however explicitly ask the Linux kernel to use a
+      different user id and group id. This is accomplished by setting the
+      <emphasis>setuid</emphasis> or <emphasis>setgid</emphasis> flags on the
+      process file itself. With <emphasis>setuid</emphasis><indexterm>
+          <primary>setuid</primary>
+        </indexterm> (set user id) and <emphasis>setgid</emphasis><indexterm>
+          <primary>setgid</primary>
+        </indexterm> (set group id) the owner of the process is the owner of
+      the file rather than the user that launched the process.</para>
+
+      <para>An example is the <command>passwd</command> command, used to
+      change the password of a user:</para>
+
+      <programlisting>$ <command>ls -l /bin/passwd</command>
+-rws--x--x 1 root root  28956 Jul 15  2007 passwd</programlisting>
+
+      <para>As you can see, the command file itself is owned by root. It also
+      has the setuid bit set (see the s in <filename>-rws--x--x</filename>).
+      If a user runs the <command>passwd</command> command, the command itself
+      has root privileges rather than the privileges for the user. For the
+      <command>passwd</command> command, this is necessary because it needs to
+      update the password files (<filename>/etc/passwd</filename> and
+      <filename>/etc/shadow</filename>) which are only writeable by the root
+      user (the <filename>/etc/shadow</filename> file is not even readable for
+      regular users).</para>
+    </section>
+
+    <section>
+      <title>Viewing Process Information</title>
+
+      <para>Various tools exist to obtain process information. The next few
+      chapters give a nice overview of these tools...</para>
+
+      <section>
+        <title>Process Lists</title>
+
+        <para>The main program to create a process list is the
+        <command>ps</command> command. If ran inside a shell, it shows the
+        processes that are running inside the session (meaning the processes
+        launched from the shell, including the shell itself):</para>
+
+        <programlisting>$ <command>ps</command>
+  PID TTY          TIME CMD
+24064 pts/3    00:00:00 bash
+24116 pts/3    00:00:00 ps</programlisting>
+
+        <para>The columns shown are:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>PID - process id of the process</para>
+          </listitem>
+
+          <listitem>
+            <para>TTY - controlling terminal (this is Unix inheritage where
+            users were logged on through terminals, pts is a
+            pseudoterminal)</para>
+          </listitem>
+
+          <listitem>
+            <para>TIME - the execution time the process took. In the above
+            example, both commands hardly took any CPU time on the system
+            (bash is the shell, which is most of the time waiting for input so
+            not consuming any CPU time, the other one is ps which gave its
+            results in less than a second)</para>
+          </listitem>
+
+          <listitem>
+            <para>CMD - the process name itself (the command)</para>
+          </listitem>
+        </orderedlist>
+
+        <para>Of course, several arguments to ps exist which change its
+        behavior. For instance, with <command>ps -e</command> you see the same
+        information, but for all processes runnin on the system. With
+        <command>ps -f</command> a few more columns are added, including the
+        parent process id and the time the process started.</para>
+
+        <para>You can also limit the processes to see based on the user
+        (<command>ps -u username</command>), command name (<command>ps -C
+        command</command>), really running processes (taking cpu time at the
+        moment: <command>ps -r</command>) and more. For more information, see
+        the ps manual page.</para>
+
+        <para>Another command that is often used to obtain process list
+        information is the <command>top</command> program. The top command is
+        an interactive command that shows you a process list, sorted by one or
+        more values (default is CPU usage) and refreshes this list every 5
+        seconds (this is of course configurable):</para>
+
+        <programlisting>top - 10:19:47 up 6 days,  6:41,  5 users,  load average: 1.00, 1.27, 0.92
+Tasks: 120 total,   1 running, 119 sleeping,   0 stopped,   0 zombie
+Cpu(s):  3.2%us,  0.7%sy,  0.0%ni, 95.6%id,  0.3%wa,  0.1%hi,  0.0%si,  0.0%st
+Mem:   1545408k total,  1490968k used,    54440k free,   177060k buffers
+Swap:  2008084k total,      132k used,  2007952k free,   776060k cached
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+ 4458 haldaemo  16   0  5488 3772 2388 S  2.0  0.2   4:23.69 hald
+27255 swift     15   0  2272 1064  768 R  2.0  0.1   0:00.01 top
+    1 root      15   0  1612  544  468 S  0.0  0.0   0:00.48 init
+    2 root      12  -5     0    0    0 S  0.0  0.0   0:00.00 kthreadd
+    3 root      39  19     0    0    0 S  0.0  0.0   0:00.45 ksoftirqd/0
+    4 root      10  -5     0    0    0 S  0.0  0.0   0:01.95 events/0
+    5 root      10  -5     0    0    0 S  0.0  0.0   0:00.00 khelper
+   60 root      10  -5     0    0    0 S  0.0  0.0   0:00.00 kblockd/0
+   61 root      11  -5     0    0    0 S  0.0  0.0   0:25.77 kacpid
+   62 root      11  -5     0    0    0 S  0.0  0.0   0:09.60 kacpi_notify
+  171 root      10  -5     0    0    0 S  0.0  0.0   0:00.00 ata/0
+  172 root      10  -5     0    0    0 S  0.0  0.0   0:00.00 ata_aux
+  173 root      10  -5     0    0    0 S  0.0  0.0   0:00.00 ksuspend_usbd
+  176 root      10  -5     0    0    0 S  0.0  0.0   0:00.00 khubd
+  178 root      10  -5     0    0    0 S  0.0  0.0   0:00.01 kseriod
+  196 root      10  -5     0    0    0 S  0.0  0.0   0:01.13 kswapd0
+  197 root      20  -5     0    0    0 S  0.0  0.0   0:00.00 aio/0</programlisting>
+
+        <para>There is plenty of information in the top screen...</para>
+
+        <programlisting>top - 10:19:47 up 6 days,  6:41,  5 users,  load average: 1.00, 1.27, 0.92</programlisting>
+
+        <para>The first line shows you the uptime of the system (this system
+        is running for 6 days, 6 hours and 41 minutes), the number of logged
+        on users (beware, this is not the number of different users - if a
+        user launches 3 xterms inside a graphical session he will be shown as
+        four logged on users) and the load average.</para>
+
+        <para>The load average is something many people misinterprete. The
+        load average shows the number of processes that were running or asking
+        for CPU time during the given interval. In the above example, this
+        means that:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>in the last minute, an average of 1 process was asking for
+            or using CPU time</para>
+          </listitem>
+
+          <listitem>
+            <para>in the last 5 minutes, an average of 1.27 processes were
+            asking for or using CPU time</para>
+          </listitem>
+
+          <listitem>
+            <para>in the last 15 minutes, an average of 0.92 processes were
+            asking for or using CPU time</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>For a single CPU system, you most likely don't want a number
+        higher than 1 in the long run (for instance, the 15-minute span). The
+        more CPUs, the higher the load average can become.</para>
+
+        <programlisting>Tasks: 120 total,   1 running, 119 sleeping,   0 stopped,   0 zombie</programlisting>
+
+        <para>The number of processes running on this system (120) of which
+        119 are sleeping (not performing any duties), 1 running (the top
+        command itself), 0 stopped (a process in the stopped state can still
+        be revived but is, at this moment, not accepting input or performing
+        any tasks) and 0 zombie.</para>
+
+        <para>A zombie process is not really a real process: the process
+        itself has already finished, but its parent process doesn't know this
+        yet, so the kernel is keeping some process information until the
+        parent process asks for the child process state.</para>
+
+        <programlisting>Cpu(s):  3.2%us,  0.7%sy,  0.0%ni, 95.6%id,  0.3%wa,  0.1%hi,  0.0%si,  0.0%st</programlisting>
+
+        <para>CPU state information, showing the CPU usage percentages: user
+        processes (us), system/kernel CPU usage (sy), niced processes (ni),
+        idle CPU (id), waiting for I/O (wa), hardware interrupts (hi),
+        software interrupts (si) and virtual cpu stealing (st).</para>
+
+        <para>Most of the states are self-explanatory. The niced processes is
+        for processes the user reniced and is a subset of the user processes
+        percentage. The virtual CPU stealing is the percentage of time a
+        virtual CPU waits for a real CPU and is not interesting for regular
+        Linux/Unix users (as they don't work with virtualization).</para>
+
+        <programlisting>Mem:   1545408k total,  1490968k used,    54440k free,   177060k buffers
+Swap:  2008084k total,      132k used,  2007952k free,   776060k cached</programlisting>
+
+        <para>Memory usage: of the 1.5 Gbyte of memory available, 1.45Gbyte is
+        in use and 54Mbyte is free. Of the used memory, 177 Mbyte is used by
+        the kernel for internal buffers. Also, 776 Mbyte of the used memory
+        actually consists out of cached data which can potentially be cleared
+        if a process would require more memory than currently
+        available.</para>
+
+        <para>The swap space itself is hardly used: of the 2Gbyte of swap
+        space defined, only 132 kbyte is in use.</para>
+
+        <programlisting>  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+ 4458 haldaemo  16   0  5488 3772 2388 S  2.0  0.2   4:23.69 hald
+...</programlisting>
+
+        <para>The rest of the screen gives the process listing itself. The
+        columns shown are:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Process ID (PID) of the process</para>
+          </listitem>
+
+          <listitem>
+            <para>Username (USER) showing the owner of the process</para>
+          </listitem>
+
+          <listitem>
+            <para>Priority value (PR) of the process (the higher the value,
+            the higher the priority). Priorities are exclusively determined by
+            the Linux kernel.</para>
+          </listitem>
+
+          <listitem>
+            <para>Nice value (NI) of the process (is a user sets a nice value,
+            or renices a tool, it tells the Linux kernel how "nice" the
+            program is - the higher the nice value, the nicer it is so
+            (generally) the lower the priority should be).</para>
+          </listitem>
+
+          <listitem>
+            <para>The virtual memory (VIRT) the process is occupying. This
+            includes the memory it is actually using, mapped memory from
+            devices, files mapped into memory and shared memory.</para>
+          </listitem>
+
+          <listitem>
+            <para>The resident (really used) memory (RES) the process is
+            using.</para>
+          </listitem>
+
+          <listitem>
+            <para>The amount of possibly shared memory (SHR). It is "possibly"
+            because the memory is shareable, but not automatically used by
+            others already.</para>
+          </listitem>
+
+          <listitem>
+            <para>Process state (S), which can be any of S (sleeping), R
+            (running), D (uninterruptible sleep), T (traced or stopped) or Z
+            (zombie).</para>
+          </listitem>
+
+          <listitem>
+            <para>CPU usage (%CPU)</para>
+          </listitem>
+
+          <listitem>
+            <para>Memory usage (%MEM - based on RES)</para>
+          </listitem>
+
+          <listitem>
+            <para>Runtime (TIME+)</para>
+          </listitem>
+
+          <listitem>
+            <para>Command (COMMAND)</para>
+          </listitem>
+        </orderedlist>
+      </section>
+
+      <section>
+        <title>Process Information</title>
+
+        <para>You can also be interested in more detailed process information
+        such as the files (or connections) the process has currently
+        open.</para>
+
+        <para>With <command>lsof</command><indexterm>
+            <primary>lsof</primary>
+          </indexterm> you can view this information. Just give the process id
+        with it (lsof -p PID) and you get all this information. However, lsof
+        can do much more. For instance, with lsof you can see what process is
+        listening on a particular port:</para>
+
+        <programlisting># <command>lsof -i :443</command>
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE NODE NAME
+apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisting>
+
+        <para>Another tool that can do the same is
+        <command>fuser</command><indexterm>
+            <primary>fuser</primary>
+          </indexterm>:</para>
+
+        <programlisting># <command>fuser -v 443/tcp</command>
+                     USER        PID ACCESS COMMAND
+443/tcp:             root       4346 F.... apache2</programlisting>
+
+        <para>The same can be accomplished with files. For instance, to see
+        what processes are using a particular file with fuser, just give the
+        filename (<command>fuser -v /path/to/file</command>).</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Backgrounding Processes</title>
+
+      <para>Processes can be started in the background, either because the
+      process immediately detaches it from the running session (daemons) or
+      because the user asks to run it in the background.</para>
+
+      <para>Daemons<indexterm>
+          <primary>daemon</primary>
+        </indexterm> are processes that do not stay in the running session.
+      The moment you launch a daemon process, you immediately get your prompt
+      back as if the process has finished. However, this isn't true: the
+      process is still running, but it is running in the background. Most
+      daemons do not have the possibility to reattach to the session. Wether
+      or not a process is a daemon depends on the process itself as this is a
+      pure programmatical decision.</para>
+
+      <para>Backgrounded processes however are processes that stay in the
+      running session, but do not "lock" the input devices (keyboard). As a
+      result, the user gets the prompt back and can continue launching other
+      processes or do other tasks. To background a process, a user can add a
+      "&amp;" sign at the end of the command line. For instance, to put the
+      command "eix-update" in the background:</para>
+
+      <programlisting># <command>eix-update &amp;</command></programlisting>
+
+      <para>You can see what processes are running in your session in the
+      background using the <command>jobs</command><indexterm>
+          <primary>jobs</primary>
+        </indexterm> command:</para>
+
+      <programlisting># <command>jobs</command>
+[1]- Running           eix-update &amp;</programlisting>
+
+      <para>You can put a job back into the foreground using the
+      <command>fg</command><indexterm>
+          <primary>fg</primary>
+        </indexterm> command. If you just enter fg, it'll put the last job put
+      in the background back. If you want to select a different job, use the
+      number that jobs returned. For instance, to return the 3rd job back to
+      the foreground:</para>
+
+      <programlisting># <command>fg %3</command></programlisting>
+
+      <para>If you want to put a process that you are running in the
+      background, use Ctrl-Z to put the process in the background. Ctrl-Z also
+      pauzes the process, so if you want to continue the process in the
+      background, enter "<command>bg</command>" afterwards as well:</para>
+
+      <programlisting># <command>eix-update</command>
+(...)
+(Press <command>Ctrl-Z</command>)
+[1]+ Stopped         eix-update
+# <command>bg</command>
+[1]+ eix-update &amp;</programlisting>
+
+      <para>There are a few things you must keep in mind when using
+      jobs:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>A (non-daemon) process is attached to a running session. The
+          moment you terminate your session, all jobs that were running in
+          that session (both foreground and background processes) are
+          terminated as well.</para>
+        </listitem>
+
+        <listitem>
+          <para>Although processes can be ran in the background, their output
+          is still forwarded to your terminal. If you do not want this, you
+          can redirect the output of a command using the &gt; redirect. For
+          instance, to redirect the standard output (default - 1) of
+          update-eix to a logfile and do the same for the error output
+          (2):</para>
+
+          <programlisting># <command>eix-update &gt; /var/tmp/update-eix.log 2&gt;&amp;1 &amp;</command></programlisting>
+
+          <para>Another popular redirect is to ignore output
+          completely:</para>
+
+          <programlisting># <command>eix-update &gt; /dev/null 2&gt;&amp;1 &amp;</command></programlisting>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+
+  <section>
+    <title>Process Behavior</title>
+
+    <para>Programs are most often launched when a user selects a tool or
+    executes a command. They can also be invoked automatically by a running
+    program or by the Linux kernel (although the init tool is probably the
+    only one ever invoked by the kernel autonomously).</para>
+
+    <para>The next few sections give pointers on process behavior and how you
+    can modify it (if appropriate).</para>
+
+    <section>
+      <title>Command Return Codes</title>
+
+      <para>The simplest example of launching a program is a simple command
+      you enter in the command line. Once the program has finished, it leaves
+      behind its <emphasis>return code</emphasis><indexterm>
+          <primary>return code</primary>
+        </indexterm> (or <emphasis>exit code</emphasis><indexterm>
+          <primary>exit code</primary>
+        </indexterm>) informing you how well it did its job.</para>
+
+      <para>A returncode is always an integer in the range of 0 to 255. Some
+      programs might attempt to return a code larger than 255 (or even
+      negative). Although not technically restricted, this is not a good idea
+      as some applications only expect a returncode between 0 to 255 and might
+      even "wrap" return codes to this range. If a program would ever have a
+      return code of 512 for instance, it might be mapped into 0.</para>
+
+      <para>Every program that has succesfully finished its job will (or
+      should) return code 0. A non-zero return code means that the application
+      has failed to finish its tasks (completely).</para>
+
+      <para>Inside any POSIX-compliant shell (POSIX has a standard for Unix
+      environments, including how a shell should function) such as
+      <command>ksh</command> or <command>bash</command> you can obtain the
+      return code of the last command using <filename>$?</filename>:</para>
+
+      <programlisting>$ <command>ls -l</command>
+...
+$ <command>echo $?</command>
+0
+$ <command>ls -z</command>
+ls: invalid option -- z
+Try `ls --help' for more information
+$ <command>echo $?</command>
+2</programlisting>
+
+      <para>These return codes are important as they are the means to
+      investigate if all commands went succesfully or not, allowing you to
+      write quite intelligent shell scripts which trigger several commands and
+      include logic to handle command failures.</para>
+    </section>
+
+    <section>
+      <title>Priority and Niceness</title>
+
+      <para>On Linux, you can't set the priority of a process yourself: the
+      Linux kernel does that for you, based on information about the process
+      itself, including but not limited to if the process is I/O-bound (as
+      such programs are most of the time user-interactive), its previous CPU
+      consumation, possible locks it is holding and more.</para>
+
+      <para>You can, however, inform the kernel on what you think the process'
+      priority ought to be. For this, you can set a
+      <emphasis>nice</emphasis><indexterm>
+          <primary>nice value</primary>
+        </indexterm> value for the application. The value, in the range of -20
+      to 10, informs the Linux kernel about how nice the program should be
+      towards the rest of the system. Negative numbers (-1 to -20) are not
+      that nice; the Linux kernel will thus assign those a larger time slice
+      and you'll notice that such programs usually get a higher priority.
+      However, only the root user can assign a negative nice number to a
+      program. Positive numbers (1 to 19) make a process more nice to the
+      system; they will receive a lower time slice and usually a lower
+      priority.</para>
+
+      <para>Thanks to this system you can launch long-lasting, non-interactive
+      commands in the background without worrying about the inpact to your
+      interactive user experience. The <command>nice</command><indexterm>
+          <primary>nice</primary>
+
+          <secondary>tool</secondary>
+        </indexterm> tool allows you to start up a command with a particular
+      nice value.</para>
+
+      <para>For instance, to start a Gentoo system upgrade with the highest
+      possible nice value (as this is something you usually want to perform in
+      the background):</para>
+
+      <programlisting># <command>nice -n 19 emerge -uDN world</command></programlisting>
+
+      <para>If a process is already running, you can change its nice value
+      with the renice tool (for instance, to increase the nice value of the
+      process with process id 219 with 5):</para>
+
+      <programlisting># <command>renice +5 219</command></programlisting>
+    </section>
+
+    <section>
+      <title>Sending Signals (and Killing Processes)</title>
+
+      <para>Some processes allow you to send certain signals to them. A signal
+      is a simple integer between 0 and 64; each of them is also given a
+      particular name. The <command>kill</command><indexterm>
+          <primary>kill</primary>
+        </indexterm> tool can be used to send signals to processes, but also
+      to obtain a list of available signals:</para>
+
+      <programlisting>$ <command>kill -l</command>
+ 1) SIGHUP       2) SIGINT        3) SIGQUIT      4) SIGILL
+ 5) SIGTRAP      6) SIGABRT       7) SIGBUS       8) SIGFPE
+ 9) SIGKILL     10) SIGUSR1      11) SIGSEGV     12) SIGUSR2
+13) SIGPIPE     14) SIGALRM      15) SIGTERM     16) SIGSTKFLT
+17) SIGCHLD     18) SIGCONT      19) SIGSTOP     20) SIGTSTP
+21) SIGTTIN     22) SIGTTOU      23) SIGURG      24) SIGXCPU
+25) SIGXFSZ     26) SIGVTALRM    27) SIGPROF     28) SIGWINCH
+29) SIGIO       30) SIGPWR       31) SIGSYS      34) SIGRTMIN
+35) SIGRTMIN+1  36) SIGRTMIN+2   37) SIGRTMIN+3  38) SIGRTMIN+4
+39) SIGRTMIN+5  40) SIGRTMIN+6   41) SIGRTMIN+7  42) SIGRTMIN+8
+43) SIGRTMIN+9  44) SIGRTMIN+10  45) SIGRTMIN+11 46) SIGRTMIN+12
+47) SIGRTMIN+13 48) SIGRTMIN+14  49) SIGRTMIN+15 50) SIGRTMAX-14
+51) SIGRTMAX-13 52) SIGRTMAX-12  53) SIGRTMAX-11 54) SIGRTMAX-10
+55) SIGRTMAX-9  56) SIGRTMAX-8   57) SIGRTMAX-7  58) SIGRTMAX-6
+59) SIGRTMAX-5  60) SIGRTMAX-4   61) SIGRTMAX-3  62) SIGRTMAX-2
+63) SIGRTMAX-1  64) SIGRTMAX</programlisting>
+
+      <para>Its name might already inform you about its usual task: killing
+      processes. By default, if you want to terminate a process but you can't
+      commicate with the process directly (like hitting "Quit" or "Exit"), you
+      should send a signal 15 (SIGTERM<indexterm>
+          <primary>SIGTERM</primary>
+        </indexterm>) to the program. This is also what
+      <command>kill</command> does by default.</para>
+
+      <para>However, if the process doesn't listen to this signal or has gone
+      haywire, you can use the SIGKILL signal. The SIGKILL<indexterm>
+          <primary>SIGKILL</primary>
+        </indexterm> signal doesn't actually reach the application (ever) but
+      immediately terminates the process. Its number is 9:</para>
+
+      <programlisting>$ <command>kill -9 219</command></programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>How do you obtain the process ID of a running process?</para>
+      </listitem>
+
+      <listitem>
+        <para>How can you run a process in background and still be able to
+        terminate the session without terminating the process (without the
+        process being a daemon)?</para>
+      </listitem>
+
+      <listitem>
+        <para>What is a &lt;defunct&gt; process?</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Further Resources</title>
+
+    <itemizedlist>
+      <listitem>
+        <para><ulink
+        url="http://www.gnu.org/software/bash/manual/bashref.html#Redirections">Bash
+        redirection</ulink></para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

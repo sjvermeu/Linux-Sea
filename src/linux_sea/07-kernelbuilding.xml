@@ -1,0 +1,2754 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Configuring a Linux Kernel</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The Linux kernel is responsible for the majority of the hardware
+    support. It contains the drivers to access and communicate with hardware.
+    However, there are also quite some user-space tools required in order to
+    succesfully work with the hardware. For instance, support for printing
+    inside the kernel is limited to support to the LPT printer port or USB,
+    but the printer drivers themselves are user-space.</para>
+
+    <para>Another example are scanners: inside the kernel, you need either USB
+    or SCSI support, but there are no drivers for scanners themselves. Those
+    are available in the user-space.</para>
+
+    <para>Terms like <emphasis>user-space</emphasis><indexterm>
+        <primary>user-space</primary>
+      </indexterm> (everything running as a regular process or data found in
+    non-kernel-reserved memory) and
+    <emphasis>kernel-space</emphasis><indexterm>
+        <primary>kernel-space</primary>
+      </indexterm> (in-kernel tasks or data in kernel-reserved memory) are not
+    that frequently used in documentation about applications, but for drivers,
+    the distinction is quite important. Everything in kernel-space can have
+    quite an impact to performance (it must be fully tuned and proofread by
+    various developers before it is accepted). As such, if particular drivers
+    can be made part of a user-space design (this is not often possible) it is
+    preferred to make them user-space drivers.</para>
+
+    <para>To support all the hardware in your system well, you first need to
+    identify what hardware is inside your system. Then, you need to find the
+    correct configurations inside the Linux kernel that match against the
+    hardware. Before building the Linux kernel, you also need to include
+    support for the non-hardware related features you need (such as filesystem
+    support). Once the kernel is built, you can store it to disk and update
+    the boot loader to use the new kernel. Finally, you install and configure
+    the user-space tools needed to deal with your hardware.</para>
+  </section>
+
+  <section>
+    <title>Obtaining Hardware Information</title>
+
+    <section>
+      <title>Introduction</title>
+
+      <para>If you don't know what hardware is inside your system (and I'd be
+      very surprised if you know all components, including vendor and type of
+      your system) you will be glad to know Linux has quite some interesting
+      tools to tell you what it found. The results of these tools are
+      regardless of wether or not your kernel has support for these devices
+      (although some small support is required, but most, if not all default
+      kernels have this included).</para>
+    </section>
+
+    <section>
+      <title>Device Information</title>
+
+      <section>
+        <title>Processor</title>
+
+        <para>Information regarding the processor(s) in your system can be
+        found inside the <filename>/proc/cpuinfo</filename><indexterm>
+            <primary>cpuinfo</primary>
+          </indexterm> file. This file is not a real file but a representation
+        of what the Linux kernel finds in your system. In effect, every file
+        in the <filename>/proc</filename> file system is a representation of
+        the kernel's information and every time you read it it gives you the
+        last known state.</para>
+
+        <programlisting>$ <command>cat /proc/cpuinfo</command>
+processor    : 0
+vendor_id    : GenuineIntel
+cpu family   : 6
+model        : 13
+model name   : Intel(R) Pentium(R) M processor 1.73GHz
+stepping     : 8
+cpu MHz      : 800.000
+cache size   : 2048 KB
+fdiv_bug     : no
+hlt_bug      : no
+f00f_bug     : no
+coma_bug     : no
+fpu          : yes
+fpu_exception: yes
+cpuid level  : 2
+wp           : yes
+flags        : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge
+               mca cmov pat clflush dts acpi mmx fxsr sse sse2 ss
+               tm pbe nx est tm2
+bogomips     : 1597.26
+clflush size : 64</programlisting>
+
+        <para>The information might overwhelm you - don't let it. The most
+        interesting information here is the model name as it effectively tells
+        you what brand and type of CPU this is. If you have multiple CPUs
+        inside your system (or multiple cores) then you'll find multiple
+        entries - one for each CPU / core.</para>
+      </section>
+
+      <section>
+        <title>Memory</title>
+
+        <para>Similar to CPU information, you can view the information from
+        the <filename>/proc/meminfo</filename><indexterm>
+            <primary>meminfo</primary>
+          </indexterm> file to obtain information regarding your memory. Or,
+        you can use the <command>free</command> command to obtain the current
+        memory usage statistics - including the total amount of memory your
+        system has.</para>
+      </section>
+
+      <section>
+        <title>PCI Devices</title>
+
+        <para>PCI device information can be obtained using the
+        <command>lspci</command><indexterm>
+            <primary>lspci</primary>
+          </indexterm> tool. Just entering lspci already gives you a nice
+        overview of the PCI devices found inside your system:</para>
+
+        <programlisting># lspci
+00:00.0 Host bridge: Intel Corporation Mobile 915GM/PM/GMS/910GML 
+        Express Processor to DRAM Controller (rev 03)
+00:02.0 VGA compatible controller: Intel Corporation Mobile 
+        915GM/GMS/910GML Express Graphics Controller (rev 03)
+00:02.1 Display controller: Intel Corporation Mobile 915GM/GMS/910GML
+        Express Graphics Controller (rev 03)
+00:1c.0 PCI bridge: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6
+        Family) PCI Express Port 1 (rev 04)
+00:1c.1 PCI bridge: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6
+        Family) PCI Express Port 2 (rev 04)
+00:1d.0 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
+        (ICH6 Family) USB UHCI #1 (rev 04)
+00:1d.1 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
+        (ICH6 Family) USB UHCI #2 (rev 04)
+00:1d.2 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
+        (ICH6 Family) USB UHCI #3 (rev 04)
+00:1d.3 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
+        (ICH6 Family) USB UHCI #4 (rev 04)
+00:1d.7 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
+        (ICH6 Family) USB2 EHCI Controller (rev 04)
+00:1e.0 PCI bridge: Intel Corporation 82801 Mobile PCI Bridge (rev d4)
+00:1e.2 Multimedia audio controller: Intel Corporation
+        82801FB/FBM/FR/FW/FRW (ICH6 Family) AC'97 Audio Controller
+       (rev 04)
+00:1e.3 Modem: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family)
+        AC'97 Modem Controller (rev 04)
+00:1f.0 ISA bridge: Intel Corporation 82801FBM (ICH6M) LPC Interface
+        Bridge (rev 04)
+00:1f.1 IDE interface: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 
+        Family) IDE Controller (rev 04)
+00:1f.2 SATA controller: Intel Corporation 82801FBM (ICH6M) SATA
+        Controller (rev 04)
+00:1f.3 SMBus: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) 
+        SMBus Controller (rev 04)
+06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL-8169 
+        Gigabit Ethernet (rev 10)
+06:04.0 Network controller: Intel Corporation PRO/Wireless 2200BG
+        Network Connection (rev 05)
+06:09.0 CardBus bridge: Texas Instruments PCIxx21/x515 Cardbus
+        Controller
+06:09.2 FireWire (IEEE 1394): Texas Instruments OHCI Compliant IEEE 1394
+        Host Controller
+06:09.3 Mass storage controller: Texas Instruments PCIxx21 Integrated
+        FlashMedia Controller
+06:09.4 SD Host controller: Texas Instruments
+        PCI6411/6421/6611/6621/7411/7421/7611/7621 Secure Digital Controller</programlisting>
+
+        <para>This gives all the information you might need to know about your
+        PCI devices. For instance, to find out what graphical controller you
+        have (video card), look for the "VGA compatible controller"
+        entry.</para>
+      </section>
+
+      <section>
+        <title>USB Devices</title>
+
+        <para>Similar to the <command>lspci</command> tool, there is also an
+        <command>lsusb</command><indexterm>
+            <primary>lsusb</primary>
+          </indexterm> tool showing you which USB devices are attached to your
+        system:</para>
+
+        <programlisting># <command>lsusb</command>
+Bus 001 Device 001: ID 1d6b:0002  
+Bus 005 Device 001: ID 1d6b:0001  
+Bus 004 Device 001: ID 1d6b:0001  
+Bus 003 Device 002: ID 04b0:012e Nikon Corp. Coolpix 5600 (ptp)
+Bus 003 Device 001: ID 1d6b:0001  
+Bus 002 Device 001: ID 1d6b:0001</programlisting>
+
+        <para>To find out which device file is used, check the dmesg output
+        (dmesg returns the kernel message output):</para>
+
+        <programlisting># <command>dmesg | tail</command>
+sd 4:0:0:0: [sdb] Mode Sense: 18 00 00 08
+sd 4:0:0:0: [sdb] Assuming drive cache: write through
+sd 4:0:0:0: [sdb] 1990656 512-byte hardware sectors: (1.01 GB/972 MiB)
+sd 4:0:0:0: [sdb] Write Protect is off
+sd 4:0:0:0: [sdb] Mode Sense: 18 00 00 08
+sd 4:0:0:0: [sdb] Assuming drive cache: write through
+ sdb: sdb1
+sd 4:0:0:0: [sdb] Attached SCSI removable disk
+sd 4:0:0:0: Attached scsi generic sg1 type 0
+usb-storage: device scan complete</programlisting>
+
+        <para>In this example, the device is known as /dev/sdb and has one
+        partition (/dev/sdb1).</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title id="configuringkernel">Configuring a Linux Kernel</title>
+
+    <para>There are two ways you can configure a Linux kernel in Gentoo Linux.
+    One is the easiest method, yet not 100% reliable regarding supported
+    hardware: it is a script Gentoo provides that builds a Linux kernel with a
+    generic configuration and lots of loadable modules to include as much
+    hardware support as possible. It works well for standard setups (both
+    hardware and system setup) but might fail for more complex systems. The
+    second method is the most reliable - you configure everything manually
+    yourself. If it fails, it's most likely your own fault.</para>
+
+    <para>But before we focus on these methods, a small introduction to the
+    Linux kernel modules administration-wise.</para>
+
+    <section>
+      <title>Kernel Modules</title>
+
+      <para>The Linux kernel is a file loaded into memory by the boot loader.
+      However, Linux supports loadable kernel modules.</para>
+
+      <para>A <emphasis>Linux kernel module</emphasis><indexterm>
+          <primary>kernel module</primary>
+        </indexterm><indexterm>
+          <primary>linux kernel module</primary>
+
+          <see>kernel module</see>
+        </indexterm> is a part of the Linux kernel which can be dynamically
+      loaded and unloaded from memory. As such, it is possible to build a
+      kernel which supports certain hardware, but doesn't load support for
+      these modules until absolutely necessary.</para>
+
+      <para>Kernel modules are often used for detachable devices (such as USB
+      devices) but also for distributions who want to provide a kernel to
+      their users regardless of the hardware these users own: at bootup, the
+      distribution will load the modules needed to support the hardware found
+      and leave all other modules untouched.</para>
+
+      <para>It is important to understand though that these modules are read
+      from somewhere - you can't put the driver for your disk in a module and
+      store that module on disk - the Linux kernel doesn't know what a disk is
+      at that point and can therefor not find the module. Similar, don't put
+      support for a particular file system (such as ext3) in a module and
+      store that module on an ext3 file system.</para>
+
+      <para>To be able to use kernel modules even though they might be
+      required to access devices such as disks, you can create an intermediate
+      root disk (<emphasis>initial root disk</emphasis><indexterm>
+          <primary>initial root disk</primary>
+        </indexterm> or <emphasis>initrd</emphasis><indexterm>
+          <primary>initrd</primary>
+
+          <see>initial root disk</see>
+        </indexterm>). This contains the modules that might be needed in order
+      to succesfully boot the system. Support for the initrd format is built
+      in-kernel (in-kernel is the term denoting that support is not built as a
+      kernel module but immediately made part of the Linux kernel image loaded
+      by the boot loader).</para>
+
+      <para>The boot loader itself is responsible for placing the initrd in
+      memory and informing the Linux kernel where the initial root disk can be
+      found.</para>
+
+      <section>
+        <title>Working with Modules</title>
+
+        <para>The three most important commands to use for kernel modules
+        manipulation are <command>lsmod</command>, <command>modprobe</command>
+        and <command>rmmod</command>.</para>
+
+        <para>To list the currently loaded modules, use
+        <command>lsmod</command><indexterm>
+            <primary>lsmod</primary>
+          </indexterm>:</para>
+
+        <programlisting># <command>lsmod</command>
+Module                  Size  Used by
+ieee80211_crypt_wep     3584  1 
+i915                   29184  2 
+drm                    69664  3 i915
+ieee80211_crypt_tkip     8896  0 
+pcmcia                 31764  0 
+sdhci_pci               6976  0 
+sdhci                  14660  1 sdhci_pci
+yenta_socket           22860  1 
+ipw2200               133492  0 
+mmc_core               42068  1 sdhci
+rsrc_nonstatic          8960  1 yenta_socket
+pcmcia_core            31248  3 pcmcia,yenta_socket,rsrc_nonstatic
+tifm_7xx1               5568  0 
+tifm_core               6420  1 tifm_7xx1</programlisting>
+
+        <para>The <command>lsmod</command> output gives you what modules are
+        loaded, the size it takes in memory and how many/what other modules
+        use it.</para>
+
+        <para>To remove a loaded module, first ensure that the module is not
+        used by any other module anymore (i.e. the "Used by" listing should be
+        empty in the <command>lsmod</command> output) and then use
+        <command>rmmod</command><indexterm>
+            <primary>rmmod</primary>
+          </indexterm>:</para>
+
+        <programlisting># <command>rmmod ipw2200</command></programlisting>
+
+        <para>If you want to load a module in memory, you should use
+        <command>modprobe</command><footnote>
+            <para>There is another command called insmod - this tool is less
+            intelligent than modprobe: it only attempts to load a kernel
+            module given its filename and it doesn't try to load the
+            prerequirement modules (modules can prerequire other
+            modules).</para>
+          </footnote><indexterm>
+            <primary>modprobe</primary>
+          </indexterm>:</para>
+
+        <programlisting># <command>modprobe ipw2200</command></programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Using Gentoo's genkernel Script</title>
+
+      <para>Gentoo has a script called <command>genkernel</command><indexterm>
+          <primary>genkernel</primary>
+        </indexterm> which builds<indexterm>
+          <primary>kernel</primary>
+
+          <secondary>configuring automatically</secondary>
+        </indexterm> a complete Linux kernel based on some default
+      configuration. Most hardware support is put in loadable modules although
+      the configuration attempts to put all required device support
+      in-kernel.</para>
+
+      <para>To use genkernel, we first need to install it. As root, execute
+      the following command (software installation is covered later in this
+      book):</para>
+
+      <programlisting># <command>emerge genkernel</command></programlisting>
+
+      <para>The installation shouldn't take long. Once finished, run the
+      genkernel tool with the all argument (this assumes that a Linux kernel
+      source code is already installed - if Gentoo has been installed, this is
+      already the case):</para>
+
+      <programlisting># <command>genkernel all</command></programlisting>
+
+      <para>Once finished, the script will have created the Linux kernel
+      itself, the various modules and an initrd file containing the necessary
+      modules that might be required to boot the system. The Linux kernel file
+      and initial root disk are then used by the boot loader to boot up
+      Linux.</para>
+
+      <para>Simple, isn't it?</para>
+    </section>
+
+    <section>
+      <title>Manually Configuring a Kernel</title>
+
+      <para>Building a Linux kernel<indexterm>
+          <primary>kernel</primary>
+
+          <secondary>configuring manually</secondary>
+        </indexterm> can take a while, but the majority of time comes in the
+      configuration of the kernel. Especially the first Linux kernel
+      configuration might even take over an hour to complete because there are
+      so many options to select (or deselect). Luckily, configurations can be
+      saved and reused later on, so subsequent configurations will be much
+      faster.</para>
+
+      <para>Even more, Pappy McFae, a vivid Gentoo user, is providing kernel
+      seeds to Gentoo users. A <emphasis>kernel seed</emphasis><indexterm>
+          <primary>kernel seed</primary>
+        </indexterm> is, in his words:</para>
+
+      <blockquote>
+        <para>[a part of a kernel configuration where] all the tough stuff has
+        already been set up. The basics for a standard desktop system
+        configuration, basic network operation, and other settings have been
+        set for stable systemic usability. All you, the user, have left to do
+        is to plug in the required hardware devices, and you have a functional
+        kernel.</para>
+      </blockquote>
+
+      <para>His idea is really worth persuing, so don't hesitate to take a
+      look at <ulink
+      url="http://www.kernel-seeds.org/">http://www.kernel-seeds.org/</ulink>.
+      On the site, you can then navigate to your architecture (currently only
+      x86 and x86_64 are supported), select the kernel tree you have installed
+      (most likely gentoo if you have installed the gentoo-sources) and
+      download the configuration file for the selected kernel version.</para>
+
+      <para>Next, copy the configuration file to the kernel configuration
+      location:</para>
+
+      <programlisting># <command>cp /path/to/2.6.31-gentoo-r1-x86-07.config /usr/src/linux/.config</command></programlisting>
+
+      <para>This will make sure that the kernel configuration utility uses the
+      settings from the file as the "default".</para>
+
+      <section>
+        <title>Loading the Kernel Configuration Utility</title>
+
+        <para>The Linux kernel provides its own configuration utility; if you
+        go to the Linux source code and type in "make menuconfig" you'll be
+        greeted with the index of the Linux kernel configuration:</para>
+
+        <programlisting># <command>cd /usr/src/linux</command>
+# <command>make menuconfig</command></programlisting>
+
+        <note>
+          <para>The visual representation (more specifically, the location of
+          the menu entries) might be different on your system. The location of
+          settings changes very often and chances are that the kernel version
+          you are using is different from the one this chapter is based
+          upon.</para>
+        </note>
+
+        <programlisting>---------------  Linux Kernel Configuration  ---------------
+Arrow keys navigate the menu. &lt;Enter&gt; selects submenus ---&gt;.
+Highlighted letters are hotkeys. Pressing &lt;Y&gt; includes, &lt;N&gt;
+excludes, &lt;M&gt; modularizes features. Press &lt;Esc&gt;&lt;Esc&gt; to exit,
+&lt;?&gt; for Help, &lt;/&gt; for Search. Legent: [*] built-in, 
+[ ] excluded, &lt;M&gt; module, &lt; &gt; excluded module
+
+      General setup ---&gt;
+  [*] Enable loadable module support ---&gt;
+  -*- Enable the block layer ---&gt;
+      Processor type and features ---&gt;
+      Power management and ACPI options ---&gt;
+      Bus options (PCI etc.) ---&gt;
+      Executable file formats / Emulations ---&gt;
+  [*] Networking support ---&gt;
+      Device Drivers ---&gt;
+      Firmware Drivers ---&gt;
+      File systems ---&gt;
+      Kernel hacking ---&gt;
+      Security options ---&gt;
+  -*- Cryptographic API ---&gt;
+  [*] Virtualization ---&gt;
+      Library routines ---&gt;
+---
+  Load an Alternate Configuration File
+  Save an Alternate Configuratio File
+
+  &lt;Select&gt;  &lt;Exit&gt;  &lt;Help&gt;</programlisting>
+
+        <para>This tool doesn't do much more than edit a configuration file
+        called <filename>/usr/src/linux/.config</filename> so it will not
+        reconfigure your current kernel setup. As such, I recommend you to try
+        it out. If you want to be absolutely sure that you don't mess anything
+        up, you can make a backup of the current configuration file prior to
+        starting the menuconfig:</para>
+
+        <programlisting># <command>cp .config .config~</command></programlisting>
+
+        <para>A new feature, available from Linux 2.6.32 onwards, is the make
+        option <command>localmodconfig</command><indexterm>
+            <primary>localmodconfig</primary>
+          </indexterm> (and a derivative called
+        <command>localyesconfig</command><indexterm>
+            <primary>localyesconfig</primary>
+          </indexterm>). These options are interesting if you are currently
+        running a LiveCD or different distribution with a default distribution
+        kernel (a fits-all kernel that uses kernel modules) as they will
+        enable the drivers that are currently loaded (when you execute the
+        commands) in the kernel configuration, giving a nice configuration to
+        start from. This is especially true with Pappy's kernel seeds
+        ;-)</para>
+
+        <programlisting># <command>make localmodconfig</command></programlisting>
+
+        <para>The <command>localmodconfig</command> enables the drivers as
+        kernel modules. The <command>localyesconfig</command> target enables
+        the drivers as in-kernel selections (no modules).</para>
+
+        <para>You should understand that your current Linux kernel (the one
+        you're booted with) is stored elsewhere in the system (probably in
+        <filename>/boot</filename>) and that this kernel doesn't need to know
+        its configuration file anymore - it has been built using a particular
+        configuration and will remain as-is.</para>
+
+        <para>Configuring your own kernel is most likely a trial-and-error
+        process: you configure a new kernel, boot it, play around and if
+        you're not satisfied (or it doesn't boot at all), just reboot with the
+        old kernel (having several kernels next to each other is not a
+        problem).</para>
+
+        <para>The menuconfig utility has an extensive help system built in.
+        For instance, select "Enable loadable module support" and select
+        &lt;Help&gt; (or press "?"):</para>
+
+        <programlisting>------------   Enable loadable module support ----------
+CONFIG_MODULES:
+
+Kernel modules are small pieces of compiled code which can
+be inserted in the running kernel, rather than being
+permanently built into the kernel. You use the "modprobe"
+tool to add (and sometimes remove) them. If you say Y here,
+many parts of the kenel can be built as modules (by 
+answering M instead of Y where indicated): this is most
+useful for infrequently used options which are not required
+for booting. For more information, see the man pages for
+modprobe, lsmod, modinfo, insmod and rmmod.
+
+If you say Y here, you will need to run "make
+modules_install" to put the modules under /lib/modules/
+where modprobe can find them (you may need to be root to do
+this).
+
+If unsure, say Y.
+
+Symbol: MODULES [=y]
+Prompt: Enable loadable module support
+  Defined at init/Kconfig:607
+  Location:
+    -&gt; Loadable module support</programlisting>
+
+        <para>As you can see, the system gives information about the selected
+        option as well as an indication whether or not you should select this
+        ("If unsure, say Y.").</para>
+
+        <para>The system also has a search system. Press "/" and type in
+        "initrd" to look for the configuration entry where you can enable
+        initrd support inside the kernel:</para>
+
+        <programlisting>------------   Search Results   ------------
+Symbol: BLK_DEV_INITRD [=n]
+Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
+  Defined at init/Kconfig:326
+  Depends on: BROKEN || !FRV
+  Location:
+    -&gt; General setup</programlisting>
+
+        <para>The search results give you a one-liner explanation of the found
+        results as well as where you can find the option (here: in the
+        "General setup" tab). It also shows you when the option is selectable
+        (when the configuration BROKEN is set, or when FRV is not selected -
+        FRV is an architecture, just as x86 and SPARC are - so for a non-FRV
+        architecture it is always selectable).</para>
+
+        <para>In certain cases it can also tell you what new options it will
+        allow once selected.</para>
+      </section>
+
+      <section>
+        <title>Recommended Linux Kernel Configurations</title>
+
+        <para>Although this might be a bit boring for some people, I'll
+        discuss what I see as recommended Linux kernel configurations
+        regardless of the hardware support you add on later...</para>
+
+        <section>
+          <title>General Setup</title>
+
+          <para>In "General Setup", miscellaneous configurations for the Linux
+          kernel can be found.</para>
+
+          <programlisting>[ ] Prompt for development and/or incomplete code/drivers
+()  Local version - append to kernel release
+[ ] Automatically append version information to the version string
+    Kernel compression mode (Gzip) --&gt;
+[*] Support for paging of anonymous memory (swap)
+[*] System V IPC
+[ ] POSIX Message Queues
+[ ] BSD Process Accounting
+[ ] Auditing Support
+    RCU Subsystem ---&gt;
+[*] Kernel .config support
+[*]   Enable access to .config through /proc/config.gz
+(16) Kernel log buffer size (16 =&gt; 64KB, 17 =&gt; 128 KB)
+[ ] Control Group support ---&gt;
+[ ] enable deprecated sysfs features to support old userspace tools
+[ ] Kernel-&gt;user space relay support (formerly relayfs)
+-*- Namespaces support
+[ ]   UTS namespace
+[ ]   IPC namespace
+[ ]   Network namespaces
+[ ] Initial RAM filesystem and RAM disk (initramfs/initrd) support
+[ ] Optimize for size
+[ ] Configure standard kernel features (for small systems) ---&gt;
+    Kernel Performance Events And Counters ---&gt;
+[ ] Disable heap randomization
+    Choose SLAB allocator (SLUB (Unqueued Allocator)) ---&gt;
+[ ] Profiling support
+[ ] Kprobes
+    GCOV-based kernel profiling ---&gt;
+[ ] Slow work debugging through debugfs</programlisting>
+
+          <para>The following configurations are recommended to be enabled in
+          this section:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Support for paging of anonymous memory (swap)</para>
+
+              <para>You will need this enabled if you want to enable swap
+              space<indexterm>
+                  <primary>swap space</primary>
+                </indexterm> on your system. You generally want this, unless
+              you're confident that you have enough memory (RAM) in your
+              system for every possible situation. Swap space is used when
+              free memory is needed but not available. In that case, the Linux
+              kernel will move out old pages of memory (which are most likely
+              not going to be used in the near future) to the swap
+              space.</para>
+            </listitem>
+
+            <listitem>
+              <para>System V IPC</para>
+
+              <para>IPC (Inter Process Communication) allows programs to share
+              and exchange information between them. Many programs on a Linux
+              system will not start if System V IPC support isn't enabled in
+              the kernel. System V IPC allows programs to use message queues,
+              semaphores and shared memory segments.</para>
+            </listitem>
+
+            <listitem>
+              <para>RCU Subsystem</para>
+
+              <para>RCU<indexterm>
+                  <primary>RCU</primary>
+                </indexterm> (Read Copy Update) is a synchronisation primitive
+              supported by the Linux kernel which offers fast access to shared
+              resources (programming-terms) in case of a many-read and
+              infrequent write access behavior. That might sound terribly
+              geekish and programmer-specific - and it is - but if you have
+              multiple cores or processors in your system, it is wise to
+              enable it. Otherwise, set it to UP-kernel (UniProcessor).</para>
+
+              <programlisting>    RCU Implementation (Tree-based hierarchical RCU) ---&gt;
+[ ] Enable tracing for RCU
+(32) Tree-based hierarchical RCU fanout value
+[ ] Disable tree-based hierarchical RCU auto-balancing</programlisting>
+            </listitem>
+
+            <listitem>
+              <para>Kernel .config support</para>
+
+              <para>Although definitely not mandatory for a kernel, building
+              in .config support allows you to obtain the configuration for a
+              running kernel from the kernel itself. This can come in handy if
+              you don't keep track of the configurations you use(d) for
+              kernels. You can, for instance, base a new kernel configuration
+              on this configuration to get a good start.</para>
+
+              <para>The subselection to support
+              <filename>/proc/config.gz</filename> is an easy-to-use interface
+              to the kernel configuration of a running kernel: extract
+              /proc/config.gz (for instance, <command>zcat /proc/config.gz
+              &gt; /usr/src/linux/.config</command> and you have this kernel's
+              configuration at hand.</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>You also notice that initramfs support is not enabled: I'm no
+          proponent of initrd's, it is in my opinion better that a user
+          configures his kernel to his system rather than hoping that an
+          initrd will help with configuration failures.</para>
+        </section>
+
+        <section>
+          <title>Enable Loadable Module Support</title>
+
+          <para>I recommend enabling loadable module support if you use or
+          will use detachable devices (such as USB devices).</para>
+
+          <programlisting>--- Enable loadable module support
+[ ]   Forced module loading
+[*]   Module unloading
+[ ]     Forced module unloading
+[ ]   Module versioning support
+[ ]   Source checksum for all modules
+</programlisting>
+
+          <para>The following settings are recommended:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Module unloading</para>
+
+              <para>You will probably want to unload kernel modules if you
+              don't need them anymore.</para>
+            </listitem>
+
+            <listitem>
+              <para>Automatic kernel module loading</para>
+
+              <para>If not enabled, you'll need to manually run a command to
+              load the kernel module you need. With this setting enabled, many
+              Linux kernel components will automatically load the necessary
+              kernel module when appropriate.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section>
+          <title>Enable the Block Layer</title>
+
+          <para>I recommend enabling the block layer as you'll most likely
+          want to use block devices or Linux kernel components that use
+          functions from the block layer (such as SCSI or SCSI emulating
+          devices, the ext3 file system or USB storage).</para>
+
+          <programlisting>--- Enable the block layer
+[ ]   Support for large (2TB+) block devices and files
+[ ]   Block layer SG support v4
+[ ]   Block layer data integrity support
+      IO Schedulers ---&gt;</programlisting>
+
+          <programlisting>------------   IO Schedulers   ------------
+&lt;*&gt; Deadline I/O scheduler
+&lt;*&gt; CFQ I/O scheduler
+    Default I/O scheduler (CFQ) ---&gt;</programlisting>
+
+          <para>The important setting here are the IO schedulers. These
+          control how (and when) the Linux kernel writes or reads data to/from
+          disks. There are different IO schedulers available because,
+          depending on the system's use, a specific implementation can give a
+          nice performance boost. The CFQ scheduler is a good implementation
+          for desktop systems.</para>
+        </section>
+
+        <section>
+          <title>Processor Type and Features</title>
+
+          <para>The following settings are the recommended settings. However,
+          these settings depend heavily on the system you have (as your CPU is
+          most likely different from the one I use):</para>
+
+          <programlisting>[ ] Tickless System (Dynamic Ticks)
+[*] High Resolution Timer Support
+[*] Symmetric multi-processing support
+[ ] Support sparse irq numbering
+[*] Enable MPS table
+[ ] Support for big SMP systems with more than 8 CPUs
+[ ] Support for extended (non-PC) x86 platforms
+[*] Single-depth WCHAN output
+[ ] Paravirtualized guest support
+[*] Disable bootmem code
+[ ] Memtest
+    Processor family (Pentium M) ---&gt;
+[ ] Generic x86 support
+[*] HPET Timer Support
+(2) Maximum number of CPUs (2-255)
+[ ] SMT (Hyperthreading) scheduler support
+[*] Multi-core scheduler support
+    Preemption Model (Preemptible Kernel (Low-Latency Desktop)) ---&gt;
+[ ] Reroute for broken boot IRQs
+[*] Machine Check / overheating reporting
+[*]   Intel MCE features
+[ ]   AMD MCE features
+[ ]   Support for old Pentium 5 / WinChip machine checks
+&lt; &gt; Machine check injector support
+&lt; &gt; Toshiba Laptop support
+&lt; &gt; Dell laptop support
+[ ] Enable X86 board specific fixups for reboot
+&lt; &gt; /dev/cpu/microcode - Intel IA32 CPU microcode support
+&lt; &gt; /dev/cpu/*/msr - Model-specific register support
+&lt; &gt; /dev/cpu/*/cpuid - CPU information support
+    High Memory Support (4GB) ---&gt;
+    Memory model (Flat Memory) ---&gt;
+[ ] Enable KSM for page merging
+(65536) Low address space to protect from user allocation
+[ ] Enable recovery from hardware memory errors
+[ ] Allocate 3rd-level pagetables from highmem
+[ ] Check for low memory corruption
+[ ] Reserve low 64K of RAM on AMI/Phoenix BIOSen
+[ ] Math emulation
+-*- MTRR (Memory Type Range Register)
+[ ]   MTRR cleanup support
+[ ] EFI runtime service support
+[ ] Enable seccomp to safely compute untrusted bytecode
+    Timer frequency (1000 HZ) ---&gt;
+[ ] kexec system call
+[ ] kernel crash dumps
+[ ] Build a relocatable kernel
+(0x100000) Alignment value to which kernel should be aligned
+-*- Support for hot-pluggable CPUs
+[ ] Compat VDSO support
+[ ] Built-in kernel command line</programlisting>
+
+          <para>The following settings are recommended:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>High Resolution Timer Support</para>
+
+              <para>Most relatively modern systems (Pentium III and higher)
+              have high resolution timers, allowing for more precise timing.
+              Not really mandatory, but some applications like mplayer can
+              benefit from using hi-res timers.</para>
+            </listitem>
+
+            <listitem>
+              <para>Symmetric multi-processing support</para>
+
+              <para>If you have multiple (identical) CPUs or your CPU has
+              multiple cores, enable this.</para>
+            </listitem>
+
+            <listitem>
+              <para>Enable MPS Table</para>
+
+              <para>In case you have a somewhat older system (like I have) you
+              might need to enable this. It fixes some ACPI problems that
+              these systems have. Systems with 64-bit CPUs definitely don't
+              need this.</para>
+            </listitem>
+
+            <listitem>
+              <para>Single-depth WCHAN output</para>
+
+              <para>WCHAN is the abbreviation for "waiting channel" and
+              identifies where tasks are currently waiting for. With this
+              enabled, the calculation for the waiting channel is simplified
+              at the expense of accuracy. Most users don't need this level of
+              accuracy and the simplifications means less scheduling
+              overhead.</para>
+            </listitem>
+
+            <listitem>
+              <para>Disable bootmem code</para>
+
+              <para>This optimizes some complex initial memory allocation
+              fragments within the Linux kernel. </para>
+            </listitem>
+
+            <listitem>
+              <para>Processor family (Pentium M)</para>
+
+              <para>I have selected "Pentium M" here as this is my CPU type
+              (see the <filename>/proc/cpuinfo</filename> information). You
+              should select the processor family of your CPU here.</para>
+            </listitem>
+
+            <listitem>
+              <para>HPET Timer Support</para>
+
+              <para>This enables support for the High Precision Event Timer,
+              which can be seen as a time-source resource on somewhat more
+              modern systems. Especially if you have more than 1 core/CPU,
+              enabling this offers "cheaper" time access than without HPET
+              Timer support.</para>
+            </listitem>
+
+            <listitem>
+              <para>SMT (Hyperthreading) scheduler support</para>
+
+              <para>If you have an Intel CPU with hyperthreading, enable this
+              to improve the CPU scheduler performance.</para>
+            </listitem>
+
+            <listitem>
+              <para>Multi-core scheduler support</para>
+
+              <para>Enable this if you have a CPU with multiple cores inside;
+              it will improve the CPU scheduler performance.</para>
+            </listitem>
+
+            <listitem>
+              <para>Preemption Model (Preemptible Kernel (Low-Latency
+              Desktop))</para>
+
+              <para>Preemption<indexterm>
+                  <primary>preemption</primary>
+                </indexterm> means that a priority process, even when
+              currently in kernel mode executing a system call, can yield his
+              CPU time to another process. The user will notice this as if his
+              system is running somewhat more 'smoothly' as applications might
+              react faster to user input.</para>
+
+              <para>There are three models available:</para>
+
+              <itemizedlist>
+                <listitem>
+                  <para>No Forced Preemption, or</para>
+                </listitem>
+
+                <listitem>
+                  <para>Voluntary Kernel Preemption, where low-priority
+                  processes can voluntarily yield CPU time, or</para>
+                </listitem>
+
+                <listitem>
+                  <para>Preemptible Kernel, where all processes can yield CPU
+                  time (as long as they're not in a critical kernel region at
+                  that moment)</para>
+                </listitem>
+              </itemizedlist>
+            </listitem>
+
+            <listitem>
+              <para>Machine Check / overheating reporting</para>
+
+              <para>MCE allows the processor to notify the kernel when
+              problems are detected (like overheating); based on its severity,
+              the Linux kernel can report the issue or take immediate action.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para>Intel MCE features</para>
+
+              <para>This is part of the "Machine Check / overheating
+              reporting" section, and enables Intel-specific MCE features. I
+              enable this, as I have an Intel-based system.</para>
+            </listitem>
+
+            <listitem>
+              <para>High Memory Support (4GB)</para>
+
+              <para>If you don't have more than around 900 Mbytes of memory,
+              you don't need to enable High Memory Support. If you have
+              between 900 Mbyte and around 4Gbyte, select 4GB. If you have
+              more than 4GB, select 64GB.</para>
+            </listitem>
+
+            <listitem>
+              <para>Memory Model (Flat Memory)</para>
+
+              <para>If you have a 32-bit processor, selecting Flat Memory is
+              what you need. CPUs with a larger address space support (like
+              64-bit CPUs) most likely only allow you to select "Sparse
+              Memory" as you are not likely to have more than a few thousand
+              terabytes of RAM ;-)</para>
+            </listitem>
+
+            <listitem>
+              <para>MTRR (Memory Type Range Register) support</para>
+
+              <para>With MTRR support, applications such as the X server can
+              control how the processor caches memory accesses, boosting
+              performance for reads/writes to certain memory ranges.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section>
+          <title>Power Management and ACPI Options</title>
+
+          <para>The power management options provide power-saving features for
+          Linux, not only the APM / ACPI support, but also suspend-to-ram and
+          standby support.</para>
+
+          <programlisting>[*] Power Management support
+[ ]   Power Management Debug Support
+[*] Suspend to RAM and standby
+[*] Hibernation (aka 'suspend to disk')
+(/dev/sda5) Default resume partition
+[*] Run-time PM core functionality
+[*] ACPI (Advanced Configuration and Power Interface) Support ---&gt;
+[ ] SFI (Simple Firmware Interface) Support ---&gt;
+&lt; &gt; APM (Advanced Power Management) BIOS support ---&gt;
+    CPU Frequency Scaling ---&gt;
+-*- CPU idle PM support</programlisting>
+
+          <para>The following options are of particular interest:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Power Management Support</para>
+
+              <para>Enable this to be able to select one or more of the other
+              power management options.</para>
+            </listitem>
+
+            <listitem>
+              <para>Suspend to RAM and standby</para>
+
+              <para>If you will have moments where you temporarily leave your
+              system but don't want to shut it down and boot it back later,
+              you can opt to have the system suspend itself into memory - in
+              this case, many powerconsuming devices are shut down but you
+              don't lose any information as everything remains in memory (and
+              memory remains powered up).</para>
+            </listitem>
+
+            <listitem>
+              <para>Hibernation (aka 'suspend to disk')</para>
+
+              <para>In hibernation, all devices shut down. The current state
+              of your system (such as your memory content) is saved into your
+              swap space. When you boot your system back, the Linux kernel
+              will detect this in the swap space and load all information back
+              into memory so you can continue where you left off.</para>
+
+              <para>With suspend to disk enabled, set the default resume
+              partition to your swap partition.</para>
+            </listitem>
+
+            <listitem>
+              <para>ACPI (Advanced Configuration and Power Interface)
+              Support</para>
+
+              <para>Within this section you can configure several aspects of
+              the ACPI support. Enabling ACPI can be of great help to reduce
+              power consumption as it is a powerful technology. Sadly, not
+              every device follows the ACPI guidelines strictly. You will find
+              topics on the internet where boot failures or network
+              irregularities can be solved by disabling a part of the ACPI
+              support inside Linux.</para>
+
+              <programlisting>--- ACPI (Advanced Configuration and Power Interface Support)
+[*]   Deprecated /proc/acpi files
+[*]   Deprecated power /proc/acpi directories
+[ ]   Future power /sys interface
+[*]   Deprecated /proc/acpi/event support
+&lt;*&gt; AC Adapter
+&lt;*&gt; Battery
+{*} Button
+-*- Video
+&lt;*&gt; Fan
+[*] Dock
+&lt;*&gt; Processor
+&lt; &gt;   Processor Aggregator
+&lt;*&gt;   Thermal Zone
+(�) Disable ACPI for systems before Jan 1st this year
+[ ] Debug Statements
+&lt; &gt; PCI slot detection driver
+&lt; &gt; Smart Battery System</programlisting>
+
+              <para>Within the ACPI configuration you should select the
+              components for which you want support. On regular desktops, you
+              most likely don't have a battery so support for that (and AC
+              Adapters) won't be necessary.</para>
+
+              <para>I select a few "deprecated" settings as I know the
+              reporting tools I use (for battery status etc.) still rely on
+              these files, directories and events to function
+              correctly.</para>
+            </listitem>
+          </itemizedlist>
+
+          <itemizedlist>
+            <listitem>
+              <para>CPU Frequency Scaling</para>
+
+              <para>If you own a laptop you'll most likely want to enable CPU
+              Frequency scaling as it will slow down the CPU speed (and the
+              power consumption with it) when the CPU isn't used.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section>
+          <title>Bus options (PCI etc.)</title>
+
+          <para>A bus is a physical connection between several devices. The
+          most popular bus technology within a computer nowadays is PCI (or
+          PCI Express) but a few other bus technologies exist (for instance
+          PCMCIA).</para>
+
+          <programlisting>[*] PCI Support
+      PCI access mode (Any) ---&gt;
+[*] PCI Express support
+[ ]   Root Port Advanced Error Reporting support
+[ ] Message Signaled Interrupts (MSI and MSI-X)
+[ ] PCI Debugging
+&lt; &gt; PCI Stub driver
+[ ] Interrupts on hypertransport devices
+[ ] PCI IOV support
+[ ] ISA support
+[ ] MCA support
+&lt; &gt; NetSemi SCx200 support
+[ ] One Laptop Per Child support
+&lt; &gt; PCCard (PCMCIA/CardBus) support ---&gt;
+&lt; &gt; Support for PCI Hotplug ---&gt;</programlisting>
+
+          <para>In the above example I only selected PCI and PCI-X support;
+          laptop users will most likely enable PCCard support as well. Within
+          the submenu of the PCCard configuration you will be asked to select
+          the supporting bridge. A bridge<indexterm>
+              <primary>bridge</primary>
+            </indexterm> is a component that links one bus technology with
+          another. A PCMCIA bridge allows PCMCIA devices to connect to your
+          system. Most systems with PCMCIA support have a CardBus
+          yenta-compatible bridge.</para>
+
+          <para>Although I own a laptop, I have no PC cards of any kind nor do
+          I suspect I will need them quickly, so I leave out support for
+          that.</para>
+        </section>
+
+        <section>
+          <title>Executable File Formats / Emulations</title>
+
+          <para>Within this section you can select what binaries (format for
+          executable files with machine instructions inside) Linux should
+          support.</para>
+
+          <programlisting>[*] Kernel support for ELF binaries
+[ ] Write ELF core dumps with partial segments
+&lt; &gt; Kernel support for a.out and ECOFF binaries
+&lt; &gt; Kernel support for MISC binaries</programlisting>
+
+          <para>The binary format used by Linux is ELF. Very old Linux systems
+          and a couple of BSD operating systems use a.out binaries but it
+          isn't necessary to include support for those anymore.</para>
+        </section>
+
+        <section>
+          <title>Networking</title>
+
+          <para>Inside the networking configuration tab you configure the
+          various aspects related to your network.</para>
+
+          <programlisting>[*] Networking support
+      Networking options ---&gt;
+[ ]   Amateur Radio support ---&gt;
+&lt; &gt;   CAN bus subsystem support ---&gt;
+&lt; &gt;   IrDA (infrared) subsystem support ---&gt;
+&lt; &gt;   Bluetooth subsystem support ---&gt;
+&lt; &gt;   RxRPC session sockets
+-*-   Wireless ---&gt;
+&lt; &gt;   WiMAX Wireless Broadband support ---&gt;
+&lt; &gt;   RF switch subsystem support ---&gt;</programlisting>
+
+          <para>Within the 'Networking options', you will need to enable
+          support for the networking technologies (not hardware) you want to
+          support.</para>
+
+          <programlisting>----- Networking Options -----
+&lt;*&gt; Packet socket
+&lt;*&gt; Unix domain sockets
+&lt; &gt; Transformation user configuration interface
+&lt; &gt; PF_KEY sockets
+[*] TCP/IP networking
+[ ]   IP: multicasting
+      ...
+[ ] Security Marking
+[*] Network packet filtering framework (Netfilter) ---&gt;
+&lt; &gt; Asynchronous Transfer Mode (ATM)
+&lt; &gt; 802.1d Ethernet Bridging
+[ ] Distributed Switch Architecture support ---&gt;
+&lt; &gt; 802.1Q VLAN Support
+&lt; &gt; DECnet Support
+&lt; &gt; ANSI/IEEE 802.2 LLC type 2 Support
+&lt; &gt; The IPX protocol
+&lt; &gt; Appletalk protocol support
+&lt; &gt; WAN router
+&lt; &gt; Phonet protocols family
+&lt; &gt; IEEE Std 802.15.4 Low-Rate Wireless Personal Area Networks support
+[ ] QoS and/or fair queuing ---&gt;
+[ ] Data Center Bridging support
+    Network testing ---&gt;</programlisting>
+
+          <para>The most notable options here are:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Packet socket</para>
+
+              <para>This allows programs to interface with the network devices
+              immediately (without going through the network protocol
+              implementation on the Linux kernel). It is required by tools
+              such as tcpdump / wireshark (popular network analysing tools).
+              You don't need to enable this, but I often perform network
+              analysis myself so I need to have this enabled.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unix domain sockets</para>
+
+              <para>Sockets are a standard mechanism in Unix for processes to
+              communicate with each other. This is an important setting that
+              you must leave on.</para>
+            </listitem>
+
+            <listitem>
+              <para>TCP/IP networking</para>
+
+              <para>Although you don't have to select any of the subfeatures
+              that are shown when you enable this, TCP/IP networking support
+              is definitely a must-have.</para>
+            </listitem>
+
+            <listitem>
+              <para>Network packet filtering framework (Netfilter)</para>
+
+              <para>Enable this if you are planning on configuring a firewall
+              on your system or have your system act as a gateway for others.
+              Enable the 'IP tables support' found under 'IP: Netfilter
+              Configuration' and select:</para>
+
+              <programlisting>&lt;*&gt; IPv4 connection tracking support (required for NAT)
+[*]   proc/sysctl compatibility with old connection tracking
+&lt;*&gt; IP tables support (required for filtering/masq/NAT)
+&lt;*&gt;   Packet filtering
+&lt;*&gt;      REJET target support
+&lt;*&gt;   LOG target support
+&lt; &gt;   ULOG target support
+&lt;*&gt;   Full NAT
+&lt;*&gt;     MASQUERADE target support
+&lt;*&gt;   Packet mangling</programlisting>
+            </listitem>
+          </itemizedlist>
+
+          <para>Users of a wireless network card will, under 'Networking',
+          also select the Wireless configuration.</para>
+
+          <programlisting>--- Wireless
+&lt;*&gt;  cfg80211 - wireless configuration API
+[ ]     nl80211 testmode command
+[ ]     enable developer warnings
+[ ]     cfg80211 regulatory debugging
+[*]     enable powersave by default
+[ ]     cfg80211 DebugFS entries
+[ ]     cfg80211 wireless extensions compatibility
+&lt; &gt;  Common routines for IEEE802.11 drivers
+&lt; &gt;  Generic IEEE 802.11 Networking Stack (mac80211)</programlisting>
+
+          <para>I've selected these options because IEEE 802.11 is the
+          standard for wireless networking:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>cfg80211 - wireless configuration API</para>
+
+              <para>You need to enable this if you have a wireless card</para>
+            </listitem>
+
+            <listitem>
+              <para>enable powersave by default</para>
+
+              <para>Enables powersaving features of the wireless cards -
+              definitely a must-have if you have wireless on a laptop as this
+              reduces power consumption dramatically.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section>
+          <title>Device Drivers</title>
+
+          <para>Within this section you can configure support for the various
+          devices in your system. It is with this configuration that the
+          output of the <command>lspci</command> command (and other system
+          information) is needed. The next example is merely that - an
+          example. As this is very specific to your system, it is not possible
+          to provide a general example that suits everybody. For completeness
+          sake, I'll give the configuration for my own system with the
+          motivation of the selection of each item.</para>
+
+          <programlisting>    Generic Driver Options ---&gt;
+&lt; &gt; Connector - unified userspace &lt;-&gt; kernelspace linker ---&gt;
+&lt; &gt; Memory Technology Device (MTD) support ---&gt;
+&lt; &gt; Parallel port support ---&gt;
+-*- Plug and Play support ---&gt;
+[*] Block devices ---&gt;
+[*] Misc devices ---&gt;
+&lt;*&gt; ATA/ATAPI/MFM/RLL support ---&gt;
+    SCSI device support ---&gt;
+&lt;*&gt; Serial ATA (prod) and Parallel ATA (experimental) drivers ---&gt;
+[ ] Multiple devices driver support (RAID and LVM) ---&gt;
+[ ] Fusion MPT device support ---&gt;
+    IEEE 1394 (FireWire) support ---&gt;
+&lt; &gt; I2O device support ---&gt;
+[ ] Macintosh device drivers ---&gt;
+[*] Network device support ---&gt;
+&lt; &gt; ISDN support ---&gt;
+&lt; &gt; Telephony support ---&gt;
+    Input device support ---&gt;
+    Character devices ---&gt;
+{*} I2C support ---&gt;
+[ ] SPI support ---&gt;
+    PPS support ---&gt;
+[ ] GPIO support ---&gt;
+&lt; &gt; Dallas's 1-wire support ---&gt;
+&lt; &gt; Power supply class support ---&gt;
+&lt; &gt; Hardware Monitoring support ---&gt;
+-*- Generic Thermal sysfs driver ---&gt;
+[ ] Watchdog Timer Support ---&gt;
+    Sonics Silicon Backplane ---&gt;
+    Multifunction device drivers ---&gt;
+[ ] Voltage and Current Regulator Support ---&gt;
+&lt; &gt; Multimedia support ---&gt;
+    Graphics support ---&gt;
+&lt;*&gt; Sound card support ---&gt;
+[*] HID Devices ---&gt;
+[*] USB support ---&gt;
+&lt;M&gt; MMC/SD/SDIO card support ---&gt;
+[ ] LED Support ---&gt;
+&lt; &gt; InfiniBand support ---&gt;
+[ ] EDAC (Error Detection And Correction) reporting ---&gt;
+&lt; &gt; Real Time Clock ---&gt;
+[ ] DMA Engine support ---&gt;
+[ ] Auxiliary Display support ---&gt;
+&lt; &gt; Userspace I/O drivers ---&gt;
+    TI VLYNQ ---&gt;
+[ ] Staging drivers ---&gt;
+[*] X86 Platform Specific Device Drivers ---&gt;</programlisting>
+
+          <para>As you can see, most of the options are not selected and
+          almost all of them provide subsections. This is of course expected,
+          as device driver support is a huge part of the Linux source code,
+          and the end user will only select a very small part of it.</para>
+
+          <section>
+            <title>Block devices</title>
+
+            <para>Block devices<indexterm>
+                <primary>block devices</primary>
+              </indexterm> are devices where you can access data in blocks (as
+            opposed to characters). Not all block devices are configurable
+            through this menu (a well-known block device type, hard disk, is
+            configured elsewhere) as you notice from the available
+            configuration options:</para>
+
+            <programlisting>--- Block devices
+&lt; &gt;   Normal floppy disk support
+&lt; &gt;   Compaq SMART2 support
+&lt; &gt;   Compaq SMart Array 5xxx support
+&lt; &gt;   Mylex DAC960/DAC1100 PCI RAID Controller support
+&lt;*&gt;   Loopback device support
+&lt; &gt;     Cryptoloop Support
+&lt; &gt;   Network block device support
+&lt; &gt;   Promise SATA SX8 support
+&lt; &gt;   Low Performance USB Block driver
+&lt; &gt;   RAM block device support
+&lt; &gt;   Packet writing on CD/DVD media
+&lt; &gt;   ATA over Ethernet support
+[ ]   Very old hard disk (MFM/RLL/IDE) driver</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>Loopback device support</para>
+
+                <para>The only block device I enable is loopback support. This
+                allows me to mount images (files) just like they were
+                devices.</para>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>SCSI device support</title>
+
+            <para>Although my system doesn't have SCSI, it has Serial ATA
+            (SATA) with disks attached to it. SATA support in Linux is brought
+            through the SCSI subsystem, so I need to configure SCSI device
+            support.</para>
+
+            <programlisting>&lt; &gt; RAID Transport Class
+-*- SCSI device support
+&lt; &gt; SCSI target support
+[ ] legacy /proc/scsi/ support
+    *** SCSI support type (disk, tape, CD-ROM) ***
+&lt;*&gt; SCSI disk support
+&lt; &gt; SCSI tape support
+&lt; &gt; SCSI OnStream SC-x0 tape support
+&lt; &gt; SCSI CDROM support
+&lt; &gt; SCSI generic support
+&lt; &gt; SCSI media changer support
+    *** Some SCSI devices (e.g. CD jukebox) support multiple LUNs ***
+[ ] Probe all LUNs on each SCSI device
+[ ] Verbose SCSI error reporting (kernel size +=12K)
+[ ] SCSI logging facility
+[ ] Asynchronous SCSI scanning
+    SCSI Transports ---&gt;
+[ ] SCSI low-level drivers ---&gt;
+&lt; &gt; SCSI Device Handlers ---&gt;
+&lt; &gt; OSD-Initiator library</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>SCSI disk support</para>
+
+                <para>SCSI disk support is needed for the SATA disks.</para>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>Serial ATA and Parallel ATA drivers</title>
+
+            <para>Serial ATA support is needed to be able to access my
+            disks.</para>
+
+            <programlisting>--- Serial ATA and Parallel ATA drivers
+[ ]   Verbose ATA error reporting
+[*]   ATA ACPI Support
+[ ]   SATA Port Multiplier support
+&lt;*&gt;   AHCI SATA support
+&lt; &gt;   Silicon Image 3124/3132 SATA support
+[*]   ATA SFF support
+&lt; &gt;     ServerWorks Frodo / Apple K2 SATA support
+&lt;*&gt;     Intel ESB, ICH, PIIX3, PIIX4 PATA/SATA support
+&lt; &gt;     Marvell SATA support
+      ...</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>ATA ACPI Support</para>
+
+                <para>Enables retrieving ACPI related files (performance,
+                security, power management ...) from the ACPI BIOS and save
+                them on the disk controller.</para>
+              </listitem>
+
+              <listitem>
+                <para>Intel ESB, ICH, PIIX3, PIIX4 PATA/SATA support</para>
+
+                <para>The only selection made in this configuration is the
+                support for my SATA chipset of which lspci told me it was an
+                Intel ICH6 chipset:</para>
+
+                <programlisting># <command>lspci | grep SATA</command>
+00:1f.2 SATA controller: Intel Corporation 82801FBM (ICH6M)
+        SATA Controller (rev 04)</programlisting>
+
+                <para>All the other options are drivers for other
+                chipsets.</para>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>Network device support</title>
+
+            <para>Inside network device support we configure the drivers for
+            the networkcards.</para>
+
+            <programlisting>--- Network device support
+&lt;*&gt;   Dummy net driver support
+&lt; &gt;   Bonding driver support
+&lt; &gt;   EQL (serial line load balancing) support
+&lt; &gt;   Universal TUN/TAP device driver support
+&lt; &gt;   Virtual ethernet pair device
+&lt; &gt;   General Instruments Surfboard 1000
+&lt; &gt;   ARCnet support ---&gt;
+[ ]   Ethernet (10 or 100Mbit) ---&gt;
+[*]   Ethernet (1000 Mbit) ---&gt;
+[ ]   Ethernet (10000 Mbit) ---&gt;
+[ ]   Token Ring driver support ---&gt;
+[*]   Wireless LAN ---&gt;
+      USB Network Adapters ---&gt;
+[ ]   Wan interfaces support ---&gt;
+&lt; &gt;   FDDI driver support
+&lt; &gt;   PPP (point-to-point protocol) support
+&lt; &gt;   SLIP (serial line) support
+[ ]   Fibre Channel driver support
+&lt; &gt;   VMWare VMXNET3 ethernet driver</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>Dummy net driver support</para>
+
+                <para>This driver allows me to create an interface which takes
+                on all packets and just ignores them. This seems to be a weird
+                driver, but it can come in handy from time to time. Also, this
+                has no impact on my kernel size so I don't mind enabling this
+                for the few times I actually use it.</para>
+              </listitem>
+
+              <listitem>
+                <para>Ethernet (1000 Mbit)</para>
+
+                <para>I have a Realtek 8169 ethernet card (which is a 1Gbit
+                network card) as mentioned by <command>lspci</command>:</para>
+
+                <programlisting># <command>lspci | grep Ethernet</command>
+06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd.
+        RTL-8169 Gigabit Ethernet (rev 10)</programlisting>
+
+                <para>As such I select the 'Realtek 8169 gigabit ethernet
+                support' option in the configuration screen.</para>
+              </listitem>
+
+              <listitem>
+                <para>Wireless LAN</para>
+
+                <para>As my system is a laptop with onboard wireless network
+                card, I need to enable WLAN support as well.</para>
+
+                <programlisting>--- Wireless LAN
+&lt; &gt;   Cisco/Airnet 34X/35X/4500/4800 ISA and PCI cards
+...
+&lt;M&gt;   Intel PRO/Wireless 2200BG and 2915ABG Network Connection
+[*]     Enable promiscuous mode
+-*-       Enable radiotap format 802.11 raw packet support
+[*]       Enable creation of a RF radiotap promiscuous interface
+[ ]     Enable QoS support
+...</programlisting>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>Wireless LAN (IEEE 802.11)</para>
+
+                    <para>The network card I have is an 802.11-something so I
+                    need to enable this.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Intel PRO/Wireless 2200BG and 2915ABG Network
+                    Connection</para>
+
+                    <para>lspci sais that my wireless card is an Intel
+                    PRO/Wireless 2200BG one, so I need to enable support for
+                    it:</para>
+
+                    <programlisting># <command>lspci | grep Wireless</command>
+06:04.0 Network controller: Intel Corporation PRO/Wireless
+        2200BG Network Connection (rev 05)</programlisting>
+                  </listitem>
+
+                  <listitem>
+                    <para>Enable promiscuous mode</para>
+
+                    <para>I need promiscuous mode when I want to analyse the
+                    wireless network I work on.</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>Input device support</title>
+
+            <para>Input devices are the devices you know to interact with your
+            system, such as a keyboard and a mouse.</para>
+
+            <programlisting>-*- Generic input layer (needed for keyboard, mouse, ...)
+&lt; &gt;   Support for memoryless force-feedback devices
+&lt; &gt;   Polled input device skeleton
+&lt; &gt;   Sparse keymap support library
+      *** Userland interfaces ***
+-*-   Mouse interface
+[*]     Provide legacy /dev/psaux device
+(1024)  Horizontal screen resolution
+(768)   Vertical screen resolution
+&lt; &gt;   Joystick interface
+&lt;*&gt;   Event interface
+&lt; &gt;   Event debugging
+      ** Input Device Drivers ***
+-*-   Keyboards ---&gt;
+[*]   Mice ---&gt;
+[ ]   Joysticks/Gamepads ---&gt;
+[ ]   Tables ---&gt;
+[ ]   Touchscreens ---&gt;
+[ ]   Miscellaneous devices ---&gt;
+    Hardware I/O ports ---&gt;</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>Generic input layer (needed for keyboard, mouse,
+                ...)</para>
+
+                <para>As the title sais already, I need this for
+                keyboard/mouse support</para>
+              </listitem>
+
+              <listitem>
+                <para>Mouse interface</para>
+
+                <para>Enable mouse support</para>
+              </listitem>
+
+              <listitem>
+                <para>Horizontal screen resolution / Vertical screen
+                resolution</para>
+
+                <para>Actually, this setting is ignored as it is only really
+                used if your pointing device is a digitizer or tablet rather
+                than a simple mouse.</para>
+              </listitem>
+
+              <listitem>
+                <para>Event interface</para>
+
+                <para>This enables evdev support, which is somewhat mandatory
+                if you want to work with graphical interfaces (for instance,
+                the xorg configuration requires this).</para>
+              </listitem>
+
+              <listitem>
+                <para>Keyboards</para>
+
+                <para>Keyboard support is automatically selected, but in the
+                subconfiguration you don't need to select anything unless you
+                have a very special keyboard.</para>
+              </listitem>
+
+              <listitem>
+                <para>Mice</para>
+
+                <para>Within the mouse configuration, I enable 'PS/2 mouse' as
+                my mouse is a PS/2 one.</para>
+              </listitem>
+
+              <listitem>
+                <para>Hardware I/O ports</para>
+
+                <para>Inside this configuration section, 'Serial I/O support'
+                should be automatically selected as it is used by the
+                keyboard/mice support.</para>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>Character devices</title>
+
+            <para>Character devices<indexterm>
+                <primary>character device</primary>
+              </indexterm> are devices that are accessed character per
+            character. An example of a character device is a terminal.</para>
+
+            <programlisting>-*- Virtual terminal
+[ ]   Support for binding and unbinding console drivers
+[ ] /dev/kmem virtual device support
+[ ] Non-standard serial port support
+&lt; &gt; HSDPA Broadband Wireless Data Card - Globe Trotter
+    Serial drivers ---&gt;
+-*- Unix98 PTY support
+[ ]   Support multiple instances of devpts
+[*] Legacy (BSD) PTY support
+(256) Maximum number of legacy PTY in use
+&lt; &gt; IPMI top-level message handler ---&gt;
+&lt;*&gt; Hardware Random Number Generator Core support
+&lt; &gt;   Timer IOMEM HW Random Number Generator support
+&lt;*&gt;   Intel HW Random Number Generator support
+&lt; &gt;   AMD HW Random Number Generator support
+&lt; &gt;   AMD Geode HW Random Number Generator support
+&lt; &gt;   VIA HW Random Number Generator support
+&lt; &gt; /dev/nvram support
+&lt; &gt; Enhanced Real Time Clock Support (Legacy PC RTC driver)
+&lt; &gt; Generic /dev/rtc emulation
+&lt; &gt; Siemens R3964 line discipline
+&lt; &gt; Applicom intelligent fieldbus card support
+&lt; &gt; ACP Modem (Mwave) support
+&lt; &gt; NatSemi PC8736x GPIO Support
+&lt; &gt; NatSemi Base GPIO Support
+&lt; &gt; AMD CS5535/CS5536 GPIO (Geode Companion Device)
+&lt; &gt; RAW driver (/dev/raw/rawN)
+[ ] HPET - High Precision Event Timer
+&lt; &gt; Hangcheck timer
+&lt; &gt; TPM Hardware Support ---&gt;
+&lt; &gt; Telecom clock driver for ATCA SBC</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>Virtual terminal</para>
+
+                <para>Support for virtual terminals is automatically selected.
+                You need it as you'll work with virtual consoles all the time
+                in Linux: if you're opening a terminal window, you're working
+                in a virtual console.</para>
+              </listitem>
+
+              <listitem>
+                <para>Unix98 PTY Support</para>
+
+                <para>This should be automatically selected; it is the support
+                for virtual PTYs which you definitely need.</para>
+              </listitem>
+
+              <listitem>
+                <para>Legacy (BSD) PTY support</para>
+
+                <para>Enables support for virtual PTYs, but then a different
+                kind. Although not selecting this option won't break your
+                kernel, you'll most likely get a few (cosmetic) errors every
+                time you open a terminal. So better enable this.</para>
+              </listitem>
+
+              <listitem>
+                <para>Hardware Random Number Generator Core support</para>
+
+                <para>To have support for the hardware random number
+                generator, select this and the specific generator in the next
+                list.</para>
+              </listitem>
+
+              <listitem>
+                <para>Intel HW Random Number Generator support</para>
+
+                <para>My generator provider is an Intel one (as my CPU is an
+                Intel CPU).</para>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>Graphics support</title>
+
+            <para>Graphical card support is configured here as well as
+            framebuffer support (allowing applications to access the graphics
+            hardware through a well-defined interface).</para>
+
+            <programlisting>&lt;*&gt; /dev/agpgart (AGP Support) ---&gt;
+-*- VGA Arbitration
+(2)   Maximum number of GPUs
+[ ] Laptop Hybrid Graphics - GPU switching support
+&lt;M&gt; Direct Rendering Manager (XFree86 4.1.0 and higher DRI support) ---&gt;
+{M} Lowlevel video output switch controls
+{*} Support for frame buffer devices ---&gt;
+&lt; &gt; CyberPro 2000/2010/5000 support
+&lt; &gt; Arc Monochrome LCD board support
+[ ] Asiliant (Chips) 6900 display support
+[ ] IMS Twin Turbo display support
+&lt; &gt; VGA 16-color graphics support
+[*] VESA VGA graphics support
+&lt; &gt; N411 Apollo/Hecuba devkit support
+&lt; &gt; Hercules mono graphics support
+...
+[ ] Backlight &amp; LCD device support ---&gt;
+    Display device support ---&gt;
+    Console display driver support ---&gt;
+[ ] Bootup logo ---&gt;</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>/dev/agpgart (AGP Support)</para>
+
+                <para>I know my laptop has an on-board AGP card. lspci tells
+                me what card it is:</para>
+
+                <programlisting># <command>lspci | grep VGA</command>
+00:02.0 VGA compatible controller: Intel Corporation Mobile
+        915GM/GMS/910GML Express Graphics Controller (rev 03)</programlisting>
+
+                <para>As such, I also enable 'Intel 440LX/BX/GX, I8xx and
+                E7x05 chipset support'. You might believe that I am in error
+                because the title doesn't mention 915GM (as shown in lspci's
+                output) but if I read the help for the option, I read that
+                I915 is supported through this driver as well.</para>
+              </listitem>
+
+              <listitem>
+                <para>Direct Rendering Manager (XFree86 4.1.0 and higer DRI
+                support)</para>
+
+                <para>DRM is needed by XFree86 to improve graphic performance
+                (including 3D support). Within the subconfiguration, I enable
+                drivers for my Intel graphical card:</para>
+
+                <programlisting>--- Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)
+&lt; &gt;   3dfx Banshee/Voodoo3+
+      ...
+&lt;M&gt;   Intel 830M, 845G, 852GM, 855GM, 865G
+&lt; &gt;     i830 driver
+&lt;M&gt;     i915 driver
+&lt; &gt;   Matrox g200/g400
+      ...</programlisting>
+              </listitem>
+
+              <listitem>
+                <para>Support for frame buffer devices</para>
+
+                <para>I want frame buffer support because that allows me to
+                display more characters than just 80x25 when working in the
+                command-line mode (console). In the subconfiguration, I enable
+                'VESA VGA graphics support' which enables standard VESA
+                support for framebuffer access.</para>
+              </listitem>
+
+              <listitem>
+                <para>Console display driver support</para>
+
+                <para>Within the console display driver support, I enable
+                framebuffer support for the console:</para>
+
+                <programlisting>-*- VGA test console
+[ ]   Enable Scrollback Buffer in System RAM
+{*} Framebuffer Console support
+[ ]   Map the console to the primary display device
+[ ]   Framebuffer Console Rotation
+[ ] Select compiled-in fonts</programlisting>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>Sound</title>
+
+            <para>To support my sound card, I enable sound card support and
+            the sound system I want to use.</para>
+
+            <programlisting>&lt;*&gt; Sound card support
+[ ]   Preclaim OSS device numbers
+&lt;*&gt;   Advanced Linux Sound Architecture ---&gt;
+&lt; &gt;   Open Sound System (DEPRECATED) ---&gt;</programlisting>
+
+            <para>ALSA<indexterm>
+                <primary>ALSA</primary>
+              </indexterm> (Advanced Linux Sound Architecture) is the latest
+            sound system supported by Linux. OSS is deprecated and ALSA
+            provides OSS compatibility for those applications that still
+            require OSS.</para>
+
+            <programlisting>&lt;*&gt; Advanced Linux Sound Architecture
+&lt;*&gt;   Sequencer support
+&lt; &gt;     Sequencer dummy client
+&lt; &gt;   OSS Mixer API
+&lt; &gt;   OSS PCM (digital audio) API
+[ ]   OSS Sequencer API
+[ ]   Dynamic device file minor numbers
+[ ]   Support old ALSA API
+[ ]   Verbose procfs contents
+[ ]   Verbose printk
+[ ]   Debug
+[ ]   Generic sound devices ---&gt;
+[*]   PCI sound devices ---&gt;
+[ ]   USB devices ---&gt;
+&lt; &gt;   ALSA for SoC audio support ---&gt;</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>PCI sound devices</para>
+
+                <para>Under the PCI devices, select the audio card you have.
+                Again, lspci can show you what device you have:</para>
+
+                <programlisting># <command>lspci | grep Audio</command>
+00:1e.2 Multimedia audio controller: Intel Corporation
+        82801FB/FBM/FR/FW/FRW (ICH6 Family) AC'97 Audio
+        Controller (rev 04)</programlisting>
+
+                <para>With this information, I know that I need to select
+                'Intel/SiS/nVidia/AMD/ALi AC97 Controller'.</para>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>HID Devices</title>
+
+            <para>A HID<indexterm>
+                <primary>HID</primary>
+              </indexterm> device (Human Interface Device) is a device that
+            takes input from the user. An important class of devices that use
+            the HID interface are USB keyboards and mice.</para>
+
+            <programlisting>--- HID Devices
+-*-   Generic HID support
+[ ]     /dev/hidraw raw HID device support
+      *** USB Input Devices ***
+&lt;*&gt;   USB Human Interface Device (full HID) support
+[ ]   PID device support
+[ ]   /dev/hiddev raw HID device support
+      Special HID drivers ---&gt;</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>USB Human Interface Device (full HID) support</para>
+
+                <para>I select this as I often use a USB mouse on my
+                laptop.</para>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>USB support</title>
+
+            <para>USB devices come in various types and classes; the USB
+            support screen is therefore quite a large device driver
+            configuration screen with many options.</para>
+
+            <programlisting>--- USB support
+&lt;*&gt; Support for Host-side USB
+[ ]   USB verbose debug messages
+[ ]   USB announce new devices
+      *** Miscellaneous USB options ***
+[ ]   USB device filesystem (DEPRECATED)
+[ ]   USB device class-devices (DEPRECATED)
+...
+      *** USB Host Controller Drivers ***
+&lt; &gt;   Cypress C67x00 HCD support
+&lt;*&gt;   EHCI HCD (USB 2.0) support
+&lt; &gt;   ISP116X HCD support
+&lt;*&gt;   OHCI HCD support
+&lt;*&gt;   UHCI HCD (most Intel and VIA) support
+&lt; &gt;   SL811HS HCD support
+&lt; &gt;   R8A66597 HCD support
+      *** USB Device Class drivers ***
+&lt; &gt;   USB Modem (CDC ACM) support
+&lt;*&gt;   USB Printer support
+    *** NOTE: USB_STORAGE enables SCSI, and 'SCSI disk support'
+    *** may also be needed; see USB_STORAGE Help for more information
+&lt;*&gt; USB Mass Storage support
+&lt; &gt;   USB Mass Storage verbose debug
+      ...
+[ ] The shared table of common (or usual) storage devices
+    *** USB Imaging devices ***
+&lt; &gt; Microtek X6USB scanner support
+[ ] USB Monitor
+    *** USB port drivers ***
+&lt; &gt; USB Serial Converter support ---&gt;
+    *** USB Miscellaneous drivers ***
+&lt; &gt; EMI 6|2m USB Audio interface support
+    ...</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>Support for Host-side USB</para>
+
+                <para>This enables general USB support
+                (technology-wise)</para>
+              </listitem>
+
+              <listitem>
+                <para>USB device filesystem</para>
+
+                <para>With this enabled, the Linux kernel will create
+                information files inside /proc/bus/usb about each device. This
+                information can come in handy to debug USB device support but
+                is also used by tools to provide more information about a USB
+                device.</para>
+              </listitem>
+
+              <listitem>
+                <para>EHCI HCD (USB 2.0) support</para>
+
+                <para>There are a few standards for USB controllers. For USB
+                2.0 support, you need to enable EHCI HCD support.</para>
+              </listitem>
+
+              <listitem>
+                <para>UHCI HCD (most Intel and VIA) support</para>
+
+                <para>UHCI is Intels' interface for USB 1.0 and 1.1
+                support.</para>
+              </listitem>
+
+              <listitem>
+                <para>USB Printer support</para>
+
+                <para>As I do want to print occasionally, I need to enable USB
+                printer support (as my printer is a USB printer).</para>
+              </listitem>
+
+              <listitem>
+                <para>USB Mass Storage support</para>
+
+                <para>USB Mass Storage support is needed to be able to access
+                USB sticks, USB disks and other USB media that I want to be
+                able to access as a remote disk. This includes most digital
+                cameras.</para>
+              </listitem>
+            </itemizedlist>
+          </section>
+
+          <section>
+            <title>MMC/SD card support</title>
+
+            <para>My laptop supports MMC/SD cards so I want to support this in
+            my kernel as well.</para>
+
+            <programlisting>[ ] MMC debugging
+[ ] Assume MMC/SD cards are non-removable (DANGEROUS)
+    *** MMC/SD Card Drivers ***
+&lt;M&gt; MMC block device driver
+[*]   Use bounce buffer for simple hosts
+&lt; &gt; SDIO UART/GPS class support
+&lt; &gt; MMC host test driver
+    *** MMC/SD HOst Controller Drivers ***
+&lt;M&gt; Secure Digital Host Controller Interface support
+&lt;M&gt; SDHCI support on PCI bus
+&lt; &gt; Winbond W83L51xD SD/MMC Card Interface
+&lt; &gt; ENE CB710 MMC/SD Interface support
+&lt; &gt; VIA SD/MMC Card Reader Driver</programlisting>
+
+            <itemizedlist>
+              <listitem>
+                <para>MMC block device driver</para>
+
+                <para>This driver enables the Linux kernel to mount an MMC/SD
+                card as a file system.</para>
+              </listitem>
+
+              <listitem>
+                <para>Use bounce buffer for simple hosts</para>
+
+                <para>The Linux kernel help system has informed me that this
+                helps performance on certain controllers. Although I don't
+                know if I really need this, I've enabled this as I was unsure,
+                and the help sais I need to say 'Y' if I am unsure.</para>
+              </listitem>
+
+              <listitem>
+                <para>Secure Digital Host Controller Interface support</para>
+
+                <para>Inside the help of this option it sais that this enables
+                SD controller support for controllers manufactured by Texas
+                Instruments, Ricoh and Toshiba. lspci informs me that I have a
+                Texas Instruments device, so I enable this:</para>
+
+                <programlisting># <command>lspci | grep SD</command>
+06:09.4 SD Host controller: Texas Instruments
+        PCI6411/6421/6611/6621/7411/7421/7611/7621 Secure
+        Digital Controller</programlisting>
+              </listitem>
+            </itemizedlist>
+          </section>
+        </section>
+
+        <section>
+          <title>File Systems</title>
+
+          <para>Our next stop is file system support. A file system is the
+          formatting structure used on a (disk)partition as we mentioned
+          before. It is important here that you build support for the file
+          systems in the kernel (and not as a module) as you could otherwise
+          end up with a kernel that needs file system support to mount the
+          file system... where your kernel modules are installed.</para>
+
+          <programlisting>&lt;*&gt; Second extended fs support
+[ ]   Ext2 extended attributes
+[ ]   Ext2 execute in place support
+&lt;*&gt; Ext3 journalling file system support
+[ ]   Default to 'data=ordered' in ext3
+[ ]   Ext3 extended attributes
+&lt; &gt; The Extended 4 (ext4) filesystem
+[ ] JDB (ext3) debugging support
+&lt; &gt; Reiserfs support
+&lt; &gt; JFS filesystem support
+&lt; &gt; XFS filesystem support
+&lt; &gt; OCFS2 file system support
+[*] Dnotify support
+[*] Inotify file change notification support
+[*]   Inotify support for userspace
+[ ] Quota support
+&lt; &gt; Kernel automounter support
+&lt; &gt; Kernel automounter version 4 support (also supports v3)
+&lt; &gt; FUSE (Filesystem in Userspace) support
+    Caches ---&gt;
+    CD-ROM/DVD Filesystems ---&gt;
+    DOS/FAT/NT Filesystems ---&gt;
+    Pseudo filesystems ---&gt;
+[ ] Miscellaneous filesystems ---&gt;
+[*] Network File Systems ---&gt;
+    Partition Types ---&gt;
+-*- Native language support ---&gt;
+&lt; &gt; Distributed Lock Manager (DLM) ---&gt;</programlisting>
+
+          <itemizedlist>
+            <listitem>
+              <para>Second extended fs support</para>
+
+              <para>My /boot partition uses the ext2 file system...</para>
+            </listitem>
+
+            <listitem>
+              <para>Ext3 journalling file system support</para>
+
+              <para>... and all other partitions I have use the ext3 file
+              system</para>
+            </listitem>
+
+            <listitem>
+              <para>Dnotify support</para>
+
+              <para>Some applications might need Dnotify support (a
+              notification system where the kernel sends a signal to a
+              userspace application to notify it about file changes).</para>
+            </listitem>
+
+            <listitem>
+              <para>'Inotify file change notification support' and 'Inotify
+              support for userspace'</para>
+
+              <para>Inotify is a better implementation of a file notification
+              system than Dnotify and is used by various applications.</para>
+            </listitem>
+
+            <listitem>
+              <para>CD-ROM/DVD Filesystems</para>
+
+              <para>Within this subsection, enable 'ISO 9660 CDROM file system
+              support' as well as 'Microsoft Joliet CDROM extensions' (to
+              support the larger filename scheme used by Microsoft).</para>
+            </listitem>
+
+            <listitem>
+              <para>DOS/FAT/NT FIlesystems</para>
+
+              <para>If you are never going to work on FAT/NTFS file systems,
+              you don't need this, but I occasionally attach a FAT/NTFS
+              formatted disk on my laptop to help people.</para>
+
+              <programlisting>&lt;*&gt; MSDOS fs support
+&lt;*&gt; VFAT (Windows-95) fs support
+(437) Default codepage for FAT
+(iso8859-15) Default iocharset for FAT
+&lt;*&gt; NTFS file system support
+[ ]   NTFS debugging support
+[ ]   NTFS write support</programlisting>
+
+              <para>You notice that I don't enable NTFS write support. This is
+              because the in-kernel NTFS write support is very limited (thank
+              you Microsoft for hiding how NTFS works).</para>
+            </listitem>
+
+            <listitem>
+              <para>Pseudo filesystems</para>
+
+              <para>Pseudo file systems are virtual file systems where the
+              kernel maps information onto virtual files which you can read or
+              write.</para>
+
+              <programlisting>-*- /proc file system support
+[*]   /proc/kcore support
+[*] Virtual memory file system support (former shm fs)
+[ ]   Tmpfs POSIX Access Control Lists
+[ ] HugeTLB file system support
+&lt; &gt; Userspace-driven configuration filesystem</programlisting>
+
+              <para>Apart from the /proc file system support, I also enable
+              'Virtual memory file system support' (also known as
+              tmpfs<indexterm>
+                  <primary>tmpfs</primary>
+                </indexterm>) which allows you to map a portion of your
+              virtual memory as a file system (every file you create inside a
+              tmpfs file system is stored in memory or swap space; when
+              unmounted, the files are lost).</para>
+
+              <para>Tmpfs is often used for the /tmp location.</para>
+            </listitem>
+
+            <listitem>
+              <para>Network File Systems</para>
+
+              <para>Network file systems allow you to access files on remote
+              sites as if they were local (rather than using tools /
+              technologies like FTP to store or retrieve them).</para>
+
+              <programlisting>&lt;*&gt; NFS file system support
+[*]   Provide NFSv3 client support
+[ ]     Provide client support for the NFSv3 ACL protocol extension
+[ ]   Allow direct I/O on NFS files
+&lt;*&gt; NFS server support
+[ ]   Provide NFSv3 server support
+[*]   Provide NFS server over TCP support
+&lt; &gt; SMB file system support (OBSOLETE, please use CIFS)
+&lt;*&gt; CIFS support (advanced network filesystem, SMBFS successor)
+[ ]   CIFS statistics
+[ ]   Support legacy servers which use weaker LANMAN security
+[ ]   CIFS extended attributes
+[ ]   Enable additional CIFS debugging routines
+&lt; &gt; NCP file system support (to mount NetWare volumes)
+&lt; &gt; Code file system support (advanced network fs)</programlisting>
+
+              <itemizedlist>
+                <listitem>
+                  <para>NFS file system support</para>
+
+                  <para>I use NFS to share Gentoo's portage tree with other
+                  systems (and even virtual machines) so I need to enable NFS
+                  support</para>
+                </listitem>
+
+                <listitem>
+                  <para>Provide NFSv3 client support</para>
+
+                  <para>With this I can act as an NFS client (to mount remote
+                  NFS shares)</para>
+                </listitem>
+
+                <listitem>
+                  <para>NFS server support</para>
+
+                  <para>With this I can act as an NFS server (to provide
+                  remote NFS shares)</para>
+                </listitem>
+
+                <listitem>
+                  <para>Provide NFS server over TCP support</para>
+
+                  <para>Enable NFS servers with TCP support; the Linux kernel
+                  help system tells me that this is interesting when the
+                  network is lossy or congested. As I'm using a wireless
+                  network, this seems to be a good choice.</para>
+                </listitem>
+
+                <listitem>
+                  <para>CIFS support</para>
+
+                  <para>CIFS enables support for mounting SAMBA shares as well
+                  as Windows shares (and authenticate my own system on a
+                  Windows network).</para>
+                </listitem>
+              </itemizedlist>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section>
+          <title>Cryptographic API</title>
+
+          <para>Some kernel subsystems require in-kernel cryptographic
+          algorithm support. The algorithms that are needed will be
+          automatically selected, so you don't have to configure anything
+          here.</para>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Building a Linux Kernel</title>
+
+    <para>Once your kernel configuration is finished, save the configuration
+    (select 'Exit' and confirm that you want to save the new kernel
+    configuration). Next, build the main kernel<indexterm>
+        <primary>kernel</primary>
+
+        <secondary>building</secondary>
+      </indexterm> and the modules by entering the <command>make</command>
+    command.</para>
+
+    <programlisting>$ <command>make</command></programlisting>
+
+    <para>The make command reads in a specific configuration file (the
+    Makefile) which contains the instructions for building the Linux kernel
+    completely. This can take a while; when finished, the kernel image will be
+    stored in (for x86 architecture) <filename>arch/i386/boot</filename> and
+    is called <filename>bzImage</filename><indexterm>
+        <primary>bzImage</primary>
+      </indexterm>.</para>
+
+    <para>Next, you need to install the kernel modules (if any) on your
+    system. Type in <command>make modules_install</command> to have the
+    <command>make</command> command automatically copy the kernel modules to
+    the correct location
+    (<filename>/lib/modules/</filename><emphasis><filename>kernelversion</filename></emphasis>):</para>
+
+    <programlisting># <command>make modules_install</command></programlisting>
+
+    <para>Finally, copy over the kernel image to the /boot location. If /boot
+    is a separate partition (as it is on my system) which isn't automatically
+    mounted, mount it first:</para>
+
+    <programlisting># <command>mount /boot</command>
+# <command>cp /usr/src/linux/arch/x86/boot/bzImage /boot/kernel-2.6.25-r2</command></programlisting>
+
+    <section>
+      <title>Rebuilding a Kernel</title>
+
+      <para>Suppose that you have succesfully built a kernel and are happily
+      working with it. At some point in time, you'll need to upgrade your
+      kernel. Luckily, there is no reason to perform the above steps over and
+      over again.</para>
+
+      <para>Go to the source location of your new kernel sources (most likely,
+      still <filename>/usr/src/linux</filename>) and get your current kernel
+      configuration. If you've followed the above configuration directives,
+      you'll have access to these settings in
+      <filename>/proc/config.gz</filename><indexterm>
+          <primary>config.gz</primary>
+        </indexterm>:</para>
+
+      <programlisting># <command>cd /usr/src/linux</command>
+# <command>zcat /proc/config.gz &gt; .config</command></programlisting>
+
+      <para>The <command>zcat</command> command will "load" your current
+      kernel configuration into the <filename>.config</filename> file, which
+      is the file used by the kernel building process to find the (new)
+      configuration settings. Next, tell the kernel build tool to use this
+      configuration as if it is your old(er) configuration. This will result
+      in the build process to only ask for validation when new configuration
+      items are found (in the new sources) that weren't available
+      previously.</para>
+
+      <programlisting># <command>make oldconfig</command></programlisting>
+
+      <para>When this is finished, continue with the <command>make</command>
+      and <command>make modules_install</command> commands, finishing off with
+      the <command>mount</command> and copy commands to install the new kernel
+      at the <filename>/boot</filename> location.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Configuring the Boot Loader</title>
+
+    <para>Before you can use the new kernel, you need to edit your boot loader
+    configuration to use the new kernel. The bootloader I recommend is
+    GRUB<indexterm>
+        <primary>GRUB</primary>
+      </indexterm>, the GRand Unified Bootloader, but others exist (especially
+    for non-x86 compatible architectures which might need different boot
+    loaders).</para>
+
+    <section>
+      <title>Installing GRUB</title>
+
+      <para>Before you can start using GRUB, you need to install GRUB onto
+      your MBR<indexterm>
+          <primary>MBR</primary>
+        </indexterm>, or Master Boot Record<indexterm>
+          <primary>Master Boot Record</primary>
+        </indexterm>. That is a special location on your disk (the first 512
+      bytes of a disk) which is loaded by the BIOS and executed (if it
+      contains executable material).</para>
+
+      <para>By installing GRUB into the MBR, GRUB is automatically started
+      after the BIOS POST processing (Power On Self Test).</para>
+
+      <para>First of all, you need to install GRUB:</para>
+
+      <programlisting># <command>emerge grub</command></programlisting>
+
+      <para>Next, we install GRUB onto the MBR. To have the installation
+      command work, we need to create the /etc/mtab file:</para>
+
+      <programlisting># <command>grep -v rootfs /proc/mounts &gt; /etc/mtab</command>
+# <command>grub-install --no-floppy /dev/sda</command></programlisting>
+    </section>
+
+    <section>
+      <title>Configuring GRUB</title>
+
+      <para>The GRUB configuration file is
+      <filename>/boot/grub/grub.conf</filename><indexterm>
+          <primary>grub.conf</primary>
+        </indexterm>. It's configuration is quite simple:</para>
+
+      <programlisting>default 0
+timeout 5
+
+title=Gentoo Linux 2.6.20
+kernel /kernel-2.6.20 root=/dev/sda8
+
+title=Gentoo Linux 2.6.19
+kernel /kernel-2.6.19 root=/dev/sda8</programlisting>
+
+      <para>You can read this (very simple yet fully functional) configuration
+      file as:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>By default, use the first (0) entry (paragraph beginning with
+          'title=')</para>
+        </listitem>
+
+        <listitem>
+          <para>Provide the user with a selection for at most 5 seconds</para>
+        </listitem>
+
+        <listitem>
+          <para>Two entries can be found:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Gentoo Linux 2.6.20</para>
+
+              <para>This entry uses the kernel image /boot/kernel-2.6.20 (the
+              GRUB kernel argument starts looking for files from its boot
+              partition, and as /boot is a separate partition on my system,
+              /boot/kernel-2.6.20 for GRUB is actually /kernel-2.6.20).</para>
+
+              <para>Also, the root partition (which is the partition where my
+              Linux installation is on) is at
+              <filename>/dev/sda8</filename>.</para>
+            </listitem>
+
+            <listitem>
+              <para>Gentoo Linux 2.6.19</para>
+
+              <para>This is the entry for my previous kernel. It isn't used by
+              default (remember, the default entry that is booted is the first
+              one) but I always allow my last kernel to be bootable in case
+              the kernel configuration for the new kernel went haywire.</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+
+      <para>To use the new kernel (which I stored as
+      <filename>kernel-2.6.25-r2</filename> inside <filename>/boot</filename>)
+      I remove the second entry and put a new one before the entry that is
+      currently the first one (so that the new entry becomes the default
+      entry):</para>
+
+      <programlisting>default 0
+timeout 5
+
+title=Gentoo Linux 2.6.25 Release Candidate 2
+kernel /kernel-2.6.25-r2 root=/dev/sda8
+
+title=Gentoo Linux 2.6.20
+kernel /kernel-2.6.20 root=/dev/sda8</programlisting>
+
+      <para>After this, I unmount the /boot partition again (<command>umount
+      /boot</command>). If I now reboot my system, I am booted with the new
+      Linux kernel (at least if everything works). If for some reason the
+      kernel doesn't work, I can restart the system and select the second
+      entry in the menu to boot the old kernel (which I know works) and
+      attempt to fix the configuration.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Troubleshooting Boot Failures</title>
+
+    <para>One of the worst issues you can face is an unbootable system. Yes,
+    it is bad, because without being able to boot, how can you fix the system
+    (or debug / troubleshoot)? Before continuing with the most frequent boot
+    failures (and how to deal with them), first a quick look at how to
+    generally act when a system fails to boot...</para>
+
+    <section>
+      <title>When a system fails to boot...</title>
+
+      <para>A boot failure can either be due to:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>kernel configuration issue, or</para>
+        </listitem>
+
+        <listitem>
+          <para>system configuration issue, or</para>
+        </listitem>
+
+        <listitem>
+          <para>hardware malfunction</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>It's pretty easy to guess which one is the hardest to detect but
+      easiest to resolve (hint: it's the hardware malfunction one). The other
+      ones, well, they require a bit preparation in order to easily
+      troubleshoot and, eventually, solve.</para>
+
+      <section>
+        <title>Rescue Kernel Boot Entry</title>
+
+        <para>Whenever you have a kernel that boots (regardless of the fact
+        that the kernel doesn't support your sound card or doesn't play 3D
+        action games well), make a new entry in your boot loader to boot this
+        kernel:</para>
+
+        <programlisting># <command>mount /boot</command>
+# <command>nano /boot/grub/grub.conf</command>
+(...)
+
+title=Rescue Gentoo Linux 2.6.20
+kernel /kernel-2.6.20 root=/dev/sda8</programlisting>
+
+        <para>If a boot failure occurs due to a malconfigured kernel, just
+        boot the backup (rescue) kernel and retry configuring your
+        kernel.</para>
+      </section>
+
+      <section>
+        <title>Kernel Parameters</title>
+
+        <para>GRUB allows you to boot a kernel / system with a modified set of
+        parameters for a single time (i.e. the changes are not persisted).
+        This allows you to (re)boot a kernel with additional
+        parameters.</para>
+
+        <orderedlist>
+          <listitem>
+            <para>When you are at the GRUB screen, highlight the entry you
+            want to boot, and press <command>e</command> (for edit).</para>
+          </listitem>
+
+          <listitem>
+            <para>Highlight the line starting with "kernel", and press
+            <command>e</command> again.</para>
+          </listitem>
+
+          <listitem>
+            <para>Edit the line accordingly (a kernel parameter is often a
+            word or key=value set appended to the line), and press Enter to
+            save the changes (remember, it is just for this single
+            boot)</para>
+          </listitem>
+
+          <listitem>
+            <para>Press <command>b</command> (for boot) to boot the
+            kernel.</para>
+          </listitem>
+        </orderedlist>
+
+        <para>You will find that several of the kernel boot failures can be
+        helped with one or more kernel parameters being added.</para>
+      </section>
+
+      <section>
+        <title>Rescue Live Linux Environment</title>
+
+        <para>If a system fails to boot due to a system configuration issue, I
+        recommend to boot from a rescue environment (<ulink
+        url="http://www.sysresccd.org">SysRescCD</ulink> comes to mind). Since
+        USB sticks are widely spread and easy to work with, I suggest that you
+        configure your system to be able to boot from USB <emphasis>and test
+        it</emphasis>. It is faster than booting from most CD/DVD drives
+        (sorry, I still don't have a BlueRay drive at the time of writing) and
+        a rescue USB stick is easier to carry with you.</para>
+
+        <para>Having a rescue live Linux environment around you is really
+        worth it. Configuration failures are easily made, and can have serious
+        consequences. Gentoo Linux doesn't have a roll-back scenario (yet)
+        that allows you to boot with previous settings.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Kernel Boot Failures</title>
+
+      <para>Kernel boot failures can have multiple causes, but usually the
+      output on the screen allows you to identify the issue rapidly.</para>
+
+      <section>
+        <title>ACPI Issues</title>
+
+        <para>ACPI is a common source of boot failures. It isn't that the
+        (ACPI) standard is bad, or that Linux drivers often implement it
+        wrongly. Rather, some hardware is known not to follow the ACPI
+        standard to the letter, making it difficult to write drivers that
+        comply to the ACPI standard with this hardware.</para>
+
+        <para>Issues with ACPI support are often seen through kernel oops
+        messages (which is a dump to the screen offering information for
+        kernel developers regarding the problem) that point to
+        <function>acpi_*</function> functions:</para>
+
+        <programlisting><emphasis>[     0.873537]  [&lt;ffffffff8134ecba&gt;] ? acpi_video_register+0x3f/0x71</emphasis>
+[     0.873596]  [&lt;ffffffff8100c36a&gt;] ? do_one_initcall+0x34/0x1a0
+[     0.873656]  [&lt;ffffffff8175147d&gt;] ? kernel_init+0x164/0x1be
+[     0.876714]  [&lt;ffffffff8100c36a&gt;] ? child_rip+0xa/0x20
+[     0.876773]  [&lt;ffffffff81751319&gt;] ? kernel_init+0x0/0x1be
+[     0.876832]  [&lt;ffffffff8100c360&gt;] ? child_rip+0x0/0x20</programlisting>
+
+        <para>Whenever you suspect that ACPI is the source of your issue, boot
+        the same kernel, but with the <parameter>noacpi</parameter><indexterm>
+            <primary>noacpi</primary>
+          </indexterm> parameter.</para>
+      </section>
+
+      <section>
+        <title>Unable to mount root-fs</title>
+
+        <para>Most likely one of the most occurring issue (but once you solved
+        it, you most likely are never going to see it again):</para>
+
+        <programlisting>Unable to mount root fs on unknown-block(0,0)</programlisting>
+
+        <para>or</para>
+
+        <programlisting>VFS: Cannot open root device "sda3" or unknown-block(8,3)
+Please append a correct "root=" boot option; here are the available partitions:
+  sda driver: sd
+    sda1 sda2</programlisting>
+
+        <para>The digits "0,0" or "8,3" can be different in your case - it
+        refers to the device that the kernel tries to access (and which
+        fails). Generally speaking one can say that, if the first digit is 0,
+        then the kernel is unable to identify the hardware. If it is another
+        digit (like 8), it is unable to identify the file system (but is able
+        to access the hardware).</para>
+
+        <para>The problem here is that the kernel that you are booting cannot
+        translate the "root=/dev/..." parameter you gave it (inside the boot
+        loader configuration) into a real, accessible file system. Several
+        reasons can result in such a failure:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>the kernel configuration is missing drivers for your HDD
+            controller (cases <ulink
+            url="https://forums.gentoo.org/viewtopic-t-810063.html">1</ulink>,
+            <ulink
+            url="https://forums.gentoo.org/viewtopic-p-6075078.html#6075078">4</ulink>,
+            <ulink
+            url="https://forums.gentoo.org/viewtopic-t-801465.html">5</ulink>)</para>
+          </listitem>
+
+          <listitem>
+            <para>the kernel configuration is missing drivers for the bus used
+            by your HDD controller</para>
+          </listitem>
+
+          <listitem>
+            <para>the kernel configuration is missing drivers for the file
+            system you are using</para>
+          </listitem>
+
+          <listitem>
+            <para>the device is misidentified in your root= parameter (cases
+            <ulink
+            url="https://forums.gentoo.org/viewtopic-t-809455.html">2</ulink>,
+            <ulink
+            url="https://forums.gentoo.org/viewtopic-t-805518.html">3</ulink>)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Resolving the issue is easy if you know what the reason is. You
+        most likely don't, so here's a quick check-up.</para>
+
+        <para>Open the kernel configuration wizard (the <command>make
+        menuconfig</command> part) so that you can update the kernel
+        configuration accordingly.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Check if you have built in (and not as a module) support for
+            the bus / protocol that your harddisk controller uses.</para>
+
+            <para>Most likely this is PCI support, SATA support (which is
+            beneath SCSI device support), ...</para>
+          </listitem>
+
+          <listitem>
+            <para>Check if you have built in (and not as a module) support for
+            the HDD controller you use.</para>
+
+            <para>One of the most frequent cases: you selected support for
+            your harddisk controller protocol (IDE, SATA, SCSI, ...) but
+            forgot to select the HDD controller driver itself (like Intel
+            PIIX). Try running the following <command>lscpi</command> command,
+            and paste its output on <ulink
+            url="http://kmuto.jp/debian/hcl/">http://kmuto.jp/debian/hcl/</ulink>.
+            The site will show you which kernel drivers you need to select for
+            your system. Within the menuconfig, you can type "/" to open the
+            search function, and type in the driver name to find out where it
+            resides.</para>
+
+            <programlisting># <command>lspci -n</command></programlisting>
+          </listitem>
+
+          <listitem>
+            <para>Check if you have built in (and not as a module) support for
+            the file system(s) you use.</para>
+
+            <para>Say your root file system uses btrfs (which I definitely
+            don't recommend) but you didn't select it, or selected it to be
+            built as a module, then you'll get the error you see. Make sure
+            the file system support is built in the kernel.</para>
+          </listitem>
+
+          <listitem>
+            <para>Check if the kernel parameter for
+            <parameter>root=</parameter> is pointing to the correct
+            partition.</para>
+
+            <para>This isn't as stupid as it sounds. When you are booted with
+            one kernel, it might list your disks as being /dev/sda whereas
+            your (configured) kernel is expecting it to be /dev/hda. This is
+            not because kernels are inconsistent with each other, but because
+            of the drivers used: older drivers use the hda syntax, newer
+            sda.</para>
+
+            <para>Try switching hda with sda (and hdb with sdb, and
+            ...).</para>
+
+            <para>Also, recent kernels give an overview of the partitions they
+            found on the device told. If it does, it might help you identify
+            if you misselected a partition (in the example given at the
+            beginning of this section, only two partitions are found whereas
+            the kernel was instructed to boot the third). If it doesn't, it is
+            most likely because the kernel doesn't know the device to begin
+            with (so it can't attempt to display partitions).</para>
+          </listitem>
+
+          <listitem>
+            <para>Check if the kernel that is being boot by the boot loader is
+            the correct kernel.</para>
+
+            <para>I have seen people who, after building a first kernel (which
+            doesn't boot), forget that they have to mount
+            <filename>/boot</filename> before the overwrite the kernel with a
+            new one. As a result, they copy the kernel to the root file system
+            (/) whereas the boot loader still expects the kernel image to be
+            on the <filename>/boot</filename> partition.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>System Boot Failures</title>
+
+      <para>The following set of subsections explain various failures you
+      might get in contact with. These failures are less (or not) related with
+      the kernel build process, but since they occur at boot-time (and due to
+      lack of a better location in this book) I've included them in this
+      chapter...</para>
+
+      <section>
+        <title>X (graphical environment) comes up, but keyboard or mouse
+        doesn't work</title>
+
+        <para>You might have this issue when you have just upgraded your
+        graphical environment or HAL process. By itself not a very easy thing
+        to debug, but you'll need to get access to your system, and rebooting
+        doesn't help (as you'll get into the same situation anyhow).</para>
+
+        <para>Luckily, you can ask Gentoo to boot the system without starting
+        the graphical environment (leaving you with the command-line login
+        from which you can fix things). Reboot until you get into the GRUB
+        menu. Then press e(dit) on the boot item, e(dit) again on the kernel
+        line, and add "nox" at the end of the line. This option will inform
+        Gentoo not to load X.</para>
+
+        <para>Now that you are booted without the graphical environment, you
+        can fix your system.</para>
+
+        <para>One reason this might happen is that X has been upgraded but you
+        need to rebuild the various xf86-input-* packages. To get the list of
+        installed xf86-input-* packages, you can use qlist:</para>
+
+        <programlisting># <command>qlist -I xf86-input</command>
+x11-drivers/xf86-input-evdev
+x11-drivers/xf86-input-keyboard
+x11-drivers/xf86-input-mouse
+x11-drivers/xf86-input-synaptics</programlisting>
+
+        <para>You can reinstall those packages using the following
+        command:</para>
+
+        <programlisting># <command>emerge -1 `qlist -CI xf86-input`</command></programlisting>
+
+        <para>Mind the use of the ` character at both beginning and ending of
+        the <command>qlist</command> stanza.</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>How is it possible that one bootloader is able to boot an
+        operating system through a different bootloader?</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

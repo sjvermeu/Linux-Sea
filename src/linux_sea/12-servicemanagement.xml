@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Service Management</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>A <emphasis>service</emphasis><indexterm>
+        <primary>service</primary>
+      </indexterm> is a generic term which can be used in many contexts. Here,
+    a service is a tool that runs in the background (also known as a
+    <emphasis>daemon</emphasis><indexterm>
+        <primary>daemon</primary>
+      </indexterm>) which offers a certain functionality to the system or to
+    the users. It is also possible that the tool just performs a single set of
+    tasks and then quits.</para>
+
+    <para>Examples of services on a Linux system are:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>the logger service, allowing programs on the system to send
+        logging notifications to a global location which is then parsed and
+        processed by a logger tool (example: syslog-ng).</para>
+      </listitem>
+
+      <listitem>
+        <para>the clock service, which sets the necessary environmental
+        definitions (like timezone information)</para>
+      </listitem>
+
+      <listitem>
+        <para>the SSH service, allowing users to log on to your system
+        remotely (through the secure shell)</para>
+      </listitem>
+
+      <listitem>
+        <para>...</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>The scripts that manipulate the services are called <emphasis>init
+    scripts</emphasis><indexterm>
+        <primary>init scripts</primary>
+      </indexterm> (initialization scripts) and reside inside
+    <filename>/etc/init.d</filename>. Although this is quite generic for all
+    Linux distributions, Gentoo offers a somewhat different way of working
+    with services, so not all activities mentioned in this chapter can be used
+    for other distributions.</para>
+  </section>
+
+  <section>
+    <title>Services at System Boot / Shutdown</title>
+
+    <para>When your system boots, the Linux kernel starts a process called
+    <command>init</command>. This tool executes a set of tasks defined by the
+    various init levels on the system. Each init level defines a set of
+    services to start (or stop) at this stage.</para>
+
+    <para>Within Gentoo, init levels are mapped onto named runlevels.</para>
+
+    <para>When init is launched, it will first run the sysinit and bootwait
+    init levels. On Gentoo, the associated runlevels are also called sysinit
+    and boot (sysinit is not configurable). Then, it will start the services
+    for the runlevel it is configured to boot into (by default, init level 3).
+    This init level at Gentoo is mapped onto the "default" runlevel.</para>
+
+    <para>For instance, the following services are launched when I start my
+    laptop (sysinit not shown, but sysinit is always launched).</para>
+
+    <programlisting># <command>rc-status boot</command>
+Runlevel: boot
+ alsasound        [ started ]
+ bootmisc         [ started ]
+ checkfs          [ started ]
+ checkroot        [ started ]
+ clock            [ started ]
+ consolefont      [ started ]
+ hostname         [ started ]
+ keymaps          [ started ]
+ localmount       [ started ]
+ modules          [ started ]
+ net.lo           [ started ]
+ rmnologin        [ started ]
+ urandom          [ started ]
+# <command>rc-status default</command>
+Runlevel: default
+ hald                 [ started  ]
+ local                [ started  ]
+ net.eth0             [ started  ]
+ net.eth1             [ stopped  ]
+ sshd                 [ started  ]
+ syslog-ng            [ started  ]
+ udev-postmount       [ started  ]
+ xdm                  [ started  ]</programlisting>
+
+    <para>As you can see, all configured services for the two runlevels (boot
+    and default) are launched but one: net.eth1 isn't started (because it is
+    my wireless interface and I'm currently on a cabled network which uses
+    net.eth0).</para>
+
+    <para>The init configuration file is called
+    <filename>/etc/inittab</filename><indexterm>
+        <primary>inittab</primary>
+      </indexterm>. The next excerpt is not a full
+    <filename>inittab</filename> but explains most important settings:</para>
+
+    <programlisting>id:3:initdefault:            # The default init level is 3
+si::sysinit:/sbin/rc sysinit # sysinit       &gt; run the Gentoo "sysinit" runlevel
+rc::bootwait:/sbin/rc boot   # bootwait      &gt; run the Gentoo "boot" runlevel
+l0:0:wait:/sbin/rc shutdown  # init level 0  &gt; run the Gentoo "shutdown" runlevel
+l1:S1:wait:/sbin/rc single   # init level S1 &gt; run the Gentoo "single" runlevel
+l3:3:wait:/sbin/rc default   # init level 3  &gt; run the Gentoo "default" runlevel
+l6:6:wait:/sbin/rc reboot    # init level 6  &gt; run the Gentoo "reboot" runlevel</programlisting>
+
+    <para>Okay, so in the end, init uses Gentoo's runlevels. How do you
+    configure those?</para>
+
+    <section>
+      <title>Init Scripts</title>
+
+      <para>An init script is a script that manipulates a particular service.
+      It should support the "start" and "stop" arguments as these are used by
+      the <command>init</command> tool (actually the
+      <command>rc</command><indexterm>
+          <primary>rc</primary>
+        </indexterm> tool which is called by <command>init</command>). For
+      instance:</para>
+
+      <programlisting># <command>/etc/init.d/udhcp start</command>
+# <command>/etc/init.d/syslog-ng stop</command></programlisting>
+
+      <para>As you can see, the scripts reside in the
+      <filename>/etc/init.d</filename> directory. These scripts are usually
+      provided by the tools themselves (udhcp and syslog-ng in our examples)
+      but sometimes you might need to write one yourself. Luckily, this is
+      less and less the case.</para>
+    </section>
+
+    <section>
+      <title>Gentoo Runlevels</title>
+
+      <para>Inside <filename>/etc/runlevels</filename>, Gentoo keeps track of
+      the various scripts that need to be started when init starts a specific
+      init level (which maps onto a Gentoo runlevel):</para>
+
+      <programlisting># <command>ls /etc/runlevels</command>
+boot   default   nonetwork   single</programlisting>
+
+      <para>Inside the directories you get an overview of the services that
+      should be started when the runlevel is active. For instance, inside the
+      default runlevel one could see:</para>
+
+      <programlisting># <command>ls /etc/runlevels/default</command>
+local  net.eth0   net.wlan0   syslog-ng     xdm</programlisting>
+
+      <para>The files found inside these directories are symbolic links,
+      pointing to the associated init script found inside /etc/init.d:</para>
+
+      <programlisting># <command>ls -l /etc/runlevels/default/local</command>
+lrwxrwxrwx 1 root root 17 Jul 12   2004 
+  /etc/runlevels/default/local -&gt; /etc/init.d/local</programlisting>
+
+      <para>To manipulate the Gentoo runlevels, you can manipulate the
+      symbolic links inside these directories directly, but you can also use
+      the tools rc-update, rc-config and rc-status.</para>
+
+      <para>With <command>rc-update</command><indexterm>
+          <primary>rc-update</primary>
+        </indexterm>, you can add or delete links from a particular runlevel.
+      For instance, to remove the xdm init script from the default
+      runlevel:</para>
+
+      <programlisting># <command>rc-update del xdm default</command></programlisting>
+
+      <para>With <command>rc-status</command><indexterm>
+          <primary>rc-status</primary>
+        </indexterm>, you can see what scripts should be started in the
+      selected runlevel and the current state. The next example shows that the
+      net.eth0 runlevel is not started currently even though it is a service
+      for the default runlevel (the reason is simple: I deactivated it as I
+      don't need the interface currently):</para>
+
+      <programlisting># <command>rc-status default</command>
+Runlevel: default
+ local                                      [started]
+ net.eth0                                   [stopped]
+ net.wlan0                                  [started]
+ syslog-ng                                  [started]
+ xdm                                        [started]</programlisting>
+
+      <para>With <command>rc-config</command><indexterm>
+          <primary>rc-config</primary>
+        </indexterm>, you can manipulate the runlevels (just like with
+      <command>rc-update</command>), show the current status of a particular
+      runlevel (just like with <command>rc-status</command>) and view all
+      currently available init scripts and the runlevels in which they are
+      available (actually, <command>rc-update</command> can also do this using
+      <command>rc-update show</command>):</para>
+
+      <programlisting># <command>rc-config list</command>
+(...)</programlisting>
+    </section>
+
+    <section>
+      <title>List of Default Services</title>
+
+      <para>When a pristine Gentoo install has finished, you will already have
+      quite a few services available. The following sections give a quick
+      overview of those services and what they stand for.</para>
+
+      <section>
+        <title>alsasound</title>
+
+        <para>The alsasound<indexterm>
+            <primary>alsasound</primary>
+          </indexterm> service is responsible for loading the appropriate
+        sound kernel modules (if they are known as modules) and
+        saving/restoring the sound configuration at boot-up / shutdown.</para>
+
+        <para>When the service is started, you might see kernel modules being
+        loaded in memory. However, no other processes are started as part of
+        this service.</para>
+      </section>
+
+      <section>
+        <title>bootmisc</title>
+
+        <para>The bootmisc<indexterm>
+            <primary>bootmisc</primary>
+          </indexterm> service is responsible for various boot-level
+        activities, such as:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>loading the kernel parameters from
+            <filename>/etc/sysctl.conf</filename><indexterm>
+                <primary>sysctl.conf</primary>
+              </indexterm>.</para>
+          </listitem>
+
+          <listitem>
+            <para>cleaning up directories to ensure they don't contain rogue
+            information that might hinder the bootup</para>
+          </listitem>
+
+          <listitem>
+            <para>create, if they don't exist, system files with the correct
+            permissions</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>checkfs</title>
+
+        <para>The checkfs<indexterm>
+            <primary>checkfs</primary>
+          </indexterm> service is responsible for verifying the integrity of
+        your systems' file systems. By default, it will verify the integrity
+        of the file systems whose last digit in
+        <filename>/etc/fstab</filename> isn't zero. You can force a root file
+        system check by adding the <parameter>forcefsck</parameter><indexterm>
+            <primary>forcefsck</primary>
+          </indexterm> boot parameter or force a full file system check for
+        all partitions (listed in the fstab file) by creating an empty
+        "/forcefsck" file. This file will be automatically removed once the
+        check has been finished.</para>
+
+        <programlisting># <command>touch /forcefsck</command></programlisting>
+
+        <para>On the other hand, if you want to ignore the file system checks,
+        add the <parameter>fastboot</parameter><indexterm>
+            <primary>fastboot</primary>
+          </indexterm> boot parameter.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>checkroot</title>
+
+        <para>The checkroot<indexterm>
+            <primary>checkroot</primary>
+          </indexterm> service is responsible for checking the consistency of
+        the root file system. This service uses the same boot parameters
+        (forcefsck or fastboot) as the checkfs service. </para>
+
+        <para>The service is also responsible for remounting the root file
+        system read-write (by default it gets mounted read-only by the Linux
+        kernel).</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>clock</title>
+
+        <para>The clock<indexterm>
+            <primary>clock</primary>
+
+            <secondary>service</secondary>
+          </indexterm> service is responsible for setting the system time
+        based on the BIOS clock and the settings defined in
+        <filename>/etc/conf.d/clock</filename>. It will also synchronise the
+        system clock with your hardware clock during shutdown.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>consolefont</title>
+
+        <para>The consolefont<indexterm>
+            <primary>consolefont</primary>
+          </indexterm> service is responsible for setting the console
+        font.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>hald</title>
+
+        <para>The hald<indexterm>
+            <primary>hald</primary>
+
+            <secondary>service</secondary>
+          </indexterm> service is responsible for starting the hardware
+        abstraction layer daemon (see <link linkend="HAL">HAL</link>).</para>
+
+        <para>Once the service has finished starting, you will find the hald
+        process running as the haldaemon user.</para>
+      </section>
+
+      <section>
+        <title>hostname</title>
+
+        <para>The hostname<indexterm>
+            <primary>hostname</primary>
+
+            <secondary>service</secondary>
+          </indexterm> service is responsible for setting your systems'
+        hostname based on the input of
+        <filename>/etc/conf.d/hostname</filename>.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>keymaps</title>
+
+        <para>The keymaps<indexterm>
+            <primary>keymaps</primary>
+          </indexterm> service is responsible for setting your keyboard
+        mapping (qwerty, azerty, dvorak, ...) based on the
+        <filename>/etc/conf.d/keymaps</filename> file.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>local</title>
+
+        <para>The local<indexterm>
+            <primary>local</primary>
+          </indexterm> service is responsible for handling your custom
+        activities which you have stated in
+        <filename>/etc/conf.d/local.start</filename> and
+        <filename>/etc/conf.d/local.stop</filename>. The local service is ran
+        as last service before you can log on to your system.</para>
+
+        <para>As you completely manage what this service does, I can't tell
+        you what will happen when the service has finished starting. By
+        default however, it doesn't do anything.</para>
+      </section>
+
+      <section>
+        <title>localmount</title>
+
+        <para>The localmount<indexterm>
+            <primary>localmount</primary>
+          </indexterm> service is responsible for mounting all local file
+        systems (mentioned in <filename>/etc/fstab</filename>). It also
+        initiates the necessary support for USB file systems, specific binary
+        format file systems, security file systems and enabling the swap file
+        system.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>modules</title>
+
+        <para>The modules<indexterm>
+            <primary>modules</primary>
+
+            <secondary>service</secondary>
+          </indexterm> service is responsible for automatically loading the
+        kernel modules listed in
+        <filename>/etc/modules.autoload</filename><indexterm>
+            <primary>modules.autoload</primary>
+          </indexterm>.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>net.lo (net.*)</title>
+
+        <para>The net.lo<indexterm>
+            <primary>net.lo</primary>
+          </indexterm> service is responsible for loading networking support
+        for a specific interface. Although the name suggests that it only
+        supports the lo (loopback) interface, the service actually supports
+        any interface. Other interface scripts are just symbolic links to this
+        script.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>rmnologin</title>
+
+        <para>The rmnologin<indexterm>
+            <primary>rmnologin</primary>
+          </indexterm> service is responsible for changing the state of your
+        system from a non-logon-capable system (set by the bootmisc service)
+        to a logon-capable one. This is needed to ensure no-one can log on to
+        your system while important services are being loaded.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>sshd</title>
+
+        <para>The sshd<indexterm>
+            <primary>sshd</primary>
+
+            <secondary>service</secondary>
+          </indexterm> service is responsible for launching the secure shell
+        daemon, which allows you to access your system from a remote location
+        (as long as the network / firewalls permit it) in a secure manner.
+        </para>
+
+        <para>Once the service has finished starting, you will find the sshd
+        process running.</para>
+      </section>
+
+      <section>
+        <title>syslog-ng (or any other system logger service)</title>
+
+        <para>The syslog-ng<indexterm>
+            <primary>syslog-ng</primary>
+
+            <secondary>service</secondary>
+          </indexterm> service is responsible for starting the syslog-ng
+        daemon, which is responsible for watching the
+        <filename>/dev/log</filename> socket for log events and managing those
+        events by dispatching them towards the right log file (or other log
+        server).</para>
+
+        <para>Once the service has finished starting, you will find the
+        syslog-ng process running.</para>
+      </section>
+
+      <section>
+        <title>udev-postmount</title>
+
+        <para>The udev-postmount<indexterm>
+            <primary>udev-postmount</primary>
+          </indexterm> service is responsible for re-evaluating udev events
+        between the moment udev was started and the moment udev-postmount is
+        started which might have failed for any reason (for instance because
+        not everything was up and running yet).</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+
+      <section>
+        <title>urandom</title>
+
+        <para>The urandom<indexterm>
+            <primary>urandom</primary>
+          </indexterm> service is responsible for initializing the random
+        number generator in a somewhat more secure manner (using a random seed
+        obtained during the last shutdown of the system). Without this, the
+        random number generator would be a bit more predictable.</para>
+
+        <para>Once the service has finished starting, no additional processes
+        will be running.</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Service Configurations</title>
+
+    <section>
+      <title>General Service Configuration</title>
+
+      <para>Gentoo's general configuration file for the start-up service
+      behavior is <filename>/etc/rc.conf</filename> and
+      <filename>/etc/conf.d/rc</filename>.</para>
+
+      <section>
+        <title>/etc/rc.conf</title>
+
+        <para>Inside the <filename>rc.conf</filename> file, generic settings
+        which are (or might be) needed by several services can be configured.
+        The syntax is, as usual, "key=value".</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>UNICODE="yes" (or "no"), which specifies if you want to use
+            Unicode support at the console</para>
+          </listitem>
+
+          <listitem>
+            <para>EDITOR="/bin/nano" (or any other text editor), which
+            specifies the default text editor you want to use</para>
+          </listitem>
+
+          <listitem>
+            <para>XSESSION="Xfce4" (or any other supported graphical session
+            manager), which specifies the default graphical environment to
+            launch</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>/etc/conf.d/rc</title>
+
+        <para>In the /etc/conf.d/rc file, you specify configuration settings
+        that affect or influence the system service handling behaviour. The
+        file contains lots of comments which should make it a bit easier to
+        work with. So consider the list below more of a small introduction
+        rather than a complete list. As usual, the syntax uses a key=value
+        set.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><parameter>RC_PARALLEL_STARTUP</parameter><indexterm>
+                <primary>RC_PARALLEL_STARTUP</primary>
+              </indexterm> ("yes" or "no") informs the system service handling
+            to attempt to start services in parallel as much as
+            possible.</para>
+          </listitem>
+
+          <listitem>
+            <para><parameter>RC_NET_STRICT_CHECKING</parameter><indexterm>
+                <primary>RC_NET_STRICT_CHECKING</primary>
+              </indexterm> ("none", "lo", "no", "yes") informs the system when
+            it should consider networking to be available:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>none = networking is always available</para>
+              </listitem>
+
+              <listitem>
+                <para>lo = networking is available the moment the loopback
+                interface (lo) is available</para>
+              </listitem>
+
+              <listitem>
+                <para>no = networking is available the moment at least one
+                non-loopback interface is available</para>
+              </listitem>
+
+              <listitem>
+                <para>yes = networking is available when all non-loopback
+                interfaces are available</para>
+              </listitem>
+            </itemizedlist>
+
+            <para>The <emphasis>loopback interface</emphasis><indexterm>
+                <primary>loopback interface</primary>
+              </indexterm> is a surreal interface which only supports local
+            traffic (localhost, 127.0.0.1). Linux by default enables this
+            interface (it is a kernel configuration) so that one can work with
+            networking tools even if the system isn't on any network. It also
+            makes the development of certain applications a lot easier once
+            they can assume some networking is available (even if it is "just"
+            localhost).</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>Specific Service Configuration</title>
+
+      <para>Each system service within Gentoo can be configured using a file
+      in <filename>/etc/conf.d</filename> which is named the same as the
+      service itself (except in a few specific cases like network
+      configurations, which use the <filename>/etc/conf.d/net</filename>
+      configuration file). All these files use a key=value syntax for
+      configuration purposes.</para>
+
+      <para>For instance, the <command>/etc/init.d/clock</command> init script
+      can be configured using the <filename>/etc/conf.d/clock</filename>
+      configuration file.</para>
+    </section>
+
+    <section>
+      <title>Softlevel States</title>
+
+      <para>Gentoo supports softlevels, which are specific configurations of
+      one or more services. The need exists, because you might create
+      different runlevels (say "work" and "home" instead of just "default") in
+      which services need to be configured differently. As the services would
+      only use their general configuration file, this wouldn't work.</para>
+
+      <para>To initiate softlevels, you need to specify
+      "softlevel=&lt;yoursoftlevel&gt;" at the kernel option line (for
+      instance, in GRUB, this means you add it to grub.conf's kernel line).
+      Once set, Gentoo will try to start the softlevel given instead of the
+      default runlevel (coincidentally named "default") and first look for
+      configurations of this softlevel for each service. If it cannot find
+      specific configurations, it will use the default one.</para>
+
+      <para>An example use of softlevels would be to define a softlevel "work"
+      and a softlevel "home". Both initiate different settings, such as
+      different networking settings, different clock settings, different
+      crypto-loop settings, etc. This could result in the following two GRUB
+      configuration entries:</para>
+
+      <programlisting>title=Gentoo Linux @Home
+kernel /kernel-2.6.31 root=/dev/sda2 softlevel=home
+
+title=Gentoo Linux @Work
+kernel /kernel-2.6.31 root=/dev/sda2 softlevel=work</programlisting>
+
+      <para>Whenever a service is started (or stopped), it will look for its
+      configuration file called
+      <filename>/etc/conf.d/&lt;servicename&gt;.&lt;softlevel&gt;</filename>
+      (for instance, <filename>/etc/conf.d/clock.work</filename>) and if that
+      doesn't exist, use the default one (for instance,
+      <filename>/etc/conf.d/clock</filename>).</para>
+
+      <para>To finish the softlevel, create a new runlevel with the
+      softlevels' name:</para>
+
+      <programlisting># <command>mkdir /etc/runlevels/work</command></programlisting>
+
+      <para>Finish up by adding the services you need to this runlevel.</para>
+    </section>
+
+    <section>
+      <title>Bootlevel States</title>
+
+      <para>The idea behind bootlevel is the same as softlevel, but instead of
+      changing the default runlevel "default", you change the default boot
+      runlevel "boot".</para>
+    </section>
+  </section>
+</chapter>

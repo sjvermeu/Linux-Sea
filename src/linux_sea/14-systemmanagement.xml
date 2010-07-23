@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>System Management</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>System management is a broad term. It is my attempt to cover the
+    system administration tasks that almost every administrator (or end user)
+    will need to know for his system, such as time management, language
+    management, keyboard settings and more.</para>
+  </section>
+
+  <section>
+    <title>Environment Variables</title>
+
+    <para>The Linux operating system makes extensive use of environment
+    variables.</para>
+
+    <para>An environment variable<indexterm>
+        <primary>environment variable</primary>
+      </indexterm> is a simply a key-value pair which a process can read out.
+    For instance, the environment variable <varname>EDITOR</varname> (with, as
+    an example, value <filename>/bin/nano</filename>) informs the process who
+    reads it that the default text editor is (in this case) nano. These
+    variables are not system-wide: if you alter the value of a variable, the
+    change is only active in the session where you are in (which is your shell
+    and the processes started from the shell).</para>
+
+    <section>
+      <title>List of Environment Variables</title>
+
+      <para>There are quite a few environment variables you'll come across
+      often.</para>
+
+      <section>
+        <title>DISPLAY</title>
+
+        <para>The <parameter>DISPLAY</parameter><indexterm>
+            <primary>DISPLAY</primary>
+          </indexterm> environment variable is used when you're logged on to a
+        Unix/Linux system graphically. It identifies where X applications
+        should "send" their graphical screens to. When you log on to a system
+        remotely, this variable is set to your local IP address and the screen
+        number you're using on this system. Most of the time, when you're
+        logged on locally, it's content is ":0.0" (the first screen on the
+        system).</para>
+
+        <para>Note that "screen" here isn't the hardware device, but a name
+        given to a running X instance.</para>
+      </section>
+
+      <section>
+        <title>EDITOR</title>
+
+        <para>The <parameter>EDITOR</parameter><indexterm>
+            <primary>EDITOR</primary>
+          </indexterm> variable identifies the default text editor you want to
+        use. Applications that spawn a text editor (for instance, visudo) to
+        edit one or more files, use this variable to know which text editor to
+        launch.</para>
+      </section>
+
+      <section>
+        <title>LANG and other locale specific variables</title>
+
+        <para>Locales are discussed later in this chapter. Its environment
+        variables (<parameter>LANG</parameter> and the various
+        <parameter>LC_*</parameter> variables) identify the users' language,
+        timezone, currency, number formatting and more.</para>
+      </section>
+
+      <section>
+        <title>PATH</title>
+
+        <para>The PATH variable identifies the directories where the system
+        should look for executable files (being binaries or shell scripts). If
+        unset or set incorrectly, you cannot execute a command without
+        providing the entire path to this command (except built-in shell
+        commands as those are no executable files).</para>
+
+        <para>Below is a small example of a PATH variable:</para>
+
+        <programlisting>~$ <command>echo $PATH</command>
+/usr/local/bin:/usr/bin:/bin:/opt/bin:/usr/i686-pc-linux-gnu/gcc-bin/4.1.2:
+/opt/blackdown-jdk-1.4.2.03/bin:/opt/blackdown-jdk-1.4.2.03/jre/bin:
+/usr/kde/3.5/bin:/usr/qt/3/bin:/usr/games/bin:/home/swift/bin/</programlisting>
+
+        <para>An example of what happens when PATH is not set:</para>
+
+        <programlisting>~$ <command>ls</command>
+(... listing of current directory ...)
+~$ <command>unset PATH</command>
+~$ <command>ls</command>
+-bash: ls: No such file or directory
+~$ <command>/bin/ls</command>
+(... listing of current directory ...)</programlisting>
+      </section>
+
+      <section>
+        <title>TERM</title>
+
+        <para>The <parameter>TERM</parameter><indexterm>
+            <primary>TERM</primary>
+          </indexterm> variable allows command-line programs with special
+        characters to identify which terminal you use to run them. Although
+        nowadays the xterm TERM is most used, sometimes you will find yourself
+        logged on to a different system which doesn't know xterm or where the
+        application looks really awkward. In such cases a solution could be to
+        set the TERM variable to, for instance, vt100.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>How to Set an Environment Variable</title>
+
+      <para>Environment variables are user specific, but can be set on three
+      levels: session (only valid for the current, open session), user (only
+      valid for this user and used as default for all sessions of this user)
+      or system wide (used as a global default).</para>
+
+      <section>
+        <title>Session Specific</title>
+
+        <para>When you want to set an environment variable for a specific
+        session, you can use the shell <command>set</command><indexterm>
+            <primary>set</primary>
+          </indexterm> or <command>export</command><indexterm>
+            <primary>export</primary>
+          </indexterm> command:</para>
+
+        <programlisting>~$ <command>ls -z</command>
+ls: invalid option -- z
+Try `ls --help` for more information.
+~$ <command>export LANG="fr"</command>
+~$ <command>ls -z</command>
+ls: option invalide -- z
+Pour en savoir davantage, faites: `ls --help`</programlisting>
+
+        <para>Which one to use depends on what you actually want to
+        achieve:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>With <command>set</command>, you change the environment
+            variable for this session, but not for the subshells you might
+            want to start from the current shell. In other words, set is local
+            to the shell session.</para>
+          </listitem>
+
+          <listitem>
+            <para>With <command>export</command>, you change the environment
+            variable for this session as well as subshells you might want to
+            start from the current shell from this point onward. In other
+            words, export is global.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>User Specific</title>
+
+        <para>User specific environment settings are best placed inside the
+        <filename>.bashrc</filename><indexterm>
+            <primary>.bashrc</primary>
+          </indexterm> file. This file is automatically read when a user is
+        logged on (at least when he is using the bash shell). A more
+        shell-agnostic file is <filename>.profile</filename><indexterm>
+            <primary>.profile</primary>
+          </indexterm>. Inside the file, define the variables as you would for
+        a specific session:</para>
+
+        <programlisting>export LANG="fr"</programlisting>
+      </section>
+
+      <section>
+        <title>System Wide Defaults</title>
+
+        <para>To make an environment variable system wide, you must make sure
+        that your environment variable is stored in a file or location that
+        every session reads out when it is launched. By convention,
+        <filename>/etc/profile</filename> is a script in which system wide
+        environment variables can be placed. Gentoo offers a nice interface
+        for this: inside <filename>/etc/env.d</filename> you can manage
+        environment variables in a more structured approach, and the
+        <command>env-update.sh</command> script will then make sure that the
+        environment variables are stored elsewhere so that
+        <filename>/etc/profile</filename> reads them out.</para>
+
+        <note>
+          <para>The /etc/profile script does not read out all values inside
+          /etc/env.d itself for (at least) two reasons:</para>
+
+          <orderedlist>
+            <listitem>
+              <para>The structure used in /etc/env.d uses a specific
+              "appending" logic (i.e. variables that are defined several times
+              do not overwrite each other; instead, their values are appended)
+              which could be too hard to implement in /etc/profile without too
+              much overhead. After all, /etc/profile is read by every newly
+              launched session, so if it took too much time, your system would
+              start up much slower.</para>
+            </listitem>
+
+            <listitem>
+              <para>The system administrator might want to make a set of
+              changes which should be made atomic (for instance, remove a
+              value from one variable and add it to another). If changes are
+              publicized immediately, a session could read in /etc/profile
+              which loads an at that time incorrect environment variable set
+              (especially when a process is launched after the administrators'
+              first change but before the second).</para>
+            </listitem>
+          </orderedlist>
+        </note>
+      </section>
+    </section>
+
+    <section>
+      <title>Managing Environment Entries</title>
+
+      <para>On Linux, the behavior of many commands is manipulated by values
+      of environment entries, or environment variables. Within Gentoo Linux,
+      you can manage the system-wide environment variables through the
+      <filename>/etc/env.d</filename> directory.</para>
+
+      <section>
+        <title>Environment Files</title>
+
+        <para>Inside /etc/env.d, you will find environment files which use a
+        simple key=value syntax. For instance, the /etc/env.d/20java file
+        defines, amongst other environment variables, the PATH and MANPATH
+        variables:</para>
+
+        <programlisting># <command>cat /etc/env.d/20java</command>
+...
+MANPATH=/opt/blackdown-jdk-1.4.2.03/man
+PATH=/opt/blackdown-jdk-1.4.2.03/bin:/opt/blackdown-jdk-1.4.2.03/jre/bin</programlisting>
+
+        <para>With these settings, the value of MANPATH (location where man
+        will search for its manual pages) and PATH (location where the system
+        will look for executable binaries every time you enter a command) is
+        <emphasis>extended</emphasis> with the given values (note that the
+        variables are not rewritten: their value is appended to the value
+        previously assigned to the variable).</para>
+
+        <para>The order in which variable values are appended is based on the
+        filename inside <filename>/etc/env.d</filename>. This is why most
+        files start with a number (as most people find it easier to deal with
+        order based on numbers, plus that the filenames themselves are still
+        explanatory to what purpose they serve).</para>
+      </section>
+
+      <section>
+        <title>Changing Environment Variables</title>
+
+        <para>If you want to change a system variable globally, you can either
+        add another file to <filename>/etc/env.d</filename> or manipulate an
+        existing one. In the latter case, you should be aware that application
+        upgrades automatically update their entries inside
+        <filename>/etc/env.d</filename> without warning (this location is not
+        protected, unlike many other configuration locations).</para>
+
+        <para>As such, it is adviseable to always add your own files rather
+        than manipulate existing ones.</para>
+
+        <para>When you have altered an environment file or added a new one,
+        you need to call <command>env-update</command><indexterm>
+            <primary>env-update</primary>
+          </indexterm> to have Gentoo process the changes for you:</para>
+
+        <programlisting># <command>env-update</command></programlisting>
+
+        <para>This command will read in all environment files and write the
+        final result in <filename>/etc/profile.env</filename> (which is
+        sourced by <filename>/etc/profile</filename>, which is always sourced
+        when a user logs on).</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Location Specific Settings</title>
+
+    <para>When I talk about location specific settings, I mean the settings
+    that your neighbour is most likely to need as well: language settings,
+    keyboard settings, timezone / currency settings, ... Within the Linux/Unix
+    environment, these settings are combined in the locale settings and
+    keyboard settings.</para>
+
+    <section>
+      <title>Locale Settings</title>
+
+      <para>A <emphasis>locale</emphasis><indexterm>
+          <primary>locale</primary>
+        </indexterm> is a setting that identifies the language, number format,
+      date/time format, timezone, daylight saving time and currency
+      information for a particular user or system. This locale information is
+      stored inside a variable called <parameter>LANG</parameter>; however, it
+      is possible to switch a particular locale setting to another locale (for
+      instance, use the American English settings for everything, but currency
+      to european euro).</para>
+
+      <para>The following table gives an overview of the most important
+      variables:</para>
+
+      <table>
+        <title>Locale variables supported on a Linux system</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry><parameter>LANG</parameter></entry>
+
+              <entry>A catch-all setting which identifies the locale for all
+              possible features. However, individual topics can be overridden
+              using one of the following variables.</entry>
+            </row>
+
+            <row>
+              <entry><parameter>LC_COLLATE</parameter> and
+              <parameter>LC_CTYPE</parameter></entry>
+
+              <entry>Character handling (which characters are part of the
+              alphabet) and (alphabetical) order</entry>
+            </row>
+
+            <row>
+              <entry><parameter>LC_MESSAGES</parameter></entry>
+
+              <entry>Applications that use message-based output use this
+              setting to identify what language their output should be</entry>
+            </row>
+
+            <row>
+              <entry><parameter>LC_MONETARY</parameter></entry>
+
+              <entry>Currency-related settings</entry>
+            </row>
+
+            <row>
+              <entry><parameter>LC_NUMERIC</parameter></entry>
+
+              <entry>Formatting of numerical values</entry>
+            </row>
+
+            <row>
+              <entry><parameter>LC_TIME</parameter></entry>
+
+              <entry>Time related settings</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>There is another variable available as well, called
+      <parameter>LC_ALL</parameter>. If this variable is set, none of the
+      above variables is used anymore. However, use of this variable is
+      strongly discouraged.</para>
+
+      <para>To get an overview of your locale settings (including a full list
+      of supported variables), enter the <command>locale</command><indexterm>
+          <primary>locale</primary>
+        </indexterm> command.</para>
+
+      <para>The format of a locale variable is as follows:</para>
+
+      <programlisting>language[_territory][.codeset][@modifier]</programlisting>
+
+      <para>The settings used in this format are:</para>
+
+      <table>
+        <title>List of settings used in a locale definition</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>language</entry>
+
+              <entry>Language used. Examples are "en" (English), "nl" (Dutch),
+              "fr" (French), "zh" (Chinese)</entry>
+            </row>
+
+            <row>
+              <entry>territory</entry>
+
+              <entry>Location used. Examples are "US" (United states), "BE"
+              (Belgium), "FR" (France), "CN" (China)</entry>
+            </row>
+
+            <row>
+              <entry>codeset</entry>
+
+              <entry>Codeset used. Examples are "utf-8" and
+              "iso-8859-1"</entry>
+            </row>
+
+            <row>
+              <entry>modifier</entry>
+
+              <entry>Modifier used, which allows a different definition of a
+              locale even when all other settings are the same. Examples are
+              "euro" and "preeuro" (which has its consequences on the monetary
+              aspect).</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>So, a few examples are:</para>
+
+      <programlisting>LANG="en"
+LANG="nl_BE"
+LANG="en_US.utf-8"
+LANG="nl_NL@euro"</programlisting>
+
+      <para>These settings are read as environment variables (which are
+      discussed later) by the applications. You can mark locales systemwide,
+      but it is advised that this is stored on a per-user basis. As such, I
+      recommend that you set something like the following in your
+      <filename>~/.bashrc</filename> file (and in
+      <filename>/etc/skel/.bashrc</filename> so that newly created user
+      accounts have this set automatically as well):</para>
+
+      <programlisting>$ <command>nano -w ~/.bashrc</command>
+...
+# Put your fun stuff here
+LANG="en_US.utf-8"</programlisting>
+    </section>
+
+    <section>
+      <title>Keyboard Settings</title>
+
+      <para>When you aren't using the default qwerty layout, you'll need to
+      modify the keyboard mapping setting on your system. Gentoo makes this
+      easy for you: edit /etc/conf.d/keymaps and set the KEYMAP variable to
+      the mapping you need:</para>
+
+      <programlisting># <command>nano -w /etc/conf.d/keymaps</command>
+...
+KEYMAP="be-latin1"</programlisting>
+
+      <para>A list of supported keymaps can be found in the subdirectories of
+      <filename>/usr/share/keymaps</filename>.</para>
+
+      <para>If you want to test and see if a particular keymap is correct,
+      load it manually using the <command>loadkeys</command><indexterm>
+          <primary>loadkeys</primary>
+        </indexterm> command:</para>
+
+      <programlisting># <command>loadkeys &lt;keymap&gt;</command></programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Time Settings</title>
+
+    <para>To change the system time/date, you can use the
+    <command>date</command><indexterm>
+        <primary>date</primary>
+      </indexterm> command. For instance, to set the date to september 30th,
+    2008 and time to 17.34h:</para>
+
+    <programlisting># <command>date 093017342008</command></programlisting>
+
+    <para>If your system has Internet access, it is wise to install
+    ntp-supporting tools such as the net-misc/ntp package. With
+    <command>ntpdate</command><indexterm>
+        <primary>ntpdate</primary>
+      </indexterm> (and other similar tools), you can use online time servers
+    to set the time of your system correct to the second.</para>
+
+    <programlisting># <command>ntpdate pool.ntp.org</command></programlisting>
+
+    <para>To save the current (operating system) time to your hardware clock,
+    you can use the <command>hwclock</command><indexterm>
+        <primary>hwclock</primary>
+      </indexterm> program:</para>
+
+    <programlisting># <command>hwclock --systohc</command></programlisting>
+  </section>
+
+  <section>
+    <title>System Scheduler</title>
+
+    <para>Within Unix/Linux, the default scheduler often used is called
+    <emphasis>cron</emphasis><indexterm>
+        <primary>cron</primary>
+      </indexterm>. There are quite a few cron implementations available, such
+    as the popular <command>vixie-cron</command>, <command>fcron</command>,
+    <command>bcron</command> and <command>anacron</command>. Once installed,
+    you start the cron service through an init script (which you most likely
+    add to the default runlevel):</para>
+
+    <programlisting># <command>rc-update add vixie-cron default</command>
+# <command>/etc/init.d/vixie-cron start</command></programlisting>
+
+    <para>When the cron service is running, every user can define one or more
+    commands he wants to periodically execute. </para>
+
+    <para>To edit your personal scheduling rules, run <command>crontab
+    -e</command><indexterm>
+        <primary>crontab</primary>
+      </indexterm>:</para>
+
+    <programlisting>$ <command>crontab -e</command></programlisting>
+
+    <para>Your current rule file will be shown in the default editor (nano,
+    vim, ...). A crontab entry has 6 columns:</para>
+
+    <table>
+      <title>Crontab columns</title>
+
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry>Minute</entry>
+
+            <entry>Minute of the hour (0-59)</entry>
+          </row>
+
+          <row>
+            <entry>Hour</entry>
+
+            <entry>Hour of the day (0-23)</entry>
+          </row>
+
+          <row>
+            <entry>Day</entry>
+
+            <entry>Day of the month (1-31)</entry>
+          </row>
+
+          <row>
+            <entry>Month</entry>
+
+            <entry>Month of the year (1-12 or use names)</entry>
+          </row>
+
+          <row>
+            <entry>Weekday</entry>
+
+            <entry>Day of the week (0-7 or use names. 0/7 are Sunday)</entry>
+          </row>
+
+          <row>
+            <entry>Command</entry>
+
+            <entry>Command to execute</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Next to the number representation, you can use ranges (first-last),
+    summation (1,3,5), steps (0-23/2) and wildcards.</para>
+
+    <para>For instance, to execute "<command>ntpdate ntp.pool.org</command>"
+    every 15 minutes, the line could look like:</para>
+
+    <programlisting>*/15 * * * * ntpdate ntp.pool.org</programlisting>
+
+    <para>or</para>
+
+    <programlisting>0,15,30,45 * * * * ntpdate ntp.pool.org</programlisting>
+
+    <para>If you just want to view the scheduled commands, run
+    <command>crontab -l</command>.</para>
+  </section>
+</chapter>

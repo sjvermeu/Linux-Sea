@@ -1,0 +1,1026 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>What is Linux?</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Within the realms of desktop environments, Linux is supposedly no
+    large player (market investigations estimate a market share of about 3%).
+    However, you'll most likely know two or more people who use Linux, some of
+    them even exclusively. If you take that into consideration, either you
+    know the personal OS preference of over a hundred people (you're popular)
+    or the estimation is to be taken with a grain of salt.</para>
+
+    <para>Nevertheless, 3% is still a lot (ever thought about how many desktop
+    systems there are? I did, never found the answer though). And if we take
+    other markets into account (embedded systems, servers, network appliances
+    and more) the Linux share increases.</para>
+
+    <para>But still, many people have no idea what Linux is or how to work
+    with it. In this book, I offer a technical, quick introduction to the
+    Linux operating system from a users perspective. I'm not going to dive
+    into the concept, advantages or disadvantages of Free Software (although a
+    few paragraphs don't hurt) and am not going to talk about the history and
+    evolution of Linux Operating Systems. For more resources on these subjects
+    I refer you to the <link linkend="whatislinux_resources">Further
+    Resources</link> section at the end of this chapter.</para>
+
+    <para>For a book to be complete about Linux as an operating system, it is
+    important to inform the user about operating systems in general. Linux is
+    very modular and open, meaning that each component in the Linux Operating
+    System is visible to the user. Without understanding of the structure of
+    an operating system it would be hard for a user to comprehend the
+    reasoning behind each module in the Linux OS. For this reason alone I
+    devote an entire section on operating systems in general.</para>
+
+    <para>Once I have crossed the tasks of an operating system, I continue
+    with an explanation on the real Linux operating systems: Linux
+    distributions.</para>
+
+    <para>Finally, each chapter in this book will offer a set of exercises
+    that you could attempt to solve. You will not be able to find the answers
+    of each question in this book. Rather see the exercises as a means to push
+    you further and help you seek (and find) more topics related to Linux. At
+    the end of the book, a list of tips and/or answers is given for each
+    question.</para>
+  </section>
+
+  <section>
+    <title>The Anatomy of an Operating System</title>
+
+    <para>An operating system is actually a stack of software, each item
+    designed for a specific purpose.</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>The <emphasis>kernel</emphasis> is the core of an operating
+        system: it manages communication between devices and software, manages
+        the system resources (like CPU time, memory, network, ...) and shields
+        off the complexity of device programming from the developer as it
+        provides an interface for the programmer to manipulate
+        hardware.</para>
+      </listitem>
+
+      <listitem>
+        <para>The <emphasis>system libraries</emphasis> contain program
+        methods for developers to write software for the operating system. The
+        libraries contain methods for process creation and manipulation, file
+        handling, network programming, etc. It is a vital part of an operating
+        system because you can't (or shouldn't) communicate with the kernel
+        directly: the library shields off the complexity of kernel programming
+        for the system programmer.</para>
+      </listitem>
+
+      <listitem>
+        <para>The <emphasis>system tools</emphasis> are built using the system
+        libraries and enable administrators to administer the system: manage
+        processes, navigate on the file system, execute other applications,
+        configure the network, ...</para>
+      </listitem>
+
+      <listitem>
+        <para>The <emphasis>development tools</emphasis> provide the means to
+        build new software on (or for) the system. Although not a required
+        part of an operating system I do like to mention it because with
+        Gentoo, this is a requirement (we'll see later on why this is the
+        case). These tools include compilers (translate code to machine code),
+        linkers (which collect machine code and bring it together into a
+        working binary) and tools that ease the build process
+        considerably.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Other libraries on the system enhance the developers' coding
+    experience by providing access to methods other developers have already
+    written. Examples of such libraries include graphical libraries (for
+    manipulating windows) or scientific libraries. They aren't required on
+    every operating system, but if you want to run a specific tool, it will
+    require certain libraries to be installed on your system. On top of those
+    additional libraries you will find the end-user tools (office suites,
+    multimedia tools, graphical environments, ...) that you want to install on
+    your operating system.</para>
+
+    <section>
+      <title>Kernel</title>
+
+      <para>A kernel <indexterm>
+          <primary>kernel</primary>
+        </indexterm>has generally four basic responsibilities:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>device management</para>
+        </listitem>
+
+        <listitem>
+          <para>memory management</para>
+        </listitem>
+
+        <listitem>
+          <para>process management</para>
+        </listitem>
+
+        <listitem>
+          <para>handling system calls</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The first responsibility is called <emphasis>device
+      management</emphasis><indexterm>
+          <primary>device management</primary>
+        </indexterm>. A computer system has several devices connected to it:
+      not only the CPU and memory are available, but also disks (and disk
+      controllers), network cards, graphical cards, sound cards, ... Because
+      every device operates differently, the kernel is required to know what
+      the device can do and how to address and manipulate each device so that
+      it plays nice in the entire system. This information is stored in the
+      device driver: without such driver, the kernel doesn't know the device
+      and will therefore not be able to control it.</para>
+
+      <para>Next to the device drivers, the kernel also manages the
+      communication between the devices: it governs access to the shared
+      components so that all drivers can happily operate next to each other.
+      All communication must adhere to strict rules and the kernel makes sure
+      that these rules are followed.</para>
+
+      <para>The <emphasis>memory management</emphasis> <indexterm>
+          <primary>memory management</primary>
+        </indexterm>component manages the memory usage of the system: it keeps
+      track of used and unused memory, assigns memory to processes who require
+      it and ensures that processes can't manipulate each other's data. To do
+      this, it uses the concept of virtual memory addresses: addresses for one
+      process are not the real addresses, and the kernel keeps track of the
+      correct mappings. It is also possible for data not to be really present
+      in memory although it is present for a process: such data is stored on a
+      swap space. Because swap space is much, much slower than real memory,
+      use of this space should be limited to data that isn't read
+      often.</para>
+
+      <para>To ensure that each process gets enough CPU time, the kernel gives
+      priorities to processes and gives each of them a certain amount of CPU
+      time before it stops the process and hands over the CPU to the next one.
+      <emphasis>Process management</emphasis> <indexterm>
+          <primary>process management</primary>
+        </indexterm>not only deals with CPU time delegation (called
+      scheduling), but also with security privileges, process ownership
+      information, communication between processes and more.</para>
+
+      <para>Finally, for a kernel to actually work on a system, it must
+      provide the means to the system and the programmer to control itself and
+      give or receive information from which new decisions can be made. Using
+      <emphasis>system calls</emphasis><indexterm>
+          <primary>system call</primary>
+        </indexterm> a programmer can write applications that query the kernel
+      for information or ask the kernel to perform a certain task (for
+      instance, manipulate some hardware and return the result). Of course,
+      such calls must be safe to use so that malicious programmers can't bring
+      the system down with a well-crafted system call.</para>
+
+      <para>A Linux operating system, like Gentoo Linux, uses Linux as the
+      kernel.</para>
+    </section>
+
+    <section>
+      <title>System Libraries</title>
+
+      <para>Because a kernel can't do much out of itself, it must be triggered
+      to perform tasks. Such triggers are made by applications, but these
+      applications must of course know how to place system calls for the
+      kernel. Because each kernel has a different set of system calls
+      available (it is very system specific), programmers have created
+      standards with which they can work. Each operating system supports these
+      standards, and these are then translated to the system specific
+      calls<indexterm>
+          <primary>system library</primary>
+        </indexterm> for that operating system.</para>
+
+      <para>One example standard is the C library<indexterm>
+          <primary>C library</primary>
+        </indexterm>, probably the most important system library available.
+      This library makes pretty vital operations available to the programmer,
+      such as basic input/output support, string handling routines,
+      mathematical methods, memory management and file operations. With these
+      functions a programmer can create software that builds on every
+      operating system that supports the C library. These methods are then
+      translated by the C library to the kernel specific system calls (if
+      system calls are necessary). This way the programmer doesn't need to
+      know the kernel internals and can even write software (once) that can be
+      build for many platforms.</para>
+
+      <para>There is no single specification on what a system library is. The
+      author of this book believes that system libraries are whatever library
+      is part of the default, minimal install of an operating system. As such,
+      system libraries for one operating system (and even Linux distribution)
+      can and will differ from the system libraries of another. Most Linux
+      distributions have the same system libraries, which is to be expected
+      because all Linux distributions can run the same software and this
+      software is of course built for these system libraries. Some
+      distributions just don't mark one library part of the default, minimal
+      install while others do.</para>
+
+      <para>The most well-known system library for Linux systems is the GNU C
+      Library, also known as glibc<indexterm>
+          <primary>glibc</primary>
+        </indexterm>.</para>
+    </section>
+
+    <section>
+      <title>System Tools</title>
+
+      <para>Just like with system libraries there is no single specification
+      for <emphasis>system tools</emphasis><indexterm>
+          <primary>system tool</primary>
+        </indexterm>. But, unlike system libraries, system tools are quite
+      visible to the end user. Because of this, almost all Linux distributions
+      use the same system tools, or similar tools with the same features but
+      different implementations.</para>
+
+      <para>But what are system tools? Well, with a kernel and some
+      programming libraries you can't manipulate your system yet. You need
+      access to commands, input you give to the system that gets interpreted
+      and executed. These commands do primitive stuff like file navigation
+      (change directory, create/remove files, obtain file listings, ...),
+      information manipulation (text searching, compression, listing
+      differences between files, ...), process manipulation (launching new
+      processes, getting process listings, exiting running processes, ...),
+      privilege related tasks (changing ownership of files, changing user ids,
+      updating file permissions, ...) and more.</para>
+
+      <para>If you don't know how to deal with all this stuff, you don't know
+      how to work with your operating system. Some operating systems hide
+      these tasks behind complex tools, others have simple tools for each task
+      and bundle the power of all these tools. Unix (and Linux) is one of the
+      latter. Linux systems usually have the GNU Core Utilities for most of
+      these tasks.</para>
+    </section>
+
+    <section>
+      <title>Development Tools</title>
+
+      <para>With the above three components you have a running, working
+      operating system. You might not be able to do everything you want, but
+      you can update your system until it does what you want. How? By
+      installing additional tools and libraries until you have your functional
+      system.</para>
+
+      <para>These additional tools and libraries are of course written by
+      programmers and they must be able to build their code so that it works
+      on your system. Some systems, like Gentoo Linux, even build this
+      software for you instead of relying on the prebuilt software by others.
+      To be able to build these tools, you need the source code of each tool
+      and the necessary tools to convert the source code to executable
+      files.</para>
+
+      <para>These tools are called a <emphasis>toolchain</emphasis><indexterm>
+          <primary>toolchain</primary>
+        </indexterm>: a set of tools that are used as in a chain in order to
+      produce a working application. A general toolchain consists out of a
+      text editor (to write the code in), compiler (to convert code to
+      machine-specific language), linker (to combine machine-code of several
+      sources - including prebuilt "shared" libraries - into a single,
+      executable file) and libraries (those I just mentioned as being "shared"
+      libraries).</para>
+
+      <para>A toolchain is of the upmost importance for a developer; it is a
+      vital <emphasis>development tool</emphasis><indexterm>
+          <primary>development tool</primary>
+        </indexterm>, but not the only development tool. For instance,
+      developers of graphical applications generally need tools to create
+      graphics as well, or even multimedia-related tools to add sound effects
+      to their program. A development tool is a general noun for a tool that a
+      developer would need in order to create something, but isn't vital for
+      an operating system of an average non-developer user.</para>
+
+      <para>The most well-known development tools are also delivered by the
+      GNU foundation, namely the GNU Compiler Collection, also known as
+      gcc<indexterm>
+          <primary>gcc</primary>
+        </indexterm>.</para>
+    </section>
+
+    <section>
+      <title>End User Tools</title>
+
+      <para>Once a developer has finished creating its product, you have an
+      end-user tool with accompanying libraries (which might be required by
+      other tools that are build on top of this product). These end tools are
+      what makes a system unique for a user: they represent what a user wants
+      to do with his system. Although not required by an operating system they
+      are required by the end user and are therefore very important for his
+      system.</para>
+
+      <para>Most operating systems don't install all or most of the end-user
+      tools because there are just too many to choose from. Some operating
+      systems don't even provide the means to install end-user tools to their
+      users but rely on the ingenuity of each programmer to create an
+      installer that sets up the tool on the system. Other operating systems
+      bring a small but considerable subset of end-user tools with them so
+      that their users can quickly update their system to whatever shape they
+      want without requiring a long and difficult search across the Internet
+      (or even worse, computer/software shop) to find the software they
+      need.</para>
+
+      <para>Examples of end-user tools are well known, such as office suites,
+      graphic design tools, multimedia players, communication software,
+      Internet browsers, ...</para>
+    </section>
+
+    <section>
+      <title>Okay, I bite, What is this GNU?</title>
+
+      <para>The GNU Project is an effort of several programmers and developers
+      to create a free, Unix-like operating system. GNU<indexterm>
+          <primary>GNU</primary>
+        </indexterm> is a recursive acronym that stands for <emphasis>GNU's
+      Not Unix</emphasis>, because it is Unix-like but contains no Unix code
+      and is (and remains) free. The GNU foundation, the legal entity behind
+      the GNU project, sees free as more than just the financial meaning of
+      free: the software should be free to use for any purpose whatsoever,
+      free to study and modify the source code and behavior, free to copy and
+      free to distribute the changes you made.</para>
+
+      <para>This idea of free software is a noble thought that is active in
+      many programmers' minds: hence many software titles are freely
+      available. Software is generally accompanied by a license that explains
+      what you can and cannot do with it (also known as the "End User License
+      Agreement"). Free Software also has such a license - unlike the EULAs
+      they actually allow most things instead of denying it. An example of
+      such license is the GPL - GNU General Public License.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Linux as the Kernel of the Linux Operating System</title>
+
+    <para>When we look at a Linux Operating System, its core component is its
+    kernel. The kernel all Linux Operating System use is the Linux kernel, or
+    just Linux. Yes, that's right, the Linux Operating System is called after
+    the kernel, Linux<indexterm>
+        <primary>linux kernel</primary>
+      </indexterm>.</para>
+
+    <para>Now although all Linux Operating Systems use Linux as their kernel,
+    many of them use a different flavor. This is because the kernel
+    development has several branches. The most important one I call the
+    <emphasis>vanilla</emphasis> kernel. This kernel is the main development
+    kernel where most kernel developers work on; every other kernel is based
+    on this kernel. Other kernels introduce features that the vanilla kernel
+    doesn't want yet (or has tossed away in favor of another feature); still,
+    these kernels are fully compatible with the vanilla kernel.</para>
+
+    <para>The Linux kernel saw its first light in 1991 and is created (and
+    still maintained) by Linus Torvalds. It grew rapidly (in 1994, version
+    1.0.0 saw the light) both in size (1.0.0 had more than 175000 lines of
+    code) and in popularity. Over the years, its development model stayed the
+    same: there are few major players in the development who decide what goes
+    in and what stays out of the kernel code, but the majority of
+    contributions happen from several hundreds volunteers (kernel 2.6.21 had
+    contributions from more than 800 individuals).</para>
+
+    <para>The latest kernel version at thise time of writing is 2.6.32.1. The
+    first two numbers play the role of the major version, the last number
+    denotes a plain bug fix. The intermediate number is the one that
+    increments most often: for every increment, users (and developers) know
+    that the kernel has new features but, as the major number doesn't change,
+    the kernel remains fully compatible with older versions (so it is safe to
+    upgrade).</para>
+
+    <para>Once a new version of the Linux kernel is released, it isn't
+    distributed to all of its users. No, this is where distributions come into
+    play...</para>
+  </section>
+
+  <section>
+    <title>Linux Operating Systems: Distributions</title>
+
+    <para>If an end user would want to install a Linux Operating System
+    without additional help, he would need to build a Linux kernel himself,
+    build the components of the operating system (like the libraries, end
+    tools ...) and keep track of changes in the free software world (like new
+    versions or security fixes). And although all this is perfectly possible
+    (look for the <emphasis>Linux From Scratch</emphasis> project), most users
+    would want something that is a bit more... userfriendly.</para>
+
+    <para>Enter distributions<indexterm>
+        <primary>distribution project</primary>
+      </indexterm>. A distribution project (like the Gentoo Project) is
+    responsible for a Linux Operating System (the distribution) to such an
+    extend that for the end user, the distribution project is
+    <emphasis>the</emphasis> point of contact for his Linux
+    installation.</para>
+
+    <para>Distribution projects make choices regarding the software:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>How should the users install the operating system?</para>
+
+        <para>Perhaps users are encouraged to perform as many steps as
+        possible during the installation process (the "distribution" <ulink
+        url="http://www.linuxfromscratch.org/">Linux from Scratch</ulink>
+        probably has the most intensive installation process). The very
+        inverse is an installation CD or USB image that doesn't even require
+        any configuration or installation: it just boots the environment and
+        you're ready to start using the Linux distribution.</para>
+      </listitem>
+
+      <listitem>
+        <para>What installation options are there (CD, DVD, network, Internet,
+        ... ?)</para>
+
+        <para>Most Linux distributions offer an installation CD/DVD as it is
+        the most popular method for acquiring software. But many other
+        installation options exist. You can install a distribution from a
+        network using net booting (a popular approach in enterprise
+        environments as it makes unattended installations possible) or from
+        within another operationg system.</para>
+      </listitem>
+
+      <listitem>
+        <para>What software should be available to the user?</para>
+
+        <para>Popular desktop Linux distributions offer a wide range of
+        software to the end users. This allows the distribution to become
+        widely accepted as it fits the needs of many users. However, more
+        advanced distributions exist that focus on a particular market (like
+        settop boxes for multimedia presentations, firewalls and network
+        management, domotica appliances, ...) and of course, these
+        distributions offer different software titles to the users.</para>
+      </listitem>
+
+      <listitem>
+        <para>How is the available software built (specific system, features
+        ...)?</para>
+
+        <para>If a distribution wants the software to run on as many processor
+        types as possible (pentium, i7, athlon, xeon, itanium, ...) it needs
+        to build the software for a generic platform (say i686) rather than
+        for a specific one (Itanium). Of course, this means that the software
+        doesn't use all features that new processors provide, but the software
+        does run on many more systems.</para>
+
+        <para>The same is true for features supported by certain software
+        titles. Some software titles offer optional support for ipv6, ssl,
+        truetype fonts, ... but if you want it, you need to compile this
+        support in the application. Distributions that offer software in a
+        binary format (most distributions do) need to make this choice for
+        their users. More than often, they attempt to offer support for as
+        many features as possible, but not all end-users would need or even
+        want this.</para>
+      </listitem>
+
+      <listitem>
+        <para>Is internationalisation of the software important?</para>
+
+        <para>Some distributions are targetting specific user groups tied to
+        their language and geography. There are distributions that are fully
+        localized to a specific group (say "Belgian Dutch-speaking users" or
+        "Canadian French-speaking users"), but also distributions that try to
+        offer localization for as many groups as possible.</para>
+      </listitem>
+
+      <listitem>
+        <para>How should users update and maintain their system?</para>
+
+        <para>Many distributions offer an automated software update process,
+        but not all distributions offer a live upgrade process (where, once
+        installed, your installation gradually builds up and becomes the
+        latest version of that distribution without any specific actions).
+        Some distributions even require you to boot from the latest
+        installation CD and perform an upgrade step.</para>
+      </listitem>
+
+      <listitem>
+        <para>How would a user configure his system?</para>
+
+        <para>If you are a graphical Linux user, you definitely don't want to
+        hear about configuration file editing or command-line actions to be
+        taken. So, you will most likely look for distributions that offer a
+        full graphical interface to configure your system. But some users do
+        like the idea of writing the configuration files directly as it offers
+        the largest flexibility (but also the highest learning curve) and
+        distributions often work on these sentiments. Some distributions don't
+        even allow you to update the configuration files directly as they
+        (re)generate those files anyway (overwriting your changes).</para>
+      </listitem>
+
+      <listitem>
+        <para>What is the target user group of the distribution?</para>
+
+        <para>Most desktop distributions target home/office users, but there
+        are distributions that target children or scientists. Some
+        distributions are made for developers and others for elder people.
+        There are distributions for visually impaired people and distributions
+        for people without Internet access.</para>
+      </listitem>
+
+      <listitem>
+        <para>What policies does the distribution put on its software?</para>
+
+        <para>Organisations like FSF have a vision on how the (software) world
+        should look like. Many distributions offer a way of implementing these
+        visions. For instance, some distributions only allow software that is
+        licensed under a FSF-approved license. Other distributions allow users
+        to use non-free software. There are distributions that implement a
+        higher security vision in the distribution, offering a more hardened
+        approach to operating systems.</para>
+      </listitem>
+
+      <listitem>
+        <para>Should the distribution be freely available?</para>
+
+        <para>Of course, money is often a major decision point as well. Not
+        all distributions are freely downloadable / available on the Internet,
+        although the majority is. But even when the distribution is freely
+        available, it might still be necessary to obtain commercial support,
+        even just for the security updates of the distribution.</para>
+      </listitem>
+
+      <listitem>
+        <para>...</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>You'll find several distributions in the world; each of those
+    distribution projects answers the questions a bit different from the
+    others. Hence, choosing the right distribution is often a quest where you
+    have to answer many questions before you find the correct
+    distribution.</para>
+
+    <para>Of course, when you're starting with Linux, you probably don't have
+    a strong opinion about these questions yet. That's okay because, if you
+    want to start using Linux, you should start with the distribution of which
+    you'll have the best support. Ask around, perhaps you have friends who
+    might help you with Linux. And be honest, what better support is there
+    than personal support?</para>
+
+    <section>
+      <title>What is a Distribution?</title>
+
+      <para>A distribution<indexterm>
+          <primary>distribution</primary>
+        </indexterm> is a collection of software (called the
+      packages<indexterm>
+          <primary>package</primary>
+        </indexterm>) bundled together in a coherent set that creates a fully
+      functional environment. The packages contain software titles (build by
+      other projects) and possibly patches (updates) specific for the
+      distribution so that the package integrates better with other packages
+      or blends in better with the overall environment. These packages are
+      usually not just copies of the releases made by the other software
+      projects but contain a lot of logic to fit the software in the global
+      vision of the distribution.</para>
+
+      <para>Take KDE<indexterm>
+          <primary>KDE</primary>
+        </indexterm> for example. KDE is a (graphical) desktop environment
+      which bundles several dozens of smaller tools together. Some
+      distributions provide a pristine KDE installation to their users, others
+      change KDE a bit so that it has a different default look and
+      such.</para>
+
+      <para>Another example would be MPlayer<indexterm>
+          <primary>MPlayer</primary>
+        </indexterm>, a multimedia player especially known for its broad
+      support of various video formats. However, if you want to view Windows
+      Media Video files (WMV), you need to build in support for the (non-free)
+      win32 codecs. Some distributions provide MPlayer with support for these
+      codecs, others without. Gentoo Linux lets you choose if you want this
+      support or not.</para>
+    </section>
+
+    <section>
+      <title>What does a Distribution Provide?</title>
+
+      <para>When you want to use a distribution, you <emphasis>can</emphasis>
+      (but you don't have to) use tools built by the distribution project to
+      ease several tasks:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>to install the distribution you can use one or more
+          installation tools provided by the distribution project</para>
+        </listitem>
+
+        <listitem>
+          <para>to install additional packages on your system you can use one
+          or more software management tools provided by the distribution
+          project</para>
+        </listitem>
+
+        <listitem>
+          <para>to configure your system you can use one or more configuration
+          tools provided by the distribution project</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>I cannot stress enough the importance of the term
+      <emphasis>can</emphasis>. You don't have to use the distributions'
+      installation tools (you can always install a distribution differently),
+      you don't have to install software using the software management tools
+      (you can always build and install your software manually) and you don't
+      have to configure your system with the configuration tools (you can
+      always edit the configuration files of the various applications by
+      hand).</para>
+
+      <para>Why then does a distribution put all this effort in these tools?
+      Because they make it a lot easier for the user to use his system. Take
+      software installation as an example. If you don't use a software
+      management tool, you need to build the software yourself (which can be
+      different depending on the software you want to build), keep track of
+      updates (both bug fixes and security fixes), make sure you have
+      installed all the dependent software (software this depends on software
+      that which depends on library a, b and c ...) and keep track of the
+      installed files so that your system doesn't clutter up.</para>
+
+      <para>Another major addition distributions provide are the software
+      packages themselves. A software package contains a software title (think
+      of the Mozilla Firefox browser) with additional information (such as a
+      description of the software title, category information, depending
+      software and libraries ...) and logic (how to install the software, how
+      to activate certain modules it provides, how to create a menu entry in
+      the graphical environments, how to build the software if it isn't built
+      already, ...). This can result in a complex package, making it one of
+      the reasons why distributions usually cannot provide a new package at
+      the same day the software project itself releases a new version.</para>
+
+      <para>For security fixes however, most information and logic stays the
+      same so security fix releases by the software project usually result in
+      a quick security fix release of the software package by the distribution
+      project.</para>
+
+      <para>Next to the software that is the distribution, a distribution
+      project<indexterm>
+          <primary>distribution project</primary>
+        </indexterm> provides supporting items:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>documentation about the distribution</para>
+        </listitem>
+
+        <listitem>
+          <para>infrastructure where you can download the distribution and its
+          documentation from</para>
+        </listitem>
+
+        <listitem>
+          <para>daily package updates for new software</para>
+        </listitem>
+
+        <listitem>
+          <para>daily security updates</para>
+        </listitem>
+
+        <listitem>
+          <para>support for the distribution (which can be in the form of
+          forums, e-mail support, telephone support or even more commercial
+          contractual support)</para>
+        </listitem>
+
+        <listitem>
+          <para>...</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Now, a distribution project is more than all that. By bundling all
+      packaging into a single project, developers can work together to build
+      an operating system that extends the ''commercial-grade'' operating
+      systems. To do this, most distribution projects have divisions for
+      public relations, user relations, developer relations, release
+      management, documentation and translations, etc.</para>
+    </section>
+
+    <section>
+      <title>What is an Architecture?</title>
+
+      <para>I haven't talked about architectures yet, but they are important
+      nevertheless. Let me first define the concept of <emphasis>instruction
+      set</emphasis>s.</para>
+
+      <para>An instruction set<indexterm>
+          <primary>instruction set</primary>
+        </indexterm> of a CPU is the set of commands that that particular CPU
+      understands. These commands perform a plethora on functions such as
+      arithmetic functions, memory operations and flow control. Programs can
+      be written using these functions but usually programmers use a higher
+      level programming language because a program written in this specific
+      language (called the <emphasis>assembly</emphasis><indexterm>
+          <primary>assembly</primary>
+        </indexterm> language of that CPU) can only be run on that CPU. That,
+      and assembly is so low-level that it is far from easy to write a tool
+      with it. The tools that still use assembly language are compilers (which
+      translate higher-level programming language to assembly), bootloaders
+      (which load an operating system into memory) and some core components of
+      operating systems (the Linux kernel has some assembly code).</para>
+
+      <para>Now, every CPU type has a different instruction set. The Intel
+      Pentium IV has a different instruction set than the Intel Pentium III;
+      the Sun UltraSPARC III has a different instruction set than the Sun
+      UltraSPARC IIIi. Still, their instruction sets are very similar. This is
+      because they are in the same family. CPUs of the same family understand
+      a particular instruction set. Software tools built for that instruction
+      set run on all CPUs of that family, but cannot take advantage of the
+      entire instruction set of the CPU they run on.</para>
+
+      <para>Families of CPUs are grouped in
+      <emphasis>architectures</emphasis><indexterm>
+          <primary>architecture</primary>
+        </indexterm>. Architectures are global and represent the concept of an
+      entire system; they describe how disks are accessed, how memory is
+      handled, how the boot process is defined. These define the large,
+      conceptual differences between system. For instance, the Intel
+      compatible range of systems is grouped in the x86 architecture; if you
+      boot such a system, its boot process starts with the BIOS<indexterm>
+          <primary>BIOS</primary>
+        </indexterm> (Basic Input-Output System). Sun Sparc compatible systems
+      are grouped in the sparc architecture; if you boot such a system, its
+      boot process starts with the Boot PROM.</para>
+
+      <para>Architectures are important because Linux distributions often
+      support multiple architectures and you should definitely know what
+      architecture your system uses. It is most probably the x86 or amd64
+      architecture (both are quite equivalent) but you should understand that
+      other architecture exist as well. You will even find tools that are not
+      supported for your architecture even though they are available for your
+      distribution, or some packages will have the latest version available on
+      one architecture and not yet on the others.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Myths Surrounding Linux</title>
+
+    <para>Linux is frequently hyped in the media - sometimes with reason, most
+    of the time without. Although I discussed what Linux is previously, a
+    quick recap:</para>
+
+    <blockquote>
+      <para>Linux is a generic term referring to the Linux Operating System, a
+      collection of tools running under the Linux kernel and most of the time
+      offered through a Linux distribution project.</para>
+    </blockquote>
+
+    <para>Of course, this is often not clear for users unknown to the world
+    beyond Microsoft Windows. Although the best way of discovering what Linux
+    is is by using Linux, I feel it is important to debunk some myths before I
+    continue with the rest of the book.</para>
+
+    <section>
+      <title>Myths</title>
+
+      <para>A myth is a story which is popular, but not true. Myths
+      surrounding Linux will always exist. The next few sections try to offer
+      my ideas behind many of these myths...</para>
+
+      <section>
+        <title>Linux is hard to install</title>
+
+        <para>It is always possible for someone to point to a Linux
+        distribution that is difficult to install. The Linux From Scratch
+        "distribution" is actually a document explaining the entire process
+        for setting up a Linux distribution by building compilers, building
+        software, placing files, etc. Yes, this is hard and might even be
+        difficult if the documentation wasn't up to date.</para>
+
+        <para>However, many distributions (most of them even) are simple to
+        install. They offer the same installation approach as other operating
+        systems (including Microsoft Windows) together with online help
+        (on-screen help) and offline help (installation guides). Some
+        distributions can even be installed with as little as two or three
+        questions, and you can even use Linux without having to install it at
+        all.</para>
+      </section>
+
+      <section>
+        <title>There is no support for Linux</title>
+
+        <para>There were days that Linux had no commercial support, but that
+        was in the previous century. You can now obtain the Linux operating
+        system from major software vendors such as Novell or RedHat (with
+        support), or use a freely downloadable Linux distribution and get a
+        contract with a company that offers support for that
+        distribution.</para>
+
+        <para>All distributions offer excellent free support as well
+        (something I'll talk about in the next few chapters) and many have an
+        active security follow-up, resulting in quick security fixes as soon
+        as a vulnerability is found or reported. There is often no need for a
+        desktop user to obtain commercial support as the freely available
+        support channels offer a major advantage compared to some other,
+        propriatary operating systems.</para>
+      </section>
+
+      <section>
+        <title>Linux is free software, so security holes are easily
+        found</title>
+
+        <para>Actually, because it is free software, security holes are far
+        more difficult to remain in the source code. There are too many eyes
+        watching the source code and many free software projects have a very
+        active developer community that checks and rechecks source code
+        changes over and over again before they are pushed to the end
+        user.</para>
+      </section>
+
+      <section>
+        <title>Linux is non-graphical</title>
+
+        <para>The Linux kernel is not a graphical kernel, but the tools that
+        run beneath the Linux kernel can be graphical. Even more, most
+        distributions offer a full graphical interface for every possible
+        aspect of the operating system: it boots graphically, you work
+        graphically, you install software graphically, you even troubleshoot
+        issues graphically. Although you can work with a command line
+        exclusively, most distributions focus on the graphical
+        environment.</para>
+
+        <para>This book is not a good example regarding this myth as it
+        focuses on the command-line. However, that is because of the personal
+        preference of the author.</para>
+      </section>
+
+      <section>
+        <title>I cannot run my software under Linux</title>
+
+        <para>For many Microsoft Windows titles, this is true. But there is
+        almost certainly software available in Linux that offers the same
+        features as the software you are referring to. Some software even
+        <emphasis>is</emphasis> available for Linux: the popular browsers
+        Firefox and Chrome are two examples, the freely available office suite
+        OpenOffice.org is another.</para>
+
+        <para>There are also Windows emulators and libraries that offer an
+        interface allowing Microsoft Windows applications to run within Linux.
+        I don't recommend using this software for every possible software
+        title though. It is more of a last resort in case you definitely
+        require a certain software title but already perform the majority of
+        your work within Linux.</para>
+      </section>
+
+      <section>
+        <title>Linux is secure</title>
+
+        <para>This is also a myth. Linux is no more secure than Microsoft
+        Windows or Apple's Mac OS X. Security is more than the sum of all
+        vulnerabilities in software. It is based upon the competence of the
+        user, the administrator, the configuration of the system and
+        more.</para>
+
+        <para>Linux can be made very secure: there are distributions that
+        focus on security intensively through additional settings, kernel
+        configurations, software choices and more. But you don't need such a
+        distribution if you want to have a secure Linux system. Better is to
+        read the security documentation of your distribution, make sure that
+        you regularly update your system, don't start software you don't need
+        or visit sites you know aren't legit.</para>
+      </section>
+
+      <section>
+        <title>Linux is too fragmented to ever become a wider player</title>
+
+        <para>Many groups refer to Linux as being fragmented because there are
+        so many Linux distributions. However, a user of one distribution can
+        easily work with users of other distributions (no issue here). A user
+        of one distribution can also help users of other distributions,
+        because their software is still the same (no issue here either). Even
+        more, software created on one distribution runs perfectly on another
+        distribution (no issue here). The widespread availability of
+        distributions is a strength, not a weakness, as it offers more choice
+        (and more expertise) to the end user.</para>
+
+        <para>Perhaps people are referring to the various Linux kernel trees
+        that exist. Yet, all these trees are based upon the same mainline
+        kernel (often called the "vanilla kernel") and every time the mainline
+        kernel brings out a new version, these trees update their own code so
+        branches are never lagging behind. The additional trees that exist are
+        there because of development purposes (additional patches for
+        unsupported hardware before it is merged with the mainline kernel,
+        additional patches for specific virtualization solutions that are
+        otherwise incompatible or cannot be merged due to license issues,
+        additional patches that are too intrusive and will take a while before
+        they are stabilized, etc.)</para>
+
+        <para>Or perhaps people are referring to the various graphical
+        environments (like KDE and GNOME). Yet, they do not speak about the
+        interoperability between those graphical environments (you can run KDE
+        applications in GNOME and vice versa), the standards that this
+        diversity creates (standards on dealing with file formats, menu
+        entries, object linking and more), and more.</para>
+
+        <para>Controlled fragmentation is what Linux (and free software in
+        general) offers. Controlled, because it is matched with open standards
+        and free specifications that are well documented and that all software
+        adheres to. Fragmented because the community wants to offer more
+        choices to the end users. </para>
+      </section>
+
+      <section>
+        <title>Linux is an alternative for Microsoft Windows</title>
+
+        <para>Linux isn't an alternative, but a different operating system.
+        There's a difference between the terms. Alternatives try to offer the
+        same functionality and interface, but using different means. Linux is
+        a different operating system, because it doesn't strive to offer the
+        same functionality or interface of Microsoft Windows.</para>
+      </section>
+
+      <section>
+        <title>Linux is anti-Microsoft</title>
+
+        <para>It isn't because people that have certain feelings about
+        Microsoft are often using Linux, that Linux is anti-Microsoft. The
+        Linux operating system wants nothing more than be fully interoperable
+        with any other operating system. Software projects most definitely
+        want their software to run on any operating system, not only Microsoft
+        Windows or Linux. </para>
+      </section>
+    </section>
+
+    <section>
+      <title>Weaknesses</title>
+
+      <para>Yet not all information spread around are myths. Some are real
+      weaknesses that Linux still needs to work on.</para>
+
+      <section>
+        <title>Linux has little support for games</title>
+
+        <para>True. Although there are many free software games around, most
+        games are developed for Microsoft Windows exclusively, and not all
+        games can be run using emulators or libraries like WINE within Linux
+        (luckily, many are). It is hard to ask game developers to develop for
+        Linux as most developers focus their endeavors on libraries (like
+        DirectX) that are only available for Microsoft Windows.</para>
+
+        <para>However, another trend is also emerging: more and more games are
+        only being released on consoles, dropping the PC environment
+        alltogether. I personally don't know how games will evolve in the
+        future, but I think that real action games will focus on game consoles
+        more.</para>
+
+        <para>Still, gaming is a sore weak spot of the Linux operating
+        system.</para>
+      </section>
+
+      <section>
+        <title>Recent hardware isn't quickly adopted within Linux</title>
+
+        <para>If the vendor of the hardware doesn't offer Linux drivers, then
+        it does take a while before the hardware support is brought within the
+        Linux kernel. However, this is not a process spanning multiple years,
+        but rather months. Chances are that a brand-new graphic card / sound
+        card is supported within 3 to 6 months after being released.</para>
+
+        <para>The same is true for wireless network cards. Whereas this was a
+        weakness previously, support for wireless network cards is now well
+        integrated within the community. A major reason here is that most
+        vendors are now officially supporting their wireless chipset for
+        Linux, offering drivers and documentation.</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Create a list of Linux distributions you have heard of and
+        check, for every one of them, how they perform in the fields you find
+        important (for instance, availability of documentation, translations,
+        support for specific hardware, multimedia, ...).</para>
+      </listitem>
+
+      <listitem>
+        <para>List 7 CPU architectures.</para>
+      </listitem>
+
+      <listitem>
+        <para>Why are new kernel releases not distributed to the end user
+        immediately? What role do distributions play in this process?</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title id="whatislinux_resources">Further Resources</title>
+
+    <itemizedlist>
+      <listitem>
+        <para><ulink url="http://www.dwheeler.com/oss_fs_why.html">Why Open
+        Source / Free Software</ulink>, by David A. Wheeler - a paper on using
+        Open Source Software / Free Software (OSS/FS).</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.distrowatch.com">Distrowatch</ulink>, a
+        popular site that attempts to track all available Linux distributions
+        and has weekly news coverage.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

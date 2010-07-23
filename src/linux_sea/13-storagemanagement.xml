@@ -1,0 +1,1026 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Storage Management</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Within Linux, the file system the user sees acts regardless of the
+    underlying storage used (hard disk partitions, CD/DVD, removable USB disk,
+    remote file systems). You assign a location of the file system to the
+    storage medium and you're up and running.</para>
+
+    <para>I've already covered the <filename>/etc/fstab</filename> file, where
+    you can map these locations and media. In this chapter, I'll cover the
+    various media, how you can create and manage them as well as assign them
+    in the <filename>fstab</filename> file.</para>
+  </section>
+
+  <section>
+    <title id="hdpartitions">Hard Disk Partitions</title>
+
+    <para>The most common storage is a hard disk partition. I'll only cover
+    the x86 partitions as those are most used at this moment.</para>
+
+    <section>
+      <title>Partition Layout</title>
+
+      <para>The x86 partition layout only allows for at most 4 partitions
+      called <emphasis>primary partitions</emphasis><indexterm>
+          <primary>partition</primary>
+
+          <secondary>primary</secondary>
+        </indexterm>. At the time the x86 partition layout was designed, this
+      was thought to be sufficient. However, time has proven the assumption
+      wrong. Luckily, the x86 partition layout has a way of working around
+      this restriction: you can designate one partition as a "container"
+      partition which holds other partitions. This container partition is
+      called the <emphasis>extended partition</emphasis><indexterm>
+          <primary>partition</primary>
+
+          <secondary>extended</secondary>
+        </indexterm>. The partitions inside this extended partition are called
+      <emphasis>logical partitions</emphasis><indexterm>
+          <primary>partition</primary>
+
+          <secondary>logical</secondary>
+        </indexterm>.</para>
+
+      <para>Linux gives a number to a partition based on their type: primary
+      partitions (including the extended partition) are numbered 1 to 4;
+      logical partitions start at 5 and can, theoretically, sum up to infinity
+      (if you have an infinite amount of disk space, that is). On Linux, you
+      can create up to 63 partitions per disk.</para>
+
+      <para>If you do not need more than 4 partitions, you can stick with the
+      primary partitions. However, if you need more than 4 partitions, make
+      sure you create one extended partition (which holds all disk space) and
+      then create additional logical partitions inside this extended
+      partition.</para>
+    </section>
+
+    <section>
+      <title>Partitioning a Disk</title>
+
+      <para>To partition a disk, you can use tools such as
+      <command>fdisk</command>, <command>cfdisk</command>,
+      <command>sfdisk</command>, <command>parted</command>, ... Of course,
+      there are graphical tools as well (such as <command>qtparted</command>).
+      In this section, I'll cover the use of
+      <command>fdisk</command><indexterm>
+          <primary>fdisk</primary>
+        </indexterm> as it is a simple command-line tool (making it easy to
+      add the input/output in this book) which is well supported and fully
+      featured.</para>
+
+      <para>In the next paragraphs, I'm going to partition the
+      <filename>/dev/sda</filename> disk (<filename>/dev/sda</filename> is
+      Linux' representation of the first (<filename>a</filename>) SCSI/SATA
+      (<filename>sd</filename>) disk). The second SCSI/SATA disk would be
+      called <filename>/dev/sdb</filename>, third
+      <filename>/dev/sdc</filename>, ...</para>
+
+      <para>IDE disks are called <filename>/dev/hda</filename> (b, c, d, ...).
+      Unlike SCSI/SATA disks, IDE disks are labelled based upon their position
+      in the computer. Every IDE controller (which is where the disks are
+      attached to) has a certain position in the computer. The first
+      controller manages the disks a, b, c and d; the second controller
+      manages the disks e, f, g and h, etc. Every controller can manage four
+      disks: the first two are called the primary disks, the last two are
+      called the secundary disks. Every pair of disks has a master (first
+      disk) and slave (second disk). So, the primary master disk of the first
+      IDE controller is <filename>/dev/hda</filename>, the secundary slave
+      disk of the second IDE controller would be
+      <filename>/dev/hdh</filename>.</para>
+
+      <para>To find out which disk devices are detected on your system, you
+      can list the contents of <filename>/dev/disk/by-path</filename>:</para>
+
+      <programlisting># <command>ls -l /dev/disk/by-path</command>
+lrwxrwxrwx 1 root root  9 2009-12-05 23:35 pci-0000:00:1f.1 -&gt; ../../hda
+lrwxrwxrwx 1 root root  9 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0 -&gt; ../../sda
+lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part1 -&gt; ../../sda1
+lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part2 -&gt; ../../sda2
+lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part5 -&gt; ../../sda5
+lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part6 -&gt; ../../sda6
+lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part7 -&gt; ../../sda7
+lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part8 -&gt; ../../sda8</programlisting>
+
+      <para>Or, if this location doesn't exist (it is created by Gentoo's udev
+      rules, but that doesn't necessarily mean it is available on other
+      distributions), you can check the content of
+      <filename>/sys/block</filename>:</para>
+
+      <programlisting># <command>ls /sys/block</command>
+hda  loop0   loop1   loop2   loop3    sda</programlisting>
+
+      <para>Now, fire up fdisk to edit the partitions on /dev/sda:</para>
+
+      <programlisting># <command>fdisk /dev/sda</command>
+Command (m for help): </programlisting>
+
+      <para>To view the current partition layout, enter p:</para>
+
+      <programlisting>Command (m for help): <command>p</command>
+
+Disk /dev/sda: 240 heads, 63 sectors, 2184 cylinders
+Units = cylinders of 15120 * 512 bytes
+
+Device Boot    Start       End    Blocks   Id  System
+/dev/sda1             1        14    105808+  83  Linux
+/dev/sda2            15        49    264600   82  Linux swap
+/dev/sda3            50        70    158760   83  Linux
+/dev/sda4            71      2184  15981840    5  Extended
+/dev/sda5            71       209   1050808+  83  Linux
+/dev/sda6           210       348   1050808+  83  Linux
+/dev/sda7           349       626   2101648+  83  Linux
+/dev/sda8           627       904   2101648+  83  Linux
+/dev/sda9           905      2184   9676768+  83  Linux
+
+Command (m for help): </programlisting>
+
+      <para>Now, before continuing, let's first think about what partition
+      layout you need...</para>
+
+      <section>
+        <title>Partition Layout Scheme</title>
+
+        <para>On Linux, as I've told before, the file system can be contained
+        inside one partition, but it can also be made up of several
+        partitions. The reason to use a single partition or multiple
+        partitions depends a bit on how flexible you want to assign your
+        available disk space and what other requirements you have for your
+        file systems.</para>
+
+        <para>For instance, if you do not want your users to be able to fill
+        up your root partition you might want to put their home directories on
+        a different partition. In this case, if they end up filling their home
+        directory, only the partition used for the home directories is filled
+        up and the other partitions remain untouched.</para>
+
+        <note>
+          <para>This is not the only possible way of limiting users' disk
+          space usage. You can also implement quotas so that users are only
+          allowed to use a particular amount of disk space.</para>
+        </note>
+
+        <para>You might want to store certain data on a partition which
+        shouldn't be always visible. In this case, you can opt not to mount
+        the partition automatically.</para>
+
+        <para>One final note is that, if your system is not blessed with a
+        huge amount of memory, you need to set up some swap space. Although
+        you can use a swap file for this, most distributions (still) prefer
+        that you use a swap partition. This is a (relatively) small partition
+        which will be used by the Linux kernel to store memory pages when
+        physical memory is full.</para>
+
+        <para>An example partitioning scheme is given in <xref
+        linkend="partschemetable" />.</para>
+
+        <table id="partschemetable">
+          <title>Example partitioning scheme for a Linux desktop</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>Partition</entry>
+
+                <entry>Size</entry>
+
+                <entry>Description</entry>
+              </row>
+
+              <row>
+                <entry>/dev/sda1</entry>
+
+                <entry>100Mbyte</entry>
+
+                <entry>Will be used to house the /boot partition in which the
+                bootloader configuration and kernel images are stored.
+                Separate partition as none of the files on this partition are
+                needed during regular operations (thus partition is not
+                automatically mounted)</entry>
+              </row>
+
+              <row>
+                <entry>/dev/sda2</entry>
+
+                <entry>12Gbyte</entry>
+
+                <entry>Main (root) partition which will host the Linux
+                operating system</entry>
+              </row>
+
+              <row>
+                <entry>/dev/sda3</entry>
+
+                <entry>27Gbyte</entry>
+
+                <entry>Partition which will hold the /home files (files and
+                folders of the users of the system).</entry>
+              </row>
+
+              <row>
+                <entry>/dev/sda4</entry>
+
+                <entry>900Mbyte</entry>
+
+                <entry>swap partition. The desktop system will have enough
+                physical memory and the system will not use software suspend
+                (write memory content to disk and hibernate the system) so the
+                swap does not need to be as large as the physical
+                memory.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <section>
+        <title>Cleaning Existing Partitions</title>
+
+        <para>Once inside fdisk, you can view the current partitions using the
+        <command>p</command> command. You can then remove the partitions you
+        do not want anymore with the d command, followed by the partition
+        identifier. For instance, suppose you want to remove the third
+        partition (/dev/sda3):</para>
+
+        <programlisting>Command (m for help): <command>p</command>
+Disk /dev/sda: 240 heads, 63 sectors, 2184 cylinders
+Units = cylinders of 15120 * 512 bytes
+
+Device Boot    Start       End    Blocks   Id  System
+/dev/sda1             1        14    105808+  83  Linux
+/dev/sda2            15        49    264600   82  Linux swap
+/dev/sda3            50        70    158760   83  Linux
+/dev/sda4            71      2184  15981840    5  Extended
+/dev/sda5            71       209   1050808+  83  Linux
+/dev/sda6           210       348   1050808+  83  Linux
+/dev/sda7           349       626   2101648+  83  Linux
+/dev/sda8           627       904   2101648+  83  Linux
+/dev/sda9           905      2184   9676768+  83  Linux
+
+Command (m for help): <command>d</command>
+Partition number (1-9): <command>3</command></programlisting>
+
+        <para>Repeat this step for every partition you want to delete. When
+        you're finished, type the w command to write the changes to disk and
+        exit fdisk (of course, you probably want to wait until you've created
+        the new partitions as well).</para>
+
+        <programlisting>Command (m for help): <command>w</command></programlisting>
+      </section>
+
+      <section>
+        <title>Adding Partitions</title>
+
+        <para>Now to add new partitions, I will work from the given partition
+        layout example given previously. Also, I assume that the disk has no
+        partitions. So first, let's create /dev/sda1:</para>
+
+        <programlisting>Command (m for help): <command>n</command>
+Command action
+   e   extended
+   p   primary partition (1-4)
+<command>p</command>
+Partition number (1-4): <command>1</command>
+First cylinder (1-12621, default 1): <emphasis>(Press return to use the default "1")</emphasis>
+Using default value 1
+Last cylinder or +size or +sizeM or +sizeK (1-621, default 621):
+<command>+100M</command></programlisting>
+
+        <para>In the above command sequence, I asked <command>fdisk</command>
+        to create a new partition which will be a primary one (remember, if I
+        would select extended then I would be creating a container partition
+        which can then host logical partitions). <command>fdisk</command> then
+        asks for the first cylinder and proposes as default the first cylinder
+        (which means as much as "start at the beginning of the disk"). Then
+        <command>fdisk</command> asks where the partition should end. As I'm
+        not going to calculate which cylinder is around the 100Mbyte limit, I
+        just tell fdisk to create a partition of 100Mbyte size.</para>
+
+        <para>Next, I create /dev/sda2, 3 and 4 in one go:</para>
+
+        <programlisting>Command (m for help): <command>n</command>
+Command action
+   e   extended
+   p   primary partition (1-4)
+<command>p</command>
+Partition number (1-4): <command>2</command>
+First cylinder (97-12621, default 97): <emphasis>(Return again)</emphasis>
+Using default value 97
+Last cylinder or +size or +sizeM or +sizeK (97-12621, default 12621):
+<command>+12288M</command>
+
+Command (m for help): <command>n</command>
+Command action
+   e   extended
+   p   primary partition (1-4)
+<command>p</command>
+Partition number (1-4): <command>3</command>
+First cylinder (4041-12621, default 4041): <emphasis>(Return again)</emphasis>
+Using default value 4041
+Last cylinder or +size or +sizeM or +sizeK (4041-12621, default
+12621): <command>+27648M</command>
+
+Command (m for help): <command>n</command>
+Command action
+   e   extended
+   p   primary partition (1-4)
+<command>p</command>
+Partition number (1-4): <command>4</command>
+First cylinder (12021-12621, default 12021): <emphasis>(Return again)</emphasis>
+Using default value 12021
+Last cylinder or +size or +sizeM or +sizeK (12021-12621, default
+12621): <emphasis>(Return)</emphasis></programlisting>
+
+        <para>In the last sequence we let the final partition be as large as
+        the remaining amount of disk space left, so we accept the default last
+        cylinder proposal.</para>
+
+        <para>Right now, the partition scheme is set, but the partitions
+        aren't ready yet. I now need to mark each partition with a particular
+        partition type. A <emphasis>partition type</emphasis><indexterm>
+            <primary>partition</primary>
+
+            <secondary>type</secondary>
+          </indexterm> is a small label assigned to a partition that allows an
+        operating system to know if it can read the partition (i.e. understand
+        its content) or not.</para>
+
+        <para>For instance, the partition type "Linux" (label 83) allows Linux
+        operating systems to identify the partition as a partition it
+        understands. Windows on the other hand will not show this partition as
+        it does not support Linux partitions. Likewise, a FAT32 Windows
+        partition has label 0B (labels are hexadecimal).</para>
+
+        <para>In our example, we need to use two partition types: one to
+        identify a Linux partition (83) and one to identify the Linux swap
+        partition (82). To mark partitions as such, use fdisk's
+        <command>t</command> command:</para>
+
+        <programlisting>Command (m for help): <command>t</command>
+Partition number (1-4): <command>1</command>
+Hex code (type L to list codes): <command>83</command>
+Changed system type of partition 1 to 83 (Linux)
+
+Command (m for help): <command>t</command>
+Partition number (1-4): <command>2</command>
+Hex code (type L to list codes): <command>83</command>
+Changed system type of partition 2 to 83 (Linux)
+
+Command (m for help): <command>t</command>
+Partition number (1-4): <command>3</command>
+Hex code (type L to list codes): <command>83</command>
+Changed system type of partition 3 to 83 (Linux)
+
+Command (m for help): <command>t</command>
+Partition number (1-4): <command>4</command>
+Hex code (type L to list codes): <command>82</command>
+Changed system type of partition 4 to 82 (Linux swap)</programlisting>
+
+        <para>Now that our partitions are created and marked, write the
+        changes to disk and exit fdisk with the <command>w</command>
+        command.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Placing a File System on a Partition</title>
+
+      <para>With a partition alone you cannot do much: the partition is
+      available as an empty space, but has no file system on it. File systems
+      are mandatory to use as they structure the partition and allow the
+      operating system to manage files, directories and more on the partition.
+      We covered this already in <xref linkend="filesystems" />.</para>
+
+      <para>To place a file system on a partition you need to use the
+      <command>mkfs.&lt;type&gt;</command><indexterm>
+          <primary>mkfs</primary>
+        </indexterm> command. For instance, to create an ext2 or ext3
+      partition, use <command>mkfs.ext2</command><indexterm>
+          <primary>mkfs.ext2</primary>
+        </indexterm> or <command>mkfs.ext3</command><indexterm>
+          <primary>mkfs.ext3</primary>
+        </indexterm>. With the example partition scheme I would use ext2 for
+      the /boot partition (<filename>/dev/sda1</filename>), and ext3 for the
+      two other Linux partitions:</para>
+
+      <programlisting># <command>mkfs.ext2 /dev/sda1</command>
+# <command>mkfs.ext3 /dev/sda2</command>
+# <command>mkfs.ext3 /dev/sda3</command></programlisting>
+
+      <para>A good idea is to label each partition. A <emphasis>volume
+      label</emphasis><indexterm>
+          <primary>volume label</primary>
+        </indexterm><indexterm>
+          <primary>label</primary>
+        </indexterm> is a simple string of limited length (16 bytes, so 16
+      characters as I don't suspect unicode is supported here) which can allow
+      you to find the partition more easily. Say that you label your
+      partitions based on their use:</para>
+
+      <programlisting># <command>mkfs.ext2 -L boot /dev/sda1</command>
+# <command>mkfs.ext3 -L root /dev/sda2</command>
+# <command>mkfs.ext3 -L home /home/sda3</command></programlisting>
+
+      <para>With labels set, you can use label-based device file names instead
+      of the (sometimes difficult to remember) standard ones:
+      <filename>/dev/disk/by-label/root</filename> instead of
+      <filename>/dev/sda2</filename>.</para>
+
+      <para>Finally, I need to mark the swap partition as a swap partition
+      using the <command>mkswap</command><indexterm>
+          <primary>mkswap</primary>
+        </indexterm> command. This command also supports the <command>-L
+      &lt;label&gt;</command> option if you want to use it.</para>
+
+      <programlisting># <command>mkswap /dev/sda4</command></programlisting>
+    </section>
+
+    <section>
+      <title>Using the Partitions</title>
+
+      <para>With the selected partitions created, you can now start using
+      them.</para>
+
+      <section>
+        <title>Enabling a Swap Partition</title>
+
+        <para>To enable a swap partition, use the swapon command. This will
+        inform the Linux kernel that the selected partition can be used as a
+        swap partition:</para>
+
+        <programlisting># <command>swapon /dev/sda4</command></programlisting>
+
+        <para>Because you do not want to enter this command every time you
+        boot your system, add the following line to /etc/fstab. This will
+        automatically enable the selected partition as a swap
+        partition:</para>
+
+        <programlisting>/dev/sda4  none   swap   sw   0 0</programlisting>
+      </section>
+
+      <section>
+        <title>Enabling a File System</title>
+
+        <para>To enable a file system on a partition, you need to mount it on
+        your file system. This has already been covered in <xref
+        linkend="mountsection" />.</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Removable Media</title>
+
+    <para>Removable media differs from partitions in the fact that they are...
+    removable. Some removable media cannot be written to, others can. If you
+    can write to it, you most likely can partition (and put a file system on
+    it) just as if it was a hard disk.</para>
+
+    <para>The most important difference is that they are not always available
+    for the system: you can plug (put) them in or pull them out, so you should
+    mount and unmount the file system. Luckily, there are tools that
+    automatically mount / umount such devices.</para>
+
+    <section>
+      <title>Mounting Removable Media</title>
+
+      <para>As seen before, media mountpoints can be defined in
+      <filename>/etc/fstab</filename> to ease the mount process. Two examples
+      (one for a CD-ROM device and one for a USB storage device) could
+      be:</para>
+
+      <programlisting>/dev/cdrom    /media/cdrom    auto   defaults,user,noauto   0 0
+/dev/sdb1     /media/usb      auto   defaults,user,noauto   0 0</programlisting>
+
+      <para>As you can see, the mounts are defined with auto as file system
+      type (meaning that the mount process attempts to automatically find the
+      file system to use) and has user (users have the ability to mount this
+      location) and noauto (do not attempt to mount this when the system
+      boots) as options.</para>
+
+      <para>But in order to succesfully edit the fstab file, you need to know
+      what device will be used and you also need to make sure that the
+      destination directories exist.</para>
+
+      <section>
+        <title>Device Files and udev</title>
+
+        <para>The <command>udev</command> device manager creates device files
+        for your partitions, including removable media when it is attached to
+        the system. One of the advantages of using udev is that it also
+        creates various symlinks that identify the same device. For instance,
+        a plugged in USB stick can get the following device files
+        created:</para>
+
+        <programlisting>/dev/sdb1</programlisting>
+
+        <para>The following links can then be created to this device
+        file:</para>
+
+        <programlisting>/dev/block/8:17
+/dev/disk/by-id/usb-_USB_DISK_2.0_0789E600025-0:0-part1
+/dev/disk/by-path/pci-0000:00:1d.7-usb-0:1:1.0-scsi-0:0:0:0-part1
+/dev/disk/by-uuid/3466-4C39
+/dev/disk/by-label/UDISK-2.0</programlisting>
+
+        <para>The advantage of having these links is that, when you plug
+        another USB stick first and then this one, it's device file might be
+        different (say <filename>/dev/sdc1</filename>) but the by-id, by-uuid
+        and by-label links will remain the same.</para>
+      </section>
+
+      <section>
+        <title>Obtaining the device file</title>
+
+        <para>When you plug in a removable media (like a USB stick), the
+        kernel will log that it has detected the hardware. One way to find out
+        which device file is used is to filter the <command>dmesg</command>
+        output for text such as "removable media":</para>
+
+        <programlisting>~# <command>dmesg | grep 'removable media'</command>
+sd 4:0:0:0: [sdb] Attached SCSI removable disk</programlisting>
+
+        <para>In this example, the hardware device file is for /dev/sdb. The
+        partitions can then be obtained by listing all files in /dev starting
+        with sdb:</para>
+
+        <programlisting>~# <command>ls /dev/sdb*</command>
+/dev/sdb    /dev/sdb1</programlisting>
+
+        <para>Now, if you want to find out which files point to (or are
+        hardlinks to) a particular device file (say /dev/sdb1), you can use
+        the following <command>find</command> construct:</para>
+
+        <programlisting>~# <command>find -L /dev -samefile /dev/sdb1</command>
+/dev/sdb1
+/dev/disk/by-label/UDISK-2.0
+/dev/disk/by-uuid/3466-4C39
+/dev/disk/by-id/usb-_USB_DISK_2.0_07891E600025-0:0-part1
+/dev/disk/by-path/pci-0000:00:1d.7-usb-0:1:1.0-scsi-0:0:0:0-part1
+/dev/block/8:17</programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Automounting Devices</title>
+
+      <para>You can also have Linux configured so that removable media is
+      automatically mounted. In almost all cases, this is done through a
+      deamon process provided by the desktop environment. It starts with
+      hal...</para>
+
+      <section>
+        <title id="HAL">Using HAL</title>
+
+        <para>The <command>hal</command><indexterm>
+            <primary>hal</primary>
+          </indexterm> (Hardware Abstraction Layer) software daemon provides
+        an interface to other programs about plugged in hardware. It attempts
+        to provide an abstraction layer on top of the device: is the device an
+        USB stick or a digital camera plugged in through USB? The idea is that
+        a multitude of hardware devices should be seen as the same kind of
+        hardware devices (so the same actions need to be taken when the device
+        is plugged in), regardless of brand and type.</para>
+
+        <para>In effect, <command>hal</command> itself isn't sufficient to
+        automatically mount a device, but it is part of a more global
+        architecture. For instance, with GNOME, you need
+        <command>hal</command>, <command>dbus</command> and
+        <command>gnome-volume-manager</command>. The tool that actually does
+        the auto-mounting is <command>gnome-volume-manager</command>. It
+        listens for hal events through <command>dbus</command><indexterm>
+            <primary>dbus</primary>
+          </indexterm> (which is a service that allows processes to
+        communicate with each other through a unified specification). The hal
+        software gets an event from udev (which we've seen before), identifies
+        the hardware and submits an event to dbus.</para>
+
+        <para>If you have GNOME installed, these tools are probably already
+        set up. You can configure the <command>hal</command> device manager
+        through the GNOME menu (Desktop &gt; Administration &gt; Device
+        Manager) as you can for the GNOME volume manager (Desktop &gt;
+        Preferences &gt; Removable Drives and Media).</para>
+
+        <para>If you use KDE, the necessary tools are probably installed as
+        well (only the volume manager isn't called gnome-volume-manager
+        ;-).</para>
+
+        <para>In both cases I say "probably", because many packages rely on
+        USE flags to decide if a certain functionality needs to be enabled
+        (check the hal USE flag).</para>
+
+        <programlisting>$ <command>emerge -pv kdebase</command>
+[ebuild   R   ] kde-base/kdebase-3.5.9-r3  USE="branding cups hal
+java ldap opengl pam -arts -debug -ieee1394 -joystick 
+-kdeenablefinal -kdehiddenvisibility -lm_sensors -logitech-mouse
+-openexr -samba -xcomposite -xinerama -xscreensaver"  0 kB</programlisting>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Network File Systems</title>
+
+    <para>Although Unix has grown with NFS as the primary network file system,
+    others are available which offer different features you might
+    require...</para>
+
+    <section>
+      <title>NFS</title>
+
+      <para>NFS, or <emphasis>Network File Server</emphasis><indexterm>
+          <primary>NFS</primary>
+        </indexterm><indexterm>
+          <primary>Network File Server</primary>
+        </indexterm>, is one of the most popular network file systems used in
+      the Linux/Unix world. With NFS, you can export files and directories to
+      other systems on the network while still using the Unix way of assigning
+      permissions and ownership to files.</para>
+
+      <section>
+        <title>NFS Server</title>
+
+        <para>If you want to export files to your network yourself, you need
+        to install the necessary NFS server tools which is included in the
+        nfs-utils<indexterm>
+            <primary>nfs-utils</primary>
+          </indexterm> package:</para>
+
+        <programlisting>$ <command>emerge nfs-utils</command></programlisting>
+
+        <para>Once installed, you need to select what directories you want to
+        export through the <filename>/etc/exports</filename><indexterm>
+            <primary>exports</primary>
+          </indexterm> file. The syntax for the exports file is similar to the
+        SunOS exports file<footnote>
+            <para>Some Unix flavors have different syntax rules for the
+            exports file. If you are not running Gentoo Linux or have
+            installed a different NFS server package, check the exports man
+            page through <command>man exports</command>.</para>
+          </footnote> and allows you to select a particular directory as an
+        exportable resource together with specific mount options for the
+        clients. I will give a multi-line example that will get you
+        going:</para>
+
+        <programlisting>/usr/portage  192.168.1.0/24(ro)
+/home 192.168.1.0/24(rw,no_subtree_check)
+/media/usb rw,no_root_squash mediacenter ws5 ws6 ws7(root_squash)</programlisting>
+
+        <itemizedlist>
+          <listitem>
+            <para>The first line gives read-only access to /usr/portage to all
+            systems in the 192.168.1.0/24 network.</para>
+          </listitem>
+
+          <listitem>
+            <para>The second line gives read-write access to /home to all
+            systems in the same network. I also added the no_subtree_check
+            (see the exports man page for more information) as it improves
+            reliability for file systems where file changes occur frequently
+            (such as home directories).</para>
+          </listitem>
+
+          <listitem>
+            <para>The third line gives read-write access to the /media/usb
+            location to the hosts with hostname mediacenter, ws5, ws6 and ws7.
+            Also, all these hosts except for ws7 have root access to the files
+            as well (as a security measure, by default the root user of the
+            remote clients do not have root access to the file systems
+            exported by NFS).</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>As you can see from the syntax, you can either give options
+        specific for a host (between brackets) or give general options to all
+        hosts for the selected directory.</para>
+
+        <para>To start the NFS service, you only need to start the nfs
+        runlevel:</para>
+
+        <programlisting># <command>/etc/init.d/nfs start</command></programlisting>
+
+        <para>All other required services, such as rpc.statd and portmap, are
+        automatically started by the initialisation script.</para>
+      </section>
+
+      <section>
+        <title>NFS Client</title>
+
+        <para>At the client side, you add in one or more lines in the
+        <filename>/etc/fstab</filename> file to mount a remote NFS file
+        system. Suppose that the NFS server is at 192.168.1.100, you can use
+        the following lines in <filename>/etc/fstab</filename> to mount the
+        file systems defined in the previous section:</para>
+
+        <programlisting>192.168.1.100:/usr/portage  /usr/portage       nfs  ro,proto=tcp  0 0
+192.168.1.100:/home         /home/remoteusers  nfs  rw,proto=tcp  0 0
+192.168.1.100:/media/usb    /media/usb         nfs  ro,proto=tcp  0 0</programlisting>
+
+        <para>You can of course also run an NFS mount without
+        <filename>fstab</filename>. For more information about the NFS mount
+        options, please read the nfs manual page.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Samba</title>
+
+      <para>Samba, offered by the net-fs/samba<indexterm>
+          <primary>samba</primary>
+        </indexterm> package, is a toolset that offers interoperability with
+      Microsoft Windows networks. Not only can you access files shared on a
+      Microsoft Windows network or share files yourself on such a network, you
+      can also use or manage printers that are exported to the Microsoft
+      Windows network.</para>
+
+      <para>In the majority of cases, if you need to do something with a
+      Microsoft Windows network, you'll need to configure Samba on your
+      system. Although the configuration options for Samba can be
+      overwhelming, there is an integrated web administration tool for Samba
+      called SWAT which is included when you install the net-fs/samba package
+      with the swat USE flag (which is enabled by default).</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Managing Diskspace</title>
+
+    <para>To identify the current file system usage, you can use the
+    <command>df</command><indexterm>
+        <primary>df</primary>
+      </indexterm> tool, which stands for "disk free". I recommend using the
+    -h and -T options to show disk usage in a human readable format (using the
+    M and G notations for megabytes and gigabytes) and display the file system
+    types (ext2, ext3, xfs, ...):</para>
+
+    <programlisting>$ <command>df -hT</command>
+Filesystem    Type    Size  Used Avail Use% Mounted on
+/dev/sda8     ext3     35G   22G   11G  68% /
+udev         tmpfs     10M   88K   10M   1% /dev
+/dev/sda7     ext3    9.4G  7.6G  1.5G  85% /home
+none         tmpfs    754M     0  754M   0% /dev/shm
+/dev/sda1     ext3    9.7G  421M  8.8G   5% /mnt/data</programlisting>
+
+    <para>In the above example you can see the available disk space on all
+    mounted file systems.</para>
+
+    <section>
+      <title>Finding Top Diskspace Consumers</title>
+
+      <para>To find out how much disk space a file (or, more interestingly, a
+      directory with all files and subdirectories) you can use the
+      <command>du</command><indexterm>
+          <primary>du</primary>
+        </indexterm> command (disk usage). By default, <command>du</command>
+      shows the disk usage in kilobytes for every file passed on to it. You
+      can have <command>du</command> show the total using the -s option
+      (summarize) and even have du show it in a more human-readable manner (so
+      12.6G instead of 13269313 - kilobytes).</para>
+
+      <programlisting>$ <command>du -hs /home/raghat</command>
+12.6G     /home/raghat</programlisting>
+
+      <para>If you want to view the largest users (subdirectories or files
+      inside the directory) you can do a summary listing of everything beneath
+      it and sort the resulting output by number. To make it a bit manageable,
+      the next example then only shows the last 5 lines (the largest 5
+      consumers).</para>
+
+      <programlisting>$ <command>du -ks /home/raghat/* | sort -n | tail -5</command>
+7660    folder.pdf
+7672    linux_sea.pdf
+8532    docs/
+3666665 hmd/</programlisting>
+
+      <para>However, you'll quickly find that this process is tedious (you'll
+      have to repeat it for every subdirectory if you don't plan on wiping out
+      the entire directory) when you need to free some space. One of the
+      solutions is to find large files, for instance through the find
+      command.</para>
+
+      <para>The next example finds all files of at least 50mbyte in size from
+      the current location:</para>
+
+      <programlisting>$ <command>find . -type f -size +50M</command>
+./tmp/download/testvid001.avi
+./tmp/download/testvid002.avi
+./iso/SysRescCD.iso</programlisting>
+
+      <para>Another frequently used method for cleaning up files is to find
+      all files of a certain age (modification time). For instance, to find
+      all files of at least 10Mbyte with an age of at least 1 year old (365
+      days):</para>
+
+      <programlisting>$ <command>find . -type f -size +10M -mtime +365</command></programlisting>
+    </section>
+
+    <section>
+      <title>Cleaning Up Gentoo-related Files</title>
+
+      <para>If you work with Gentoo, you have a few commands at your disposal
+      that help you clean out Gentoo-specific files as well.</para>
+
+      <para>With <command>eclean</command><indexterm>
+          <primary>eclean</primary>
+        </indexterm>, which is part of
+      <package>app-portage/gentoolkit</package>, most Gentoo space-consuming
+      directories can be cleaned in a safe manner:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the distfiles location, where Gentoo Portage stores all
+          downloaded source code (in case it needs to rebuild packages), can
+          be cleaned with <command>eclean distfiles</command>:</para>
+
+          <programlisting># <command>eclean distfiles</command></programlisting>
+
+          <para>As a result, all downloaded source code of packages that are
+          not installed on the system anymore is removed from the distfiles
+          location.</para>
+        </listitem>
+
+        <listitem>
+          <para>the packages location, wheren Gentoo Portage stores the binary
+          package builds of the packages you install (this is not on by
+          default, but I recommend it if you have sufficient amount of space
+          as it can help you recover from certain disasters quickly), can be
+          cleaned with <command>eclean packages</command>:</para>
+
+          <programlisting># <command>eclean packages</command></programlisting>
+        </listitem>
+      </itemizedlist>
+
+      <para>Another location that you may clean is
+      <filename>/var/tmp/portage</filename>. At this location, Portage
+      performs the entire build process. If an ebuild build process fails, the
+      files are left at this location (this is deliberate, so that one can
+      debug and perhaps fix the build failure manually). Since most users
+      don't manually fix this, if you are not emerge'ing anything, this entire
+      folder can be made empty.</para>
+    </section>
+
+    <section>
+      <title>Resizing Partitions</title>
+
+      <para>It is possible to resize partitions, although I recommend that, if
+      you plan on using this a lot, you should take a look at LVM2 (logical
+      volume management) which provides an easier and safer method for
+      resizing filesystems.</para>
+
+      <section>
+        <title>Resizing xt2/ext3 file systems</title>
+
+        <para>To increase the size of an ext3 file system, you first need to
+        resize the partition. You can do this with <command>fdisk</command> by
+        removing the partition and then recreating it, starting from the same
+        point as the original partition started, but now larger. Of course,
+        this means that the partition cannot be mounted at that time. Then,
+        run <command>resize2fs</command><indexterm>
+            <primary>resize2fs</primary>
+          </indexterm> against the device. The tool will automatically expand
+        the file system to use the entire partition again. Once the resize is
+        completed, you can mount the file system again.</para>
+
+        <programlisting># <command>fdisk /dev/sda</command>
+<emphasis>(Edit partition sda3, making it take more space than before)</emphasis>
+# <command>resize2fs /dev/sda3</command></programlisting>
+
+        <para>If you want to decrease the size of an ext3 file system, you
+        first need to use <command>resize2fs</command> to shrink the file
+        system. Then you edit the partition table again, removing the existing
+        partition and recreating it, but with a smaller size, and again
+        starting the partition from the same point as the original partition
+        started:</para>
+
+        <programlisting># <command>resize2fs /dev/sda3 10G</command>
+# <command>fdisk /dev/sda</command></programlisting>
+
+        <para>As you can see, resizing an ext2/ext3 file system suffers from
+        the following draw-backs:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>the file system cannot be mounted at the time of resizing.
+            If you want to resize the root partition, this means you'll need
+            to boot from a LiveCD, LiveUSB or another operating system</para>
+          </listitem>
+
+          <listitem>
+            <para>the resize operation can only manipulate the end of the
+            partition. The start of the partition must remain the same. In
+            other words, if your entire disk is used by partitions, you cannot
+            increase any partition without deleting one or more partitions
+            behind it (you cannot shrink the last partition by moving its
+            starting point closer to the end).</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Resizing other file systems</title>
+
+        <para>Almost every file system technology has a command to resize its
+        file system. Some even support online resizing, provided that the
+        storage on which the file system is put (partition) already has
+        unallocated space available. As most people use partitions, this still
+        requires unmounting the file system and editing the partition table
+        using fdisk.</para>
+
+        <para>The XFS file system has <command>xfs_growfs</command><indexterm>
+            <primary>xfs_growfs</primary>
+          </indexterm>, the JFS file system uses mount options to
+        resize:</para>
+
+        <programlisting><emphasis>(Resizing a JFS file system)</emphasis>
+# <command>mount -o remount,resize /jfs/filesystem/mountpoint</command></programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Limiting User Files</title>
+
+      <para>It is possible to limit the amount of files, or total disk space
+      that a particular user can take on an individual partition. This is
+      especially useful when you have multiple users on your system (and you
+      don't want a single user to take almost all disk space on your /home
+      partition - provided that it already is a separate partition, which I
+      strongly recommend). A second possible reason to do this is when /home
+      is not on a separate partition, and you don't want any user to be able
+      to fill up your root partition.</para>
+
+      <para>This kind of support is called <emphasis>quota</emphasis> support.
+      Quota support (which requires kernel level support as well) is based
+      upon two simple files that you place in the root folder of the mount
+      point. Inside this file, you specify per user (for the
+      <filename>aquota.user</filename> file) or group (for the
+      <filename>aquota.group</filename> file) how much blocks (kilobytes)
+      and/or inodes (files/directories) can be used. The soft limit there is
+      when the system will start complaining, the hard limit is a final limit
+      - the user or group cannot go beyond that.</para>
+
+      <para>To use quota, first install the qouta utilities.</para>
+
+      <programlisting># <command>emerge sys-fs/quota</command></programlisting>
+
+      <para>Next, edit /etc/fstab and add usrquota,grpquota (or one of the two
+      depending on how you want to configure your quota's) as mount
+      parameters.</para>
+
+      <programlisting># <command>nano -w /etc/fstab</command>
+<emphasis>(Edit the mount parameters, like so:)</emphasis>
+/dev/sda3  /home   ext3   defaults,noatime,usrquota,grpquota  0 0</programlisting>
+
+      <para>Create, inside the mount point, the quota files. Then remount the
+      file system and initialize the quota files:</para>
+
+      <programlisting># <command>touch /home/aquota.user /home/aquota.group</command>
+# <command>chmod 600 /home/aquota.*</command>
+# <command>mount -o remount /home</command>
+# <command>quotacheck -avugm</command>
+# <command>quotaon -avug</command></programlisting>
+
+      <para>Finally, set the quota's using the
+      <command>edquota</command><indexterm>
+          <primary>edquota</primary>
+        </indexterm> commands. The next example edits the quota's for the
+      raghat user and for the group "usergroup". The command will open up your
+      standard editor (<command>vi</command> or <command>nano</command>) and
+      display the current quota limits (0 means unlimited). You can then just
+      edit the file to your liking. Changes will be effective
+      immediately.</para>
+
+      <programlisting># <command>edquota -u raghat</command>
+# <command>edquota -g usergroup</command></programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Resources</title>
+
+    <itemizedlist>
+      <listitem>
+        <para><ulink url="http://tldp.org/HOWTO/Partition/">Linux Partition
+        HOWTO</ulink>, section "<ulink
+        url="http://tldp.org/HOWTO/Partition/fdisk_partitioning.html">Partitioning
+        with fdisk</ulink>"</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.mythic-beasts.com/~mark/random/hal/">HAL
+        and device management</ulink>, written by Mark Longair</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink
+        url="http://docs.kde.org/stable/en/kdebase-runtime/userguide/multimedia.html">Multimedia
+        with KDE</ulink>, part of KDE base documentation</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

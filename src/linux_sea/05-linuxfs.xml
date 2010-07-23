@@ -1,0 +1,1551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>The Linux File System</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The Linux file system is a hierarchically structured tree where
+    every location has its distinct meaning. The file system structure is
+    standardized through the file system hierarchy standard of which you'll
+    find this chapter to be a description off. Of course, a file system is
+    always stored on media (be it a hard drive, a CD or a memory fragment);
+    how these media relate to the file system and how Linux keeps track of
+    those is also covered in this chapter.</para>
+  </section>
+
+  <section>
+    <title>Structure</title>
+
+    <para>The file system is a tree-shaped structure. The root of the tree,
+    which coincidentally is called the <emphasis>file system
+    root</emphasis><indexterm>
+        <primary>root</primary>
+
+        <secondary>file system</secondary>
+      </indexterm> but is always depicted as being above all other, is
+    identified by the slash character: "<filename>/</filename>". It is the
+    highest place you can go to. Beneath it are almost always only
+    directories:</para>
+
+    <programlisting>~$ <command>cd /</command>
+~$ <command>ls -F</command>
+bin/     home/     opt/      srv/     var/
+boot/    lib/      proc/     sys/
+dev/     media/    root/     tmp/
+etc/     mnt/      sbin/     usr/</programlisting>
+
+    <para>The <command>ls -F</command> commands shows the content of the root
+    location but appends an additional character to special files. For
+    instance, it appends a "/" to directories, an "@" to symbolic links and a
+    "*" to executable files. The advantage is that, for this book, you can
+    easily see what type of files you have. By default, Gentoo enables
+    color-mode for the <command>ls</command> command, telling you what kind of
+    files there are by the color. For books however, using the appended
+    character is more sane.</para>
+
+    <para>A popular way of representing the file system is through a tree. An
+    example would be for the top level:</para>
+
+    <programlisting>/
++- bin/
++- boot/
++- dev/
++- etc/
++- home/
++- lib/
++- media/
++- mnt/
++- opt/
++- proc/
++- root/
++- sbin/
++- srv/
++- sys/
++- tmp/
++- usr/
+`- var/</programlisting>
+
+    <para>The more you descend, the larger the tree becomes and it will soon
+    be too difficult to put it on a single view. Still, the tree format is a
+    good way of representing the file system because it shows you exactly how
+    the file system looks like.</para>
+
+    <programlisting>/
++- bin/
++- ...
++- home/
+|  +- thomas/
+|  |  +- Documents/
+|  |  +- Movies/
+|  |  +- Music/
+|  |  +- Pictures/         &lt;-- You are here
+|  |  |  `- Backgrounds/
+|  |  `- opentasks.txt
+|  +- jane/
+|  `- jack/
++- lib/
++- ...
+`- var/</programlisting>
+
+    <para>We've briefly covered navigating through the tree previously:
+    suppose that you are currently located inside
+    <filename>/home/thomas/Pictures</filename>. To descend even more (into the
+    <filename>Backgrounds</filename> directory) you would type "<command>cd
+    Backgrounds</command>". To ascend back (to
+    <filename>/home/thomas</filename>) you would type "<command>cd
+    ..</command>" (<filename>..</filename> being short for "parent
+    directory").</para>
+
+    <para>Before we explain the various locations, let's first consider how
+    the file system is stored on one (or more) media...</para>
+
+    <section>
+      <title>Mounting File Systems</title>
+
+      <para>The root of a file system is stored somewhere. Most of the time,
+      it is stored on a partition of a disk. In many cases you would want to
+      combine multiple partitions for a single file system. Combining one
+      partition with the file system is called <emphasis>mounting a file
+      system</emphasis><indexterm>
+          <primary>mount</primary>
+        </indexterm>. Your file system is always seen as a tree structure, but
+      parts of a tree (a <emphasis>branch</emphasis><indexterm>
+          <primary>branch</primary>
+        </indexterm>) can be located on a different partition, disk or even
+      other medium (network storage, DVD, USB stick, ...).</para>
+
+      <section>
+        <title>Mounting</title>
+
+        <para>Suppose that you have the root of a file system stored on one
+        partition, but that all the users' files are stored on another. This
+        would mean that <filename>/</filename>, and everything beneath it, is
+        on one partition except <filename>/home</filename> and everything
+        beneath that, which is on a second one.</para>
+
+        <figure>
+          <title>Two partitions used for the file system structure</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/filesystem-partitions.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>The act of mounting requires that you identify a location of the
+        file system as being a mount point (in the example,
+        <filename>/home</filename> is the mount point) under which every file
+        is actually stored on a different location (in the example, everything
+        below <filename>/home</filename> is on the second partition). The
+        partition you "mount" to the file system doesn't need to know where it
+        is mounted on. In fact, it doesn't. You can mount the users' home
+        directories at <filename>/home</filename> (which is preferable) but
+        you could very well mount it at
+        <filename>/srv/export/systems/remote/disk/users</filename>. Of course,
+        the reason why you would want to do that is beyond me, but you could
+        if you want to.</para>
+
+        <para>The mount command by itself, without any arguments, shows you a
+        list of mounted file systems:</para>
+
+        <programlisting>$ <command>mount</command>
+/dev/sda8 on /             type ext3 (rw,noatime)
+proc      on /proc         type proc (rw)
+sysfs     on /sys          type sysfs (rw,nosuid,nodev,noexec,relatime)
+udev      on /dev          type tmpfs (rw,nosuid,relatime,size=10240k,mode=755)
+devpts    on /dev/pts      type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620)
+/dev/sda7 on /home         type ext3 (rw,noatime)
+none      on /dev/shm      type tmpfs (rw)
+/dev/sda1 on /mnt/data     type ext3 (rw,noatime)
+usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)</programlisting>
+
+        <para>The above example, although bloated with a lot of other file
+        systems we know nothing about yet, tells us that the file system can
+        be seen as follows:</para>
+
+        <programlisting>/             (on /dev/sda8)
++- ...
++- dev/       (special: "udev")
+|  +- pts     (special: "devpts")
+|  `- shm     (special: "none")
++- proc/      (special: "proc")
+|  `- bus/
+|     `- usb/ (special: "usbfs")
++- sys/       (special: "sys")
++- home/      (on /dev/sda7)
+`- mnt/
+   `- data/   (on /dev/sda1)</programlisting>
+
+        <para>Ignoring the special mounts, you can see that the root of the
+        file system is on device <filename>/dev/sda8</filename>. From
+        <filename>/home</filename> onwards, the file system is stored on
+        <filename>/dev/sda7</filename> and from <filename>/mnt/data</filename>
+        onwards, the file system is stored on <filename>/dev/sda1</filename>.
+        More on this specific device syntax later.</para>
+
+        <para>The concept of mounting allows programs to be agnostic about
+        where your data is structured. From an application (or user) point of
+        view, the file system is one tree. Under the hood, the file system
+        structure can be on a single partition, but also on a dozen
+        partitions, network storage, removable media and more.</para>
+      </section>
+
+      <section id="filesystems">
+        <title>File Systems</title>
+
+        <para>Each medium which can contain files is internally structured.
+        How this structure looks like is part of the file system it uses.
+        Windows users might remember that originally, Microsoft Windows used
+        FAT16 and later on FAT32 before they all migrated to one of the many
+        NTFS revisions currently in use by Microsoft Windows. Well, all these
+        are in fact file systems<indexterm>
+            <primary>file system format</primary>
+          </indexterm>, and Linux has its own set as well.</para>
+
+        <para>Linux however doesn't require its partitions to have one
+        possible file system (like "only NTFS is supported"): as long as it
+        understands it and the file system supports things like ownership and
+        permissions, you are free to choose whatever file system you want. In
+        fact, during most distribution installations, you are asked which file
+        system to choose. The following is a small list of popular file
+        systems around, each with a brief explanation on its advantages and
+        disadvantages...</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>The <emphasis>ext2</emphasis><indexterm>
+                <primary>ext2</primary>
+              </indexterm> file system is Linux' old, yet still used file
+            system. It stands for extended 2 file system and is quite simple.
+            It has been in use almost since the birth of Linux and is quite
+            resilient against file system fragmentation - although this is
+            true for almost all Linux file systems. It is however slowly being
+            replaced by journalled file systems.</para>
+          </listitem>
+
+          <listitem>
+            <para>The <emphasis>ext3</emphasis><indexterm>
+                <primary>ext3</primary>
+              </indexterm> file system is an improvement on the ext2 file
+            system, adding, amongst other things, the concept of journalling.
+            The file system is very popular because it builds upon the
+            reliability of the ext2 file system and is in fact the default
+            choice for most users and distributions.</para>
+          </listitem>
+
+          <listitem>
+            <para>The <emphasis>ext4</emphasis><indexterm>
+                <primary>ext4</primary>
+              </indexterm> file system is an improvement on the ext3 file
+            system, adding, amongst other things, support for very large file
+            systems/files, extents (contiguous physical blocks),
+            pre-allocation and delayed allocation and more. It has recently
+            been integrated in the main Linux kernel tree so still has to
+            prove itself as a worthy successor to ext3. The ext4 file system
+            is backwards compatible with ext3 as long as you do not use
+            extents.</para>
+          </listitem>
+
+          <listitem>
+            <para>The <emphasis>reiserfs</emphasis><indexterm>
+                <primary>reiserfs</primary>
+              </indexterm> file system is written from scratch. It provides
+            journalling as well, but its main focus is on speed. The file
+            system provides quick access to locations with hundreds of files
+            inside (ext2 and ext3 are much slower in these situations) and
+            keeps the disk footprint for small files small (some other file
+            systems reserve an entire block for every file, reiserfs is able
+            to share blocks with several files). Although quite popular a few
+            years back, the file system has been seeing a lack of support
+            through its popular years (harmful bugs stayed in for quite some
+            time) and is not frequently advised by distributions anymore. Its
+            successor, <emphasis>reiser4</emphasis><indexterm>
+                <primary>reiser4</primary>
+              </indexterm>, is still quite premature and is, due to the
+            inprisonment of the main developer Hans Reiser, not being
+            developed that actively anymore.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>A <emphasis>file system journal</emphasis><indexterm>
+            <primary>file system journal</primary>
+          </indexterm><indexterm>
+            <primary>journal</primary>
+          </indexterm> keeps track of file write operations by first
+        performing the write (like adding new files or changing the content of
+        files) in a journal first. Then, it performs the write on the file
+        system itself after which it removes the entry from the journal. This
+        set of operations ensures that, if at any point the file system
+        operation is interrupted (for instance through a power failure), the
+        file system is able to recover when it is back up and running by
+        either replaying the journal or removing the incomplete entry: as
+        such, the file system is always at a consistent state.</para>
+
+        <para>It is usually not possible to switch between file systems
+        (except ext2 &lt;&gt; ext3) but as most file systems are mature enough
+        you do not need to panic "to chose the right file system".</para>
+
+        <para>Now, if we take a look at our previous mount output again, we
+        notice that there is a part of the line that sais which "type" a mount
+        has. Well, this type is the file system used for that particular
+        mount.</para>
+
+        <programlisting>$ <command>mount</command>
+/dev/sda8 on /             type ext3 (rw,noatime)
+proc      on /proc         type proc (rw)
+sysfs     on /sys          type sysfs (rw,nosuid,nodev,noexec,relatime)
+udev      on /dev          type tmpfs (rw,nosuid,relatime,size=10240k,mode=755)
+devpts    on /dev/pts      type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620)
+/dev/sda7 on /home         type ext3 (rw,noatime)
+none      on /dev/shm      type tmpfs (rw)
+/dev/sda1 on /mnt/data     type ext3 (rw,noatime)
+usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)</programlisting>
+
+        <para>As you can see, all partitions (the non-special lines) are all
+        typed as ext3. But what are those other file systems that you
+        notice?</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis>proc</emphasis><indexterm>
+                <primary>proc</primary>
+
+                <secondary>file system</secondary>
+              </indexterm> is a special file system which doesn't exist on a
+            device, but is a sort of gateway to the Linux kernel. Everything
+            you see below <filename>/proc</filename> is something the kernel
+            displays the moment you read it. It is a way to communicate with
+            the kernel (and vice versa) using a very simple interface: file
+            reading and file writing, something well supported.</para>
+
+            <para>I will elaborate on <filename>/proc</filename> more later in
+            this chapter.</para>
+
+            <para>proc is known to be a <emphasis>pseudo file
+            system</emphasis><indexterm>
+                <primary>pseudo file system</primary>
+              </indexterm>: it does not contain real files, but runtime
+            information.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis>sysfs</emphasis><indexterm>
+                <primary>sysfs</primary>
+              </indexterm> is a special file system just like proc: it doesn't
+            exist on a device, and is a sort of gateway to the Linux kernel.
+            It differs from proc in the way it is programmed as well as
+            structured: sysfs is more structured and tailored towards
+            computer-based parsing of the files and directories, whereas proc
+            is more structured and tailored towards human-based
+            reading/writing to the files and directories.</para>
+
+            <para>The idea is that proc will eventually disappear (although
+            there is no milestone set yet since many people like the simple
+            way <filename>/proc</filename> gives them information) and be
+            fully replaced by the sysfs file system.</para>
+
+            <para>Like <filename>/proc</filename>, sysfs is known to be a
+            pseudo file system and will be elaborated more later in this
+            chapter.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis>tmpfs</emphasis><indexterm>
+                <primary>tmpfs</primary>
+              </indexterm> is a temporary file system. Its contents is stored
+            in memory and not on a persistent disk. As such, its storage is
+            usually very quick (memory is a lot faster than even the fastests
+            SSDs and hard disks out there). I do say usually, because tmpfs
+            can swap out pages of its memory to the swap location, effectively
+            making those parts of the tmpfs file system slower (as they need
+            to be read from disk again before they can be used).</para>
+
+            <para>Within Linux, tmpfs is used for things like the device files
+            in /dev (which are populated dynamically with udev - more about
+            that later) and /tmp.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis>devpts</emphasis><indexterm>
+                <primary>devpts</primary>
+
+                <secondary>file system</secondary>
+              </indexterm> is a pseudo file system like proc and sysfs. It
+            contains device files used for terminal emulation (like getting a
+            console through the graphical environment using
+            <command>xterm</command>, <command>uxterm</command>,
+            <command>eterm</command> or another terminal emulation program).
+            In earlier days, those device files were created statically, which
+            caused most distributions to allocate a lot of terminal emulation
+            device files (as it is difficult to know how many of those
+            emulations a user would start at any point in time). To manage
+            those device files better, a pseudo file system is developed that
+            creates and destroys the device files as they are needed.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis>usbfs</emphasis><indexterm>
+                <primary>usbfs</primary>
+              </indexterm> is also a pseudo file system and can be compared
+            with devpts. It also contains files which are created or destroyed
+            as USB devices are added or removed from the system. However,
+            unlike devpts, it doesn't create device files, but pseudo files
+            that can be used to interact with the USB device.</para>
+
+            <para>As most USB devices are generic USB devices (belonging to
+            certain classes, like generic USB storage devices) Linux has
+            developed a framework that allows programs to work with USB
+            devices based on their characteristics, through the usbfs file
+            system.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Many more special file systems exist, but I leave that to the
+        interested reader to find out more about these file systems.</para>
+      </section>
+
+      <section>
+        <title>Partitions and Disks</title>
+
+        <para>Every hardware device (except the network interface) available
+        to the Linux system is represented by a <emphasis>device
+        file</emphasis><indexterm>
+            <primary>device file</primary>
+          </indexterm> inside the <filename>/dev</filename> location.
+        Partitions and disks are no exception. Let's take a serial ATA hard
+        disk as an example.</para>
+
+        <para>A SATA disk driver internally uses the SCSI layer to represent
+        and access data. As such, a SATA device is represented as a SCSI
+        device. The first SATA disk on your system is represented as
+        <filename>/dev/sda</filename>, its first partition as
+        <filename>/dev/sda1</filename>. You could read
+        <filename>sda1</filename> backwards as: "1st partition (1) on the
+        first (a) scsi device (sd)".</para>
+
+        <programlisting>~$ <command>ls -l /dev/sda1</command>
+brw-rw---- 1 root disk 8,  1  Nov 12  10:10  /dev/sda1</programlisting>
+
+        <para>A regular ATA disk (or DVD-ROM) would be represented by
+        <filename>/dev/hda</filename> (hd stood for hard disk but is now seen
+        as the identification of an ATA device).</para>
+
+        <programlisting>$ <command>ls -l /dev/hda</command>
+brw-rw---- 1 root cdrom 3, 0  Apr 23  21:00 /dev/hda</programlisting>
+
+        <para>On a default Gentoo installation, the device manager (which is
+        called <command>udev</command><indexterm>
+            <primary>udev</primary>
+          </indexterm>) creates the device files as it encounters the
+        hardware. For instance, on my system, the partitions for my first SATA
+        device can be listed as follows:</para>
+
+        <programlisting>$ <command>ls -l /dev/sda*</command>
+brw-r----- 1 root disk 8, 0 Sep 30 18:11 /dev/sda
+brw-r----- 1 root disk 8, 1 Sep 30 18:11 /dev/sda1
+brw-r----- 1 root disk 8, 2 Sep 30 18:11 /dev/sda2
+brw-r----- 1 root disk 8, 5 Sep 30 18:11 /dev/sda5
+brw-r----- 1 root disk 8, 6 Sep 30 18:11 /dev/sda6
+brw-r----- 1 root disk 8, 7 Sep 30 18:11 /dev/sda7
+brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
+      </section>
+
+      <section id="mountsection">
+        <title>The 'mount' Command and the fstab file</title>
+
+        <para>The act of mounting a medium to the file system is performed by
+        the <command>mount</command><indexterm>
+            <primary>mount</primary>
+          </indexterm> command. To be able to perform its duty well, it
+        requires some information, such as the <emphasis>mount
+        point</emphasis><indexterm>
+            <primary>mount point</primary>
+          </indexterm>, the file system type, the device and optionally some
+        mounting options.</para>
+
+        <para>For instance, the mount command to mount
+        <filename>/dev/sda7</filename>, housing an ext3 file system, to
+        <filename>/home</filename>, would be:</para>
+
+        <programlisting># <command>mount -t ext3 /dev/sda7 /home</command></programlisting>
+
+        <para>One can also see the act of mounting a file system as
+        "attaching" a certain storage somewhere on the file system,
+        effectively expanding the file system with more files, directories and
+        information.</para>
+
+        <para>However, if your system has several different partitions, it
+        would be a joke to have to enter the commands every time over and over
+        again. This is one of the reasons why Linux has a file system
+        definition file called <filename>/etc/fstab</filename><indexterm>
+            <primary>fstab</primary>
+          </indexterm>. The fstab file contains all the information mount
+        could need in order to succesfully mount a device. An example fstab is
+        shown below:</para>
+
+        <programlisting>/dev/sda8  /          ext3    defaults,noatime      0 0
+/dev/sda5  none       swap    sw                    0 0
+/dev/sda6  /boot      ext2    noauto,noatime        0 0
+/dev/sda7  /home      ext3    defaults,noatime      0 0
+/dev/sdb1  /media/usb auto    user,noauto,gid=users 0 0</programlisting>
+
+        <para>The file is structured as follows:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>The device to mount</para>
+          </listitem>
+
+          <listitem>
+            <para>The location to mount the device to (mount point)</para>
+          </listitem>
+
+          <listitem>
+            <para>The file system type, or auto if you want Linux to
+            autodetect the file system</para>
+          </listitem>
+
+          <listitem>
+            <para>Additional options (use "defaults" if you don't want any
+            specific option), such as noatime (don't register access times to
+            the file system to improve performance) and users (allow regular
+            users to mount/umount the device)</para>
+          </listitem>
+
+          <listitem>
+            <para>Dump-number (you can leave this at 0)</para>
+          </listitem>
+
+          <listitem>
+            <para>File check order (you can leave this at 0 as well)</para>
+          </listitem>
+        </orderedlist>
+
+        <para>Thanks to this file, the previous <command>mount</command>
+        command example is not necessary anymore (as the mount is performed
+        automatically) but in case the mount has not been done already, the
+        command is simplified to:</para>
+
+        <programlisting># <command>mount /home</command></programlisting>
+
+        <para>If you ever need to remove a medium from the file system, use
+        the <emphasis>umount</emphasis><indexterm>
+            <primary>umount</primary>
+          </indexterm> command:</para>
+
+        <programlisting># <command>umount /home</command></programlisting>
+
+        <para>This is of particular interest for removable media: if you want
+        to access a CD or DVD (or even USB stick), you need to mount the media
+        on the file system first before you can access it. Likewise, before
+        you can remove the media from your system, you first need to unmount
+        it:</para>
+
+        <programlisting># <command>mount /media/dvd</command>
+<remark>(The DVD is now mounted and accessible)</remark>
+# <command>umount /media/dvd</command>
+<remark>(The DVD is now not available on the file system anymore and can be
+ removed from the tray)</remark></programlisting>
+
+        <para>Of course, modern Linux operating systems have tools in place
+        which automatically mount removable media on the file system and
+        unmount it when they are removed. Gentoo Linux does not offer such
+        tool by default (you need to install it) though.</para>
+      </section>
+
+      <section>
+        <title>Swap location</title>
+
+        <para>You can (and probably will) have a partition dedicated for
+        paging: this partition will be used by Linux when there is
+        insufficient physical memory to keep all information about running
+        processes (and their resources). When this is the case, the operating
+        system will start putting information (which it hopes will not be used
+        soon) on the disk, freeing up physical memory.</para>
+
+        <para>This swap partition is a partition like any other, but instead
+        of a file system usable by end users, it holds a specific file system
+        for memory purposes and is identified as a swap partition in the
+        partition table:</para>
+
+        <programlisting># <command>fdisk -l /dev/sda</command>
+Disk /dev/sda: 60.0 GB, 60011642880 bytes
+255 heads, 63 sectors/track, 7296 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0x8504eb57
+
+   Device Boot  Start    End      Blocks   Id  System
+/dev/sda1   *       1   1275    10241406   83  Linux
+/dev/sda2        1276   7296    48363682+   5  Extended
+<emphasis>/dev/sda5        1276   1525     2008093+  82  Linux swap / Solaris</emphasis>
+/dev/sda6        1526   1532       56196   83  Linux
+/dev/sda7        1533   2778    10008463+  83  Linux
+/dev/sda8        2779   7296    36290803+  83  Linux</programlisting>
+
+        <para>The swap partition is pointed by through the
+        <filename>/etc/fstab</filename> file and enabled at boot-up.</para>
+
+        <para>To view the currently active swap partitions (or files, as swap
+        files are supported as well), view the content of the
+        <filename>/proc/swaps</filename> file or run the <command>swapon
+        -s</command> command:</para>
+
+        <programlisting># <command>cat /proc/swaps</command>
+Filename     Type      Size    Used  Priority
+/dev/sda5    partition 2008084 0     -1</programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>The Linux File System Locations</title>
+
+      <para>As said before, every location on the Linux file system has its
+      specific meaning. We've already covered a few of them without explicitly
+      telling that those are standard locations, such as
+      <filename>/home</filename> which houses the local users' home
+      directories. The <link linkend="fhs">Linux Filesystem Standard</link>
+      covers all these standard locations, but this chapter would be very
+      incomplete if it didn't talk about these as well.</para>
+
+      <section>
+        <title>System Required Locations</title>
+
+        <para>The system required locations are locations you cannot place on
+        another file system medium because those locations are required by the
+        mount command itself to function properly:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><filename>/bin</filename> contains executable programs
+            needed to bring the system up and running</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/etc</filename> contains all the configuration
+            files for the system (not the user-specific configurations)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/lib</filename> contains the system libraries
+            necessary to succesfully boot the system and run the commands
+            which are located inside <filename>/bin</filename></para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/sbin</filename>, just like
+            <filename>/bin</filename>, contains executable programs. However,
+            whereas <filename>/bin</filename> has programs which users can use
+            as well, <filename>/sbin</filename> contains programs solely for
+            system administrative purposes</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Userland Locations</title>
+
+        <para>Userland locations are the locations which contain the files for
+        the regular operation of a system (such as application data and the
+        applications themselves). These can be stored on separate media if you
+        want. Most system administrators in larger environments do place this
+        on a separate media and mount it read-only because the file system
+        shouldn't be touched during normal operations.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><filename>/usr</filename> is the root of the userland
+            locations (and usually the mount point of the separate
+            medium)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/usr/X11R6</filename> contains all the files
+            necessary for the graphical window server (X11); they are
+            subdivided in binaries (<filename>bin/</filename>), libraries
+            (<filename>lib/</filename>) and header definitions
+            (<filename>/include</filename>) for programs relying on the X11
+            system.</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/usr/bin</filename> contains all the executable
+            programs</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/usr/lib</filename> contains all the libraries for
+            the abovementioned programs</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/usr/share</filename> contains all the application
+            data for the various applications (such as graphical elements,
+            documentation, ...)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/usr/local</filename> is often a separate mount as
+            well, containing programs specific to the local system (the
+            <filename>/usr</filename> might be shared across different systems
+            in large environments)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/usr/sbin</filename> is, like
+            <filename>/usr/bin</filename>, a location for executable programs,
+            but just like <filename>/bin</filename> and
+            <filename>/sbin</filename>, <filename>/usr/sbin</filename>
+            contains programs for system administrative purposes only.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>General Locations</title>
+
+        <para>General locations are, well, everything else which might be
+        placed on a separate medium...</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><filename>/home</filename> contains the home directories of
+            all the local users</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/boot</filename> contains the static boot-related
+            files, not actually necessary once the system is booted (for
+            instance, it includes the bootloader configuration and kernel
+            image)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/media</filename> contains the mount points for
+            the various detachable storage (like USB disks, DVDs, ...)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/mnt</filename> is a location for temporarily
+            mounted media (read: not worth the trouble of defining them in
+            fstab)</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/opt</filename> contains add-on packages and is
+            usually used to install applications into which are not provided
+            by your package manager natively (as those should reside in /usr)
+            or build specific to the local system
+            (<filename>/usr/local</filename>).</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/tmp</filename> contains temporary files for the
+            system tools. The location can be cleansed at boot up.</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/var</filename> contains data that changes in
+            size, such as log files, caches, etc.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Special Kernel-provided File Systems</title>
+
+        <para>Some locations on the file system are not actually stored on a
+        disk or partition, but are created and managed on-the-fly by the Linux
+        kernel.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><filename>/proc</filename> contains information about the
+            running system, kernel and processes</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>/sys</filename> contains information about the
+            available hardware and kernel tasks</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>The Root File System /</title>
+
+      <para>As said before, the root file system / is the parent of the entire
+      file system. It is the first file system that is mounted when the kernel
+      boots, and your system will not function properly if the kernel detects
+      corruption on this file system. Also, due to the nature of the boot
+      process, this file system will eventually become writeable (as the boot
+      process needs to store its state information, etc.)</para>
+
+      <para>Some locations on the root file system need to remain on the root
+      file system (i.e. you should never ever mount another file system on top
+      of that location). These locations are:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>/bin and /sbin as these contain the binaries (commands) that
+          are needed to get a system up to the point it
+          <emphasis>can</emphasis> mount other file systems. The locations
+          contain all binaries that would be needed to troubleshoot boot-up
+          issues (including mounting other file systems).</para>
+
+          <para>A prime example of a binary inside /bin is
+          <command>mount</command> itself.</para>
+        </listitem>
+
+        <listitem>
+          <para>/lib as this contains the libraries that are needed by the
+          commands in /bin.</para>
+        </listitem>
+
+        <listitem>
+          <para>/etc as this contains the systems' configuration files,
+          including those that are needed during the boot-up of the
+          system.</para>
+
+          <para>A prime example of a configuration file inside
+          <filename>/etc</filename> is <filename>fstab</filename> (which
+          contains information about the other file systems to mount at boot
+          time).</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>The Variable Data Location /var</title>
+
+      <para>The var location contains variable data. You should expect this
+      location to be used frequently during the life time of your
+      installation. It contains log files, cache data, temporary files,
+      etc.</para>
+
+      <para>For many, this alone is a reason to give /var its own separate
+      file system: by using a dedicated file system, you ensure that flooding
+      the /var location doesn't harm the root file system (as it is on a
+      different file system).</para>
+    </section>
+
+    <section>
+      <title>The Userland Location /usr</title>
+
+      <para>The usr location contains the systems' day-to-day application
+      files. A specific property of the location is that, if you are not
+      updating your system, it should be left unmodified. In other words, you
+      should be able to have only read-only access to the /usr
+      location.</para>
+
+      <para>For this reason, some larger installations use a network-mounted,
+      read-only /usr location.</para>
+
+      <para>Having /usr on a separate file system also has other advantages
+      (although some might be quite far-fetched ;-)</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>If you are performing system administration tasks, you could
+          unmount /usr so that end users don't run any programs they shouldn't
+          during the administrative window.</para>
+        </listitem>
+
+        <listitem>
+          <para>By placing /usr (and some other locations) on separate media,
+          you keep your root file system small which lowers the chance of
+          having a root file system corruption that will make booting
+          impossible.</para>
+        </listitem>
+
+        <listitem>
+          <para>You can use a file system that is optimized for fast reading
+          (writing doesn't require specific response times)</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>The Home Location /home</title>
+
+      <para>Finally, the /home location. This location contains the end users'
+      home directories. Inside these directories, these users have full write
+      access. Outside these directories, users usually have read-only rights
+      (or even no rights at all). The structure inside a home directory is
+      also not bound to specific rules. In effect, the users' home directory
+      is the users' sole responsibility.</para>
+
+      <para>However, that also means that users have the means of filling up
+      their home location as they see fit, possibly flooding the root file
+      system if /home isn't on a separate partition. For this reason, using a
+      separate file system for /home is a good thing.</para>
+
+      <para>Another advantage of using a separate file system for /home is
+      when you would decide to switch distributions: you can reuse your /home
+      file system for other Linux distributions (or after a reinstallation of
+      your Linux distribution).</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Permissions and Attributes</title>
+
+    <para>By default, Linux supports what is called a <emphasis>discretionary
+    access control<indexterm>
+        <primary>discretionary access control</primary>
+      </indexterm></emphasis> (<emphasis>DAC</emphasis><indexterm>
+        <primary>DAC</primary>
+      </indexterm>) permission system where privileges are based on the file
+    ownership and user identity. However, projects exist that enable
+    <emphasis>mandatory access control</emphasis><indexterm>
+        <primary>mandatory access control</primary>
+      </indexterm> (<emphasis>MAC</emphasis><indexterm>
+        <primary>MAC</primary>
+      </indexterm>) on Linux, which bases privileges on roles and where the
+    administrator can force security policies on files and processes.</para>
+
+    <para>As most MAC-based security projects (such as <ulink
+    url="http://www.rsbac.org">RSBAC</ulink>, <ulink
+    url="http://www.lids.org">LIDS</ulink> and <ulink
+    url="http://www.grsecurity.net">grSecurity</ulink>) are not part of the
+    default Linux kernel yet, I will talk about the standard, discretionary
+    access control mechanism used by almost all Linux distributions. <ulink
+    url="http://www.nsa.gov/selinux">SELinux</ulink>, which is part of the
+    default Linux kernel, will also not be discussed.</para>
+
+    <section>
+      <title>Read, Write and Execute</title>
+
+      <para>The Linux file system supports various permission flags for each
+      file or directory. You should see a flag as a feature or privilege that
+      is either enabled or disabled and is set independently of the other
+      flags. The most used flags on a file system are the read (r), write (w)
+      and execute (x) flags. Their meaning differs a bit based on the
+      target.</para>
+
+      <para>However, supporting these flags wouldn't make a system secure: you
+      want to mix these privileges based on who works with the file. For
+      instance, the system configuration files should only be writeable by the
+      administrator(s); some might not even be readable by the users (like the
+      file containing the user passwords).</para>
+
+      <para>To enable this, Linux supports three kinds of privilege
+      destinations:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the owner of the file (1st group of privileges)</para>
+        </listitem>
+
+        <listitem>
+          <para>the group owner of the file (2nd group of privileges)</para>
+        </listitem>
+
+        <listitem>
+          <para>everybody else (3rd group of privileges)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>This way, you can place one set of privileges for the file owner,
+      another set for the group (which means everybody who is member of the
+      group is matched against these privileges) and a third one set for
+      everybody else.</para>
+
+      <para>In case of a file,</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the read privilege informs the system that the file can be
+          read (viewed)</para>
+        </listitem>
+
+        <listitem>
+          <para>the write privilege informs the system that the file can be
+          written to (edited)</para>
+        </listitem>
+
+        <listitem>
+          <para>the execute privilege informs the system that the file is a
+          command which can be executed</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>As an example, see the output of the <command>ls -l</command>
+      command:</para>
+
+      <programlisting>$ <command>ls -l /etc/fstab</command>
+-rw-r--r-- 1 root root 905 Nov 21 09:10 /etc/fstab</programlisting>
+
+      <para>In the above example, the fstab file is writeable by the root user
+      (rw-) and readable by anyone else (r--).</para>
+
+      <para>In case of a directory,</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the read privilege informs the system that the directory's
+          content can be viewed</para>
+        </listitem>
+
+        <listitem>
+          <para>the write privilege informs the system that the directory's
+          content can be changed (files or directories can be added or
+          removed)</para>
+        </listitem>
+
+        <listitem>
+          <para>the execute privilege informs the system that you are able to
+          jump inside the directory (using the <command>cd</command>
+          command)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>As an example, see the output of the <command>ls -ld</command>
+      command:</para>
+
+      <programlisting>$ <command>ls -ld /etc/cron.daily</command>
+drwxr-x--- 2 root root 4096 Nov 26 18:17 /etc/cron.daily/</programlisting>
+
+      <para>In the above example, the cron.daily directory is viewable (r),
+      writeable (w) and "enterable" (x) by the root user. People in the root
+      group have view- and enter rights (r-x) whereas all other people have no
+      rights to view, write or enter the directory (---).</para>
+
+      <section>
+        <title>Viewing Privileges</title>
+
+        <para>To view the privileges on a file, you can use the long listing
+        format support of the ls command. For instance, to view the
+        permissions on the systems' passwd file (which contains the user
+        account information):</para>
+
+        <programlisting>$ <command>ls -l /etc/passwd</command>
+-rw-r--r-- 1 root root 3108 Dec 26 14:41 /etc/passwd</programlisting>
+
+        <para>This file's permissions are read/write rights for the root user
+        and read rights for everybody else.</para>
+
+        <para>The first character in the permission output shows the type of
+        the file:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>'-': regular file</para>
+          </listitem>
+
+          <listitem>
+            <para>'d': a directory</para>
+          </listitem>
+
+          <listitem>
+            <para>'l': a symbolic link</para>
+          </listitem>
+
+          <listitem>
+            <para>'b': a block device (like /dev/sda1)</para>
+          </listitem>
+
+          <listitem>
+            <para>'c': a character device (like /dev/console)</para>
+          </listitem>
+
+          <listitem>
+            <para>'p': a named pipe</para>
+          </listitem>
+
+          <listitem>
+            <para>'s': a unix domain socket</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>The rest of the permission output is divided in three parts: one
+        for the file owner, one for the file owning group and one for all the
+        rest. So, in the given example, we can read the output '-rw-r--r--'
+        as:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>the file is a regular file</para>
+          </listitem>
+
+          <listitem>
+            <para>the owner (root - see third field of the output) has
+            read-write rights</para>
+          </listitem>
+
+          <listitem>
+            <para>the members of the owning group (also root - see fourth
+            field of the output) have read rights</para>
+          </listitem>
+
+          <listitem>
+            <para>everybody else has read rights</para>
+          </listitem>
+        </orderedlist>
+
+        <para>Another example would be the privileges of the
+        <filename>/var/log/sandbox</filename> directory. In this case, we also
+        use <command>ls</command>' <command>-d</command> argument to make sure
+        ls shows the information on the directory rather than its
+        contents:</para>
+
+        <programlisting>$ <command>ls -ld /var/log/sandbox</command>
+drwxrwx--- 2 root portage 4096 Jul 14 18:47 /var/log/sandbox</programlisting>
+
+        <para>In this case:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>the file is a directory</para>
+          </listitem>
+
+          <listitem>
+            <para>the owner (root) has read, write and execute rights</para>
+          </listitem>
+
+          <listitem>
+            <para>the members of the owning group (portage) also have read,
+            write and execute rights</para>
+          </listitem>
+
+          <listitem>
+            <para>everybody else can't do anything (no read, no execute and
+            certainly no write rights)</para>
+          </listitem>
+        </orderedlist>
+
+        <para>Another method to obtain the access rights is to use the
+        <command>stat</command> command:</para>
+
+        <programlisting>$ <command>stat /etc/passwd</command>
+  File: `/etc/passwd'
+  Size: 3678        Blocks: 8          IO Block: 4096   regular file
+Device: 808h/2056d  Inode: 3984335     Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2010-03-18 21:46:06.000000000 +0100
+Modify: 2010-03-18 21:46:06.000000000 +0100
+Change: 2010-03-18 21:46:06.000000000 +0100</programlisting>
+
+        <para>In the output of the <command>stat</command> command, you notice
+        the same access flags as we identified before (-rw-r--r-- in this
+        case), but also a number. This number identifies the same rights in a
+        mort short-hand notation.</para>
+
+        <para>To be able to read the number, you need to know the values of
+        each right:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>execute rights gets the number 1</para>
+          </listitem>
+
+          <listitem>
+            <para>write rights gets the number 2</para>
+          </listitem>
+
+          <listitem>
+            <para>read rights gets the number 4</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>To get the access rights of a particular group (owner, group or
+        everybody else), add the numbers together.</para>
+
+        <para>For a file with privileges (-rw-r--r--), this gives the number
+        644:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>6 = 4 + 2, meaning read and write rights for the
+            owner</para>
+          </listitem>
+
+          <listitem>
+            <para>4 = 4, meaning read rights for the group</para>
+          </listitem>
+
+          <listitem>
+            <para>4 = 4, meaning read rights for everybody else</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>The first 0 that we notice in <command>stats</command>' output
+        identifies the file as having no very specific privileges.</para>
+      </section>
+
+      <section>
+        <title>Specific Privileges</title>
+
+        <para>There are a few specific privileges inside Linux as well.</para>
+
+        <para>The restricted deletion flag, or sticky bit<indexterm>
+            <primary>sticky bit</primary>
+          </indexterm>, has been identified before. When set on a directory,
+        it prevents people with write access to the directory, but not to the
+        file, to delete the file (by default, write access to a directory
+        means that you can delete files inside that directory regardless of
+        their ownership). The most well-known use for this flag is for the
+        /tmp location:</para>
+
+        <programlisting>$ <command>stat /tmp</command>
+  File: `/tmp'
+  Size: 28672      Blocks: 56         IO Block: 4096   directory
+Device: 808h/2056d Inode: 3096577     Links: 759
+Access: (1777/drwxrwxrwt)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2008-01-10 17:44:04.000000000 +0100
+Modify: 2010-04-24 00:04:36.000000000 +0200
+Change: 2010-04-24 00:04:36.000000000 +0200</programlisting>
+
+        <para>Another specific privilege that we have identified before is the
+        setuid<indexterm>
+            <primary>setuid</primary>
+          </indexterm> or setgid<indexterm>
+            <primary>setgid</primary>
+          </indexterm> flag. When set on an executable (non-script!), the
+        executable is executed with the rights of the owner (setuid) or owning
+        group (setgid) instead of with the rights of the person that is
+        executing it. That does mean that people with no root privileges can
+        still execute commands with root privileges if those commands have the
+        setgid flag set. For this reason, the number of executables with the
+        setuid/setgid bit set need to be limited and well audited for possible
+        security exposures. A nice example for this flag is /bin/mount:</para>
+
+        <programlisting>$ <command>stat /bin/mount</command>
+  File: `/bin/mount'
+  Size: 59688      Blocks: 128        IO Block: 4096   regular file
+Device: 808h/2056d Inode: 262481      Links: 1
+Access: (4711/-rws--x--x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2010-02-06 13:50:35.000000000 +0100
+Modify: 2010-02-06 13:50:35.000000000 +0100
+Change: 2010-02-06 13:50:43.000000000 +0100</programlisting>
+      </section>
+
+      <section>
+        <title>Changing Privileges</title>
+
+        <para>To change the privileges of a file or directory, you should use
+        the <command>chmod</command><indexterm>
+            <primary>chmod</primary>
+          </indexterm> command (<command>ch</command>ange
+        <command>mod</command>e). Its syntax is easy enough to remember well.
+        First, the target permissions:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>'u' for user,</para>
+          </listitem>
+
+          <listitem>
+            <para>'g' for group, and</para>
+          </listitem>
+
+          <listitem>
+            <para>'o' for everybody else (others)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Then you can set (=), add (+) or remove (-) privileges. For
+        instance, to make <filename>/etc/passwd</filename> writeable for the
+        members of the owning group:</para>
+
+        <programlisting># <command>chmod g+w /etc/passwd</command></programlisting>
+
+        <para>You can also combine privileges. For instance, if you want to
+        remove write privileges for the owning group and remove read
+        privileges for the others:</para>
+
+        <programlisting># <command>chmod g-w,o-r /etc/passwd</command></programlisting>
+
+        <para>Finally, you can use the numeric notation if you want as
+        well:</para>
+
+        <programlisting># <command>chmod 644 /etc/passwd</command></programlisting>
+      </section>
+
+      <section>
+        <title>Changing Ownership</title>
+
+        <para>When you need to change the ownership of a file or directory,
+        use the <command>chown</command><indexterm>
+            <primary>chown</primary>
+          </indexterm> (<command>ch</command>ange <command>own</command>er) or
+        <command>chgrp</command><indexterm>
+            <primary>chgrp</primary>
+          </indexterm> (<command>ch</command>ange
+        <command>gr</command>ou<command>p</command>) command. For instance, to
+        change the owner of a file to the user "jack":</para>
+
+        <programlisting># <command>chown jack template.txt</command></programlisting>
+
+        <para>To change the owner of a file, you need to be root though - it
+        will not help if you are the current owner. This is not true for the
+        group though: if you are a member of the target group, you can change
+        the owning group:</para>
+
+        <programlisting>$ <command>ls -l bar</command>
+-rw-r--r-- 1 swift  users   0 May 13 20:41 bar
+$ <command>chgrp dialout bar</command>
+$ <command>ls -l bar</command>
+-rw-r--r-- 1 swift  dialout 0 May 13 20:41 bar</programlisting>
+
+        <para>If you need to change the owner and group, you can use a single
+        <command>chown</command> command: just separate the target owner and
+        group with a colon, like so:</para>
+
+        <programlisting># <command>chown jack:dialout template.txt</command></programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Attributes</title>
+
+      <para>Some file systems allow you to add additional attributes to files.
+      These attributes might have influence on the permissions / usage of
+      these files, or on how the operating system works with these files. Not
+      many distributions use these attributes, because not all file systems
+      support them.</para>
+
+      <section>
+        <title>Listing and Modifying Attributes</title>
+
+        <para>To view the attributes of a file, you can use the
+        <command>lsattr</command><indexterm>
+            <primary>lsattr</primary>
+          </indexterm> command (list attributes); to modify the attributes,
+        use <command>chattr</command><indexterm>
+            <primary>chattr</primary>
+          </indexterm> (change attributes). As Gentoo does not have an example
+        file, lets' create one first:</para>
+
+        <programlisting># <command>touch /tmp/foo</command>
+# <command>chattr +asS /tmp/foo</command></programlisting>
+
+        <para>Now let's see what <command>lsattr</command> has to say:</para>
+
+        <programlisting># <command>lsattr /tmp/foo</command>
+s-S--a---------  /tmp/foo</programlisting>
+
+        <para>Not a big surprise, given the chattr command before. But what
+        does it mean? Well, <command>man chattr</command> gives us the
+        information we need, but here is it in short-hand:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>s: when the file is deleted, its blocks are zeroed and
+            written back to disk (unlike regular files where only the
+            reference to the file is deleted)</para>
+          </listitem>
+
+          <listitem>
+            <para>S: when changes are made to the file, the changes are
+            immediately synchronized to disk (no memory caching
+            allowed)</para>
+          </listitem>
+
+          <listitem>
+            <para>a: the file can only be appended (data is added to the
+            file); changes are not allowed to existing content. Very useful
+            for log files.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Another very interesting attribute is the immutable flag (i)
+        that doesn't allow the file to be deleted, changed, modified, renamed
+        or moved.</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Locating Files</title>
+
+    <para>With all these locations, it might be difficult to locate a
+    particular file. Most of the time, the file you want to locate is inside
+    your home directory (as it is the only location where you have write
+    privileges). However, in some cases you want to locate a particular file
+    somewhere on your entire system.</para>
+
+    <para>Luckily, there are a few commands at your disposal to do so.</para>
+
+    <section>
+      <title>slocate</title>
+
+      <para>The <command>slocate</command><indexterm>
+          <primary>slocate</primary>
+        </indexterm> command manages and uses a database of files to help you
+      find a particular file. Before you can use <command>slocate</command>,
+      you first need to create this database. Also, this database is not
+      automatically brought up to date while you modify your system, so you'll
+      need to run this database update command every now and then:</para>
+
+      <programlisting># <command>slocate -u</command></programlisting>
+
+      <para>A popular way of keeping this database up to date is to use the
+      system scheduler (called cron) which is discussed later.</para>
+
+      <para>When your database is build and somewhat up to date, you can
+      locate any particular file on your filesystem using
+      <command>slocate</command>:</para>
+
+      <programlisting># <command>slocate make.conf</command>
+/etc/make.conf
+/etc/make.conf.example
+(...)
+/usr/portage/local/layman/make.conf</programlisting>
+
+      <para>As you can see, the slocate command returns all files it has found
+      where the string (in this case, "make.conf") is used in the filename,
+      even when the filename is different.</para>
+    </section>
+
+    <section>
+      <title>find</title>
+
+      <para>The <command>find</command><indexterm>
+          <primary>find</primary>
+        </indexterm> command is a very important and powerful command. Unlike
+      <command>slocate</command>, it only returns live information (so it
+      doesn't use a database). This makes searches with
+      <command>find</command> somewhat slow, but <command>find</command>'s
+      power isn't speed, but the options you can give to find a particular
+      file...</para>
+
+      <section>
+        <title>Regular find patterns</title>
+
+        <para>The most simple <command>find</command> construct is to locate a
+        particular file inside one or more directories. For instance, to find
+        files or directories inside /etc whose name is dhcpd.conf (exact
+        matches):</para>
+
+        <programlisting>$ <command>find /etc -name dhcpd.conf</command>
+/etc/dhcp/dhcpd.conf</programlisting>
+
+        <para>To find files (not directories) where dhcpd is in the filename,
+        also inside /etc directory:</para>
+
+        <programlisting>$ <command>find /etc -type f -name '*dhcpd*'</command>
+/etc/conf.d/dhcpd
+/etc/init.d/dhcpd
+/etc/udhcpd.conf
+/etc/dhcp/dhcpd.conf</programlisting>
+
+        <para>To find files in the /etc directory who have been modified
+        within the last 7 days (read: "less than 7 days ago"):</para>
+
+        <programlisting>$ <command>find /etc -type f -mtime -7</command>
+/etc/mtab
+/etc/adjtime
+/etc/wifi-radar.conf
+/etc/genkernel.conf</programlisting>
+
+        <para>You can even find files based on their ownership. For instance,
+        find the files in /etc that do not belong to the root user:</para>
+
+        <programlisting>$ <command>find /etc -type f -not -user root</command></programlisting>
+      </section>
+
+      <section>
+        <title>Combining find patterns</title>
+
+        <para>You can also combine find patterns. For instance, find files
+        modified within the last 7 days but whose name does not contain
+        .conf:</para>
+
+        <programlisting>$ <command>find /etc -type f -mtime -7 -not -name '*.conf'</command>
+/etc/mtab
+/etc/adjtime</programlisting>
+
+        <para>Or, find the same files, but the name should also not be
+        mtab:</para>
+
+        <programlisting>$ <command>find /etc -type f -mtime -7 -not \( -name '*.conf' -or -name mtab)</command>
+/etc/adjtime</programlisting>
+      </section>
+
+      <section>
+        <title>Working with the results</title>
+
+        <para>With find, you can also perform tasks on the results. For
+        instance, if you want to view the "ls -l" output against the files
+        that find finds, you can add the -exec option. The string after -exec
+        should contain two special character sequences:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><filename>'{}'</filename> represents the file found by the
+            find command. The command given to the -exec option is executed
+            and '{}' is substituted with the filename.</para>
+          </listitem>
+
+          <listitem>
+            <para><filename>\;</filename> ends the command in the -exec
+            clause.</para>
+          </listitem>
+        </itemizedlist>
+
+        <programlisting>$ <command>find /etc -type f -mtime -7 -exec ls -l '{}' \;</command></programlisting>
+
+        <para>On the Internet, you'll also find the following
+        construction:</para>
+
+        <programlisting>$ <command>find /etc -type f -mtime -7 | xargs ls -l '{}' </command></programlisting>
+
+        <para>The result is the same, but its behavior is somewhat
+        different.</para>
+
+        <para>When using -exec, the find command executes the command for
+        every file it encounters. The xargs construction will attempt to
+        execute the command as little as possible, based on the argument
+        limits.</para>
+
+        <para>For instance, if the find command returns 10000 files, the
+        command given to -exec is executed 10000 times, once for every file.
+        With xargs, the command might be executed only a few dozen times. This
+        is possible because xargs appends multiple files for a single command
+        as it assumes that the command given can cope with multiple
+        files.</para>
+
+        <para>Example run for find -exec:</para>
+
+        <programlisting>ls -l file1
+ls -l file2
+...
+ls -l file10000</programlisting>
+
+        <para>Example run for xargs:</para>
+
+        <programlisting>ls -l file1 file2 ... file4210
+ls -l file4211 file4212 ... file9172
+ls -l file9173 file9174 ... file10000</programlisting>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Create a directory hierarchy somewhere in a temporary location
+        where you can write in (for instance, a <filename>tmp</filename>
+        directory in your home directory) as follows:</para>
+
+        <programlisting>$ <command>mkdir -p tmp/test/to/work/with/privileges</command></programlisting>
+
+        <para>Now, recursively remove the read privileges for any user (not
+        owner or group) for the entire structure.</para>
+      </listitem>
+
+      <listitem>
+        <para>Check out the privileges of the <filename>/tmp</filename>
+        directory. How would you set these permissions on, for instance, your
+        own <filename>tmp</filename> directory?</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

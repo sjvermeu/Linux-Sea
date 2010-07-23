@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>The Role of the Community</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>A very important asset of free software is the free software
+    community. Just like with any technology or concept, free software has
+    adepts that defend and promote free software to great extend. The free
+    software community itself is very vivid and eager to help others in
+    exploring the wonderful world of free software...</para>
+  </section>
+
+  <section>
+    <title>Communities</title>
+
+    <para>Free software communities are similar to real communities, but with
+    the Internet as main communication channel. Hence, these communities
+    aren't clustered in space like real life communities would, but are
+    scattered throughout the world. Nevertheless, the Internet ensures that
+    participants of a community, even when they are lightyears (figure of
+    speech) apart, talk to each other the same way as neighbours do.</para>
+
+    <para>The Internet is a great asset for these communities: you are not
+    judged based on the color of your skin, your age or your looks. What
+    matters is how you communicate with others, how you present yourself and
+    how you react in discussions. Debates in a community can often become
+    quite vivid, especially when the subject is one where facts aren't
+    sufficient to provide good answers. And when these discussions change from
+    debates into almost insulting fights, a flamewar<indexterm>
+        <primary>flamewar</primary>
+      </indexterm> is born.</para>
+
+    <para>In flamewars, facts and reason are often far away. You should
+    definitely try to avoid flamewars for discussions where decisions have to
+    be made, but it is impossible to really prevent them as they are the
+    result of people who have an active interest in a subject they are eager
+    to defend, especially when there is no clear answer to the question that
+    started the flamewar.</para>
+
+    <para>Examples of such flamewars are ``What is the best Linux
+    distribution?'' or ``What text editor should I choose?'' because these
+    questions don't have clear answers: the best distribution for one person
+    might be the worst for another, and there are many text editors around. In
+    latin one would say ``de gustibus et coloribus non est disputandum'' (one
+    shouldn't argue about tastes and colors) and this is very true for these
+    kind of questions.</para>
+
+    <para>When you don't have a choice, flamewars don't exist: you cannot
+    compare one product with itself. But in the free software world, choice is
+    an important concept. You have the choice between many free operating
+    systems (next to Linux you have many BSD flavors, Sun Solaris 10 and even
+    less popular but promising operating systems like the GNU Hurd),
+    distributions (there are over a hundred distributions around), graphical
+    environments (not a single day goes by without battles about GNOME versus
+    KDE), office suites, etc.</para>
+
+    <para>An often debated subject is ``the best distribution'' and although
+    this book might seem a bit biased on the subject the best answer I can
+    give you is that there is no best distribution, at least not generally
+    speaking. The meaning of the term ``best'' is judged by people who have
+    personal preferences about their operating system. And many of these
+    people defend their best distribution very vividly.</para>
+
+    <para>Distribution communities are very active, mostly because they are
+    quite large. The Gentoo community for instance is known for its
+    responsiveness: the Gentoo chat channel is always alive (with more than
+    800 participants at any time) as is its forum (with more than a thousand
+    posts per day) and mailinglists. Of course, general flamewars on
+    distributions are often on more neutral grounds, but heated discussions on
+    other topics are a daily routine.</para>
+
+    <para>For this reason, most communities have people who keep the
+    discussions sane and prevent flamewars from growing too much. People who
+    try to induce flamewars on the communication channels (called
+    <emphasis>trolls</emphasis><indexterm>
+        <primary>troll</primary>
+      </indexterm>) are taken care of by these operators: channel operators
+    can kick or even ban such people from the chat channel, mailinglist
+    operators remove these people from the list and forum operators remove the
+    profiles of these users. You can safely say these people are the police of
+    the community.</para>
+
+    <section>
+      <title>Local Communities</title>
+
+      <para>A specific type of community is one which is local in space. Such
+      communities often organise meetings (conferences, talks, barbequeues,
+      ...) and offer help to people local to the location where the community
+      is hosted.</para>
+
+      <para>LUG<indexterm>
+          <primary>LUG</primary>
+        </indexterm>s (Linux User Group<indexterm>
+          <primary>Linux User Group</primary>
+        </indexterm>s) are succesful examples of such communities: these
+      groups aggregate together, debating on the evolution in the Linux world
+      and help others with Linux installations (Linux Install Fests<indexterm>
+          <primary>Linux Install Fest</primary>
+        </indexterm> are local meetings that offer help in deploying your
+      favorite Linux distribution on your system). You might find a LUG very
+      close by.</para>
+
+      <para>Many LUGs offer various services to their users which is often
+      unseen in communities for commercial software. Moreover, many LUGs offer
+      these services free-of-charge:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>individual, on-site help with installation, configuration and
+          maintenance of a Linux distribution or other free software</para>
+        </listitem>
+
+        <listitem>
+          <para>courses, talks and presentations offering you more insight in
+          available Free Software</para>
+        </listitem>
+
+        <listitem>
+          <para>specific documentation tailored to the needs of its own
+          users</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>If you have some time to spare, I really recommend to join a local
+      LUG - even if you are not searching for help, you can still offer your
+      own expertise to others and make connections (yes, social networking is
+      important).</para>
+    </section>
+
+    <section>
+      <title>Online Communities</title>
+
+      <para>When people want to discuss a particular software topic or
+      distribution, online communities are often formed. These communities do
+      not (or to a less extend) organise meetings at a specific location
+      (often called "in real life") but rather use the Internet as the meeting
+      place ("online" meetings).</para>
+
+      <para>Online communities have the advantage that its members can be
+      anywhere in the world and just like LUGs, they still offer services to
+      its users, also most of the time free-of-charge:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>online help with installation, configuration and maintenance
+          of the software</para>
+
+          <para>In particular cases, communities can even offer interactive
+          help through technologies such as SSH<indexterm>
+              <primary>SSH</primary>
+            </indexterm> (Secure SHell - allows users to log on and work on
+          another machine) and VNC<indexterm>
+              <primary>VNC</primary>
+            </indexterm> (Virtual Network Computing - allows users to
+          graphically log on and work on another machine, or see read-only
+          sessions).</para>
+        </listitem>
+
+        <listitem>
+          <para>courses and online presentations</para>
+        </listitem>
+
+        <listitem>
+          <para>documentation, more specialised to the software title but
+          often also localised (translated)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>This is possible thanks to the various technologies available on
+      the Internet, including</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Wiki (online collaboration software for developing
+          documentation) software has become quite popular for developing and
+          releasing documentation. The use of wiki's allows users to edit
+          existing documentation or author new documentation online (with a
+          simple browser) and the results of their editing is immediately
+          visible to others.</para>
+        </listitem>
+
+        <listitem>
+          <para>Online (web)forums, where people can participate in
+          discussions by placing messages and reacting to other messages. The
+          advantage of web forums is that they are accessible through your web
+          browser (which most firewalls still allow), can be consulted after
+          the discussion has long been closed and where messages can be
+          extended with images, attachments and formatted text.</para>
+        </listitem>
+
+        <listitem>
+          <para>Mailinglists, which is similar (function-wise) to web forums,
+          but then organised through e-mail. People subscribe to a mailinglist
+          and then receive all mails sent to that mailinglist to their
+          personal mailbox. Replies to these mails are sent back to the
+          mailinglists where they are again distributed to all mailinglist
+          participants. Mailinglists are quite popular in free software
+          communities as they are easily moderated and can be filtered. Also,
+          mails often reach people faster than messages on a webforum so you
+          could see a mailinglist as a faster discussion medium.</para>
+        </listitem>
+
+        <listitem>
+          <para>IRC<indexterm>
+              <primary>IRC</primary>
+            </indexterm> (Internet Relay Chat) is a way of communicating with
+          many people interactively. Most people know Instant Messaging
+          software such as MSN or Google Talk. Well, IRC is somewhat older but
+          still very much used as it supports chatrooms where several hundreds
+          of people can participate. IRC is the fastest medium for
+          participating in discussions and can be seen as a method for
+          creating "online" meetings.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+
+  <section>
+    <title>Support</title>
+
+    <para>Communities often perform the role of support people: if you have a
+    question about their software project they are eager to answer and help.
+    If you think the software is insufficient, they will help you expand it or
+    have it work together with other tools (or even redirect you to other
+    software projects if they feel you want something out of their favorite
+    tool that the tool isn't made for).</para>
+
+    <para>Support can be given on many levels...</para>
+
+    <section>
+      <title>Documentation Guides</title>
+
+      <para>A documentation guide is often created with one goal: describe how
+      to do something with the tool. Such guides are therefor often called
+      HOWTOs<indexterm>
+          <primary>HOWTO</primary>
+        </indexterm>. Much work is put in such HOWTOs because they should be
+      correct, well formed but also complete. The better the HOWTO, the lesser
+      questions are asked after reading it. If you ask the community how to
+      perform a certain action and the action is described in such a HOWTO,
+      you'll be redirected to that HOWTO (sometimes with a more crude
+      reference to the RTFM<indexterm>
+          <primary>RTFM</primary>
+        </indexterm> term, or ``Read The Fucking Manual'' - although the third
+      term is also often read as ``Fine'').</para>
+
+      <para>Other types of documentation are FAQs (<emphasis>Frequently Asked
+      Questions</emphasis>) which are generally very small HOWTOs or answers
+      to conceptual questions rather than technical ones. When you're new to a
+      certain tool it is very interesting to read through the FAQs before you
+      ask your question. Not only are chances high that you find your answer,
+      you might find out more about the tool which can be very
+      interesting.</para>
+
+      <para>Some communities also offer a knowledge base. Such systems can be
+      seen as an aggregation of questions and answers, but unlike FAQs they
+      might not be frequently asked. Knowledge bases often offer support
+      solutions to specific setups.</para>
+    </section>
+
+    <section>
+      <title>Internet and Usenet Forums</title>
+
+      <para>Internet forums (webbased) or Usenet forums (newsgroups<indexterm>
+          <primary>newsgroup</primary>
+        </indexterm>) are a more interactive approach to obtain support.
+      Internet forums have the additional advantage that you can add specific
+      formatting in your questions: you can show command code, exceptions or
+      errors better than in plain text. You can even include screenshots.
+      These forums allow for any user to be helped quite fast: forums are read
+      by many and the interface is simple enough to quickly see the new
+      topics.</para>
+
+      <para>An additional advantage of internet forums is that, once a
+      question has been asked and answered, it is stored in the database of
+      the forum. Hence, the entire forum can be seen as a knowledge base with
+      a multitude of answers. Very popular topics are often made sticky,
+      meaning that the topic remains on top even when no further discussion
+      happens on it, increasing the chance that new users read the
+      topic.</para>
+
+      <para>Usenet forums (or newsgroups) are another popular approach to
+      support although it must be said that newsgroups are not used that often
+      for free software tools. Usually you'll find a newsgroup when the
+      project itself doesn't provide a forum (anyone can launch a new
+      newsgroup) although it does happen that internet forums and usenet
+      forums are linked: posts in one forum are merged with the other.</para>
+    </section>
+
+    <section>
+      <title>Mailinglists</title>
+
+      <para>A more direct approach are mailinglists<indexterm>
+          <primary>mailinglist</primary>
+        </indexterm>, e-mail addresses where several dozens (or even hundreds)
+      individuals listen to. A mailinglist is often perceived to be a bit
+      faster than forums because many developers frequent mailinglists but not
+      forums due to the ease of use: mailinglists result in plain e-mails
+      which can be easily filtered.</para>
+
+      <para>Most mailinglists are archived as well, allowing you to skim
+      through the older topics in the list. Whereas forums are usually pure
+      for user experience, mailinglists are used as the primary communication
+      channel for development purposes. Some projects also have internal
+      development mailinglists which aren't readable to the public. This isn't
+      because they want to hide development stuff from the users: such mailing
+      lists are used to communicate security issues, personal information
+      (including account information) but also to talk about topics that are
+      juridically difficult to defend if they are made public.</para>
+    </section>
+
+    <section>
+      <title>Chat</title>
+
+      <para>Chatting is almost the most direct form of communicating with each
+      other. Many free software projects use IRC<indexterm>
+          <primary>IRC</primary>
+        </indexterm> (Internet Relay Chat) as a central communication channel.
+      Users can be quickly helped through IRC while developers can talk and
+      discuss changes quickly.</para>
+
+      <para>Chat channels can be very popular. Gentoo's main chat channel
+      (#gentoo on the freenode network) has between 800 and 1000 participants
+      at any time.</para>
+    </section>
+
+    <section>
+      <title>Real-life Meetings</title>
+
+      <para>Once in a while, developer groups come together for real-life
+      support or to discuss the evolution of their software. In many cases,
+      real-life meetings offer a way for people to get hands-on, interactive
+      help. We have talked about LUG meetings (where real-life meetings are
+      often held) but also software communities have real-life meetings. Many
+      of these meetings offer a way for developers to meet each other (for the
+      first time), discuss topics and learn from each other.</para>
+
+      <para>In some cases, <emphasis>hackfest</emphasis>s<indexterm>
+          <primary>hackfest</primary>
+        </indexterm> are organized. During these meetings, developers
+      aggregate together with a single goal: to develop new features or remove
+      bugs from the software. Although this can well be done offline,
+      hackfests allow developers to communicate freely and help other
+      developers with their problems. Meeting in real life allows developers
+      to easily show the problem they have (some problems can be difficult or
+      too time consuming to write down).</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Conferences</title>
+
+    <para>In the Free Software world, conferences are often organized. During
+    these conferences</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>talks are given about certain software titles (design, features,
+        evolution, ...) or projects (infrastructure, offered services, used
+        technologies, ...)</para>
+      </listitem>
+
+      <listitem>
+        <para>booths are organized where projects can show themselves to the
+        wide(r) public. Distributions frequently use booths to hand out
+        installation CD/DVDs and show systems running the distribution.</para>
+      </listitem>
+
+      <listitem>
+        <para>companies offer information on how they use (or develop) free
+        software (and sometimes recruit developers)</para>
+      </listitem>
+    </itemizedlist>
+
+    <section>
+      <title>FOSDEM</title>
+
+      <para>FOSDEM<indexterm>
+          <primary>FOSDEM</primary>
+        </indexterm>, or the <emphasis>Free and Open Source Developers
+      European Meeting</emphasis>, takes place in Brussels, Belgium at the
+      beginning of each year (around mid-february). During this conference,
+      talks are given about coding and development of software, but you'll
+      also find booths about various software projects/distributions and
+      developer rooms (where a single project can offer talks about
+      project-specific topics).</para>
+
+      <para>FOSDEM is held during two days and has become a major conference
+      in the Free Software community, especially in Europe as many other
+      conferences are held in the USA.</para>
+    </section>
+
+    <section>
+      <title>FOSS.IN</title>
+
+      <para>FOSS.IN<indexterm>
+          <primary>FOSS.IN</primary>
+        </indexterm>, or the <emphasis>Free and Open Source Software
+      conference in India</emphasis>, is one of Asia's largest FOSS
+      conferences. It occurs at the end of every year in Balgalore, India,
+      featuring talks, discussions, workshops, meetings and more from
+      international speakers, users and developers.</para>
+    </section>
+
+    <section>
+      <title>LinuxTag</title>
+
+      <para>LinuxTag<indexterm>
+          <primary>LinuxTag</primary>
+        </indexterm> is a free software exposition with primary focus on the
+      Linux-based operating systems and solutions. Unlike FOSDEM, LinuxTag
+      focuses more on the integration of Linux (and free software) in larger
+      environments, offering booths to both commercial companies and
+      non-commercial organisations.</para>
+
+      <para>It's slogan is "Where .COM meets .ORG". You can visit LinuxTag
+      around spring every year. </para>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Try to find the online discussion methods (webforum,
+        mailinglists, IRC) offered by the Gentoo Linux distribution.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Resources</title>
+
+    <para>A few more free software conferences:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>The <ulink url="http://www.linuxsymposium.org">Ottawa Linux
+        Symposium</ulink> is held every year in Ottawa, Canada during summer
+        break.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.linux-kongress.org">Linux
+        Kongress</ulink> has almost always been held in Germany although a
+        single instance was in Cambridge, England.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://linux.conf.au/">Linux.conf.au</ulink> is
+        hosted in Australia in the beginning of every year</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.ohiolinux.org/">Ohio Linux Fest</ulink>
+        is held in Ohio every fall.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.linuxfestnorthwest.org/">Linux Fest
+        Northwest</ulink> is held in Washington every spring.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://scale7x.socallinuxexpo.org/">SCaLE (Southern
+        California Linux Expo)</ulink> is held late winter.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://onlinux.ca/">Ontario Linux
+        Fest</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.linuxworldexpo.com/">LinuxWorld
+        Conference and Expo</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://freed.in/">Freed.IN</ulink></para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

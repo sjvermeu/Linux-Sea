@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Installing Gentoo Linux</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>I've waited a few chapters before I started discussing the Gentoo
+    Linux installation because it isn't for the faint of hearted. Although
+    Gentoo has tried to offer a graphical installer in the past, its user- and
+    developer base swore by the manual installation approach. As a result, the
+    graphical installer has been deprecated and the installation procedure is
+    once more a manual, step by step guide.</para>
+
+    <para>With the previous chapters discussed, you should now be able to
+    install a Gentoo Linux yourself with the following simple set of
+    instructions. However, if you want to do it the official way, do not
+    hesitate to read the <ulink
+    url="http://www.gentoo.org/doc/en/handbook/handbook-x86.xml">Gentoo
+    Handbook</ulink>. There are also <ulink type=""
+    url="http://www.gentoo.org/doc/en/handbook">handbooks</ulink> available
+    for other architectures.</para>
+  </section>
+
+  <section>
+    <title>Booting a Linux Environment</title>
+
+    <para>A Gentoo Linux installation starts from a Linux environment. You can
+    use any Linux environment you want, but most people suggest to use a
+    LiveCD.</para>
+
+    <para>A popular LiveCD to install Gentoo from is <ulink
+    url="http://www.sysresccd.org">System Rescue CD</ulink>. All necessary
+    documentation about booting the CD, including setting up networking (which
+    you definitely need to do in order to install Gentoo) is available on the
+    site.</para>
+  </section>
+
+  <section>
+    <title>Disk Setup</title>
+
+    <para>Once your environment is set up, you'll need to setup your disks by
+    partitioning them and then putting a file system on them. Partitioning and
+    file system management has been discussed <link
+    linkend="hdpartitions">beforehand</link>:</para>
+
+    <programlisting># <command>fdisk /dev/sda</command>
+<emphasis>(Partition the disk)</emphasis>
+# <command>mkfs.ext2 /dev/sda1</command>
+# <command>mkfs.ext3 /dev/sda2</command>
+# <command>mkfs.ext3 /dev/sda3</command></programlisting>
+
+    <para>Once that your partitions are created and a file system is put on
+    it, it is time to really start the Gentoo Linux installation.</para>
+
+    <para>First, mount all the necessary partitions onto your Linux
+    environment. In the rest of this chapter I will assume the partitioning
+    layout as described in <link
+    linkend="example_partitiontable">here</link>.</para>
+
+    <table id="example_partitiontable">
+      <title>Example partition layout</title>
+
+      <tgroup cols="3">
+        <tbody>
+          <row>
+            <entry>Device</entry>
+
+            <entry>Partition</entry>
+
+            <entry>Description</entry>
+          </row>
+
+          <row>
+            <entry>/dev/sda1</entry>
+
+            <entry>/boot</entry>
+
+            <entry>Small boot partition to hold the Linux kernel and
+            bootloader information. Can be ext2</entry>
+          </row>
+
+          <row>
+            <entry>/dev/sda2</entry>
+
+            <entry>/</entry>
+
+            <entry>Root partition; should be fairly large in this example.
+            Suggested is ext3</entry>
+          </row>
+
+          <row>
+            <entry>/dev/sda3</entry>
+
+            <entry>/home</entry>
+
+            <entry>Home partition where all users' files are stored. Best to
+            always have a separate partition for the home directories so that
+            future reinstallations can reuse the home structure.</entry>
+          </row>
+
+          <row>
+            <entry>/dev/sda4</entry>
+
+            <entry>&lt;none&gt;</entry>
+
+            <entry>Swap partition, roughly 1.5 times the amount of physical
+            memory nowadays (still this large because I want to use
+            hibernate-to-disk).</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <programlisting>~# <command>mkdir /mnt/gentoo</command>
+~# <command>mount /dev/sda2 /mnt/gentoo</command>
+~# <command>mkdir /mnt/gentoo/boot</command>
+~# <command>mount /dev/sda1 /mnt/gentoo/boot</command>
+~# <command>mkdir /mnt/gentoo/home</command>
+~# <command>mount /dev/sda3 /mnt/gentoo/home</command>
+~# <command>swapon /dev/sda4</command></programlisting>
+
+    <para>With the above commands executed, the various file systems we will
+    use for the Gentoo installation are now available at
+    <filename>/mnt/gentoo</filename>. Every file or directory we put beneath
+    <filename>/mnt/gentoo</filename> will show up on our final Gentoo
+    installation. For instance, <filename>/mnt/gentoo/boot</filename> =
+    <filename>/boot</filename>.</para>
+  </section>
+
+  <section>
+    <title>Installing Gentoo Base</title>
+
+    <para>First, set your system time correct so that the files you're going
+    to create do not have a weird timestamp:</para>
+
+    <programlisting>~# <command>ntpdate pool.ntp.org</command></programlisting>
+
+    <para>Next, surf to the <ulink
+    url="http://www.gentoo.org/main/en/mirrors2.xml">Gentoo mirror
+    list</ulink> and pick a mirror close to you. On most LiveCDs browsers are
+    available. On the sysresccd you can use links or lynx (command-line
+    browsers). Navigate to releases, select your architecture, autobuilds, the
+    latest date directory to find a listing of stage3 files and install
+    files.</para>
+
+    <programlisting>~# <command>cd /mnt/gentoo</command>
+~# <command>links http://www.gentoo.org/main/en/mirrors2.xml</command></programlisting>
+
+    <itemizedlist>
+      <listitem>
+        <para>A stage3 file is an archive of a prebuilt Gentoo environment
+        which we will extract to the installation location
+        (<filename>/mnt/gentoo</filename>)</para>
+      </listitem>
+
+      <listitem>
+        <para>An install file is an ISO file (CD image) which contains a
+        minimal Gentoo environment from which you can boot and install Gentoo
+        from.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Download the stage3 file and store it in
+    <filename>/mnt/gentoo</filename>. If you have the full URL at hand, you
+    can also use <command>wget</command>:</para>
+
+    <programlisting># <command>cd /mnt/gentoo</command>
+# <command>wget http://gentoo.osuosl.org/releases/x86/autobuilds/20091201/stage3-i686-20091201.tar.bz2</command></programlisting>
+
+    <para>On many forums, you will find the notion of "funtoo" stages. <ulink
+    url="http://www.funtoo.org">Funtoo</ulink> is, to say it in the author's
+    own words (who happens to be Daniel Robbins, the founder of Gentoo Linux),
+    a Gentoo Linux variant which offers freshly-built Gentoo Linux stable
+    stages using Gentoo's official stable branch. You can use a funtoo stage
+    instead of a Gentoo official stage if you want. After all, they both
+    contain roughly the same material. Both (official and funtoo) stages are
+    fine as they are both quite recent.</para>
+
+    <para>Next, go back a few directories until you can select snapshots.
+    Enter this directory and download the latest
+    <filename>portage-&lt;date&gt;.tar.bz2</filename> you can find. Store it
+    in <filename>/mnt/gentoo</filename> as well. Finally, quit your browser
+    and extract the downloaded files on your installation location.</para>
+
+    <programlisting>~# <command>tar xvjpf stage3-*.tar.bz2</command>
+~# <command>tar xvjf portage-*.tar.bz2 -C /mnt/gentoo/usr</command></programlisting>
+
+    <para>Again, you can use <command>wget</command> if you want:</para>
+
+    <programlisting># <command>wget http://gentoo.osuosl.org/snapshots/portage-latest.tar.bz2</command></programlisting>
+
+    <para>The <filename>portage-</filename> file is a snapshot of Gentoo's
+    Portage tree.</para>
+
+    <para>Next, edit the <filename>/mnt/gentoo/etc/make.conf</filename> file.
+    As discussed previously, this file contains variables that define Portage'
+    behavior. Right now I'm focussing on the variables CFLAGS, CXXFLAGS and
+    MAKEOPTS...</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><varname>CFLAGS</varname> (C) and <varname>CXXFLAGS</varname>
+        (C++) inform gcc (GNU's Compiler Collection) what optimizations it
+        should use (see <link linkend="compilerdirectives">Compiler
+        Directives</link>)</para>
+      </listitem>
+
+      <listitem>
+        <para>MAKEOPTS defines how many parallel compilations should occur
+        when you install a package (especially useful for multicore / SMP
+        systems). A good choice is the number of core's in your system plus
+        one (for instance, a dual-core CPU would lead to
+        <varname>MAKEOPTS</varname>="<parameter>-j3</parameter>").</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>You can edit the <filename>make.conf</filename> file using
+    <command>nano</command>, <command>vim</command> or any other text
+    editor.</para>
+  </section>
+
+  <section>
+    <title>Configuring the System</title>
+
+    <para>Our next step is to configure the installation environment.</para>
+
+    <section>
+      <title>Preparing the Installation Environment</title>
+
+      <para>First, prepare the environment for chrooting.
+      <emphasis>Chrooting</emphasis><indexterm>
+          <primary>chroot</primary>
+        </indexterm> is the process of altering your sessions' file system
+      root to another location. In our case, <filename>/mnt/gentoo</filename>
+      should become <filename>/</filename> for your running session. In order
+      to chroot succesfully, we need to ensure that networking will still
+      function properly and that both kernel data and device drivers are
+      available inside the chroot:</para>
+
+      <programlisting>~# <command>cp -L /etc/resolv.conf /mnt/gentoo/resolv.conf</command>
+~# <command>mount -t proc none /mnt/gentoo/proc</command>
+~# <command>mount -o bind /dev /mnt/gentoo/dev</command></programlisting>
+    </section>
+
+    <section>
+      <title>Chrooting</title>
+
+      <para>Now, chroot into the Gentoo installation environment, update your
+      environment variables and, for safety reasons, change your prompt so
+      that you know you're inside your Gentoo installation environment.</para>
+
+      <programlisting>~# <command>chroot /mnt/gentoo /bin/bash</command>
+~# <command>env-update</command>
+~# <command>source /etc/profile</command>
+~# <command>export PS1="(chroot) $PS1"</command></programlisting>
+
+      <para>Right now, this session (where the prompt starts with "(chroot)")
+      is inside your Gentoo installation environment.</para>
+    </section>
+
+    <section>
+      <title>Configuring Portage</title>
+
+      <para>Now, update the Portage tree to make sure you have the current set
+      of packages at your disposal:</para>
+
+      <programlisting>~# <command>emerge --sync</command></programlisting>
+
+      <para>Next, select a Gentoo profile for your environment. A
+      <emphasis>Gentoo profile</emphasis><indexterm>
+          <primary>profile</primary>
+        </indexterm> is a collection of default Portage settings. If you want
+      to know what a particular profile selects of default settings, check out
+      its content at <filename>/usr/portage/profiles</filename> (and don't
+      forget to read up on cascading profiles). Currently, the 2008.0 set of
+      profiles is the stable, default one. The 10.0 set of profiles is still
+      being developed for the upcoming Gentoo 10 release.</para>
+
+      <programlisting>~# <command>eselect profile list</command>
+~# <command>eselect profile set &lt;number&gt;</command></programlisting>
+
+      <para>Finally, set the USE flags you want in either
+      <filename>/etc/make.conf</filename> (global USE flags) or
+      <filename>/etc/portage/package.use</filename> (local USE flags).</para>
+
+      <programlisting>~# <command>nano -w /etc/make.conf</command></programlisting>
+
+      <para>For those of you who want to run Gentoo Linux with support for
+      international locales, edit <filename>/etc/locale.gen</filename> and
+      specify the locales you want to support. An example of locales are given
+      below. Once set, generate the locale files for your system.</para>
+
+      <programlisting>~# <command>nano -w /etc/locale.gen</command>
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
+de_DE ISO-8859-1
+de_DE@euro ISO-8859-15
+
+~# <command>locale-gen</command></programlisting>
+
+      <para>If you want to know which locales are supported, view the contents
+      of the /usr/share/i18n/SUPPORTED file:</para>
+
+      <programlisting># <command>less /usr/share/i18n/SUPPORTED</command></programlisting>
+    </section>
+
+    <section>
+      <title>Configuring the Linux Kernel</title>
+
+      <para>First select your time zone file from inside /usr/share/zoneinfo
+      and copy it to /etc/localtime. For instance, to use the GMT time
+      zone:</para>
+
+      <programlisting>~# <command>cp /usr/share/zoneinfo/GMT /etc/localtime</command></programlisting>
+
+      <para>Next, install the kernel sources. Gentoo profiles a few kernel
+      packages like <package>vanilla-sources</package> (bare Linux kernel as
+      delivered by the kernel developers) and
+      <package>gentoo-sources</package> (vanilla Linux kernel with patches
+      managed by Gentoo developers).</para>
+
+      <programlisting>~# <command>emerge gentoo-sources</command></programlisting>
+
+      <para>You will find the kernel sources at
+      <filename>/usr/src/linux</filename>. Now continue with building the
+      Linux kernel as discussed in <link
+      linkend="configuringkernel">Configuring a Kernel</link>.</para>
+    </section>
+
+    <section>
+      <title>Configuring the System</title>
+
+      <para>There are three blocks of information we need to configure
+      now:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>file system information
+          (<filename>/etc/fstab</filename>)</para>
+        </listitem>
+
+        <listitem>
+          <para>networking information</para>
+        </listitem>
+
+        <listitem>
+          <para>system information</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>To start with the file system information, you need to edit the
+      <filename>/etc/fstab</filename> file. The structure of this file has
+      been discussed before so this shouldn't be an issue (see <link
+      linkend="mountsection">The mount command</link>).</para>
+
+      <programlisting>/dev/sda1  /boot    ext2  noauto,noatime    0 0
+/dev/sda2  /        ext3  defaults,noatime  0 0
+/dev/sda3  /home    ext3  defaults,noatime  0 0
+/dev/sda4  none     swap  sw                0 0
+none       /dev/shm tmpfs defaults          0 0</programlisting>
+
+      <para>Next, configure your network settings. Start by setting the system
+      hostname in <filename>/etc/conf.d/hostname</filename> and then configure
+      the networking settings in <filename>/etc/conf.d/net</filename>.
+      Finally, add your network interface initialization script to the default
+      run level so that networking is automatically started at boot
+      time.</para>
+
+      <programlisting>~# <command>nano -w /etc/conf.d/hostname</command>
+~# <command>nano -w /etc/conf.d/net</command>
+~# <command>rc-update add net.eth0 default</command></programlisting>
+
+      <para>Also edit your <filename>/etc/hosts</filename> file to include the
+      IP addresses and host names of other systems you might need. Also add
+      your hostname to the 127.0.0.1 entry in
+      <filename>/etc/hosts</filename>.</para>
+
+      <programlisting>~# <command>nano -w /etc/hosts</command></programlisting>
+
+      <para>Now, set your root password</para>
+
+      <programlisting>~# <command>passwd</command></programlisting>
+
+      <para>Next, edit <filename>/etc/rc.conf</filename> which contains your
+      general system configuration settings:</para>
+
+      <programlisting>~# <command>nano -w /etc/rc.conf</command></programlisting>
+
+      <para>Next, edit <filename>/etc/conf.d/keymaps</filename> to set your
+      system-wide keyboard layout settings:</para>
+
+      <programlisting>~# <command>nano -w /etc/conf.d/keymaps</command></programlisting>
+
+      <para>Finally, edit <filename>/etc/conf.d/clock</filename> to set the
+      clock options:</para>
+
+      <programlisting>~# <command>nano -w /etc/conf.d/clock</command></programlisting>
+    </section>
+
+    <section>
+      <title>Installing System Tools</title>
+
+      <para>Install a system logger, like syslog-ng:</para>
+
+      <programlisting>~# <command>emerge syslog-ng</command>
+~# <command>rc-update add syslog-ng default</command></programlisting>
+
+      <para>Install a system scheduler (cron daemon), like vixie-cron:</para>
+
+      <programlisting>~# <command>emerge vixie-cron</command>
+~# <command>rc-update add vixie-cron default</command></programlisting>
+
+      <para>Install the file system tools for the file systems you use:</para>
+
+      <programlisting>~# <command>emerge xfsprogs</command>
+~# <command>emerge reiserfsprogs</command>
+~# <command>emerge jfsutils</command></programlisting>
+
+      <para>Install the necessary networking tools, like a DHCP client:</para>
+
+      <programlisting>~# <command>emerge dhcpcd</command></programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Configuring the Boot Loader</title>
+
+    <para>Now, we install the GRUB boot loader:</para>
+
+    <programlisting>~# <command>emerge grub</command></programlisting>
+
+    <para>Once installed, edit the grub configuration file
+    (<filename>/boot/grub/grub.conf</filename>) as we've seen before. Finally,
+    install GRUB on the master boot record:</para>
+
+    <programlisting>~# <command>grep -v rootfs /proc/mounts &gt; /etc/mtab</command>
+~# <command>grub-install --no-floppy /dev/sda</command></programlisting>
+  </section>
+
+  <section>
+    <title>Finishing Up</title>
+
+    <para>Now that everything is installed, reboot your system by exiting the
+    chroot, umounting all mounted file systems and reboot:</para>
+
+    <programlisting>~# <command>exit</command>
+~# <command>cd</command>
+~# <command>umount /mnt/gentoo/boot /mnt/gentoo/dev /mnt/gentoo/proc</command>
+~# <command>umount /mnt/gentoo/home /mnt/gentoo</command>
+~# <command>reboot</command></programlisting>
+
+    <para>Once rebooted (and hopefully inside your Gentoo Linux environment),
+    log in as root and create a user for daily use:</para>
+
+    <programlisting>~# <command>useradd -m -G users,wheel,audio -s /bin/bash yournick</command>
+~# <command>passwd yournick</command></programlisting>
+
+    <para>And to remove the traces from the installation, remove the
+    downloaded tarballs from your / file system:</para>
+
+    <programlisting>~# <command>rm /stage3-*.tar.bz2</command>
+~# <command>rm /portage-*.tar.bz2</command></programlisting>
+  </section>
+</chapter>

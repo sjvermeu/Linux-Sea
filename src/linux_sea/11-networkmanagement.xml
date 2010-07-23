@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Network Management</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>An important aspect of system management is networking
+    configuration. Linux is a very powerful operating system with major
+    networking capabilities. Even more, many network appliances are in fact
+    Linux-based.</para>
+
+    <para>There are two configurations you'll most likely get in contact with:
+    wired network configuration (of which I'll discuss the Ethernet
+    connection) and wireless (IEEE 802.11* standards).</para>
+  </section>
+
+  <section>
+    <title>Supporting your Network Card</title>
+
+    <section>
+      <title>Native Driver Support</title>
+
+      <section>
+        <title>PCI Cards</title>
+
+        <para>First of all, check how many interfaces you would expect on your
+        system. Verify this with the PCI devices found by Linux. For instance,
+        to find out about a wired network controller ("Ethernet"
+        controller):</para>
+
+        <programlisting># <command>lspci | grep Ethernet</command>
+06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd.
+        RTL-8169 Gigabit Ethernet (rev 10)</programlisting>
+
+        <para>In this case, one network card was found that offered Ethernet
+        capabilities. The card uses the Realtek 8169 chipset.</para>
+      </section>
+
+      <section>
+        <title>USB Network Cards</title>
+
+        <para>There are a few USB devices which offer networking capabilities
+        (most of them wireless) which have native Linux support. An example
+        are the USB devices with the Intel 4965agn chipset. If your Linux
+        kernel supports it, the moment you plug it in, a network interface
+        should be made available. For instance, for wireless devices you could
+        use <command>iwconfig</command>, for regular Ethernet cards
+        <command>ifconfig</command>:</para>
+
+        <programlisting># <command>iwconfig</command>
+lo        no wireless extensions.
+
+dummy0    no wireless extensions.
+
+eth0      no wireless extensions.
+
+wlan0     IEEE 802.11g  ESSID:"default"  Nickname:"default"
+          Mode:Managed  Frequency:2.412 GHz  Access Point: 00:1D:6A:A2:CD:29   
+          Bit Rate:54 Mb/s   Tx-Power=20 dBm   Sensitivity=8/0  
+          Retry limit:7   RTS thr:off   Fragment thr:off
+          Power Management:off
+          Link Quality=89/100  Signal level=-37 dBm  Noise level=-89 dBm
+          Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
+          Tx excessive retries:0  Invalid misc:0   Missed beacon:7</programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Support through Windows Drivers</title>
+
+      <para>It is possible to support your (wireless or not) network card
+      using the Windows drivers. The tool you need to install for that is
+      called <command>ndiswrapper</command><indexterm>
+          <primary>ndiswrapper</primary>
+        </indexterm>. First, install ndiswrapper:</para>
+
+      <programlisting># <command>emerge ndiswrapper</command></programlisting>
+
+      <para>Next, either download the windows drivers for the network card or
+      mount the driver CD that was provided with the card. In the drivers, you
+      should find an .inf file. This file contains information regarding the
+      driver(s) for the card and is used by ndiswrapper to create a
+      wrapper.</para>
+
+      <para>Install the driver using <command>ndiswrapper -i</command> from
+      within the location where the driver is unpacked:</para>
+
+      <programlisting># <command>ndiswrapper -i net8191se.inf</command></programlisting>
+
+      <para>To verify if the driver installation succeeded, get an overview of
+      the installed drivers using <command>ndiswrapper -l</command>:</para>
+
+      <programlisting># <command>ndiswrapper -l</command>
+
+net8191se: driver installed, hardware present</programlisting>
+
+      <para>As you can see, the driver got installed and detected compatible
+      hardware.</para>
+
+      <para>Now have ndiswrapper create the necessary modprobe information
+      (modprobe is used by the system to load kernel modules with the correct
+      information; ndiswrapper creates modprobe information that ensures that,
+      when the ndiswrapper kernel module is loaded, the installed wrapper
+      drivers are enabled as well) and make sure that the ndiswrapper kernel
+      module is started when you boot your system:</para>
+
+      <programlisting># <command>ndiswrapper -m</command>
+# <command>nano -w /etc/modules.autoload.d/kernel-2.6</command>
+(Add "ndiswrapper" on a new line)</programlisting>
+
+      <para>You can manually load the ndiswrapper kernel module as
+      well:</para>
+
+      <programlisting># <command>modprobe ndiswrapper</command></programlisting>
+
+      <para>You can now check if the network interface is available
+      (<command>iwconfig</command> or <command>ifconfig</command>).</para>
+    </section>
+
+    <section>
+      <title>Verify your Networking Abilities</title>
+
+      <para>To find out if Linux has recognized this interface, run the
+      <command>ip link</command><indexterm>
+          <primary>ip</primary>
+
+          <secondary>command</secondary>
+        </indexterm> command. It will show you the interfaces that it has
+      recognized on your system:</para>
+
+      <programlisting># <command>ip link</command>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 16436 qdisc noqueue 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether 00:c0:9f:94:6b:f5 brd ff:ff:ff:ff:ff:ff
+3: eth1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast
+      qlen 1000
+    link/ether 00:12:f0:57:99:37 brd ff:ff:ff:ff:ff:ff</programlisting>
+
+      <para>Now, to find out which interface maps to the Ethernet controller
+      shown before you'll need to check the Linux kernel output when it
+      detected the interfaces. You can either use
+      <command>dmesg</command><indexterm>
+          <primary>dmesg</primary>
+        </indexterm> (which displays the last few thousands of lines produced
+      by the Linux kernel) or <filename>/var/log/dmesg</filename> (depending
+      on your system logger) which is the logfile where all Linux kernel
+      output is stored for the duration of the systems' session (i.e. until
+      the next reboot).</para>
+
+      <programlisting># <command>grep -i eth0 /var/log/dmesg</command>
+eth0: RTL8169sb/8110sb at 0xf8826000, 00:c0:9f:94:6b:f5, XID 10000000
+  IRQ 11</programlisting>
+
+      <para>In this case, the eth0 interface indeed maps to the Ethernet
+      controller found before.</para>
+
+      <para>If Linux does not recognize your device, you'll need to
+      reconfigure your Linux kernel to include support for your network
+      driver. The Linux kernel configuration has been discussed before as part
+      of the device management chapter.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Wired Network Configuration</title>
+
+    <para>Most systems have support for the popular Ethernet network
+    connection. I assume that you are already familiar with the term Ethernet
+    and the TCP/IP basics.</para>
+
+    <para>Before you configure Gentoo Linux to support your Ethernet
+    connection, you'll first need to make sure that your network card is
+    supported. Once available, you'll configure your interface to either use a
+    manually set IP address or automatically obtain an IP address.</para>
+
+    <section>
+      <title>Configuring the Wired Network</title>
+
+      <para>There are two methods you can use to configure your wired network:
+      a manual approach (which works on all Linux systems) or the Gentoo Linux
+      specific approach.</para>
+
+      <section>
+        <title>Manual Configuration</title>
+
+        <para>The quickest method for configuring your network is to tell
+        Linux what you want - a static IP address for your interface, or
+        automatically obtain the IP address information from a DHCP server
+        which is running on your network (most Internet sharing tools or
+        appliances include DHCP functionality).</para>
+
+        <para>To set the static IP address 192.168.0.100 to the eth0
+        interface, telling Linux that the gateway on the network is reachable
+        through 192.168.0.1 (the IP address that shares access to outside
+        networks):</para>
+
+        <programlisting># <command>ifconfig eth0 192.168.0.100 netmask 255.255.255.0 
+ broadcast 192.168.0.255 up</command>
+# <command>ip route add default via 192.168.0.1</command></programlisting>
+
+        <para>In the example, I used the <command>ifconfig</command><indexterm>
+            <primary>ifconfig</primary>
+          </indexterm> command to tell Linux to assign the IP address
+        192.168.0.100 to the eth0 interface, setting the netmask (part of the
+        IP address that denotes the network) to 255.255.255.0 and broadcast
+        (IP address which addresses all IP addresses in the local network) to
+        192.168.0.255. This is the same as assigning the IP address on a
+        192.168.0.1/24 network (for those who understand the CIDR
+        notation).</para>
+
+        <para>If you need static IP addresses but don't know the netmask (and
+        broadcast), please ask your network administrator - these are quite
+        basic settings necessary for an IP configuration.</para>
+
+        <para>You'll most likely also receive a set of IP addresses which
+        correspond to the DNS servers (name servers) for your network. You'll
+        need to set those IP addresses inside the
+        <filename>/etc/resolv.conf</filename><indexterm>
+            <primary>resolv.conf</primary>
+          </indexterm> file:</para>
+
+        <programlisting># <command>nano /etc/resolv.conf</command></programlisting>
+
+        <programlisting>search lan
+nameserver 10.2.3.4
+nameserver 10.2.3.5</programlisting>
+
+        <para>With this configuration file you tell Linux that a hostname can
+        be resolved through the DNS services at the corresponding IP addresses
+        (the name servers) if it does not know the IP address itself.</para>
+
+        <para>If you want to configure eth0 to automatically obtain its IP
+        address (and default gateway and even DNS servers), which is the most
+        popular method for local network configurations, you can use a DHCP
+        client such as <command>dhcpcd</command><indexterm>
+            <primary>dhcpcd</primary>
+          </indexterm>:</para>
+
+        <programlisting># <command>dhcpcd eth0</command></programlisting>
+
+        <para>That's all there is to it (unless the command fails of course
+        ;-)</para>
+      </section>
+
+      <section>
+        <title>Gentoo Linux Network Configuration</title>
+
+        <para>If you want to have Gentoo Linux configure your network device,
+        you'll need to edit the /etc/conf.d/net file.</para>
+
+        <programlisting># <command>nano /etc/conf.d/net</command></programlisting>
+
+        <para>If you need to set the IP address yourself (static IP address),
+        you'll need to set the following (suppose the static IP address is
+        192.168.0.100, gateway 192.168.0.1 and netmask 255.255.255.0 and the
+        name servers are 10.2.3.4 and 10.2.3.5):</para>
+
+        <programlisting>config_eth0=( "192.168.0.100 netmask 255.255.255.0" )
+dns_servers_eth0=( "10.2.3.4 10.2.3.5" )</programlisting>
+
+        <para>If you want to configure the interface to use DHCP
+        (automatically obtain IP address):</para>
+
+        <programlisting>config_eth0=( "dhcp" )</programlisting>
+
+        <para>For more examples on the Gentoo Linux network configuration
+        (with more advanced features), check out the
+        <filename>/etc/conf.d/net.example</filename> file.</para>
+
+        <para>To enable this support, you need to add the net.eth0 service to
+        the default runlevel and start the net.eth0 service.</para>
+
+        <programlisting># <command>rc-update add net.eth0 default</command>
+# <command>/etc/init.d/net.eth0 start</command></programlisting>
+
+        <para>If a command tells you that net.eth0 doesn't exist, create it as
+        a symbolic link to the net.lo service script:</para>
+
+        <programlisting># <command>cd /etc/init.d; ln -s net.lo net.eth0</command></programlisting>
+
+        <para>More about services later.</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Wireless Network Configuration</title>
+
+    <para>For wireless configurations, a few technologies on Linux exist. One
+    of them uses the native support for wireless cards, the other one is a
+    software component called wpa_supplicant which also supports wireless
+    cards through the device drivers provided for the Windows operating
+    system.</para>
+
+    <section>
+      <title>Supporting your Network Card</title>
+
+      <para>If you have configured your kernel with support for your wireless
+      network card, you should be able to find the interface in the iwconfig
+      output:</para>
+
+      <programlisting># <command>iwconfig</command>
+lo     no wireless extensions.
+
+eth0   no wireless extensions.
+
+eth1   IEEE 802.11g  ESSID:"aaa"  
+       Mode:Managed  Frequency:2.417 GHz Access Point: 00:11:0A:2A:73:03   
+       Bit Rate:54 Mb/s   Tx-Power=20 dBm   Sensitivity=8/0  
+       Retry limit:7   RTS thr:off   Fragment thr:off
+       Encryption key:off
+       Power Management:off
+       Link Quality=84/100  Signal level=-49 dBm  Noise level=-89 dBm
+       Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
+       Tx excessive retries:1  Invalid misc:2   Missed beacon:7</programlisting>
+
+      <para>In the above example, the eth0 interface (which is a regular
+      Ethernet interface) is detected but seen as not having a wireless
+      capability. The eth1 interface has wireless capabilities, and its
+      current wireless settings are displayed.</para>
+    </section>
+
+    <section>
+      <title>Using Wireless Extensions Support</title>
+
+      <section>
+        <title>Accessing a Wireless Network</title>
+
+        <para>To access an existing wireless network, you need a few settings.
+        Some of them can be obtained quickly, others might require information
+        from your network administrator.</para>
+
+        <para>To use the Linux wireless extensions, install the necessary
+        tools:</para>
+
+        <programlisting># <command>emerge -a wireless-tools</command></programlisting>
+
+        <para>Let's first start with the wireless network name, called the
+        ESSID<indexterm>
+            <primary>ESSID</primary>
+          </indexterm>. With <command>iwlist</command><indexterm>
+            <primary>iwlist</primary>
+          </indexterm> you can obtain a list of detected wireless networks and
+        their accompanying ESSIDs:</para>
+
+        <programlisting># <command>iwlist eth1 scan</command>
+eth1      Scan completed :
+          Cell 01 - Address: 00:11:0A:2A:73:03
+                    ESSID:"aaa"
+                    Protocol:IEEE 802.11bg
+                    Mode:Master
+                    Frequency:2.417 GHz (Channel 2)
+                    Encryption key:off
+                    Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 9 Mb/s; 11 Mb/s
+                              6 Mb/s; 12 Mb/s; 18 Mb/s; 24 Mb/s; 36 Mb/s
+                              48 Mb/s; 54 Mb/s
+                    Quality=82/100  Signal level=-48 dBm  
+                    Extra: Last beacon: 37ms ago
+          Cell 02 - Address: 00:C0:49:B0:37:43
+                    ESSID:"USR8022"
+                    Protocol:IEEE 802.11b
+                    Mode:Master
+                    Frequency:2.462 GHz (Channel 11)
+                    Encryption key:on
+                    Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 22 Mb/s
+                    Quality=41/100  Signal level=-76 dBm  
+                    Extra: Last beacon: 7665ms ago</programlisting>
+
+        <para>In this case, two wireless networks are found. The first one has
+        ESSID "aaa" and does not require any encryption (so you don't need to
+        know any password or passphraze to access this network) - notice the
+        "Encryption key:off" setting. The second one has ESSID USR8022 and
+        requires an encryption key. However, the second network's signal is
+        also less powerful (lower quality and signal level).</para>
+
+        <para>To configure your card to use a particular ESSID, you can use
+        the iwconfig command:</para>
+
+        <programlisting># <command>iwconfig eth1 essid aaa</command></programlisting>
+
+        <para>Suppose that you need to enter an encryption key as well, you
+        can add the key either in its hexadecimal form, or through the ASCII
+        representation.</para>
+
+        <programlisting># <command>iwconfig eth1 essid USR8022 key FF83-D9B3-58C4-200F-ADEA-DBEE-F3</command>
+# <command>iwconfig eth1 essid USR8022 key s:MyPassPhraze</command></programlisting>
+
+        <para>Once you have attached your wireless interface to a particular
+        network, you can configure it as if it was a fixed Ethernet
+        interface.</para>
+
+        <para>Now, Gentoo Linux allows you to configure your wireless network
+        card through <filename>/etc/conf.d/net</filename> as well.</para>
+
+        <para>In the next example, the wireless configuration is set so that
+        the two networks (aaa and USR8022) are supported where aaa is the
+        preferred network.</para>
+
+        <programlisting>modules=( "iwconfig" )
+key_aaa="key off"
+key_USR8022="s:MyPassPhraze enc open"
+preferred_aps=( "aaa" "USR8022" )</programlisting>
+
+        <para>Again, you'll need to add the net.eth1 service to the default
+        runlevel and then fire up the net.eth1 service:</para>
+
+        <programlisting># <command>rc-update add net.eth1 default</command>
+# <command>/etc/init.d/net.eth1 start</command></programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Using wpa_supplicant</title>
+
+      <para>The wpa_supplicant<indexterm>
+          <primary>wpa_supplicant</primary>
+        </indexterm> tool is a software component which controls the wireless
+      connection between your system and an access point. A major advantage of
+      <command>wpa_supplicant</command> over the previously described wireless
+      tools is its support for WPA/WPA2.</para>
+
+      <para>Before you can use wpa_supplicant, you first need to install
+      it:</para>
+
+      <programlisting># <command>emerge -a wpa_supplicant</command></programlisting>
+
+      <section>
+        <title>Accessing a Wireless Network</title>
+
+        <para>You need to configure your wpa_supplicant to support the
+        wireless network(s) you want to access. Suppose that your home network
+        is called "home" and is a secured (WPA) environment with key
+        "myHomeKey" and at your work there is a wireless network called
+        "CompanyGuests", secured (WPA) environment with key "myCompanyKey" and
+        a third network at your local computer club called "hobby", not
+        secured, then the following
+        <filename>wpa_supplicant.conf</filename><indexterm>
+            <primary>wpa_supplicant.conf</primary>
+          </indexterm> configuration could work:</para>
+
+        <programlisting>ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=wheel
+
+network={
+  ssid="home"
+  psk="myHomeKey"
+}
+
+network={
+  ssid="CompanyGuests"
+  psk="myCompanyKey"
+}
+
+network={
+  ssid="hobby"
+  key_mgmt=NONE
+}</programlisting>
+
+        <para>The <command>wpa_supplicant</command> tool also supports WPA2.
+        For instance:</para>
+
+        <programlisting>network={
+  ssid="akkerdjie"
+  proto=WPA2
+  psk="highly private key"
+}</programlisting>
+
+        <para>If you do not like to see your private key in plain text, use
+        <command>wpa_passphraze</command><indexterm>
+            <primary>wpa_passphraze</primary>
+          </indexterm> to encrypt your key:</para>
+
+        <programlisting>$ <command>wpa_passphraze akkerdjie "highly private key"</command>
+network={
+  ssid="akkerdjie"
+  #psk="highly private key"   <remark>&lt;-- Plain comment, can be removed!</remark>
+  psk=cbcb52ca4577c8c05b05e84bdd2ef72f313d3c83da18c9da388570ae3a2a0921
+}</programlisting>
+
+        <para>You can copy/paste the resulting information in
+        <filename>wpa_supplicant.conf</filename> and remove the (commented)
+        plain-text key information.</para>
+
+        <para>If your wireless card is found by Linux (and its powered on),
+        then running the following command will activate the wpa_supplicant on
+        top of it (assume the wireless interface is called wlan0):</para>
+
+        <programlisting># <command>wpa_supplicant -Dwext -iwlan0 -c/etc/wpa_supplicant.conf</command></programlisting>
+
+        <para>One interesting option is the -D option: with this you select
+        the wireless driver to use. With -Dwext, we use the Linux wireless
+        extensions (which is quite generic). In certain cases you might need
+        to use a different driver - the Internet has many resources on how to
+        configure your specific wireless network card with Linux if the Linux
+        wireless extensions don't work.</para>
+
+        <para>Of course, once the configuration file is finished, you can use
+        Gentoo's networking scripts as well. First, edit
+        <filename>/etc/conf.d/net</filename> to use wpa_supplicant:</para>
+
+        <programlisting>modules=( "wpa_supplicant" )
+wpa_supplicant_wlan0="-Dwext"</programlisting>
+
+        <para>To have the wireless support active when you boot up your
+        system, enable the net.wlan0 init script. If /etc/init.d/net.wlan0
+        doesn't exist yet, first create it:</para>
+
+        <programlisting># <command>cd /etc/init.d</command>
+# <command>ln -s net.lo net.wlan0</command></programlisting>
+
+        <para>Next, add the net.wlan0 init script to the default
+        runlevel:</para>
+
+        <programlisting># <command>rc-update add net.wlan0 default</command></programlisting>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>User-friendly Network Configuration Tools</title>
+
+    <para>The above information should allow you to work with any possible
+    Linux installation. However, the commands might look a bit tricky and,
+    especially with the wireless configuration, might even require you to hop
+    between various commands or windows before you get the connection
+    working.</para>
+
+    <para>Luckily, there are other tools around which rely on the same tools
+    as mentioned before, but offer the user a saner interface from which they
+    can configure their network. Note that these do require that the network
+    card is already detected by Linux (so the kernel configuration part should
+    have succeeded).</para>
+
+    <section>
+      <title>Wicd</title>
+
+      <para>My personal favorite is Wicd, installable through
+      net-misc/wicd<indexterm>
+          <primary>wicd</primary>
+        </indexterm>. The tool exists out of two parts: a daemon and an
+      end-user configuration interface.</para>
+
+      <programlisting># <command>emerge wicd</command></programlisting>
+
+      <para>Once installed, add the wicd service to the boot or default
+      runlevel:</para>
+
+      <programlisting># <command>rc-update add wicd default</command></programlisting>
+
+      <para>Next, make sure Gentoo doesn't start its own network configuration
+      by editing <filename>/etc/conf.d/rc</filename>, setting the
+      following:</para>
+
+      <programlisting>RC_PLUG_SERVICES="!net.*"</programlisting>
+
+      <para>Now, start the wicd service (and shut down the services you are
+      currently using):</para>
+
+      <programlisting># <command>/etc/init.d/net.eth1 stop</command>
+# <command>/etc/init.d/wicd start</command></programlisting>
+
+      <para>If you run inside a graphical environment that supports applets
+      (most desktop environments do), run
+      <command>wicd-client</command><indexterm>
+          <primary>wicd-client</primary>
+        </indexterm> (from a "Run Program..." prompt or so). From within a
+      command-line interface, you can use
+      <command>wicd-curses</command><indexterm>
+          <primary>wicd-curses</primary>
+        </indexterm>. This client will connect with the service and allow you
+      to configure your networks (both wired and wireless) more easily.</para>
+
+      <para>I refer you to the <ulink url="http://wicd.sourceforge.net">Wicd
+      homepage</ulink> for more information / documentation on the
+      tool.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Firewall Configuration</title>
+
+    <para>When your system is going to use the Internet often, using a
+    firewall is encouraged. People generally believe that their operating
+    system is secure out of the box if they don't click on "weird" links
+    inside e-mails or Internet sites. Sadly, this isn't true. Also, Linux
+    should never be seen as a secure operating system - security of a system
+    is completely defined by the competence of the system
+    administrator.</para>
+
+    <para>A firewall will not fully protect your system from malicious users
+    on the (Inter)net, but it will filter many - of course, depending on the
+    strength of the firewall.</para>
+
+    <para>There are many firewalls available for Linux; on Gentoo Linux alone
+    more than a dozen tools exist (just check out the content of the
+    net-firewall category). Most firewall tools use
+    <command>iptables</command><indexterm>
+        <primary>iptables</primary>
+      </indexterm> as underlying tool. The iptables tool is an administration
+    tool for manipulating IPv4 packets and is a very known and popular
+    tool.</para>
+
+    <para>Firewall tools will often generate iptables rules to create filters
+    (the actual firewall).</para>
+
+    <para>Because writing firewall rules is quite custom (it depends on what
+    services your system offers and what tools you often use) I suggest using
+    firewall tools first. Later, when you want to customize them further, you
+    can write your own iptables rules.</para>
+  </section>
+
+  <section>
+    <title>Sharing your Internet Connection</title>
+
+    <para>We have seen the iptables command previously, as part of the
+    firewall configuration. iptables however is not Linux' firewall tool: its
+    purpose is to create rules on how to deal with network packets on your
+    computer. As such, iptables can also be used to create a NAT gateway
+    through which clients can access the Internet.</para>
+
+    <para>In the following examples, we suppose that Internet is available at
+    the wlan0 interface while all clients access through the eth0 interface.
+    Also, we will be assigning IP addresses in the range of
+    192.168.20.200-192.168.20.250 to our clients...</para>
+
+    <section>
+      <title>Forwarding Requests</title>
+
+      <para>This is the simplest step: we ask iptables to enable
+      masquerading<indexterm>
+          <primary>masquerading</primary>
+        </indexterm> on the Internet interface. Masquerading keeps track of
+      connections packets going out on this interface with their original
+      source IP address; the packets on the connection are altered so it seems
+      as if the local system has created the connection rather than a
+      client:</para>
+
+      <programlisting>iptables -A POSTROUTING -t nat -o wlan0 -j MASQUERADE</programlisting>
+
+      <para>The only remaining tasks here is to enable forwarding packets from
+      the clients to the Internet and back:</para>
+
+      <programlisting># <command>iptables -A FORWARD -i eth0 -o wlan0 -s 192.168.20.1/24 
+  -d ! 192.168.20.1/24 -j ACCEPT</command>
+# <command>iptables -A FORWARD -o eth0 -i wlan0 -d 192.168.20.1/24 
+  -s ! 192.168.20.1/24 -j ACCEPT</command></programlisting>
+
+      <para>More information about iptables and masquerading can be found on
+      the Internet...</para>
+    </section>
+
+    <section>
+      <title>Distributing IP Addresses</title>
+
+      <para>Now, if eth0 is accessible then all clients with a correct IP
+      address attached to the eth0 interface can access the Internet; however,
+      they will manually need to mark the local system as the default gateway
+      as well as defining the necessary DNS servers. Luckily, we can automate
+      this by installing a DHCP server so that clients can automatically
+      obtain their IP address and necessary settings.</para>
+
+      <para>There are plenty of DHCP servers around. For local, small use, I
+      myself use dhcp<indexterm>
+          <primary>dhcp</primary>
+        </indexterm>:</para>
+
+      <programlisting># <command>emerge dhcp</command></programlisting>
+
+      <para>Next, I configure dhcp to distribute the necessary IP address and
+      other settings:</para>
+
+      <programlisting># <command>nano -w /etc/dhcp/dhcpd.conf</command></programlisting>
+
+      <programlisting>option domain-name "siphos.be";
+option domain-name-servers 192.168.2.1;
+default-lease-time 600;
+max-lease-time 7200;
+ddns-update-style none ;
+
+option option-150 code 150 = text ;
+
+subnet 192.168.20.0 netmask 255.255.255.0 {
+  range 192.168.20.100 192.168.20.200;
+  option routers 192.168.20.1;
+}</programlisting>
+
+      <para>Now that dhcpd is configured, we only need to start it when we
+      need it:</para>
+
+      <programlisting># <command>/etc/init.d/dhcpd start</command></programlisting>
+
+      <para>Again, if you want to have the script started automatically, add
+      it to the default runlevel.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Allowing Remote Access</title>
+
+    <para>If you need to allow remote access to your machine, there are a few
+    tools available. As this book isn't focusing on graphical environments
+    much, I'll stick with SSH access, or <emphasis>Secure
+    SHell</emphasis>.</para>
+
+    <warning>
+      <para>Allowing remote access to a system is never without security
+      risks. If your security software is not up to date, or your password is
+      easy to guess, or ... you risk being the target for more maliciously
+      minded people. This is especially true if the IP address you have is
+      immediately reachable from the Internet (either directly or because you
+      use port forwarding on your routers).</para>
+    </warning>
+
+    <section>
+      <title>Secure Shell</title>
+
+      <para>By enabling secure shell access to your machine, people on your
+      network who have an account on your system (or know the credentials of
+      an account) can access your system. The tool, which is called
+      <command>ssh</command><indexterm>
+          <primary>ssh</primary>
+        </indexterm>, encrypts the data that is sent on the network so no-one
+      can eavesdrop on the network and see usernames, passwords or even more
+      confidential information flow by.</para>
+
+      <para>To enable SSH access to your system, first install the
+      <package>net-misc/openssh</package> package:</para>
+
+      <programlisting># <command>emerge openssh</command></programlisting>
+
+      <para>Of course, this doesn't automatically enable remote access: you
+      still need to tell your system to start the SSH daemon. You can do this
+      manually using <command>/etc/init.d/sshd</command>, but also ask Gentoo
+      to automatically do this for you every time the system boots using
+      <command>rc-update</command>.</para>
+
+      <programlisting># <command>/etc/init.d/sshd start</command>
+# <command>rc-update add sshd default</command></programlisting>
+
+      <para>Now that that is accomplished, you (or other users on your
+      network) can access your system using any SSH client (on Windows, I
+      seriously recommend <ulink
+      url="http://www.chiark.greenend.org.uk/~sgtatham/putty/">PuTTY</ulink>).
+      For instance, to access your system from another Linux system, the
+      command could look like so (assuming that your IP address is
+      192.168.2.100 and your username is "captain"):</para>
+
+      <programlisting>$ <command>ssh -l captain 192.168.2.100</command></programlisting>
+
+      <para>You will be asked to enter captain's password, and then you get a
+      shell just like you would when you log on to the system
+      physically.</para>
+    </section>
+
+    <section>
+      <title>Secure File Transfer</title>
+
+      <para>By installing and enabling SSH access to your system, you can now
+      also perform secure file transfers.</para>
+
+      <para>There are two methods for doing secure file transfer using
+      standard openssh tools: scp and sftp.</para>
+
+      <section>
+        <title>Secure Copy</title>
+
+        <para>With <command>scp</command><indexterm>
+            <primary>scp</primary>
+          </indexterm> (secure copy) you can copy files between systems. If
+        your source or destination (or both) are on a remote system, prepend
+        the source/destination folder with the hostname or IP address followed
+        by a colon, like so:</para>
+
+        <programlisting>$ <command>scp thesis.tar.gz 192.168.2.1:/mnt/usb-stick</command></programlisting>
+
+        <para>If the copy also needs to change to a different user (say that
+        you are currently logged on as "bunny" but on the remote side, you
+        only have an account "wolf"):</para>
+
+        <programlisting>$ <command>scp wolf@192.168.2.2:/usr/portage/distfiles/YAML-0.71.tar.gz .</command></programlisting>
+      </section>
+
+      <section>
+        <title>Secure FTP</title>
+
+        <para>With <command>sftp</command><indexterm>
+            <primary>sftp</primary>
+          </indexterm> (secure FTP) you have an ftp-alike tool (which supports
+        the same commands) but which uses the SSH protocol for all data (and
+        command) transfers.</para>
+
+        <programlisting>$ <command>sftp wolf@192.168.2.2</command>
+Connecting to 192.168.2.2...
+Password: <remark>(enter wolf's password)</remark>
+sftp&gt; <command>cd /usr/portage/distfiles</command>
+sftp&gt; <command>pwd</command>
+Remote working directory: /usr/portage/distfiles
+sftp&gt; <command>lpwd</command>
+Local working directory: /home/bunny
+sftp&gt; <command>get YAML-*</command>
+Fetching /usr/portage/distfiles/YAML-0.71.tar.gz to YAML-0.71.tar.gz
+/usr/portage/distfiles/YAML-0.71.tar.gz  100% 110KB 110.3KB/s 00:00
+sftp&gt; </programlisting>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Further Resources</title>
+
+    <itemizedlist>
+      <listitem>
+        <para><ulink
+        url="http://www.linuxquestions.org/linux/answers/Networking/NdisWrapper_The_Ultimate_Guide/">NdisWrapper:
+        The Ultimate Guide</ulink> on www.linuxquestions.org</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

@@ -1,0 +1,1319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Running Linux</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>In order to work with Linux you need access to a Linux environment.
+    The best environment is an installed Linux distribution on your system,
+    but you can use other environments such as Linux Live CDs (bootable CDs
+    with a ready-to-run operating system on it). Installing Linux is very
+    distribution-specific and Gentoo's installation procedure is well
+    documented on the <ulink
+    url="http://www.gentoo.org/doc/en/handbook">Gentoo site</ulink>. I will
+    not discuss the installation procedure yet. Later in this book, I will
+    focus on the command-line Gentoo installation because then you'll have a
+    much better view on the various installation steps. Right now, I'm going
+    to talk about a few Linux-specific topics which are quite important to
+    understand, but without going in too much detail: almost every topic will
+    be discussed in great length later.</para>
+
+    <para>Users who are not used to working with Linux or Unix will find that
+    it is quite different from other operating systems (notably: Microsoft
+    Windows). In <link linkend="runninglinux_systemarchitecture">System
+    Architecture</link> I give a quick overview of the main differences.
+    Further down, I elaborate on using the command line interface of Linux
+    (which is definitely a must-know if you are going to work with Gentoo
+    Linux). Finally, I cover how to find help on the commands.</para>
+  </section>
+
+  <section>
+    <title id="runninglinux_systemarchitecture">System Architecture</title>
+
+    <para>Linux is a multi-user platform. The administrator user is called the
+    <emphasis>root</emphasis><indexterm>
+        <primary>root</primary>
+
+        <secondary>user</secondary>
+      </indexterm> user and can do anything on the system. Although it is
+    perfectly possible to work on your system as this administrator, it is
+    advised to create individual accounts for everyone who needs access to the
+    system and only grant those users access to important resources or
+    administrative commands (there are tools that allow a user to switch from
+    one user to another or run certain commands as a different user).</para>
+
+    <para>For your personal PC, this probably means you're going to create a
+    single additional account for yourself. If the PC is shared with many
+    people (say household PC or a work station at your office) you most likely
+    want to create accounts for every possible person. Sharing an account
+    isn't good practice: if you need to share files and directories with other
+    people, there are better ways than sharing the same account.</para>
+
+    <para>The personal account you use is limited, yet definitely not
+    unusable. A few of the differences between a non-privileged account and
+    the root account are:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>the personal account can only modify files it has created
+        itself, so there is no possibility of corrupting your system (as the
+        operating system files are immutable for the personal accounts). This
+        also means that the personal account cannot install any additional
+        software on the system (that's okay - I will tell you how to elevate
+        your privileges later on so that you can manage your system when you
+        need to).</para>
+      </listitem>
+
+      <listitem>
+        <para>the personal account cannot fill up a partition to the point
+        that the system is endangered: by default, 5% of each partition is
+        reserved for privileged users only</para>
+      </listitem>
+
+      <listitem>
+        <para>if malicious events happen using your personal account, traces
+        of what has happened might show up in log files that the personal
+        account cannot tamper with</para>
+      </listitem>
+
+      <listitem>
+        <para>...</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Every task a user starts results in a process on the system. For
+    instance, a user that fires up a browser results in at least one process
+    representing the browser program. By default, this process runs with the
+    privileges of this user and has therefor only access to the files and
+    resources of this user. Another reason why not to use the root account:
+    you don't want a malicious script that gets executed in your browser, and
+    which triggers an exploitable bug (this isn't fantasy, it might happen)
+    cause your browser to start wiping out important system files...</para>
+
+    <para>Files and directories themselves are, permission-wise, represented
+    with three sets of permissions: one for the owner, one for the owning
+    group and one for everyone. More on the file privileges later.</para>
+
+    <section>
+      <title>User Accounts</title>
+
+      <para>As the root user is an administrator account with no privilege
+      limitations whatsoever, any action ran by the root user can potentially
+      hurt your system:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>removing the wrong files or directories (there is no undelete
+          option)</para>
+        </listitem>
+
+        <listitem>
+          <para>removing or manipulating system files (possibly resulting in a
+          malfunctioning system - and a reboot won't solve this)</para>
+        </listitem>
+
+        <listitem>
+          <para>disabling networking or changing network behavior</para>
+        </listitem>
+
+        <listitem>
+          <para>placing files on wrong places (possibly losing files or
+          interfering with system operations)</para>
+        </listitem>
+
+        <listitem>
+          <para>killing or otherwise manipulating the wrong process(es)
+          (possibly resulting in service malfunction, shutdown or
+          misbehavior)</para>
+        </listitem>
+
+        <listitem>
+          <para>...</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>For this reason, user accounts should be created. A default user
+      account:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>can only edit or remove files that belong to this user</para>
+        </listitem>
+
+        <listitem>
+          <para>can not interfere with system-wide settings (including
+          networking, device access, ...)</para>
+        </listitem>
+
+        <listitem>
+          <para>can only place files inside his own (dedicated) home
+          directory</para>
+        </listitem>
+
+        <listitem>
+          <para>can only kill / manipulate processes that he has launched
+          himself</para>
+        </listitem>
+      </itemizedlist>
+
+      <important>
+        <para>It is still possible for non-root user accounts to do harm. For
+        instance, a malfunctioning program executed by a user might still
+        remove all user files from the file system. Although this is a major
+        disaster for end users (please, do not forget to take backups
+        regularly) the system itself can still run as the operating system
+        files are not touched.</para>
+      </important>
+
+      <para>Next to user accounts, any Linux installation has <emphasis>system
+      accounts</emphasis><indexterm>
+          <primary>system account</primary>
+        </indexterm> as well. These are regular accounts just like the user
+      accounts (with the same limitations), but cannot be used to log on (they
+      do not have a valid password), often have no dedicated home directory
+      and are used by the operating system to run specific services with
+      limited rights (increasing security) rather than administrative
+      rights.</para>
+
+      <para>To ease managing user accounts (and permissions / access to
+      resources), users are made part of groups. Access to files can be
+      managed through group ownership whereas every member of this group can
+      access (or even write to) the file. A user can be part of many
+      groups.</para>
+    </section>
+
+    <section>
+      <title>Processes</title>
+
+      <para>A <emphasis>process</emphasis><indexterm>
+          <primary>process</primary>
+        </indexterm> is a running task on the system. Each process runs as a
+      particular user: this not only means that that process can only access
+      resources that are available for that user, but also that only this user
+      (and the root user) can manipulate the process (for instance, kill the
+      process).</para>
+
+      <para>Each process has one parent (except the top process, which is
+      always the <command>init</command><indexterm>
+          <primary>init</primary>
+        </indexterm> process) and can have one or more child processes. If a
+      process dies, all its children die as well (so never try to kill the
+      <command>init</command> process as it would result in a total
+      annihilation of all processes on the system).</para>
+
+      <para>Running processes do not necessarily consume CPU cycles. An idle
+      system can easily be running a few dozen (or even up to a hundred)
+      processes. This is because processes have various states: actively
+      running, sleeping, waiting, stopped, ... Luckily, the Linux Operating
+      System is very efficient in balancing the requirements of the
+      applications with the available resources so you, as an end user, do not
+      notice that this many processes are running.</para>
+
+      <note>
+        <para>One process can also have multiple threads. Threads are part of
+        an application (but managed by the operating system) and allow running
+        code within an application in parallel. A program with several threads
+        is still a single process.</para>
+      </note>
+    </section>
+
+    <section>
+      <title>Files and File Structure</title>
+
+      <para>On Linux (and all the Unix and Unix-like operating systems) the
+      file system is hierarchically structured. At the top, you have the
+      <emphasis>file system root</emphasis><indexterm>
+          <primary>root</primary>
+
+          <secondary>file system</secondary>
+        </indexterm>, which is named "<filename>/</filename>"<indexterm>
+          <primary>/</primary>
+        </indexterm>. Below you'll have files and directories, following the
+      standard described in a previous section, <xref linkend="fhs" />. Every
+      position within the structure has its meaning. An example is
+      <filename>/home/swift</filename>, which is the home directory of the
+      "swift" user account. Another example is
+      <filename>/usr/share/doc/googleearth-4.2.198.2451/</filename>, the
+      location where a specific version of the GoogleEarth program stores its
+      package documentation.</para>
+
+      <para>Next to regular files (like text files or program-related files)
+      and directories, Linux also has the notion of:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis>links</emphasis><indexterm>
+              <primary>link</primary>
+            </indexterm>, which are other names for the same file (allowing
+          for one file to have multiple references),</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>symbolic links</emphasis><indexterm>
+              <primary>link</primary>
+
+              <secondary>symbolic</secondary>
+            </indexterm>, which are pointers to other files (differs from
+          links because it is merely a pointer, so it can point to something
+          that doesn't exist) and are somewhat (but not quite) comparable to
+          Microsoft Windows' shortcuts.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>named pipes</emphasis><indexterm>
+              <primary>named pipe</primary>
+            </indexterm> or <emphasis>FIFOs</emphasis><indexterm>
+              <primary>FIFO</primary>
+            </indexterm>, which are temporary buffers where one process can
+          write to and another process can read from</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>unix domain sockets</emphasis><indexterm>
+              <primary>unix domain socket</primary>
+            </indexterm>, which are created by one process and where several
+          other processes can write to or receive information from</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>character</emphasis><indexterm>
+              <primary>device file</primary>
+
+              <secondary>character</secondary>
+            </indexterm> and <emphasis>block device file</emphasis><indexterm>
+              <primary>device file</primary>
+
+              <secondary>block</secondary>
+            </indexterm>, which represents a hardware device on the system,
+          allowing to exchange data with the device through regular file
+          operations</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>All these special files are represented as files on the Linux file
+      system. Take <filename>/dev/sda1</filename> as an example. It represents
+      the first partition (<filename>1</filename>) on the first
+      (<filename>a</filename>) SCSI device (<filename>sd</filename>) known by
+      the system. <filename>/dev/sda1</filename> is a block device file
+      because read/write operations occur in blocks (certain amount of data)
+      whereas character device operations are on a character-by-character
+      basis.</para>
+
+      <para>I will be discussing device files, and how Linux manages them, in
+      a later chapter.</para>
+    </section>
+
+    <section>
+      <title>Permissions</title>
+
+      <para>Files (and directories and any of the special files talked about
+      previously - I am going to refer to those as "files" as well throughout
+      this book) are associated with three sets of permissions<indexterm>
+          <primary>permissions</primary>
+        </indexterm>: one for the owner, one for the group owner and one for
+      all the rest. Each set contains several flags:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>read access to the file or directory</para>
+        </listitem>
+
+        <listitem>
+          <para>write access to the file or directory</para>
+        </listitem>
+
+        <listitem>
+          <para>execute rights on the file (probably because it is an
+          application binary or a script) or entering rights on the directory
+          (meaning you can jump inside the directory)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Next to these three sets, additional permissions can be set for
+      executable files and directories, but these are far less important to
+      understand at this moment:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis>set user/group id</emphasis><indexterm>
+              <primary>set user id</primary>
+            </indexterm><indexterm>
+              <primary>set group id</primary>
+            </indexterm> on the file (when the file is executed, the process
+          is not ran as the user/group who executed it but as the owner) or
+          directory (only applies to the group set; in this case, files
+          created inside the directory automatically get the group ownership
+          of the directory, allowing to easily share files between
+          accounts)</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>restriction deletion</emphasis><indexterm>
+              <primary>restriction deletion flag</primary>
+            </indexterm> flag (restricts deletion of files inside the affected
+          directory unless the user is the owner of the file or
+          directory)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The restriction deletion flag needs some explanation. It is used
+      on world-writeable directories (a well-known example is
+      <filename>/tmp</filename>, where temporary files can be stored) and used
+      to prevent users to remove files they didn't create. A world-writable
+      directory would otherwise allow other users to remove files from that
+      directory (as they too have write access to the directory). The
+      restriction deletion flag is also known as the
+      <emphasis>sticky</emphasis><indexterm>
+          <primary>sticky flag</primary>
+        </indexterm> flag.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Using the Command Line</title>
+
+    <para>Most Linux distributions, once booted up, provide you with a
+    graphical logon screen, or even log you on automatically. With Gentoo
+    Linux, this isn't the case. Rather, you'll be greeted with a command-line
+    prompt asking you to identify yourself:</para>
+
+    <programlisting>This is seaheaven.homeworld (Linux i686 2.6.23) 22:30:00
+
+seaheaven login: </programlisting>
+
+    <para>At this prompt, you are asked to enter your username which you have
+    undoubtedly created during the Linux installation. Next, you are asked for
+    your account password. If the username exists and the password matches,
+    then you are greeted with a <emphasis>command line
+    prompt</emphasis><indexterm>
+        <primary>prompt</primary>
+      </indexterm>. The next listing shows a typical prompt for the account
+    with user name "captain" on a system with hostname "seaheaven":</para>
+
+    <programlisting>captain@seaheaven ~ $</programlisting>
+
+    <para>The prompt is structured as follows:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>the username of the account logged on to the system</para>
+      </listitem>
+
+      <listitem>
+        <para>the hostname of the system where the user is logged on to</para>
+      </listitem>
+
+      <listitem>
+        <para>the current location where the user is on the file system (~
+        means the users' home directory)</para>
+      </listitem>
+
+      <listitem>
+        <para>a prompt sign telling the user if he is a regular user ($) or
+        root user (#).</para>
+      </listitem>
+    </orderedlist>
+
+    <para>In the following sections, I'll give you a quick introduction to the
+    world of the Linux command line.</para>
+
+    <section>
+      <title>Navigating</title>
+
+      <para>The prompt is actually something rendered by a shell. A
+      <emphasis>shell</emphasis><indexterm>
+          <primary>shell</primary>
+        </indexterm> is an interactive program which takes on commands from
+      the user input (keyboard) and executes those on the system. One prime
+      example of commands are those used for navigating through the file
+      system:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><command>pwd</command><indexterm>
+              <primary>pwd</primary>
+            </indexterm> shows the present working directory (where the user
+          is currently in)</para>
+        </listitem>
+
+        <listitem>
+          <para><command>cd</command><indexterm>
+              <primary>cd</primary>
+            </indexterm> allows a user to change the directory he is in</para>
+        </listitem>
+
+        <listitem>
+          <para><command>ls</command><indexterm>
+              <primary>ls</primary>
+            </indexterm> shows the contents of the current directory (listing)
+          or any other location if asked</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>An example session is shown below.</para>
+
+      <programlisting>captain@seaheaven ~ $ <command>pwd</command>
+/home/captain
+captain@seaheaven ~ $ <command>ls</command>
+Documents     Movies       Music       Pictures
+opentasks.txt
+captain@seaheaven ~ $ <command>cd Documents</command>
+captain@seaheaven Documents $ <command>pwd</command>
+/home/captain/Documents</programlisting>
+
+      <para>To navigate from one directory to another, there are a couple of
+      ways to use the <command>cd</command> command. Note that the
+      <command>pwd</command> command is shown to show the current location. It
+      is not part of the process of navigating between directories!</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>You can use a relative path to go down a tree. In the example,
+          the "<command>cd Documents</command>" goes from
+          <filename>/home/captain</filename> to
+          <filename>/home/captain/Documents</filename> through the relative
+          path "<filename>Documents</filename>". </para>
+
+          <programlisting>$ <command>pwd</command>
+/home/captain
+$ <command>cd Documents</command>
+$ <command>pwd</command>
+/home/captain/Documents</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>You can go up through the special name
+          '<filename>..</filename>' (dot dot), so "<command>cd ..</command>"
+          would go from <filename>/home/captain/Documents</filename> to
+          <filename>/home/captain</filename>.</para>
+
+          <programlisting>$ <command>pwd</command>
+/home/captain/Documents
+$ <command>cd ..</command>
+$ <command>pwd</command>
+/home/captain</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>You can also use absolute paths. For instance, to go
+          immediately to <filename>/etc/init.d</filename> (a special directory
+          we'll talk about later) you would type "<command>cd
+          /etc/init.d</command>".</para>
+
+          <programlisting>$ <command>pwd</command>
+/home/captain/Documents
+$ <command>cd /etc/init.d</command>
+$ <command>pwd</command>
+/etc/init.d</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>A special character is the <filename>~</filename><indexterm>
+              <primary>~</primary>
+            </indexterm> (tilde) which means the home directory, so
+          "<command>cd ~</command>" would go to your home directory. Even
+          shorter, just entering "<command>cd</command>" would go to your home
+          directory. The <filename>~</filename> can be used in two ways:
+          either to denote your home directory (<command>cd
+          ~/Documents</command> goes to
+          <filename>/home/captain/Documents</filename>) or someone elses home
+          directory. In the latter case, you append the user name to the
+          <filename>~</filename> sign, so: "<command>cd
+          ~raghat/public_html/</command>" translates to
+          <filename>/home/raghat/public_html</filename>.</para>
+
+          <programlisting>$ <command>pwd</command>
+/etc/init.d
+$ <command>cd ~/Documents</command>
+$ <command>pwd</command>
+/home/captain/Documents</programlisting>
+        </listitem>
+      </itemizedlist>
+
+      <para>If for some reason the change directory command cannot succeed (no
+      permission to enter the directory, or the directory doesn't exist) you
+      will be notified of the failure.</para>
+
+      <programlisting>$ <command>pwd</command>
+/home/captain
+$ <command>cd /etc/cron.daily</command>
+bash: cd: /etc/cron.daily: Permission denied
+$ <command>pwd</command>
+/home/captain</programlisting>
+    </section>
+
+    <section>
+      <title>Listing Content</title>
+
+      <para>To list the contents of a directory, you would use the
+      <command>ls</command> command. By default, it shows the files and
+      directories of the current directory, but ls is one of those commands
+      that takes a multitude of options. It is not my intention to describe
+      each and every single option, but there are a few which are quite
+      important to know right now.</para>
+
+      <para>First of all, the "<command>-l</command>" option shows not only
+      the files and directories of a certain directory (or the current
+      directory) but also information about each file / directory:</para>
+
+      <programlisting>captain@seaheaven ~ $ <command>ls -l</command>
+drwxr-xr-x 2 captain users 4096 2007-10-31 22:24 Documents
+drwxr-xr-x 2 captain users 4096 2007-10-31 22:24 Movies
+drwxr-xr-x 2 captain users 4096 2007-10-31 22:25 Music
+drwxr-xr-x 2 captain users 4096 2007-10-31 22:24 Pictures
+-rw-r--r-- 1 captain users   66 2007-10-31 22:30 opentasks.txt</programlisting>
+
+      <para>The information contains, amongst other things, the permission
+      sets (three times three characters: Read, Write and eXecute), the owning
+      user and group, the size (directories are in multiples of 4 kilobytes in
+      this case) and their creation date.</para>
+
+      <para>Another interesting option is "<command>-a</command>", which lets
+      the ls command show all files (including the hidden files). A
+      <emphasis>hidden file</emphasis><indexterm>
+          <primary>hidden file</primary>
+        </indexterm> on a Unix / Linux system starts with a dot. Inside your
+      home directory you'll find a variety of hidden files by default, the
+      example below shows just a subset of such files.</para>
+
+      <programlisting>captain@seaheaven ~ $ <command>ls -a</command>
+Documents    Movies    Music    Pictures
+.history     .maildir  .profile .vimrc</programlisting>
+
+      <para>Hidden files are not meant to really hide the files, but rather
+      not to show them using regular listings so they do not clutter the
+      listing output too much. Most hidden files are configuration files (like
+      the .vimrc file which is the configuration file for the vim editor for
+      the current user).</para>
+
+      <para>As with most command line utilities, you can combine arguments;
+      you are even able to put them together, so <command>ls -l -a</command>
+      is the same as <command>ls -la</command>. The order also doesn't matter,
+      so <command>ls -la</command> and <command>ls -al</command> are both the
+      same.</para>
+
+      <section>
+        <title>Analysing ls -l output</title>
+
+        <para>You will find that you often use "<command>ls -l</command>" to
+        get the necessary information about a file or directory. As such I
+        give you a quick overview of the meaning of the various fields in
+        <command>ls</command>' output:</para>
+
+        <programlisting>$ <command>ls -l 12-servicemanagement.xml</command>
+-rw-r--r-- 1 swift users 26976 Apr 22 21:21 12-servicemanagement.xml
+|&lt;+&gt;&lt;+&gt;&lt;+&gt; | &lt;-+-&gt; &lt;-+-&gt; &lt;-+-&gt; &lt;-----+----&gt; &lt;---------+-------------&gt;
+| |  |  |  |   |     |     |         |                `- filename or directory name
+| |  |  |  |   |     |     |         `- last modification time
+| |  |  |  |   |     |     `- size (in bytes)
+| |  |  |  |   |     `- group owning the file or directory
+| |  |  |  |   `- user owning the file or directory
+| |  |  |  `- number of hard links to the file or directory
+| |  |  `- privileges (in this case: read-only) for everybody
+| |  `- privileges (in this case: read-only) for owning group ("users")
+| `- privileges (in this case: read-write) for owning user ("swift")
+`- type of file (in this case: regular file)</programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Basic File Manipulation</title>
+
+      <para>The most basic manipulations are copying, moving, renaming and
+      deleting files, which we explain below...</para>
+
+      <section>
+        <title>Copying Files &amp; Directories</title>
+
+        <para>To copy a file you would use the <command>cp</command><indexterm>
+            <primary>cp</primary>
+          </indexterm> command. Its basic syntax is simple: <emphasis>cp
+        source destination</emphasis>. The destination can be a directory in
+        which case the file is copied to that directory. If the destination is
+        a file name, the file is copied to that file(name).</para>
+
+        <programlisting>captain@seaheaven ~ $ <command>ls Documents</command>
+captain@seaheaven ~ $ <command>cp opentasks.txt Documents/tasks.txt</command>
+captain@seaheaven ~ $ <command>ls Documents</command>
+tasks.txt
+captain@seaheaven ~ $ <command>cp opentasks.txt Documents</command>
+captain@seaheaven ~ $ <command>ls Documents</command>
+opentasks.txt      tasks.txt</programlisting>
+
+        <para>By default, the <command>cp</command> command creates the
+        destination file with the privileges and ownership of the user that is
+        executing the command. In the next example, I copy the file
+        <filename>/etc/inittab</filename> to the current directory (.):</para>
+
+        <programlisting>$ <command>ls -l /etc/inittab</command>
+-rw-r--r-- 1 root root 1890 Feb 15 20:39 /etc/inittab
+$ <command>cp /etc/inittab .</command>
+$ <command>ls -l inittab</command>
+-rw-r--r-- 1 swift users 1890 Apr 22 22:49 inittab</programlisting>
+
+        <para>You can ask <command>cp</command> to preserve all information
+        (like access privileges, ownership and timestamps) although you might
+        need to be root to do so.</para>
+
+        <para>To recursively copy an entire directory and its content, use the
+        -r option. For instance, the following example would copy the folder
+        workdocuments and all files and directories inside it to the current
+        working directory.</para>
+
+        <programlisting>$ <command>cp -r /media/usb/workdocuments .</command></programlisting>
+      </section>
+
+      <section>
+        <title>Moving and Renaming Files &amp; Directories</title>
+
+        <para>To move a file, the <command>mv</command><indexterm>
+            <primary>mv</primary>
+          </indexterm> command should be used. Its syntax is <emphasis>mv
+        source destination</emphasis>. If the destination is a file name
+        rather than a directory, then the <command>mv</command> command also
+        performs the task of renaming files. In the next example, the
+        <filename>tasks.txt</filename> file is moved from the
+        <filename>Documents</filename> folder to the
+        <filename>/media/usb/workdocuments</filename> directory:</para>
+
+        <programlisting>captain@seaheaven ~ $ <command>mv Documents/tasks.txt /media/usb/workdocuments</command>
+captain@seaheaven ~ $ <command>ls</command>
+opentasks.txt     tasks.txt
+captain@seaheaven ~ $ <command>ls /media/usb/workdocuments</command>
+opentasks.txt</programlisting>
+      </section>
+
+      <section>
+        <title>Removing Files &amp; Directories</title>
+
+        <para>The final task is removing files. The
+        <command>rm</command><indexterm>
+            <primary>rm</primary>
+          </indexterm> command uses the following syntax: <emphasis>rm
+        filename</emphasis>. To remove an entire directory, you could just
+        give the directory name, but that only works if the directory is
+        empty. Otherwise, you need to add the "-r" option (which stands for
+        recursive: the directory and every file and directory inside
+        it).</para>
+
+        <programlisting>captain@seaheaven ~ $ <command>rm Documents/opentasks.txt</command>
+captain@seaheaven ~ $ <command>rm tasks.txt</command></programlisting>
+
+        <para>A popular set of options to <command>rm</command> is
+        "<command>-rf</command>": it tells rm to remove all files and
+        directories recursively, and also tells it not to ask the user for
+        validation (force). Make sure you know what you are doing, Linux does
+        not have an undo feature!</para>
+
+        <programlisting>$ <command>rm -rf Documents</command></programlisting>
+
+        <para>Luckily, <command>rm</command> only works with the privileges of
+        the user that is executing it, so you cannot accidentally remove
+        system files if you aren't running as the privileged root user:</para>
+
+        <programlisting>$ <command>rm -f /etc/passwd</command>
+rm: cannot remove '/etc/passwd': Permission denied</programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Editing Text Files</title>
+
+      <para>An important task for any Linux user is knowing how to edit text
+      files. There are many text editors around, such as the popular vim and
+      emacs. Gentoo recommends nano as your first editor because it is easy to
+      work with and understand. My preference is for vim but as the Latin
+      saying goes: <quote>de gustibus et coloribus non est
+      disputandum</quote>.</para>
+
+      <section>
+        <title>Using Nano</title>
+
+        <para>As such, a quick primer in the use of nano. If you launch nano
+        it shows you the main editor screen for a new file. If you launch nano
+        with a filename as its argument, it opens up the text file, ready for
+        editing. As an example, I open up the
+        <filename>opentasks.txt</filename> file using nano:</para>
+
+        <programlisting>captain@seaheaven ~ $ <command>nano opentasks.txt</command></programlisting>
+
+        <figure float="">
+          <title>nano editor opened with the opentasks.txt file as its working
+          document</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="left" fileref="images/nano.png" width="10cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>The first line shows the name of the file opened while the last
+        two lines show you a summary of the keyboard commands to manipulate
+        the file. The ^ character means that you have to press the Control
+        character (Ctrl), so to save the file you would press Ctrl+O. To exit
+        the editor, press Ctrl+X.</para>
+
+        <para>Some text files are very sensitive to newlines - configuration
+        files are the most important ones. By default, nano automatically
+        wraps lines when you hit the sidebar. To inform nano that you want to
+        keep lines as they are, add the "<command>-w</command>" argument:
+        "<command>nano -w opentasks.txt</command>". This is the recommended
+        approach when editing configuration files.</para>
+      </section>
+
+      <section>
+        <title>Viewing Text Files</title>
+
+        <para>If you want to view the content of a text file but don't want to
+        launch the text editor, you can use <command>cat</command> or
+        <command>less</command>. This also allows you to view the content of
+        files without accidentally modifying them.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>With <command>cat</command><indexterm>
+                <primary>cat</primary>
+              </indexterm>, you "dump" the content of a file to the terminal.
+            If the file is large, all text will scroll by very quickly. You
+            can try to scroll up using Shift+PgUp but this buffer is limited
+            in length.</para>
+          </listitem>
+
+          <listitem>
+            <para>With <command>less</command><indexterm>
+                <primary>less</primary>
+              </indexterm>, you view the content of a file page by page. The
+            less command is called a pager and supports scrolling up / down
+            (with the arrow keys or using the PgUp/PgDown keys), searching for
+            specific text, ...</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>The <command>less</command> pager is not only used for viewing
+        content of text files, but also for manual pages (which are discussed
+        further down this chapter).</para>
+
+        <table>
+          <title>Short summary of frequently used actions for the less
+          pager</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>scroll down one line</entry>
+
+                <entry>e, j, &lt;return&gt; or arrow key down</entry>
+              </row>
+
+              <row>
+                <entry>scroll up one line</entry>
+
+                <entry>y, k or arrow key up</entry>
+              </row>
+
+              <row>
+                <entry>scroll down one page</entry>
+
+                <entry>f, &lt;space&gt; or PgDown</entry>
+              </row>
+
+              <row>
+                <entry>scroll up one page</entry>
+
+                <entry>b or PgUp</entry>
+              </row>
+
+              <row>
+                <entry>/&lt;searchtext&gt;</entry>
+
+                <entry>search forward for &lt;searchtext&gt;, use
+                "<command>n</command>" for every next hit</entry>
+              </row>
+
+              <row>
+                <entry>?&lt;searchtext&gt;</entry>
+
+                <entry>search backward for &lt;searchtext&gt;, use
+                "<command>?</command>" for every previous hit</entry>
+              </row>
+
+              <row>
+                <entry>h</entry>
+
+                <entry>display the help screen</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>In case you were wondering, the name <command>less</command> is
+        a hint to an older, still supported pager called
+        <command>more</command><indexterm>
+            <primary>more</primary>
+          </indexterm>. With <command>more</command>, you can also view the
+        content of a file page by page, but <command>more</command> only
+        supports scrolling down one line (&lt;return&gt;) or page
+        (&lt;space&gt;). So <command>less</command> is more... than
+        <command>more</command>.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Linking Files and Directories</title>
+
+      <para>Linux supports two types of links: symbolic links and hard links.
+      You might wonder why I'm already telling you here in the introductionary
+      chapter on running Linux. Well, that's because symbolic links are often
+      used in Linux, whereas you'll find output related to hard links all over
+      the place. In fact, we already had some output related to hard links
+      earlier: in the output of the "<command>ls -l</command>" command.</para>
+
+      <para><emphasis>Symbolic links</emphasis><indexterm>
+          <primary>link</primary>
+
+          <secondary>symbolic</secondary>
+        </indexterm>, also known as <emphasis>symlinks</emphasis><indexterm>
+          <primary>symlink</primary>
+        </indexterm>, are the easiest to understand. They're not real files,
+      but rather references to files somewhere on the file system. Their
+      reference is a location string, which allows the link to be used across
+      media and even to files that don't exist (anymore). As an example, you
+      could have a symbolic link that points to
+      <filename>/home/swift/opentasks.txt</filename>, even when this file
+      doesn't exist (anymore).</para>
+
+      <para><emphasis>Hard links</emphasis><indexterm>
+          <primary>link</primary>
+
+          <secondary>hard</secondary>
+        </indexterm>, on the contrary, are immediate links. They actually
+      refer to the same location on the disk as their target file (through
+      inode's) and the file system will not release this location as free
+      space until there are no references to this location. In fact, every
+      file you see in the file system is a link to a location. With hard
+      links, you just create additional links.</para>
+
+      <para>Due to their technology, hard links can only point to file
+      locations on the same medium and they cannot handle directories.</para>
+
+      <para>To create links, use <command>ln</command><indexterm>
+          <primary>ln</primary>
+        </indexterm> (hard links) or <command>ln -s</command>
+      (symlinks):</para>
+
+      <programlisting>$ <command>ln targetfilename newfilename</command>
+$ <command>ln -s targetfilename newfilename</command></programlisting>
+
+      <para>Thanks to links, you can manage your files more easily. For
+      instance, you can have an important text file located inside
+      <filename>~/Documents/Work/Thesis/myThesis.txt</filename> but link to it
+      from your home directory (<filename>~/myThesis.txt</filename> points to
+      <filename>~/Documents/Work/Thesis/MyThesis.txt</filename>) so that you
+      don't have to traverse all these directories every time you want to
+      open/edit the file.</para>
+    </section>
+
+    <section>
+      <title>File / Command Completion</title>
+
+      <para>A powerful feature of most Linux shells is file and command
+      completion.</para>
+
+      <para>When you want to edit a file called, for instance, opentasks.txt,
+      you can start with typing "<command>nano o</command>" followed by the
+      &lt;tab&gt; key. If <filename>opentasks.txt</filename> is the only file
+      or directory that starts with an o, the shell will automatically expand
+      the command to "<filename>nano opentasks.txt</filename>". If there are
+      more files or directories that start with o, typing &lt;tab&gt; twice
+      will show you a list of candidates.</para>
+
+      <para>The same is true for commands. If nano is the only command
+      starting with na (it isn't, but suppose it is) then typing "na" followed
+      by a &lt;tab&gt; expands the command to nano. Pressing &lt;tab&gt; twice
+      if it isn't the only command displays all matches:</para>
+
+      <programlisting>$ <command>na</command><emphasis>&lt;tab&gt;&lt;tab&gt;</emphasis>
+namei           nautilus
+nano            nasl
+nasm            native2ascii
+$ <command>na</command></programlisting>
+    </section>
+
+    <section>
+      <title>Switching Terminals</title>
+
+      <para>One of Unix / Linux' advantages is the support for multiple
+      terminals<indexterm>
+          <primary>virtual terminal</primary>
+        </indexterm>. When you are logged on to your system, you are actually
+      watching one of the (virtual) terminals, most likely the first one. You
+      can switch from one terminal to another using Alt+F# where F# is F1, F2,
+      ... If you are on a graphical session, you'll need to use Ctrl+Alt+F#
+      first. The graphical screen is positioned at the first terminal that can
+      not be used to log on to (most likely Alt+F7).</para>
+
+      <para>The support for multiple terminals allows you to log on to your
+      system several times and spread the tasks you want to execute in
+      parallel across the various terminals. For instance, if you are
+      configuring a program, you might want to have the configuration file
+      itself open in one terminal and the program in another.</para>
+
+      <para>Hint: if you are working on the command line, you can also use the
+      <command>chvt</command><indexterm>
+          <primary>chvt</primary>
+        </indexterm> command to switch between terminals: <command>chvt
+      2</command> switches to the second terminal (similar to Alt+F2).</para>
+    </section>
+
+    <section>
+      <title>Logging Out</title>
+
+      <para>To log out from an existing session, enter <command>exit</command>
+      or press Ctrl+d:</para>
+
+      <programlisting>captain@seaheaven ~ $ <command>exit</command>
+
+This is seaheaven.homeworld (Linux i686 2.6.23) 22:30:00
+
+seaheaven login: </programlisting>
+    </section>
+
+    <section>
+      <title>Shutting Down</title>
+
+      <para>Finally, if you want to shut down<indexterm>
+          <primary>shutdown</primary>
+        </indexterm> your system, you will first need to become root. You can
+      do this by switching to another terminal and log on as root, but you can
+      also use the su command. This command will ask you to enter the root
+      password after which you are known to the system as the root
+      user:</para>
+
+      <programlisting>captain@seaheaven ~ $ <command>su -</command>
+Password: <emphasis>(Enter root password)</emphasis>
+root@seaheaven ~ # </programlisting>
+
+      <para>Now, you can issue the shutdown command to shut down (-h) or
+      reboot<indexterm>
+          <primary>reboot</primary>
+        </indexterm> (-r) the system immediately:</para>
+
+      <programlisting>root@seaheaven ~ # <command>shutdown -h now</command></programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Getting Help</title>
+
+    <para>Linux might seem a bit complex at first, especially because the
+    tools novice users use are the same tools that experts use, making the
+    tools accept expert options starters wouldn't understand. Handbooks such
+    as this one can only help users find their way, but once in a while any
+    user, beginner or advanced, will need something to fall back to. Luckily,
+    there are several resources you can address...</para>
+
+    <section>
+      <title>Man Pages</title>
+
+      <para>The <emphasis>manual page</emphasis><indexterm>
+          <primary>manual page</primary>
+        </indexterm> is available on the Linux system itself and can be
+      accessed through the <command>man</command><indexterm>
+          <primary>man</primary>
+        </indexterm> command. By entering <command>man</command> followed by
+      the command you want information about you receive the manual page of
+      that command, explaining what the command does, what syntax you should
+      use, what options it supports and what commands or files are related to
+      this command.</para>
+
+      <para>The manual page is usually structured as follows:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>name of the command with a one-line description</para>
+        </listitem>
+
+        <listitem>
+          <para>synopsis of the command, showing the syntax the command
+          accepts</para>
+        </listitem>
+
+        <listitem>
+          <para>options of the command with an explanation of each
+          option</para>
+        </listitem>
+
+        <listitem>
+          <para>further information on the command, like usage restrictions,
+          default behavior, ...</para>
+        </listitem>
+
+        <listitem>
+          <para>copyright and authorship information</para>
+        </listitem>
+
+        <listitem>
+          <para>related manual pages</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Manual pages not only exist for commands, but for files
+      (configuration files or device files), system calls and library
+      functions (programming related information) and even standards and
+      conventions. These topics are categorized in the following sections with
+      the accompanying numbers:</para>
+
+      <orderedlist>
+        <listitem>
+          <para>user commands</para>
+        </listitem>
+
+        <listitem>
+          <para>system calls</para>
+        </listitem>
+
+        <listitem>
+          <para>library functions</para>
+        </listitem>
+
+        <listitem>
+          <para>special files (device files)</para>
+        </listitem>
+
+        <listitem>
+          <para>file formats and protocols</para>
+        </listitem>
+
+        <listitem>
+          <para>games and funny programs</para>
+        </listitem>
+
+        <listitem>
+          <para>overview, conventions and miscellaneous topics</para>
+        </listitem>
+
+        <listitem>
+          <para>administrative and privileged commands</para>
+        </listitem>
+      </orderedlist>
+
+      <para>For information about these sections, open up the introduction
+      page for each section. For instance, the introduction page for the games
+      section can be accessed through <command>man 6 intro</command>. Knowing
+      what sections are available can be important, especially when there are
+      topics in different sections which have the same name. An example is
+      passwd: there is a manual page for the <command>passwd</command> command
+      (<command>man 1 passwd</command>) and one for the
+      <filename>passwd</filename> file (<command>man 5 passwd</command>). If
+      one would enter <command>man passwd</command>, the first section that
+      has a manual page for the topic is displayed (in this case, the first
+      section).</para>
+
+      <para>Once you are inside a manual page, you can navigate through it
+      using the up/down arrow keys and the PgUp/PgDn keys. You can also search
+      for some terms (press / followed by the term) and more. A full
+      explanation of all the commands of the manual viewer (which, on most
+      systems, is the <command>less</command><indexterm>
+          <primary>less</primary>
+        </indexterm> tool) can be obtained by pressing 'h'.</para>
+
+      <para>To quit viewing the manual page, press 'q'.</para>
+    </section>
+
+    <section>
+      <title>Info Pages</title>
+
+      <para>Another reference tool on your system is the
+      <command>info</command><indexterm>
+          <primary>info</primary>
+        </indexterm> page help system. The <command>info</command> tool allows
+      you to browse through info pages using a hierarchical approach
+      (next/previous section, go upwards, ...) as well as using hyperlinks
+      (select a topic in the info page to go to the section on that
+      topic).</para>
+
+      <para>Let's take a look at the GCC info pages:</para>
+
+      <programlisting>~$ <command>info gcc</command>
+...
+File: gcc.info,  Node: Top,  Next: G++ and GCC,  Up: (DIR)
+
+Introduction
+************
+
+This manual documents how to use the GNU compilers, as well as their
+features and incompatibilities, and how to report bugs.  It corresponds
+to GCC version 4.1.2.  The internals of the GNU compilers, including
+how to port them to new targets and some information about how to write
+...</programlisting>
+
+      <para>At the top of the info page you find where you are in the sequence
+      of documents (as this is the first page, there is no real previous
+      section nor upwards section). The next topic (which you can go to by
+      pressing <command>n</command>) is "G++ and GCC".</para>
+
+      <para>Inside the text you will find text snippets following by two
+      colons:</para>
+
+      <programlisting>* G++ and GCC::     You can compile C or C++ programs.
+* Standards::       Language standards supported by GCC.
+* Invoking GCC::    Command options supported by `gcc'.
+* C Implementation:: How GCC implements the ISO C specification.
+* C Extensions::    GNU extensions to the C language family.
+* C++ Extensions::  GNU extensions to the C++ language.
+* Objective-C::     GNU Objective-C runtime features.</programlisting>
+
+      <para>These texts are links which allow you to jump to that topic. Go
+      with the cursor to "Invoking GCC" and press return:</para>
+
+      <programlisting>File: gcc.info,  Node: Invoking GCC,  Next: C Implementation,  Prev: Standards,    Up: Top
+
+3 GCC Command Options
+*********************
+
+When you invoke GCC, it normally does preprocessing, compilation,
+assembly and linking.  The "overall options" allow you to stop this
+process at an intermediate stage.  For example, the `-c' option says
+not to run the linker.  Then the output consists of object files output
+by the assembler.</programlisting>
+
+      <para>You are now in the node called "Invoking GCC". The next
+      (<command>n</command>) section is "C Implementation", the previous
+      (<command>p</command>) is "Standards" and if you go up
+      (<command>u</command>), you get to the top of the info document
+      again.</para>
+
+      <para>Info pages are well used by various GNU projects (such as GCC).
+      However, manual pages are more popular - perhaps because most developers
+      find them easier to write.</para>
+    </section>
+
+    <section>
+      <title>Immediate Syntax Help</title>
+
+      <para>If you are not looking for an explanation on the command but want
+      to know its syntax, most commands provide immediate help through the
+      <command>-h</command> or <command>--help</command> arguments:</para>
+
+      <programlisting>$ <command>man -h</command>
+man, version 1.6e
+
+usage: man [-adfhktwW] [section] [-M path] [-P pager] [-S list]
+           [-m system] [-p string] name ...
+
+  a : find all matching entries
+  c : do not use cat file
+  d : print gobs of debugging information
+  D : as for -d, but also display the pages
+  f : same as whatis(1)
+  h : print this help message
+  k : same as apropos(1)
+  K : search for a string in all pages
+  t : use troff to format pages for printing
+  w : print location of man page(s) that would be displayed
+      (if no name given: print directories that would be searched)
+  W : as for -w, but display filenames only
+
+  C file   : use `file' as configuration file
+  M path   : set search path for manual pages to `path'
+  P pager  : use program `pager' to display pages
+  S list   : colon separated section list
+  m system : search for alternate system's man pages
+  p string : string tells which preprocessors to run
+               e - [n]eqn(1)   p - pic(1)    t - tbl(1)
+               g - grap(1)     r - refer(1)  v - vgrind(1)</programlisting>
+    </section>
+
+    <section>
+      <title>Package-provided Documentation</title>
+
+      <para>Some packages provide more documentation in the form of guides (in
+      HTML, PDF or other formats), README files and more. You will find most
+      of this documentation at <filename>/usr/share/doc</filename>. Gentoo
+      Linux compresses the documents using <command>bzip2</command> or
+      <command>gzip</command> (both well known compression tools in the Unix
+      world). To view the documents, you will first need to decompress those
+      into a location you have write privileges to.</para>
+
+      <para>For instance, the zip package contains a document explaining what
+      algorithm the tool uses to (de)compress data:</para>
+
+      <programlisting>$ <command>cd /usr/share/doc/zip-*</command>
+$ <command>ls</command>
+algorith.txt.bz2   BUGS.bz2            CHANGES.bz2      MANUAL.bz2
+README.bz2         timezone.txt.bz2    txtvsbin.txt.bz2 WHATSNEW.bz2
+WHERE.bz2           ziplimit.txt.bz2
+$ <command>bunzip2 -c algoritm.txt.bz2 &gt; ~/algorithm.txt</command></programlisting>
+
+      <para>The resulting file, <filename>algorithm.txt</filename>, can be
+      found in the home directory (<filename>~</filename><indexterm>
+          <primary>~</primary>
+        </indexterm> is an abbreviation for the home directory of the current
+      user). In this case, the file is a regular text file which can be viewed
+      through the <command>less</command> command, which is the same command
+      used for manual pages.</para>
+
+      <para>In the above example, a redirection is used: the output of one
+      command (<command>bunzip2 -c algorithm.txt.bz2</command>) is not shown
+      on the screen, but rather redirected into a file
+      (<filename>algorithm.txt</filename>). Redirection is discussed later
+      on.</para>
+    </section>
+
+    <section>
+      <title>Online Documentation</title>
+
+      <para>Most projects have extensive documentation available. You are
+      certainly advised to take a look at the projects' web sites or search
+      through the internet for available guides and books. Sometimes, the best
+      documentation is not written by the project itself but by satisfied
+      users.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Try to organize your home directory in logical sections. For
+        instance, create directories where you put your personal documents,
+        pictures, work-related documents and temporary documents.</para>
+      </listitem>
+
+      <listitem>
+        <para>Unix/Linux systems generally offer four compression methods.
+        Whereas Zip is well known on the Microsoft Windows operating system,
+        Unix/Linux uses GZip or BZip2 together with tar. How is "tar" used
+        with gzip/bzip2? What is the fourth compression method?</para>
+      </listitem>
+
+      <listitem>
+        <para>As stated, Unix/Linux systems have no undo functionality: when
+        you remove a file, it is removed. However, due to the technicalities
+        of removing files (in essence only the reference to the file is
+        removed, but its content remains on disk until it is overwritten)
+        there are tools available that help you recover files. Try finding a
+        few examples of such file recovery utilities for Linux.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Further Resources</title>
+
+    <itemizedlist>
+      <listitem>
+        <para><ulink
+        url="http://www.tldp.org/LDP/intro-linux/html/index.html">Introduction
+        to Linux, A Hands-On Guide</ulink> by Machtelt Garrels (also available
+        as <ulink
+        url="http://www.tldp.org/LDP/intro-linux/intro-linux.pdf">PDF</ulink>)</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

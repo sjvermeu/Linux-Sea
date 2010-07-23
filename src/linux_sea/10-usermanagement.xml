@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>User Management</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Linux is a multi-user operating system. Even systems that will be
+    used by a single user are configured as a multi-user system. This has
+    various advantages:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>security-wise, your system is protected from malicious software
+        execution as the software is executed as an unprivileged user rather
+        than the system administrator</para>
+      </listitem>
+
+      <listitem>
+        <para>if at any time multiple users are going to work on the system,
+        you just need to add the user to the system (no need to upgrade to a
+        multi-user environment first)</para>
+      </listitem>
+
+      <listitem>
+        <para>you can easily back up all files belonging to a particular user
+        as all user files are located inside his home directory</para>
+      </listitem>
+
+      <listitem>
+        <para>if you messed up your personal configuration for a particular
+        software title, you can just remove the configuration files (or move
+        them aside) and start the software title up again to start with a
+        clean slate. No configuration changes made by a user are propagated
+        system-wide</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>How you deal with this multi-user environment depends on your
+    needs...</para>
+  </section>
+
+  <section>
+    <title>Adding or Removing Users</title>
+
+    <para>If your system is used by various users, you will need to add or
+    remove their user accounts. Before starting with the command syntax, first
+    a few words on how this information is stored on the Linux system.</para>
+
+    <section>
+      <title>User Account Information</title>
+
+      <para>A user is identified by his user id, which is an ordinary integer
+      number. However, it is much easier to use a username instead of a
+      number. For this purpose, a Unix/Linux system maps a username to a user
+      id. By default, this information is stored within the
+      <filename>/etc/passwd</filename><indexterm>
+          <primary>passwd</primary>
+
+          <secondary>file</secondary>
+        </indexterm> file. However, you can also configure your system to
+      obtain this information from a central repository (like an LDAP
+      service), similar to how Windows can be configured to connect to an
+      Active Directory.</para>
+
+      <section>
+        <title id="passwdfile">The passwd file</title>
+
+        <para>The <filename>passwd</filename> file contains a line for every
+        user. Each line contains 7 fields, separated by colons:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Username</para>
+          </listitem>
+
+          <listitem>
+            <para>Password, or "x" if the password is stored elsewhere</para>
+          </listitem>
+
+          <listitem>
+            <para>User ID</para>
+          </listitem>
+
+          <listitem>
+            <para>Primary group ID</para>
+          </listitem>
+
+          <listitem>
+            <para>Comment or description</para>
+          </listitem>
+
+          <listitem>
+            <para>Home directory</para>
+          </listitem>
+
+          <listitem>
+            <para>Default shell</para>
+          </listitem>
+        </orderedlist>
+
+        <para>The <emphasis>password field</emphasis><indexterm>
+            <primary>password</primary>
+
+            <secondary>passwd file</secondary>
+          </indexterm> on modern systems contains an "x", telling the system
+        that the password is stored inside the
+        <filename>/etc/shadow</filename> file. Storing the passwords elsewhere
+        is needed to improve the security of the system: the
+        <filename>passwd</filename> file should be world readable because many
+        tools rely on it. Storing the password (even when it is encrypted or
+        hashed) in a publically readable file is asking for troubles - tools
+        exist that attempt to crack user account passwords given the encrypted
+        / hashed password values.</para>
+
+        <para>For this reason, the hashed password is stored inside the
+        <filename>/etc/shadow</filename> file which is only readable by the
+        root user (system administrator). The tools that work with passwords
+        are small in number and highly audited to decrease the chance that
+        they contain any vulnerabilities. More about the shadow file
+        later...</para>
+
+        <para>As you will see in the next section, a user can be a member of
+        many groups. However, every user has a single, <emphasis>primary
+        group</emphasis><indexterm>
+            <primary>primary group</primary>
+          </indexterm>: this is the active group at the moment that the user
+        is logged on. The active group defines the group ownership of the
+        resources the user creates while logged on (remember, resources are
+        assigned three ownership groups: user, group and others).</para>
+
+        <para>The users' <emphasis>home directory</emphasis><indexterm>
+            <primary>home directory</primary>
+          </indexterm> is usually the directory where the user has full write
+        access to (even more, it is most often the <emphasis>only</emphasis>
+        directory where the user has write access to). If a user is logged on
+        through the command line (not graphically), it is also the directory
+        where the user starts to work from.</para>
+
+        <para>Finally, the default <emphasis>shell</emphasis> for this
+        particular user is defined. We've talked about what a shell is before.
+        Unix/Linux has several shells, each shell provides roughly the same
+        functionality, but is manipulated differently. Gentoo Linux by default
+        uses the bash<indexterm>
+            <primary>bash</primary>
+          </indexterm> shell (bourne again shell), a powerfull shell with lots
+        of additional functions such as command autocompletion, output
+        coloring and more. Smaller shells also exist, such as csh (c shell) or
+        ksh (korn shell).</para>
+
+        <para>More information about shells is available online.</para>
+      </section>
+
+      <section>
+        <title>The shadow file</title>
+
+        <para>The <filename>shadow</filename> file<indexterm>
+            <primary>shadow</primary>
+
+            <secondary>file</secondary>
+          </indexterm> contains all information regarding a users' password.
+        The most important field for many is the (hashed) password itself, but
+        other information is available as well. The shadow file, like the
+        passwd file, has a single line for every user; fields are separated by
+        colons.</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Username</para>
+          </listitem>
+
+          <listitem>
+            <para>Hashed password value</para>
+          </listitem>
+
+          <listitem>
+            <para>Date of last password change (counted in days since Jan 1,
+            1970)</para>
+          </listitem>
+
+          <listitem>
+            <para>Number of days that need to pass before the password can be
+            changed by the user</para>
+          </listitem>
+
+          <listitem>
+            <para>Maximum number of days since the password change that the
+            password can be used; after this amount of days, the password will
+            need to be changed by the user</para>
+          </listitem>
+
+          <listitem>
+            <para>Number of days before expiry date (see field 5) that the
+            user will be warned about the pending password change
+            policy</para>
+          </listitem>
+
+          <listitem>
+            <para>If the password isn't changed after this many days after the
+            forced password change, the account is locked</para>
+          </listitem>
+
+          <listitem>
+            <para>Date when the account is (or will be) locked (counted in
+            days since Jan 1, 1970)</para>
+          </listitem>
+
+          <listitem>
+            <para>Reserved field (not used)</para>
+          </listitem>
+        </orderedlist>
+
+        <para>If the last three fields are left empty (which is the default
+        case), their enforcement isn't valid.</para>
+
+        <para>The password value is <emphasis>hashed</emphasis><indexterm>
+            <primary>hash function</primary>
+          </indexterm>, meaning that the password itself is not stored on the
+        disk (nor in any encrypted form). Instead, a mathematical formula is
+        used to create a unique number or string from a password. To verify if
+        a password given by a user matches, the given password is passed
+        through the same mathematical formula and the resulting number or
+        string is matched against the stored string. Such method makes it
+        harder for a user to find out the password even if he has access to
+        the shadow file because he can't deduce the password from the hash
+        value.</para>
+      </section>
+
+      <section>
+        <title>Other account storage: nsswitch.conf</title>
+
+        <para>Account information can be stored elsewhere - any repository
+        will do, as long as it provides at least the same information as the
+        passwd (and shadow) file. This is important because in enterprise
+        environments, you rather want to keep track of user accounts in a
+        central repository rather than in the files on several hundreds of
+        systems.</para>
+
+        <para>The <filename>/etc/nsswitch.conf</filename><indexterm>
+            <primary>nsswitch.conf</primary>
+          </indexterm> file defines where the system can find this
+        information. An excerpt from an nsswitch.conf file is given below. You
+        notice that it defines services on every line followed by the
+        repository (or repositories) that manages the information.</para>
+
+        <programlisting>passwd: compat
+shadow: compat
+group: compat
+hosts: files dns</programlisting>
+
+        <para>In the example, the passwd, shadow and group services are
+        managed by the "compat" implementation. Compat is the default
+        implementation provided by glibc (GNU C Library) which offers access
+        to the various <filename>/etc/*</filename> files. The hosts service
+        (used to resolve hostnames to IP addresses and vice versa) is managed
+        by two implementations:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>"files", which is the implementation that offers access to
+            the /etc/hosts file (a table containing IP address and
+            hostname(s))</para>
+          </listitem>
+
+          <listitem>
+            <para>"dns", which is the implementation that offers queries with
+            DNS servers</para>
+          </listitem>
+        </orderedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>Group Information</title>
+
+      <para>Group membership is used to group different users who need access
+      to a shared resource: assign the resource to a particular group and add
+      the users to this group.</para>
+
+      <section>
+        <title>The /etc/group file</title>
+
+        <para>Similar with the /etc/passwd file, group information is stored
+        inside the /etc/group. Again, every line in this text file defines a
+        group; the fields within a group definition are separated by a
+        colon.</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Group name</para>
+          </listitem>
+
+          <listitem>
+            <para>Group password, or "x" if the password is stored
+            elsewhere</para>
+          </listitem>
+
+          <listitem>
+            <para>Group ID</para>
+          </listitem>
+
+          <listitem>
+            <para>Group members (who don't have the group as a primary
+            group)</para>
+          </listitem>
+        </orderedlist>
+
+        <para>It might seem strange to have a password on a group. After all,
+        a user logs on using his username. However, there is a sane reason for
+        this: you can add users to a different group and password-protect this
+        group. If a user is logged on to the system (but doesn't use the
+        particular group as primary group) and leaves his terminal, malicious
+        users can't change to this particular group without knowing the
+        password even if they have access to the users' terminal (and
+        therefore logged on session).</para>
+
+        <para>Group passwords aren't used often though. The cases where group
+        passwords can be used (privileged groups) are usually implemented
+        differently (for instance using privilege escalation tools like
+        sudo).</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Creating or Deleting Users</title>
+
+      <section>
+        <title>The useradd command</title>
+
+        <para>If you want to add a user to the system, you can use the
+        <command>useradd</command><indexterm>
+            <primary>useradd</primary>
+          </indexterm> command (you'll need to be root to perform this
+        action):</para>
+
+        <programlisting># <command>useradd -D thomas</command></programlisting>
+
+        <para>In the above example, a user account identified by "thomas" is
+        created using the system default settings (which, for a Gentoo Linux
+        system, means that the default shell is bash, the home directory is
+        /home/thomas, etc) after which his password is set.</para>
+
+        <para>You can pass on additional arguments to the useradd command to
+        alter the users' attributes (such as the user id, home directory,
+        primary group ...). I encourage you to read the useradd manual page
+        for more information.</para>
+      </section>
+
+      <section>
+        <title>The userdel command</title>
+
+        <para>If a user account needs to be removed from the system, you can
+        use the <command>userdel</command><indexterm>
+            <primary>userdel</primary>
+          </indexterm> command.</para>
+
+        <programlisting># <command>userdel -r thomas</command></programlisting>
+
+        <para>With the <command>-r</command> option,
+        <command>userdel</command> not only removes the user account from the
+        system but also cleans and removes the users' home directory. If you
+        omit this option, the users' home directory remains available on the
+        system, allowing you to keep his (private or not) files for future
+        use.</para>
+      </section>
+
+      <section>
+        <title>The usermod command</title>
+
+        <para>To manipulate an existing account, you can use the
+        <command>usermod</command><indexterm>
+            <primary>usermod</primary>
+          </indexterm> command. For instance, to modify the primary group of
+        the thomas account to the "localusers" group:</para>
+
+        <programlisting># <command>usermod -g localusers thomas</command></programlisting>
+      </section>
+    </section>
+
+    <section>
+      <title>Adding or Removing Users to/from Groups</title>
+
+      <para>Once a user account is created, you can't use
+      <command>useradd</command> to add the user to one or more groups.</para>
+
+      <section>
+        <title>Creating or Deleting Groups</title>
+
+        <para>First of all, if a group doesn't exist yet, you'll need to
+        create it: the <command>groupadd</command><indexterm>
+            <primary>groupadd</primary>
+          </indexterm> command does this for you. Similarly, to remove a group
+        from the system, you can use <command>groupdel</command><indexterm>
+            <primary>groupdel</primary>
+          </indexterm>.</para>
+
+        <warning>
+          <para>You will be able to remove groups even though there are still
+          users member of this group. The only check that groupdel performs is
+          to see if a group is a users' primary group (in which case the
+          operation fails).</para>
+        </warning>
+
+        <programlisting># <command>groupadd audio</command></programlisting>
+      </section>
+
+      <section>
+        <title>Manipulating Group Membership</title>
+
+        <para>Suppose you want to add or remove a user from a group, you can
+        use the <command>usermod</command> tool (as seen before) or the
+        <command>gpasswd</command> tool.</para>
+
+        <para>The <command>gpasswd</command><indexterm>
+            <primary>gpasswd</primary>
+          </indexterm> tool is the main tool used to manipulate the group
+        file. For instance, to add a user to a particular group (in the
+        example the "audio" group):</para>
+
+        <programlisting># <command>gpasswd -a audio thomas</command></programlisting>
+
+        <para>Most resources on a Unix system are protected by a particular
+        group: you need to be a member of a particular group in order to
+        access those resources. The following tables gives an overview of
+        interesting groups.</para>
+
+        <table>
+          <title>Incomplete (!) list of system groups</title>
+
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry align="center">Group name</entry>
+
+                <entry align="center">Description / resources</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>wheel</entry>
+
+                <entry>Be able to "<command>su -</command>" to switch to the
+                root user</entry>
+              </row>
+
+              <row>
+                <entry>audio</entry>
+
+                <entry>Be able to use the sound card on the system</entry>
+              </row>
+
+              <row>
+                <entry>video</entry>
+
+                <entry>Be able to use the graphical card for hardware
+                rendering purposes (not needed for plain 2D
+                operations)</entry>
+              </row>
+
+              <row>
+                <entry>cron</entry>
+
+                <entry>Be able to use the system scheduler (cron)</entry>
+              </row>
+
+              <row>
+                <entry>cdrom</entry>
+
+                <entry>Be able to mount a CD/DVD</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+    </section>
+
+    <section>
+      <title>Setting and Changing Passwords</title>
+
+      <para>The <command>passwd</command> command allows you to change or set
+      an accounts' password.</para>
+
+      <programlisting># <command>passwd thomas</command>
+New UNIX password: <emphasis>(enter thomas' password)</emphasis>
+Retype new UNIX password: <emphasis>(re-enter thomas' password)</emphasis>
+passwd: password updated succesfully</programlisting>
+
+      <para>The root user is always able to alter a users' password. If a user
+      wants to change his own password, the passwd command will first ask the
+      user to enter his current password (to make sure it is the user and not
+      someone who took the users' session in the users' absence) before
+      prompting to enter the new password.</para>
+
+      <para>With the tool, you can also immediately expire the users' password
+      (<command>-e</command>), lock or unlock the account
+      (<command>-l</command> or <command>-u</command>) and more. In effect,
+      this tool allows you to manipulate the <filename>/etc/shadow</filename>
+      file.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Elevating User Privileges</title>
+
+    <para>On any system, a regular user has little to no rights to perform
+    administrative tasks. However, on a home workstation you'd probably want
+    to be able to shut down the system. You can log on as the root user on a
+    different (virtual) terminal, but you can also elevate your own
+    privileges...</para>
+
+    <section>
+      <title>Switching User</title>
+
+      <para>With the <command>su</command><indexterm>
+          <primary>su</primary>
+        </indexterm> command you can switch your user identity in the selected
+      session.</para>
+
+      <programlisting>$ <command>su -</command>
+Password: <emphasis>(Enter the root password)</emphasis>
+# </programlisting>
+
+      <para>In the above example, a regular user has switched his session to
+      become a root session. The "<command>-</command>" argument informs the
+      su command that not only the users' privileges should be switched, but
+      also that the root users' environment should be loaded. Without the
+      "<command>-</command>" option, the regular users' environment would be
+      used.</para>
+
+      <para>This environment defines the shell behavior; its most important
+      setting is the PATH variable which defines where the binaries are
+      located for the commands that this user might summon.</para>
+
+      <para>With su, you can also switch to a different user:</para>
+
+      <programlisting>$ <command>su thomas -</command>
+Password: (Enter thomas' password)
+$ </programlisting>
+
+      <para>If you just want to execute a single command as a different user,
+      you can use the "-c" argument:</para>
+
+      <programlisting>$ <command>su -c "shutdown -h now"</command></programlisting>
+    </section>
+
+    <section>
+      <title>Assigning Specific Privileged Commands</title>
+
+      <para>The su-based methods require the user to know the password of the
+      other accounts. On many systems, you might not want this. There are two
+      ways of dealing with such situations: marking a command so that it
+      always runs as a privileged user, or use a tool that elevates privileges
+      without requiring the password for the elevated privilege...</para>
+
+      <section>
+        <title>Marking Commands for Elevated Execution</title>
+
+        <para>Executable binaries (not shell scripts) can be marked so that
+        the Unix/Linux kernel executes that command as a specific user,
+        regardless of who started the command. This mark is the
+        <emphasis>setuid</emphasis><indexterm>
+            <primary>setuid</primary>
+          </indexterm> bit. Once set (using the chmod command), the tool is
+        always executed with the rights of the owner and not the rights of the
+        executor:</para>
+
+        <programlisting># <command>chmod +s /path/to/command</command></programlisting>
+
+        <warning>
+          <para>Using setuid tools is generally considered a security risk. It
+          is better to avoid setuid tools when possible and use tools such as
+          sudo, as explained later.</para>
+        </warning>
+
+        <para>For instance, if the shutdown command is marked setuid, then
+        every user is able to run the shutdown command as root (which is the
+        commands' owner) and thus be able to shut down or reboot the
+        system.</para>
+      </section>
+
+      <section>
+        <title>Using sudo</title>
+
+        <para>If you mark an executable using the setuid bit, every user can
+        execute the command as the application owner (root). You usually don't
+        want to allow this but rather assign the necessary rights on a
+        per-user, per-command basis. Enter sudo.</para>
+
+        <para>The <command>sudo</command><indexterm>
+            <primary>sudo</primary>
+          </indexterm> tool allows the system administrator to grant a set of
+        users (individually or through groups) the rights to execute one or
+        more commands as a different user (such as root), with or without
+        requiring their password (for the same reason as the passwd command
+        which asks the users' password before continuing).</para>
+
+        <para>Once available, the system administrator can run the
+        <command>visudo</command><indexterm>
+            <primary>visudo</primary>
+          </indexterm> command to edit the configuration file. In the next
+        example, the following definitions are set:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>All users in the wheel group are allowed to execute any
+            command as root</para>
+          </listitem>
+
+          <listitem>
+            <para>All users in the operator group are allowed to shutdown the
+            system</para>
+          </listitem>
+
+          <listitem>
+            <para>The test user is allowed to run a script called webctl.ksh
+            without a password</para>
+          </listitem>
+
+          <listitem>
+            <para>All users in the httpd group are allowed to edit the
+            /etc/apache2/conf/httpd.conf file through sudoedit</para>
+          </listitem>
+        </itemizedlist>
+
+        <programlisting>%wheel    ALL=(ALL) ALL
+%operator ALL=/sbin/shutdown
+test      ALL=NOPASSWD: /usr/local/bin/webctl.ksh
+%httpd    ALL=(ALL) sudoedit /etc/apache2/conf/httpd.conf</programlisting>
+
+        <para>If sudo is set up, users can execute commands by prepending
+        <command>sudo</command> to it. If allowed, some users can even obtain
+        a root shell through the <command>sudo -i</command> command.</para>
+
+        <programlisting><emphasis>(Execute a single command as root)</emphasis>
+$ <command>sudo mount /media/usb</command>
+Enter password: <emphasis>(unless configured with NOPASSWD)</emphasis>
+<emphasis>(Obtain a root shell)</emphasis>
+$ <command>sudo -i</command>
+Enter password: <emphasis>(unless configured with NOPASSWD)</emphasis>
+# </programlisting>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Exercises</title>
+
+    <orderedlist>
+      <listitem>
+        <para>When invoking commands using sudo, sudo logs every attempt
+        (including username, working directory and command itself). Where is
+        this log?</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>
