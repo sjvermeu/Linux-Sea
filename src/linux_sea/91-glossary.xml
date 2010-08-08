@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE glossary PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<glossary>
+  <glossdiv>
+    <title>Glossary</title>
+
+    <glossentry>
+      <glossterm>RISC</glossterm>
+
+      <glossdef>
+        <para>Reduced Instruction Set Computing, a CPU instruction design that
+        attempts to offer a simple list of instructions to use by software
+        engineers. By limiting the complexity of the instructions, RISC CPUs
+        can be made faster than more complex CPUs clockwize.</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>CISC</glossterm>
+
+      <glossdef>
+        <para>Complex Instruction Set Computing, a CPU instruction design that
+        attempts to offer a large list of powerful CPU instructions to use by
+        software engineers. The powerful instructions allow engineers to
+        perform complex tasks with a minimum on instructions. The CPU is
+        optimized to perform these instructions faster than most software
+        implementations on RISC CPUs.</para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
+</glossary>
