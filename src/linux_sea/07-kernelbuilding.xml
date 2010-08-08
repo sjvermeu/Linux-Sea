@@ -120,61 +120,82 @@ clflush size : 64</programlisting>
         <para>PCI device information can be obtained using the
         <command>lspci</command><indexterm>
             <primary>lspci</primary>
-          </indexterm> tool. Just entering lspci already gives you a nice
-        overview of the PCI devices found inside your system:</para>
+          </indexterm> tool. Just entering <command>lspci</command> already
+        gives you a nice overview of the PCI devices found inside your system.
+        I recommend to use <command>lspci -k</command> as it will also display
+        which kernel drivers are already used to manage the PCI device:</para>
 
-        <programlisting># lspci
-00:00.0 Host bridge: Intel Corporation Mobile 915GM/PM/GMS/910GML 
-        Express Processor to DRAM Controller (rev 03)
-00:02.0 VGA compatible controller: Intel Corporation Mobile 
-        915GM/GMS/910GML Express Graphics Controller (rev 03)
-00:02.1 Display controller: Intel Corporation Mobile 915GM/GMS/910GML
-        Express Graphics Controller (rev 03)
-00:1c.0 PCI bridge: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6
-        Family) PCI Express Port 1 (rev 04)
-00:1c.1 PCI bridge: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6
-        Family) PCI Express Port 2 (rev 04)
-00:1d.0 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
-        (ICH6 Family) USB UHCI #1 (rev 04)
-00:1d.1 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
-        (ICH6 Family) USB UHCI #2 (rev 04)
-00:1d.2 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
-        (ICH6 Family) USB UHCI #3 (rev 04)
-00:1d.3 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
-        (ICH6 Family) USB UHCI #4 (rev 04)
-00:1d.7 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW
-        (ICH6 Family) USB2 EHCI Controller (rev 04)
+        <programlisting># <command>lspci -k</command>
+00:00.0 Host bridge: Intel Corporation Mobile 915GM/PM/GMS/910GML Express Processor to DRAM Controller (rev 03)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: agpgart-intel
+00:02.0 VGA compatible controller: Intel Corporation Mobile 915GM/GMS/910GML Express Graphics Controller (rev 03)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+00:02.1 Display controller: Intel Corporation Mobile 915GM/GMS/910GML Express Graphics Controller (rev 03)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+00:1c.0 PCI bridge: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) PCI Express Port 1 (rev 04)
+        Kernel driver in use: pcieport
+00:1c.1 PCI bridge: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) PCI Express Port 2 (rev 04)
+        Kernel driver in use: pcieport
+00:1d.0 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #1 (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: uhci_hcd
+00:1d.1 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #2 (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: uhci_hcd
+00:1d.2 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #3 (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: uhci_hcd
+00:1d.3 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #4 (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: uhci_hcd
+00:1d.7 USB Controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB2 EHCI Controller (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: ehci_hcd
 00:1e.0 PCI bridge: Intel Corporation 82801 Mobile PCI Bridge (rev d4)
-00:1e.2 Multimedia audio controller: Intel Corporation
-        82801FB/FBM/FR/FW/FRW (ICH6 Family) AC'97 Audio Controller
-       (rev 04)
-00:1e.3 Modem: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family)
-        AC'97 Modem Controller (rev 04)
-00:1f.0 ISA bridge: Intel Corporation 82801FBM (ICH6M) LPC Interface
-        Bridge (rev 04)
-00:1f.1 IDE interface: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 
-        Family) IDE Controller (rev 04)
-00:1f.2 SATA controller: Intel Corporation 82801FBM (ICH6M) SATA
-        Controller (rev 04)
-00:1f.3 SMBus: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) 
-        SMBus Controller (rev 04)
-06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL-8169 
-        Gigabit Ethernet (rev 10)
-06:04.0 Network controller: Intel Corporation PRO/Wireless 2200BG
-        Network Connection (rev 05)
-06:09.0 CardBus bridge: Texas Instruments PCIxx21/x515 Cardbus
-        Controller
-06:09.2 FireWire (IEEE 1394): Texas Instruments OHCI Compliant IEEE 1394
-        Host Controller
-06:09.3 Mass storage controller: Texas Instruments PCIxx21 Integrated
-        FlashMedia Controller
-06:09.4 SD Host controller: Texas Instruments
-        PCI6411/6421/6611/6621/7411/7421/7611/7621 Secure Digital Controller</programlisting>
+00:1e.2 Multimedia audio controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) AC'97 Audio Controller (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: Intel ICH
+00:1e.3 Modem: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) AC'97 Modem Controller (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+00:1f.0 ISA bridge: Intel Corporation 82801FBM (ICH6M) LPC Interface Bridge (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+00:1f.1 IDE interface: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) IDE Controller (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+00:1f.2 SATA controller: Intel Corporation 82801FBM (ICH6M) SATA Controller (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: ahci
+00:1f.3 SMBus: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) SMBus Controller (rev 04)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL-8169 Gigabit Ethernet (rev 10)
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: r8169
+06:04.0 Network controller: Intel Corporation PRO/Wireless 2200BG [Calexico2] Network Connection (rev 05)
+        Subsystem: Intel Corporation Device 2702
+        Kernel driver in use: ipw2200
+        Kernel modules: ipw2200
+06:09.0 CardBus bridge: Texas Instruments PCIxx21/x515 Cardbus Controller
+        Subsystem: Fujitsu Technology Solutions Device 107d
+06:09.2 FireWire (IEEE 1394): Texas Instruments OHCI Compliant IEEE 1394 Host Controller
+        Subsystem: Fujitsu Technology Solutions Device 107d
+06:09.3 Mass storage controller: Texas Instruments PCIxx21 Integrated FlashMedia Controller
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: tifm_7xx1
+        Kernel modules: tifm_7xx1
+06:09.4 SD Host controller: Texas Instruments PCI6411/6421/6611/6621/7411/7421/7611/7621 Secure Digital Controller
+        Subsystem: Fujitsu Technology Solutions Device 107d
+        Kernel driver in use: sdhci-pci
+        Kernel modules: sdhci-pci</programlisting>
 
         <para>This gives all the information you might need to know about your
         PCI devices. For instance, to find out what graphical controller you
         have (video card), look for the "VGA compatible controller"
         entry.</para>
+
+        <para>The kernel driver/module information offered in the output is
+        only available if the mentioned driver is in fact used on the system.
+        When you are installing a Linux system from another Linux environment,
+        chances are that this is indeed already the case.</para>
       </section>
 
       <section>
@@ -841,7 +862,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
               <para>Disable bootmem code</para>
 
               <para>This optimizes some complex initial memory allocation
-              fragments within the Linux kernel. </para>
+              fragments within the Linux kernel.</para>
             </listitem>
 
             <listitem>
@@ -913,8 +934,8 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
               <para>MCE allows the processor to notify the kernel when
               problems are detected (like overheating); based on its severity,
-              the Linux kernel can report the issue or take immediate action.
-              </para>
+              the Linux kernel can report the issue or take immediate
+              action.</para>
             </listitem>
 
             <listitem>
