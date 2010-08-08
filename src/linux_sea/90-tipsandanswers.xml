@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Tips and Answers to Questions</title>
+
+  <section>
+    <title>What is Linux?</title>
+
+    <orderedlist>
+      <listitem>
+        <para>You can find information about various Linux distributions at
+        <ulink url="http://www.distrowatch.com">DistroWatch</ulink>. Also,
+        <ulink url="http://en.wikipedia.org">Wikipedia</ulink> has a <ulink
+        url="http://en.wikipedia.org/wiki/List_of_linux_distributions">List of
+        Linux Distributions</ulink>. However, you will most likely have to
+        look at the homepage of each distribution to learn how they perform in
+        the fields you find important.</para>
+      </listitem>
+
+      <listitem>
+        <para>A small list of CPU architectures is:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>For the embedded market, popular architectures are MIPS and
+            ARM</para>
+          </listitem>
+
+          <listitem>
+            <para>For the desktop market, Intel x86 and related architectures
+            (IA-32, x86-64, AMD64) have almost monopolized the market. POWER
+            (formerly known as PowerPC and IBM POWER) has been used on desktop
+            environments (most notably by Apple)</para>
+          </listitem>
+
+          <listitem>
+            <para>For the server market, Sun SPARC and HP PA-RISC are trying
+            to keep their market share, although systems with Intel's Itanium
+            (IA64) are forcefully growing in the server market.</para>
+          </listitem>
+
+          <listitem>
+            <para>For the more specialized market, IBM's Cell architecture
+            (which is actually a mix of POWER4 and
+            <glossterm>RISC</glossterm>-based coprocessors) is a nice example
+            (used in Sony's Playstation 3)</para>
+          </listitem>
+
+          <listitem>
+            <para>In the mainframe market (which is almost fully delivered by
+            IBM) the z/Architecture is well known through its use by the IBM
+            zSeries mainframes</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>New kernel releases are made by the kernel maintainers of that
+        particular tree (for instance, the vanilla tree is managed by Linus
+        Torvalds). At this point, the source code for the new kernel is made
+        available tagged with the specific version number (the source code for
+        the Linux kernel is always available, you can even obtain the at that
+        time development version which might be changed the second after
+        you've downloaded it - look for the linux-2.6 git repository).</para>
+
+        <para>Distributions then obtain the source code and start building
+        kernels based on generic kernel configurations, often with additional
+        software code patches applied. The result of the distribution builds
+        are packages containing the Linux kernel together with many kernel
+        modules (dynamically loadable parts of the Linux kernel) which are
+        then tested by many users. This testing is possible because the Linux
+        kernel will not (by default) load a Linux kernel module that isn't
+        needed or where the system doesn't have the necessary hardware.</para>
+
+        <para>When a kernel built has been thoroughly tested, the kernel build
+        is distributed to the distribution users (or, in case of sourcecode
+        based distributions, the patched source code is distributed).</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>How does Free Software affect Linux?</title>
+
+    <orderedlist>
+      <listitem>
+        <para>You can find information about GPL at the <ulink
+        url="http://www.gnu.org/copyleft/gpl.html">GNU site</ulink>.</para>
+      </listitem>
+
+      <listitem>
+        <para>A few examples of operating systems that use the ELF format or
+        where the format is heavily based upon ELF are those used by the Sony
+        PlayStation Portable/2/3 and the Nintendo Wii.</para>
+      </listitem>
+
+      <listitem>
+        <para>Many software projects still support older versions of the
+        software. For instance, at the time of writing, the KDE project still
+        supports version 3.5 even though 4.2 is being developed and 4.1 is
+        considered the latest stable one. All efforts put in the 3.5 series
+        are bugfixes and security fixes but no new features.</para>
+
+        <para>Distributions that want to offer a stable software stack tend to
+        use these software versions rather than the latest available ones.
+        Although their users lag behind on features, their software stack is
+        quite stable.</para>
+      </listitem>
+
+      <listitem>
+        <para>Upgrading a distribution means upgrading the packages offered by
+        the distribution. Now, these packages are not heavily depending upon
+        each other: you can upgrade one package without requiring to upgrade
+        all other packages (although perhaps dependencies need to be pulled
+        in). And because this software is freely available on the Internet,
+        there is no license cost attached to it.</para>
+
+        <para>Whenever a distribution makes a new release, it is often
+        accompanied with a list of "new" supported software. Users of that
+        distribution can then just start upgrading their packages to the "new"
+        software without requiring any reinstall.</para>
+
+        <para>Distributions do make new releases often, but this is mostly
+        because the installation media itself (installation CD and tools) are
+        updated to fit the latest hardware available.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>The Role of the Community</title>
+
+    <orderedlist>
+      <listitem>
+        <para>The Gentoo Linux distribution offers the discussion mediums
+        discussed in this chapter:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>The <ulink url="http://forums.gentoo.org">Gentoo Linux
+            Forums</ulink> are heavily used (over a thousand postings a day)
+            web forums</para>
+          </listitem>
+
+          <listitem>
+            <para>Gentoo hosts its mailinglists itself - you can find an
+            overview of the available mailinglists <ulink
+            url="http://www.gentoo.org/main/en/lists.xml">online</ulink></para>
+          </listitem>
+
+          <listitem>
+            <para>On the Freenode IRC network, Gentoo has a few official chat
+            channels, including the generic #gentoo channel</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>There is also the (unofficial) <ulink
+        url="http://www.gentoo-wiki.com">Gentoo Wiki</ulink>, but this is not
+        officially supported nor hosted by the Gentoo Linux distribution (it
+        really is a community site).</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Running Linux</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Organising your home directory should not be taken lightly. By
+        using a good structure you can easily backup important documents,
+        access files you often need and still keep a good overview.</para>
+
+        <para>For instance, to create the directories as given in the
+        exercise:</para>
+
+        <programlisting>$ <command>mkdir doc pics work tmp</command></programlisting>
+
+        <para>With this simple structure, the most important directory would
+        be doc (personal documents) and perhaps work. You most likely do not
+        want to back up the temporary files (tmp) and the pics folder might
+        require a lower frequency on backups.</para>
+
+        <para>Of course, you should attempt to use a structure you find the
+        most appealing.</para>
+      </listitem>
+
+      <listitem>
+        <para>The <command>tar</command> command allows you to group multiple
+        files (and directories) into a single file (archive). It is originally
+        created to allow administrators to back up multiple files on tape (tar
+        is most likely short for "tape archive"). A tar file is not compressed
+        - it is merely a concatenation of the files with additional metadata
+        about the files (such as filename, permissions, ...).</para>
+
+        <para>This is where the
+        <command>gzip</command>/<command>bzip2</command> compression comes in:
+        these compression methods do not support archiving, so one should
+        first archive the files together in a tar file and then compress the
+        tarfile using <command>gzip</command> or <command>bzip2</command>.
+        <command>gzip</command> is the most used as it offers a fast
+        compression algorithm. <command>bzip2</command> is popular too because
+        it has a higher compression rate.</para>
+
+        <para>The combination result of <command>tar</command> with
+        <command>gzip</command>/<command>bzip2</command> creates what is
+        called a <emphasis>tarball</emphasis><indexterm>
+            <primary>tarball</primary>
+          </indexterm>. These usually have the extension .tar.gz (or .tgz) for
+        gzip, or .tar.bz2 for bzip2.</para>
+
+        <para>The fourth compression is provided by the
+        <command>compress</command> command. Just like
+        <command>gzip</command>/<command>bzip2</command> it compresses a
+        single file; its extension is .Z (so a tarball would yield .tar.Z as
+        an extension). <command>compress</command> is the oldest method of
+        these four (<command>compress</command>, <command>zip</command>,
+        <command>gzip</command>, <command>bzip2</command>) and supported on
+        all Unix and Unix-alike operating systems.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink
+        url="http://www.cgsecurity.org/wiki/PhotoRec">Photorec</ulink> is a
+        software tool that allows you to recover removed files from a file
+        system. In Gentoo, you can install this tool through
+        <package>app-admin/testdisk</package>.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>The Linux File System</title>
+
+    <orderedlist>
+      <listitem>
+        <para>The command to recursively change a mode can be found in the
+        manual page of chmod:</para>
+
+        <programlisting>$ <command>man chmod</command></programlisting>
+
+        <para>In effect, the command could be:</para>
+
+        <programlisting>$ <command>chmod -R o-r tmp/test</command></programlisting>
+
+        <para>All underlying directories (<filename>test/to</filename>, ...)
+        will be changed as well.</para>
+      </listitem>
+
+      <listitem>
+        <para>The <filename>/tmp</filename> directory is world-writeable, but
+        has a specific flag set: the sticky bit. Check out the manual page of
+        chmod to find out why a possible solution to this question would
+        be:</para>
+
+        <programlisting>$ <command>chmod 1777 tmp</command></programlisting>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Working with Processes</title>
+
+    <orderedlist>
+      <listitem>
+        <para>There are quite a few possibilities to obtain a process
+        id.</para>
+
+        <para>The first one is to obtain an entire listing of all processes
+        and <command>grep</command> out those you are interested in. The
+        output's second column then displays the process' ID.</para>
+
+        <programlisting>$ <command>ps -ef | grep firefox</command></programlisting>
+
+        <para>Another method is to use the pidof command. The disadvantage is
+        that you need to know the process name exactly (not just a part of
+        it):</para>
+
+        <programlisting>$ <command>pidof firefox-bin</command></programlisting>
+
+        <para>If you have /proc available, you can search through all
+        /proc/&lt;pid&gt; directories and read out the cmdline file:</para>
+
+        <programlisting>$ <command>grep firefox /proc/*/cmdline</command></programlisting>
+      </listitem>
+
+      <listitem>
+        <para>Although many possibilities exist, two are quite popular:
+        <command>nohup</command> and <command>screen</command>.</para>
+
+        <para>With <command>nohup</command>, you tell the operating system
+        that the process should not be terminated (nohup = no hang-up) when
+        the session is terminated. However, a process launched with nohup can
+        only be put in the foreground as long as the session is running. The
+        moment the session is terminated, the process still remains active but
+        you wont be able to put it back to the foreground. You should see
+        nohup as a means to make a process behave like a daemon.</para>
+
+        <para>With <command>screen</command>, you can run processes in named
+        sessions, detach sessions from your terminal and reattach those
+        sessions in a different terminal. The <command>screen</command>
+        command is quite popular in command-line environments because you have
+        such flexibility at hand (you can launch a command-line chat on a
+        server inside irssi, detach from your terminal, go elsewhere, log on
+        to the server and reattach to the screen session to continue the
+        chat).</para>
+      </listitem>
+
+      <listitem>
+        <para>A defunct process is a process that cannot communicate with its
+        parent or child for who knows what reason. Unlike zombie processes
+        (who don't really exist), defunct processes still exist but are
+        just... well... defunct. To remove defunct processes from the system,
+        see if they have running child processes and terminate those first (it
+        happens that a defunct process can recover when the child processes
+        are terminated). If not, terminate its parent process (just like you
+        would for a zombie process).</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Configuring a Linux Kernel</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Many bootloaders support what is called "chaining". When a
+        bootloader is asked to boot an operating system through another
+        bootloader, it hands over the CPU control to the other bootloader.
+        This however requires that the other bootloaders' code is still
+        available (for instance on a certain partition).</para>
+
+        <para>Chaining is frequently used to boot Windows from a Linux boot
+        loader (LILO or GRUB); the Windows boot loaders' code is available on
+        the Windows' partition (so doesn't need to reside in the MBR).</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Hardware Support</title>
+
+    <para>No exercises for this chapter yet.</para>
+  </section>
+
+  <section>
+    <title>Software Management</title>
+
+    <orderedlist>
+      <listitem>
+        <para>One alternative package manager is called <ulink
+        url="http://paludis.pioto.org/">Paludis</ulink>, another is <ulink
+        url="http://www.pkgcore.org/">pkgcore</ulink>.</para>
+      </listitem>
+
+      <listitem>
+        <para>Various locations for USE flag definitions are the system
+        profiles (pointed to by <filename>/etc/make.profile</filename>),
+        <filename>make.conf</filename>,
+        <filename>/etc/portage/package.use</filename> and the environment
+        variable set in the user's session.</para>
+      </listitem>
+
+      <listitem>
+        <para>Gentoo's architecture testing program is brought to life to
+        assist package developers with the time-consuming testing of packages
+        for every supported architecture. Each architecture has its own AT
+        (arch tester) staff. For more information, Google for "gentoo arch
+        testers".</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>User Management</title>
+
+    <orderedlist>
+      <listitem>
+        <para>By default, <command>sudo</command> logs to the system logger,
+        so you'll find it either on the messages console or general messages
+        file. You can alter this behavior in <command>sudo</command> if you
+        wish (see <command>man sudoers</command>).</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Network Management</title>
+
+    <para>No exercises for this chapter yet.</para>
+  </section>
+
+  <section>
+    <title>Service Management</title>
+
+    <para>No exercises for this chapter yet.</para>
+  </section>
+
+  <section>
+    <title>Storage Management</title>
+
+    <para>No exercises for this chapter yet.</para>
+  </section>
+
+  <section>
+    <title>System Management</title>
+
+    <para>No exercises for this chapter yet.</para>
+  </section>
+
+  <section>
+    <title>Introducing the Graphical Environment</title>
+
+    <para>No exercises for this chapter yet.</para>
+  </section>
+
+  <section>
+    <title>Installing Gentoo Linux</title>
+
+    <para>No exercises for this chapter yet.</para>
+  </section>
+</chapter>
