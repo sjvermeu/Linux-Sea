@@ -176,8 +176,11 @@
     a Gentoo Linux variant which offers freshly-built Gentoo Linux stable
     stages using Gentoo's official stable branch. You can use a funtoo stage
     instead of a Gentoo official stage if you want. After all, they both
-    contain roughly the same material. Both (official and funtoo) stages are
-    fine as they are both quite recent.</para>
+    contain roughly the same material. However, some caution is still in place:
+    the Funtoo stages continuously evolve and diverge into their own set so I
+    recommend to take a quick stab at the Funtoo installation instructions
+    nevertheless. At the time of writing, the instructions are quite
+    resembling.</para>
 
     <para>Next, go back a few directories until you can select snapshots.
     Enter this directory and download the latest
