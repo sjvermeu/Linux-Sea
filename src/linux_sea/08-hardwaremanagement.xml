@@ -331,11 +331,11 @@
       <para>If your printer is locally attached, you need to start the CUPS
       service:</para>
 
-      <programlisting>~# <command>/etc/init.d/cups start</command></programlisting>
+      <programlisting>~# <command>/etc/init.d/cupsd start</command></programlisting>
 
       <para>Also, make sure it is started upon every (re)boot:</para>
 
-      <programlisting>~# <command>rc-update add cups default</command></programlisting>
+      <programlisting>~# <command>rc-update add cupsd default</command></programlisting>
     </section>
 
     <section>
