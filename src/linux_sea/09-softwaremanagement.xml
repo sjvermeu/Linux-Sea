@@ -429,7 +429,8 @@ SYNC="rsync://rsync.us.gentoo.org/gentoo-portage"</programlisting>
       <para>With an up to date Portage tree, you will also receive Gentoo's
       latest announcements for its users. Gentoo's news system allows Gentoo
       to inform its users about changes that the end user should read before
-      blindly starting with an upgrade.</para>
+      blindly starting with an upgrade. This is also why I mention it before
+      we start doing anything with software.</para>
 
       <para>When a news item is added, you will be notified of this at the end
       of a Portage update session:</para>
@@ -465,145 +466,205 @@ News items:
     </section>
 
     <section>
-      <title>Updating your System</title>
+      <title>Querying for Software</title>
 
-      <para>Before installing new software, let us first look at how to update
-      your system.</para>
+      <para>With tens of thousands of software titles at your fingertips, how
+      do you know what software is available (or what software you currently
+      have installed)? Or what about querying information about software
+      itself (like installed or installable files, dependencies ...), even
+      when that software is or is not installed on your system? There are
+      quite a few tools that help you with this...</para>
 
       <section>
-        <title>Updating All Installed Packages</title>
+        <title>Searching for Software Using emerge</title>
 
-        <para>If you want to update all installed packages to their latest,
-        stable version, first update your Portage tree as mentioned before.
-        Then, run the following command to see what packages will be updated,
-        installed or removed<indexterm>
+        <para>With emerge, you can query for software using
+        <command>--search</command><indexterm>
             <primary>emerge</primary>
 
-            <secondary>world</secondary>
-          </indexterm>:</para>
+            <secondary>search</secondary>
+          </indexterm> or <command>--searchdesc</command>.</para>
 
-        <programlisting># <command>emerge --update --deep --new world --pretend</command></programlisting>
+        <para>With <command>emerge --search</command>, you can look for
+        software whose title (or part of) matches the selection you
+        passed:</para>
 
-        <para>The options you pass on to emerge are:</para>
+        <programlisting>$ <command>emerge --search acroread</command>
+Searching...  
+[ Results for search key : acroread ]
+[ Applications found : 2 ]
+ 
+*  app-text/acroread
+      Latest version available: 8.1.2
+      Latest version installed: [ Not Installed ]
+      Size of files: 747,975 kB
+      Homepage:      http://www.adobe.com/products/acrobat/
+      Description:   Adobe's PDF reader
+      License:       Adobe
+
+*  media-fonts/acroread-asianfonts
+      Latest version available: 7.0.8
+      Latest version installed: [ Not Installed ]
+      Size of files: 40,076 kB
+      Homepage:      http://www.adobe.com/products/acrobat/acrrasianfontpack.html
+      Description:   Asian font packs for Adobe Acrobat Reader
+      License:       Adobe</programlisting>
+
+        <para>In the resulting output, you can find the (in this case two)
+        packages that match the given selection, together with</para>
 
         <itemizedlist>
           <listitem>
-            <para><command>--update</command> (or <command>-u</command>),
-            asking emerge to update software,</para>
+            <para>the latest, installable version</para>
           </listitem>
 
           <listitem>
-            <para><command>--deep</command> (or <command>-D</command>), asking
-            emerge to select not only the software selected, but also all of
-            its dependencies,</para>
+            <para>the currently installed version (if applicable)</para>
           </listitem>
 
           <listitem>
-            <para><command>--new</command> (or <command>-N</command>), asking
-            emerge to update software when new dynamic switches are used (USE
-            flags),</para>
+            <para>the size of the files that the installation needs to
+            download</para>
           </listitem>
 
           <listitem>
-            <para>world, asking emerge to select all software that the user
-            has installed, and</para>
+            <para>the homepage of the application (where you can usually find
+            more information about the tool)</para>
           </listitem>
 
           <listitem>
-            <para><command>--pretend</command> (or <command>-p</command>),
-            asking emerge to display what it would install, update or
-            remove</para>
+            <para>the description of the software</para>
+          </listitem>
+
+          <listitem>
+            <para>the software license</para>
           </listitem>
         </itemizedlist>
 
-        <para>To really perform the update, use the same command without
-        <command>--pretend</command>. The next example does this using the
-        single letter arguments:</para>
+        <para>If you use <command>--searchdesc</command>, the search also
+        tries to match the description fields:</para>
 
-        <programlisting># <command>emerge -uDN world</command></programlisting>
+        <programlisting>$ <command>emerge --searchdesc acrobat</command>
+Searching...  
+[ Results for search key : acrobat ]
+[ Applications found : 3 ]
+ 
+*  app-admin/watchfolder
+      Latest version available: 0.3.1.1
+      Latest version installed: [ Not Installed ]
+      Size of files: 93 kB
+      Homepage:      http://freshmeat.net/projects/watchd/
+      Description:   Watches directories and processes files, similar to the watchfolder option of Acrobat Distiller.
+      License:       GPL-2
 
-        <para>Now, if you're tired of continuously running a command with
-        <command>--pretend</command> only to remove the
-        <command>--pretend</command> after verifying the output, use
-        <command>--ask</command><indexterm>
-            <primary>emerge</primary>
+*  app-text/fdftk
+      Latest version available: 6.0-r1
+      Latest version installed: [ Not Installed ]
+      Size of files: 5,591 kB
+      Homepage:      http://www.adobe.com/devnet/acrobat/fdftoolkit.html
+      Description:   Acrobat FDF Toolkit
+      License:       Adobe
 
-            <secondary>ask</secondary>
-          </indexterm> instead. This will have the <command>emerge</command>
-        command show you what it would do, but instead of finishing, it will
-        ask you if you want to proceed with the updates or not.</para>
+*  media-fonts/acroread-asianfonts
+      Latest version available: 7.0.8
+      Latest version installed: [ Not Installed ]
+      Size of files: 40,076 kB
+      Homepage:      http://www.adobe.com/products/acrobat/acrrasianfontpack.html
+      Description:   Asian font packs for Adobe Acrobat Reader
+      License:       Adobe</programlisting>
 
-        <para>From now onwards, I will be using the <command>--ask</command>
-        argument where appropriate.</para>
+        <para>Running <command>--searchdesc</command> takes quite some time. I
+        advise you to use an indexing tool to speed up searches...</para>
       </section>
 
       <section>
-        <title>Updating All User-Installed Packages</title>
+        <title>Searching for Software Using eix</title>
 
-        <para>If you don't want to upgrade every single package on your
-        system, but only the packages you've selected to install previously,
-        don't use the <command>--deep</command> argument. User installed
-        packages are the packages you've asked to install excluding the
-        dependencies that were pulled in to satisfy the application
-        requirements.</para>
+        <para>The eix<indexterm>
+            <primary>eix</primary>
+          </indexterm> tool (not available by default, you will need to
+        install it: <command>emerge --ask eix</command>) indexes the
+        searchable application information to allow you to quickly search
+        through the portage tree.</para>
 
-        <programlisting># <command>emerge --update --new --ask world</command></programlisting>
+        <para>Once installed, you will need to run
+        <command>update-eix</command><indexterm>
+            <primary>update-eix</primary>
+          </indexterm> (which will index all the information) after every
+        <command>emerge --sync</command> (as this pulls in new packages which
+        you want to index). You can also use
+        <command>eix-sync</command><indexterm>
+            <primary>eix-sync</primary>
+          </indexterm> which will synchronise portage first and then update
+        its indexing tables immediately afterwards.</para>
+
+        <para>Once the index is built, you can quickly search through the
+        Portage tree using eix. I frequently use <command>-HAS</command>
+        (<command>--homepage --category-name --description</command>) as this
+        also matches the homepage URI next to the application name and
+        description:</para>
+
+        <programlisting>$ <command>eix -HAS acrobat</command></programlisting>
       </section>
 
       <section>
-        <title>Do not Stop Installing after Build Failures</title>
+        <title>Searching Installed Software Based on File(s)</title>
 
-        <para>By default, Gentoo Portage stops the installation / upgrade
-        process when one package fails to build properly. Although this
-        definitely needs some attention, you can ask Gentoo Portage to resume
-        building the other packages first. At the end of the final build
-        process, you will be greeted with a small report informing you which
-        packages have failed and why.</para>
+        <para>The <command>qfile</command><indexterm>
+            <primary>qfile</primary>
+          </indexterm> tool (part of
+        <package>app-portage/portage-utils</package>) allows you to find out
+        which package has delivered a certain file. That can be interesting if
+        someone is asking you which package provided that particular file at
+        your system.</para>
 
-        <para>To ask Portage to keep going after failure, use
-        <command>--keep-going</command><indexterm>
-            <primary>emerge</primary>
-
-            <secondary>keep-going</secondary>
-          </indexterm>:</para>
-
-        <programlisting># <command>emerge -uDN --keep-going world</command></programlisting>
+        <programlisting>$ <command>qfile /usr/bin/qfile</command>
+app-portage/portage-utils (/usr/bin/qfile)</programlisting>
       </section>
 
       <section>
-        <title>Pulling Security Fixes</title>
+        <title>Searching Software (Installed or Not) Based on File(s)</title>
 
-        <para>Gentoo also supports building the software affected by security
-        issues<indexterm>
-            <primary>security updates</primary>
-          </indexterm> alone. In this case, none of your unaffected software
-        is upgraded (unless requires as a dependency of a security upgrade).
-        Gentoo provides GLSA<indexterm>
-            <primary>GLSA</primary>
-          </indexterm> (<emphasis>Gentoo Linux Security
-        Advisory</emphasis><indexterm>
-            <primary>Gentoo Linux Security Advisory</primary>
-          </indexterm>) documents to inform its users about possible sucurity
-        issues (except kernel issues). These GLSA documents are parsed by the
-        <command>glsa-check</command><indexterm>
-            <primary>glsa-check</primary>
-          </indexterm> command which can apply the necessary fixes.</para>
+        <para>A Gentoo community project, called <ulink
+        url="http://www.portagefilelist.de">PortageFileList</ulink>, is
+        attempting to store information about files provided by all packages.
+        This isn't as simple as it sounds, since the files in a package depend
+        heavily on the user his system: USE flags, other installed packages
+        etc. The project asks users to run one of their tools to upload the
+        local file information (file + package + USE flags) to the server.
+        Other users can then use the tool <command>e-file</command><indexterm>
+            <primary>e-file</primary>
+          </indexterm> (part of <package>app-portage/pfl</package>) to query
+        for packages.</para>
 
-        <para>To verify if your system is affected by one or more security
-        advisories, first update your Portage tree and then run
-        <command>glsa-check --test all</command>:</para>
+        <para>The command supports SQL-like wildcards. For instance,
+        <filename>%bin/xdm</filename> matches
+        <filename>/usr/sbin/xdm</filename> and
+        <filename>/bin/xdm</filename>.</para>
 
-        <programlisting># <command>glsa-check --test all</command>
-This system is affected by the following GLSAs:
-200711-10</programlisting>
+        <programlisting>$ <command>e-file '%bin/xdm'</command>
+ * x11-apps/xdm
+      Available versions: 1.1.8 1.1.9-r0
+      Description:        X.Org xdm application
+      Matched files:      /usr/bin/xdm;</programlisting>
 
-        <para>In the example, one security advisory matches my system. I can
-        obtain more information about the advisory using <command>glsa-check
-        --dump 200711-10</command>. To fix the system, I can run glsa-check's
-        --fix:</para>
+        <para>Okay, this one was an easy guess as well ;-)</para>
+      </section>
 
-        <programlisting># <command>glsa-check --fix all</command>
-<remark>(This will iterate over all GLSAs, including the matching one(s))</remark></programlisting>
+      <section>
+        <title>Listing Installed Files</title>
+
+        <para>To list which files are provided by a package, you can use
+        <command>qlist</command><indexterm>
+            <primary>qlist</primary>
+          </indexterm> (also part of
+        <package>app-portage/portage-utils</package>):</para>
+
+        <programlisting>$ <command>qlist portage-utils</command>
+/usr/bin/q
+/usr/bin/qatom
+...
+/usr/share/doc/portage-utils-0.2.1/qsync</programlisting>
       </section>
     </section>
 
@@ -611,15 +672,25 @@ This system is affected by the following GLSAs:
       <title>Installing New Software</title>
 
       <para>You've seen already that emerge is Gentoo's main tool to work with
-      Portage. You also use this tool to install or remove software and,
-      likewise, use <command>--pretend</command> to have emerge show you what
-      it would do. You can even add the <command>--verbose</command>
-      flag<indexterm>
+      Portage and that it can be used to search for software. The same tool is
+      used to install or remove software. To help users install software, it
+      has a few options that allow you to make better informed decisions on
+      which software to install (and what the effects will be). For instance,
+      the <command>--pretend</command> option lets emerge show you what it
+      would do, without actually modifying anything. You can even add the
+      <command>--verbose</command> flag<indexterm>
           <primary>emerge</primary>
 
           <secondary>verbose</secondary>
         </indexterm> so that emerge tells you what additional settings the
-      package supports.</para>
+      package supports. It also supports the
+      <command>--ask</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>ask</secondary>
+        </indexterm> option which first behaves like
+      <command>--pretend</command>, and then asks for confirmation to continue
+      or not.</para>
 
       <para>For instance, to install Adobe's Acrobat Reader on your
       system:</para>
@@ -734,187 +805,211 @@ mozilla-firefox: 1 hour, 15 minutes, 22 seconds for 27 merges</programlisting>
     </section>
 
     <section>
-      <title>Issues While Installing</title>
+      <title>Updating your System</title>
 
-      <para>During installation, a few issues can occur which need
-      intervention. Those are:<itemizedlist>
-          <listitem>
-            <para>Blocked packages (a package that needs installing is blocked
-            by an already installed package or another package on the
-            installation list)</para>
-          </listitem>
-
-          <listitem>
-            <para>Masked packages (a package is not available for your profile
-            or environment)</para>
-          </listitem>
-
-          <listitem>
-            <para>Build failures (which we will discuss in the next
-            section)</para>
-          </listitem>
-
-          <listitem>
-            <para>Other issues (catch-all)</para>
-          </listitem>
-        </itemizedlist></para>
+      <para>When you are booted inside a Gentoo Linux system, many packages
+      will already be installed. It is wise to regularly update your system by
+      pulling in the latest updates, bugfixes and security fixes.</para>
 
       <section>
-        <title>Blocked Packages</title>
+        <title>Updating All Installed Packages</title>
 
-        <para>Sometimes a package offers a functionality that another package
-        also offers and where the two packages cannot coexist with each other.
-        When this occurs, you get the following two error:</para>
+        <para>If you want to update all installed packages to their latest,
+        stable version, first update your Portage tree as mentioned before.
+        Then, run the following command to see what packages will be updated,
+        installed or removed<indexterm>
+            <primary>emerge</primary>
 
-        <programlisting>[blocks B     ] mail-mta/ssmtp (is blocking mail-mta/postfix-2.2.2-r1)</programlisting>
+            <secondary>world</secondary>
+          </indexterm>:</para>
 
-        <para>In this example, the postfix package is on the installation
-        list, but cannot coexist with ssmtp (which is already installed). As a
-        result, the installation fails.</para>
+        <programlisting># <command>emerge --update --deep --new world --pretend</command></programlisting>
 
-        <para>To resolve this, the easiest approach is to unmerge (remove) the
-        ssmtp package from the system and retry.</para>
-      </section>
-
-      <section>
-        <title>Masked Packages</title>
-
-        <para>A package can fail to install if it is masked. A mask on a
-        package means that the package is in a state that it shouldn't be
-        installed on your system. Package states are described further in this
-        chapter. Package masks are one of the more common causes of
-        installation failures. This is either because</para>
+        <para>The options you pass on to emerge are:</para>
 
         <itemizedlist>
           <listitem>
-            <para>the end user was instructed through a document or another
-            user to unmask one package, causing a possible failure on the
-            dependency integrity</para>
+            <para><command>--update</command> (or <command>-u</command>),
+            asking emerge to update software,</para>
           </listitem>
 
           <listitem>
-            <para>a developer wrongfully made a package available which has
-            dependencies on packages that aren't available in this particular
-            state</para>
+            <para><command>--deep</command> (or <command>-D</command>), asking
+            emerge to select not only the software selected, but also all of
+            its dependencies,</para>
           </listitem>
 
           <listitem>
-            <para>the package just doesn't fit the profile that the users
-            system requires</para>
+            <para><command>--new</command> (or <command>-N</command>), asking
+            emerge to update software when new dynamic switches are used (USE
+            flags),</para>
+          </listitem>
+
+          <listitem>
+            <para>world, asking emerge to select all software that the user
+            has installed, and</para>
+          </listitem>
+
+          <listitem>
+            <para><command>--pretend</command> (or <command>-p</command>),
+            asking emerge to display what it would install, update or
+            remove</para>
           </listitem>
         </itemizedlist>
 
-        <para>If you have a masked package, read "Package States" and, if
-        necessary, "Unmasking Packages" further down this chapter.</para>
+        <para>To really perform the update, use the same command without
+        <command>--pretend</command>. The next example does this using the
+        single letter arguments:</para>
+
+        <programlisting># <command>emerge -uDN world</command></programlisting>
+
+        <para>Now, if you're tired of continuously running a command with
+        <command>--pretend</command> only to remove the
+        <command>--pretend</command> after verifying the output, use
+        <command>--ask</command> instead as we discussed before.</para>
+
+        <para>From now onwards, I will be using the <command>--ask</command>
+        argument where appropriate.</para>
       </section>
 
       <section>
-        <title>Verification of download results in failure</title>
+        <title>Updating All User-Installed Packages</title>
 
-        <para>When Gentoo Portage attempts to install software, it will verify
-        the downloaded files with the checksums and file sizes that the Gentoo
-        developer has recorded when he added the software package to the
-        Portage tree. When the downloaded file and the checksum/file size
-        doesn't match, an error is shown:</para>
+        <para>If you don't want to upgrade every single package on your
+        system, but only the packages you've selected to install previously,
+        don't use the <command>--deep</command> argument. User installed
+        packages are the packages you've asked to install excluding the
+        dependencies that were pulled in to satisfy the application
+        requirements. The end result is that only a small amount of updates is
+        installed. However, this doesn't mean that you will quickly have
+        outdated dependencies - every time an update is pulled in, this update
+        might instruct Portage that it can only work with a higher version of
+        a particular dependency, causing Portage to update that dependency as
+        well.</para>
 
-        <programlisting>('Filesize does not match recorded size', 97003L, 952)
-!!! Fetched file: genpatches-2.6.33-1.base.tar.bz2 VERIFY FAILED!
-!!! Reason: Filesize does not match recorded size
-!!! Got: 97003
-!!! Expected: 952
-...
-&gt;&gt;&gt; Failed to emerge sys-kernel/gentoo-sources-2.6.33, Log file:
-
-&gt;&gt;&gt; '/var/tmp/portage/sys-kernel/gentoo-sources-2.6.33/temp/build.log'</programlisting>
-
-        <para>In the above example, the file size as recorded by the developer
-        (952 bytes) is different from the file size of the downloaded file
-        (97003 bytes). As a result, Gentoo Portage refuses to install the
-        software as it might be corrupted, contain malicious code, etc.</para>
-
-        <para>Most of the time this occurs when the developer has made a
-        mistake. In this case, the problem will most likely be reported to
-        <ulink url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>
-        and quickly resolved. Try synchronising the Portage tree after a few
-        hours and retry.</para>
-
-        <para>If it isn't, check if the problem has been reported or not. You
-        can also try synchronising the Portage tree from a different Gentoo
-        mirror (change the value of the <parameter>SYNC</parameter> variable
-        in <filename>/etc/make.conf</filename>) as it might be possible that
-        the rsync server you are synchronising with is corrupt.</para>
+        <programlisting># <command>emerge --update --new --ask world</command></programlisting>
       </section>
 
       <section>
-        <title>Kernel configuration mismatch</title>
+        <title>Do not Stop Installing after Build Failures</title>
 
-        <para>Some packages require certain kernel configurations. To ensure
-        you don't install the packages without running a kernel with the right
-        configurations, these packages verify your kernel configuration
-        settings. If they find a mismatch, they will report it and abort the
-        installation:</para>
+        <para>By default, Gentoo Portage stops the installation / upgrade
+        process when one package fails to build properly. Although this
+        definitely needs some attention, you can ask Gentoo Portage to resume
+        building the other packages first. At the end of the final build
+        process, you will be greeted with a small report informing you which
+        packages have failed and why.</para>
 
-        <programlisting>&gt;&gt;&gt; Emerging (1 of 1) net-wireless/broadcom-sta-5.60.48.36
-...
- * Determining the location of the kernel source code
- * Found kernel source directory:
- *     /usr/src/linux
- * Found kernel object directory:
- *     /lib/modules/2.6.33-rc8/build
- * Found sources for kernel version:
- *     2.6.33-rc8
- * Checking for suitable kernel configuration options...
- *   CONFIG_WIRELESS_EXT:    is not set when it should be.
- *   CONFIG_WEXT_PRIV:    is not set when it should be.
- * Please check to make sure these options are set correctly.:
- *   Incorrect kernel configuration options</programlisting>
+        <para>To ask Portage to keep going after failure, use
+        <command>--keep-going</command><indexterm>
+            <primary>emerge</primary>
 
-        <para>When such an error occurs, you will need to reconfigure your
-        kernel to contain the appropriate configuration parameters (quick
-        hint: during the kernel configuration process, search for the settings
-        using the / help search system).</para>
+            <secondary>keep-going</secondary>
+          </indexterm>:</para>
+
+        <programlisting># <command>emerge -uDN --keep-going world</command></programlisting>
       </section>
 
       <section>
-        <title>Other Issues</title>
+        <title>Pulling Security Fixes</title>
 
-        <para>A few other issues can come up:</para>
+        <para>Gentoo also supports building the software affected by security
+        issues<indexterm>
+            <primary>security updates</primary>
+          </indexterm> alone. In this case, none of your unaffected software
+        is upgraded (unless requires as a dependency of a security upgrade).
+        Gentoo provides GLSA<indexterm>
+            <primary>GLSA</primary>
+          </indexterm> (<emphasis>Gentoo Linux Security
+        Advisory</emphasis><indexterm>
+            <primary>Gentoo Linux Security Advisory</primary>
+          </indexterm>) documents to inform its users about possible sucurity
+        issues (except kernel issues). These GLSA documents are parsed by the
+        <command>glsa-check</command><indexterm>
+            <primary>glsa-check</primary>
+          </indexterm> command which can apply the necessary fixes.</para>
 
-        <itemizedlist>
-          <listitem>
-            <para>When a package depends on another package which isn't
-            available, you will get a warning "<emphasis>there are no ebuilds
-            to satisfy &lt;dependency&gt;</emphasis>". This shouldn't occur as
-            this means an ebuild has a missing dependency or dependency which
-            isn't available for you. If it does occur, please file a bug at
-            <ulink
-            url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>.</para>
-          </listitem>
+        <para>To verify if your system is affected by one or more security
+        advisories, first update your Portage tree and then run
+        <command>glsa-check --test all</command>:</para>
 
-          <listitem>
-            <para>When two packages exist with the same name (but different
-            category), you will get a warning that the name is ambiguous. In
-            this case, Portage will ask you to specify the full name (category
-            + packagename) and give you a list of candidates.</para>
-          </listitem>
+        <programlisting># <command>glsa-check --test all</command>
+This system is affected by the following GLSAs:
+200711-10</programlisting>
 
-          <listitem>
-            <para>Required sourcecode for the given package cannot be
-            downloaded. When this occurs, you get an error as such:</para>
+        <para>In the example, one security advisory matches my system. I can
+        obtain more information about the advisory using <command>glsa-check
+        --dump 200711-10</command>. To fix the system, I can run glsa-check's
+        --fix:</para>
 
-            <programlisting>!!! Fetch failed for sys-libs/ncurses-5.4-r5, continuing...
-(...)
-!!! Some fetch errors were encountered.  Please see above for details.</programlisting>
-
-            <para>If your network connection is up and running, it is possible
-            that the mirror where Portage wants to download the source code
-            from is temporarily down. You can try again later or search for a
-            different mirror (see the Gentoo Handbook for more
-            information).</para>
-          </listitem>
-        </itemizedlist>
+        <programlisting># <command>glsa-check --fix all</command>
+<remark>(This will iterate over all GLSAs, including the matching one(s))</remark></programlisting>
       </section>
     </section>
+
+    <section>
+      <title>Uninstalling Software</title>
+
+      <para>Now suppose you've found some software installed on your system
+      that you want to remove. With <command>emerge
+      --unmerge</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>unmerge</secondary>
+        </indexterm> (<command>-C</command> in short) you can remove installed
+      software from your system.</para>
+
+      <programlisting># <command>emerge --unmerge acroread --ask</command></programlisting>
+
+      <para>However, if this software is a dependency of an installed software
+      title, your next system update will pull the software back in. Even
+      worse, software that depends on it that is still being used / running
+      might even stop functioning properly or crash. A safer way of persuing
+      the desinstallation of a package is by asking Portage not to consider
+      the package as your "main" requirement using the
+      <command>--deselect</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>deselect</secondary>
+        </indexterm> option:</para>
+
+      <programlisting># <command>emerge --deselect acroread</command></programlisting>
+
+      <para>This will not remove the package by itself. To actually remove it,
+      run <command>emerge --depclean</command><indexterm>
+          <primary>emerge</primary>
+
+          <secondary>depclean</secondary>
+        </indexterm>. The <command>depclean</command> instruction asks Portage
+      to look for package that are installed but are not required anymore
+      (meaning: you haven't installed it yourself explicitly or the package is
+      no dependency of another package):</para>
+
+      <programlisting># <command>emerge --depclean --ask</command></programlisting>
+
+      <para>With this command, Portage will remove packages that are not in
+      use. In other words, if no other package depends upon acroread, it will
+      remove acroread as you explicitly told Portage that you don't want to
+      consider it anymore. However, if some package still depends upon
+      acroread, Portage will let acroread remain on your system (until the
+      package that depends on acroread is removed or deselected as
+      well).</para>
+
+      <warning>
+        <para>Always first verify depclean's output before resuming. Never run
+        depclean if your system isn't fully up to date.</para>
+      </warning>
+    </section>
+  </section>
+
+  <section>
+    <title>Advanced Software Management</title>
+
+    <para>Of course, Gentoo allows for much more advanced software management
+    aspects than described before. If you search the available documentation,
+    you'll quickly notice that Gentoo Portage supports the notion of stable
+    versus "unstable" packages (the so-called ~arch states), supports
+    third-party repositories and more.</para>
 
     <section>
       <title>Package States</title>
@@ -1491,6 +1586,315 @@ package.mask
     </section>
 
     <section>
+      <title>Switching System Profiles</title>
+
+      <para>Gentoo Linux uses profiles to define defaults for your system
+      environment. You should have gotten a first glance at profiles while
+      installing Gentoo (if you didn't, that's okay). As a quick recap:
+      profiles are a set of predefined default values made by the Gentoo
+      project to destinguish between particular uses of the distribution.
+      Whereas other distributions ask you to select a particular type of
+      deployment (say desktop or server) in the beginning of, or during the
+      initial installation, Gentoo allows you to switch profiles whenever you
+      like.</para>
+
+      <para>The profile a system uses is defined by the
+      <filename>/etc/make.profile</filename><indexterm>
+          <primary>make.profile</primary>
+        </indexterm> symbolic link:</para>
+
+      <programlisting># <command>ls -l /etc/make.profile</command>
+lrwxrwxrwx 1 root root 57 Dec 2007 make.profile -&gt; 
+  /usr/portage/profiles/default-linux/x86/20O7.0/desktop</programlisting>
+
+      <para>A Gentoo profile defines, amongst other things:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>what USE flags are activated by default</para>
+        </listitem>
+
+        <listitem>
+          <para>what applications get installed by default when you select a
+          virtual<footnote>
+              <para>A virtual is a placeholder for an application. For
+              instance, Gentoo offers several Java runtimes; they all
+              implement the virtual/jre. A Gentoo profiles marks a specific
+              package as default for such virtual.</para>
+            </footnote></para>
+        </listitem>
+
+        <listitem>
+          <para>what packages are not available for the profile (for instance,
+          a uclibc profile doesn't support glibc) or should have a certain
+          version (for instance, glibc higher than or equal to 2.4).</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Users can easily switch between profiles. A useful tool for this
+      is eselect:</para>
+
+      <programlisting># <command>eselect profile list</command>
+Available profile symlink targets:
+  [1]   default-linux/x86/2006.1
+  [2]   default-linux/x86/2006.1/desktop
+  [3]   default-linux/x86/2007.0
+  [4]   default-linux/x86/2007.0/desktop *
+  [5]   hardened/x86/2.6
+  [6]   selinux/2007.0/x86
+  [7]   selinux/2007.0/x86/hardened
+  [8]   default/linux/x86/2008.0
+  [9]   default/linux/x86/2008.0/desktop
+  [10]  default/linux/x86/2008.0/developer
+  [11]  default/linux/x86/2008.0/server
+  [12]  hardened/linux/x86
+
+# <command>eselect profile set 8</command></programlisting>
+
+      <para>As you can see from the profile names, one profile can be a child
+      of another; if this is the case (for instance, profile number 9 from the
+      above list has profile number 8 as parent), the profile inherits the
+      settings from its parent and may extend or override particular settings
+      itself.</para>
+    </section>
+
+    <section>
+      <title>Using Third Party Software Repositories</title>
+
+      <para>Next to Gentoo's main Portage tree, you can also select third
+      party software repositories. Those are trees of developers, users and
+      organisations that offer ebuilds for you to use which aren't available
+      in Gentoo's Portage tree (yet).</para>
+
+      <para>A great tool for managing third party software repositories is
+      <command>layman</command><indexterm>
+          <primary>layman</primary>
+        </indexterm>. Install <command>layman</command> and then see what
+      repositories layman supports:</para>
+
+      <programlisting># <command>layman -L</command>
+(...)
+xen          [Subversion] (source: http://overlays....)</programlisting>
+
+      <para>The output of this layman command shows you what third party
+      repositories are configured for use with layman. If you want to select
+      one, add it to your system:</para>
+
+      <programlisting># <command>layman -a xen</command></programlisting>
+
+      <para>Likewise, to stop using a repository, remove it with
+      <command>layman -d</command>. If you want to see what repositories you
+      are currently using, use <command>layman -l</command>.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>When Things Go Wrong</title>
+
+    <para>Of course, both Gentoo and the upstream projects Gentoo's success
+    relies on is still ran and developed by humans, and humans are programmed
+    to make occasional mistakes, so things can go wrong. If you have
+    installation or build failures, the following sections might help you
+    troubleshoot it.</para>
+
+    <section>
+      <title>Portage Refuses To Install A Package</title>
+
+      <para>During package installation analysis, a few issues can occur which
+      need intervention. Those are:<itemizedlist>
+          <listitem>
+            <para>Blocked packages (a package that needs to be installed is
+            blocked by an already installed package or another package on the
+            installation list)</para>
+          </listitem>
+
+          <listitem>
+            <para>Masked packages (a package is not available for your profile
+            or environment)</para>
+          </listitem>
+
+          <listitem>
+            <para>Download failures (one or more files needed to install the
+            software aren't available or might be corrupt)</para>
+          </listitem>
+
+          <listitem>
+            <para>Kernel configuration mismatch (the package requires
+            particular kernel configuration directives to be set)</para>
+          </listitem>
+
+          <listitem>
+            <para>Other issues (catch-all)</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <section>
+        <title>Blocked Packages</title>
+
+        <para>Sometimes a package offers a functionality that another package
+        also offers and where the two packages cannot coexist with each other.
+        When this occurs, you get the following two error:</para>
+
+        <programlisting>[blocks B     ] mail-mta/ssmtp (is blocking mail-mta/postfix-2.2.2-r1)</programlisting>
+
+        <para>In this example, the postfix package is on the installation
+        list, but cannot coexist with ssmtp (which is already installed). As a
+        result, the installation fails.</para>
+
+        <para>To resolve this, the easiest approach is to unmerge (remove) the
+        ssmtp package from the system and retry.</para>
+      </section>
+
+      <section>
+        <title>Masked Packages</title>
+
+        <para>A package can fail to install if it is masked. A mask on a
+        package means that the package is in a state that it shouldn't be
+        installed on your system. Package states are described earlier in this
+        chapter. Package masks are one of the more common causes of
+        installation failures. There can be plenty of reasons why a package
+        mask is interfering with an installation cycle:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>the end user was instructed through a document or another
+            user to unmask one package, causing a possible failure on the
+            dependency integrity</para>
+          </listitem>
+
+          <listitem>
+            <para>a developer wrongfully made a package available which has
+            dependencies on packages that aren't available in this particular
+            state</para>
+          </listitem>
+
+          <listitem>
+            <para>the package just doesn't fit the profile that the users
+            system requires</para>
+          </listitem>
+
+          <listitem>
+            <para>the end user was instructed to install a particular package
+            which isn't available for general consumption yet</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>If you have a masked package, read "Package States" carefully
+        and, if necessary, "Unmasking Packages" earlier in this
+        chapter.</para>
+      </section>
+
+      <section>
+        <title>Verification of download results in failure</title>
+
+        <para>When Gentoo Portage attempts to install software, it will verify
+        the downloaded files with the checksums and file sizes that the Gentoo
+        developer has recorded when he added the software package to the
+        Portage tree. When the downloaded file and the checksum/file size
+        doesn't match, an error is shown:</para>
+
+        <programlisting>('Filesize does not match recorded size', 97003L, 952)
+!!! Fetched file: genpatches-2.6.33-1.base.tar.bz2 VERIFY FAILED!
+!!! Reason: Filesize does not match recorded size
+!!! Got: 97003
+!!! Expected: 952
+...
+&gt;&gt;&gt; Failed to emerge sys-kernel/gentoo-sources-2.6.33, Log file:
+
+&gt;&gt;&gt; '/var/tmp/portage/sys-kernel/gentoo-sources-2.6.33/temp/build.log'</programlisting>
+
+        <para>In the above example, the file size as recorded by the developer
+        (952 bytes) is different from the file size of the downloaded file
+        (97003 bytes). As a result, Gentoo Portage refuses to install the
+        software as it might be corrupted, contain malicious code, etc.</para>
+
+        <para>Most of the time this occurs when the developer has made a
+        honest mistake (he uploaded a file, found an issue, resolved it in
+        Portage but forgot to upload the modified file). In this case, the
+        problem will most likely be reported to <ulink
+        url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink> and
+        quickly resolved. Try synchronising the Portage tree after a few hours
+        and retry.</para>
+
+        <para>If it isn't, check if the problem has been reported or not. You
+        can also try synchronising the Portage tree from a different Gentoo
+        mirror (change the value of the <parameter>SYNC</parameter> variable
+        in <filename>/etc/make.conf</filename>) as it might be possible that
+        the rsync server you are synchronising with is corrupt.</para>
+
+        <para>Another occurring problem can be that a particular file is
+        missing:</para>
+
+        <programlisting>!!! Fetch failed for sys-libs/ncurses-5.4-r5, continuing...
+(...)
+!!! Some fetch errors were encountered.  Please see above for details.</programlisting>
+
+        <para>If your network connection is up and running, it is possible
+        that the mirror where Portage wants to download the source code from
+        is temporarily down. You can try again later or search for a different
+        mirror (see the Gentoo Handbook for more information). If the file is
+        really missing (i.e. other mirrors are also not hosting it), check
+        <ulink url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>
+        to see if this is a known issue.</para>
+      </section>
+
+      <section>
+        <title>Kernel configuration mismatch</title>
+
+        <para>Some packages require certain kernel configurations. To ensure
+        you don't install the packages without running a kernel with the right
+        configurations, these packages verify your kernel configuration
+        settings. If they find a mismatch, they will report it and abort the
+        installation:</para>
+
+        <programlisting>&gt;&gt;&gt; Emerging (1 of 1) net-wireless/broadcom-sta-5.60.48.36
+...
+ * Determining the location of the kernel source code
+ * Found kernel source directory:
+ *     /usr/src/linux
+ * Found kernel object directory:
+ *     /lib/modules/2.6.33-rc8/build
+ * Found sources for kernel version:
+ *     2.6.33-rc8
+ * Checking for suitable kernel configuration options...
+ *   CONFIG_WIRELESS_EXT:    is not set when it should be.
+ *   CONFIG_WEXT_PRIV:    is not set when it should be.
+ * Please check to make sure these options are set correctly.:
+ *   Incorrect kernel configuration options</programlisting>
+
+        <para>When such an error occurs, you will need to reconfigure your
+        kernel to contain the appropriate configuration parameters (quick
+        hint: during the kernel configuration process, search for the settings
+        using the / help search system).</para>
+      </section>
+
+      <section>
+        <title>Other Issues</title>
+
+        <para>A few other issues can come up:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>When a package depends on another package which isn't
+            available, you will get a warning "<emphasis>there are no ebuilds
+            to satisfy &lt;dependency&gt;</emphasis>". This shouldn't occur as
+            this means an ebuild has a missing dependency or dependency which
+            isn't available for you. If it does occur, please file a bug at
+            <ulink
+            url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>.</para>
+          </listitem>
+
+          <listitem>
+            <para>When two packages exist with the same name (but different
+            category), you will get a warning that the name is ambiguous. In
+            this case, Portage will ask you to specify the full name (category
+            + packagename) and give you a list of candidates.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
       <title>Resolving Build Failures</title>
 
       <para>One of the most troublesome issue is when a package fails to build
@@ -1564,355 +1968,6 @@ Error 2</programlisting>
         Bugzilla</ulink> to see if it is a known error (usually is) and if a
         fix is already available (or a workaround).</para>
       </section>
-    </section>
-
-    <section>
-      <title>Querying for Software</title>
-
-      <para>With all these possible software titles at your fingertips, how do
-      you know what software is available (or what software you currently have
-      installed)? Or what about querying information about software itself
-      (like installed or installable files, dependencies ...), even when that
-      software is or is not installed on your system? There are quite a few
-      tools that help you with this...</para>
-
-      <section>
-        <title>Searching for Software Using emerge</title>
-
-        <para>With emerge, you can query for software using
-        <command>--search</command><indexterm>
-            <primary>emerge</primary>
-
-            <secondary>search</secondary>
-          </indexterm> or <command>--searchdesc</command>.</para>
-
-        <para>With <command>emerge --search</command>, you can look for
-        software whose title (or part of) matches the selection you
-        passed:</para>
-
-        <programlisting>$ <command>emerge --search acroread</command>
-Searching...  
-[ Results for search key : acroread ]
-[ Applications found : 2 ]
- 
-*  app-text/acroread
-      Latest version available: 8.1.2
-      Latest version installed: [ Not Installed ]
-      Size of files: 747,975 kB
-      Homepage:      http://www.adobe.com/products/acrobat/
-      Description:   Adobe's PDF reader
-      License:       Adobe
-
-*  media-fonts/acroread-asianfonts
-      Latest version available: 7.0.8
-      Latest version installed: [ Not Installed ]
-      Size of files: 40,076 kB
-      Homepage:      http://www.adobe.com/products/acrobat/acrrasianfontpack.html
-      Description:   Asian font packs for Adobe Acrobat Reader
-      License:       Adobe</programlisting>
-
-        <para>In the resulting output, you can find the (in this case two)
-        packages that match the given selection, together with</para>
-
-        <itemizedlist>
-          <listitem>
-            <para>the latest, installable version</para>
-          </listitem>
-
-          <listitem>
-            <para>the currently installed version (if applicable)</para>
-          </listitem>
-
-          <listitem>
-            <para>the size of the files that the installation needs to
-            download</para>
-          </listitem>
-
-          <listitem>
-            <para>the homepage of the application (where you can usually find
-            more information about the tool)</para>
-          </listitem>
-
-          <listitem>
-            <para>the description of the software</para>
-          </listitem>
-
-          <listitem>
-            <para>the software license</para>
-          </listitem>
-        </itemizedlist>
-
-        <para>If you use <command>--searchdesc</command>, the search also
-        tries to match the description fields:</para>
-
-        <programlisting>$ <command>emerge --searchdesc acrobat</command>
-Searching...  
-[ Results for search key : acrobat ]
-[ Applications found : 3 ]
- 
-*  app-admin/watchfolder
-      Latest version available: 0.3.1.1
-      Latest version installed: [ Not Installed ]
-      Size of files: 93 kB
-      Homepage:      http://freshmeat.net/projects/watchd/
-      Description:   Watches directories and processes files, similar to the watchfolder option of Acrobat Distiller.
-      License:       GPL-2
-
-*  app-text/fdftk
-      Latest version available: 6.0-r1
-      Latest version installed: [ Not Installed ]
-      Size of files: 5,591 kB
-      Homepage:      http://www.adobe.com/devnet/acrobat/fdftoolkit.html
-      Description:   Acrobat FDF Toolkit
-      License:       Adobe
-
-*  media-fonts/acroread-asianfonts
-      Latest version available: 7.0.8
-      Latest version installed: [ Not Installed ]
-      Size of files: 40,076 kB
-      Homepage:      http://www.adobe.com/products/acrobat/acrrasianfontpack.html
-      Description:   Asian font packs for Adobe Acrobat Reader
-      License:       Adobe</programlisting>
-
-        <para>Running <command>--searchdesc</command> takes quite some time. I
-        advise you to use an indexing tool to speed up searches...</para>
-      </section>
-
-      <section>
-        <title>Searching for Software Using eix</title>
-
-        <para>The eix<indexterm>
-            <primary>eix</primary>
-          </indexterm> tool (not available by default, you will need to
-        install it: <command>emerge --ask eix</command>) indexes the
-        searchable application information to allow you to quickly search
-        through the portage tree.</para>
-
-        <para>Once installed, you will need to run
-        <command>update-eix</command><indexterm>
-            <primary>update-eix</primary>
-          </indexterm> (which will index all the information) after every
-        <command>emerge --sync</command> (as this pulls in new packages which
-        you want to index). You can also use
-        <command>eix-sync</command><indexterm>
-            <primary>eix-sync</primary>
-          </indexterm> which will synchronise portage first and then update
-        its indexing tables immediately afterwards.</para>
-
-        <para>Once the index is built, you can quickly search through the
-        Portage tree using eix. I frequently use <command>-HAS</command>
-        (<command>--homepage --category-name --description</command>) as this
-        also matches the homepage URI next to the application name and
-        description:</para>
-
-        <programlisting>$ <command>eix -HAS acrobat</command></programlisting>
-      </section>
-
-      <section>
-        <title>Searching Installed Software Based on File(s)</title>
-
-        <para>The <command>qfile</command><indexterm>
-            <primary>qfile</primary>
-          </indexterm> tool (part of
-        <package>app-portage/portage-utils</package>) allows you to find out
-        which package has delivered a certain file. That can be interesting if
-        someone is asking you which package provided that particular file at
-        your system.</para>
-
-        <programlisting>$ <command>qfile /usr/bin/qfile</command>
-app-portage/portage-utils (/usr/bin/qfile)</programlisting>
-      </section>
-
-      <section>
-        <title>Searching Uninstalled Software Based on File(s)</title>
-
-        <para>A Gentoo community project, called <ulink
-        url="http://www.portagefilelist.de">PortageFileList</ulink>, is
-        attempting to store information about files provided by all packages.
-        This isn't as simple as it sounds, since the files in a package depend
-        heavily on the user his system: USE flags, other installed packages
-        etc. The project asks users to run one of their tools to upload the
-        local file information (file + package + USE flags) to the server.
-        Other users can then use the tool <command>e-file</command><indexterm>
-            <primary>e-file</primary>
-          </indexterm> (part of <package>app-portage/pfl</package>) to query
-        for packages.</para>
-
-        <para>The command supports SQL-like wildcards. For instance,
-        <filename>%bin/xdm</filename> matches
-        <filename>/usr/sbin/xdm</filename> and
-        <filename>/bin/xdm</filename>.</para>
-
-        <programlisting>$ <command>e-file '%bin/xdm'</command>
- * x11-apps/xdm
-      Available versions: 1.1.8 1.1.9-r0
-      Description:        X.Org xdm application
-      Matched files:      /usr/bin/xdm;</programlisting>
-
-        <para>Okay, this one was an easy guess as well ;-)</para>
-      </section>
-
-      <section>
-        <title>Listing Installed Files</title>
-
-        <para>To list which files are provided by a package, you can use
-        <command>qlist</command><indexterm>
-            <primary>qlist</primary>
-          </indexterm> (also part of
-        <package>app-portage/portage-utils</package>):</para>
-
-        <programlisting>$ <command>qlist portage-utils</command>
-/usr/bin/q
-/usr/bin/qatom
-...
-/usr/share/doc/portage-utils-0.2.1/qsync</programlisting>
-      </section>
-    </section>
-
-    <section>
-      <title>Uninstalling Software</title>
-
-      <para>Now suppose you've found some software installed on your system
-      that you want to remove. With <command>emerge
-      --unmerge</command><indexterm>
-          <primary>emerge</primary>
-
-          <secondary>unmerge</secondary>
-        </indexterm> (<command>-C</command> in short) you can remove installed
-      software from your system.</para>
-
-      <programlisting># <command>emerge --unmerge acroread --ask</command></programlisting>
-
-      <para>However, if this software is a dependency of an installed software
-      title, your next system update will pull the software back in. Even
-      worse, software that depends on it that is still being used / running
-      might even stop functioning properly or crash. A safer way of persuing
-      the desinstallation of a package is by asking Portage not to consider
-      the package as your "main" requirement using the
-      <command>--deselect</command><indexterm>
-          <primary>emerge</primary>
-
-          <secondary>deselect</secondary>
-        </indexterm> option:</para>
-
-      <programlisting># <command>emerge --deselect acroread</command></programlisting>
-
-      <para>This will not remove the package by itself. To actually remove it,
-      run <command>emerge --depclean</command><indexterm>
-          <primary>emerge</primary>
-
-          <secondary>depclean</secondary>
-        </indexterm>. The <command>depclean</command> instruction asks Portage
-      to look for package that are installed but are not required anymore
-      (meaning: you haven't installed it yourself explicitly or the package is
-      no dependency of another package):</para>
-
-      <programlisting># <command>emerge --depclean --ask</command></programlisting>
-
-      <para>With this command, Portage will remove packages that are not in
-      use. In other words, if no other package depends upon acroread, it will
-      remove acroread as you explicitly told Portage that you don't want to
-      consider it anymore. However, if some package still depends upon
-      acroread, Portage will let acroread remain on your system (until the
-      package that depends on acroread is removed or deselected as
-      well).</para>
-
-      <warning>
-        <para>Always first verify depclean's output before resuming. Never run
-        depclean if your system isn't fully up to date.</para>
-      </warning>
-    </section>
-
-    <section>
-      <title>Switching System Profiles</title>
-
-      <para>Gentoo Linux uses profiles to define defaults for your system
-      environment. The profile a system uses is defined by the
-      <filename>/etc/make.profile</filename><indexterm>
-          <primary>make.profile</primary>
-        </indexterm> symbolic link:</para>
-
-      <programlisting># <command>ls -l /etc/make.profile</command>
-lrwxrwxrwx 1 root root 57 Dec 2007 make.profile -&gt; 
-  /usr/portage/profiles/default-linux/x86/20O7.0/desktop</programlisting>
-
-      <para>A Gentoo profile defines, amongst other things:</para>
-
-      <itemizedlist>
-        <listitem>
-          <para>what USE flags are activated by default</para>
-        </listitem>
-
-        <listitem>
-          <para>what applications are default installed when you select a
-          virtual<footnote>
-              <para>A virtual is a placeholder for an application. For
-              instance, Gentoo offers several Java runtimes; they all
-              implement the virtual/jre. A Gentoo profiles marks a specific
-              package as default for such virtual.</para>
-            </footnote></para>
-        </listitem>
-
-        <listitem>
-          <para>what packages are not available for the profile (for instance,
-          a uclibc profile doesn't support glibc) or should have a certain
-          version (for instance, glibc higher than or equal to 2.4).</para>
-        </listitem>
-      </itemizedlist>
-
-      <para>Users can easily switch between profiles. A handy tool for this is
-      eselect:</para>
-
-      <programlisting># <command>eselect profile list</command>
-Available profile symlink targets:
-  [1]   default-linux/x86/2006.1
-  [2]   default-linux/x86/2006.1/desktop
-  [3]   default-linux/x86/2007.0
-  [4]   default-linux/x86/2007.0/desktop *
-  [5]   hardened/x86/2.6
-  [6]   selinux/2007.0/x86
-  [7]   selinux/2007.0/x86/hardened
-  [8]   default/linux/x86/2008.0
-  [9]   default/linux/x86/2008.0/desktop
-  [10]  default/linux/x86/2008.0/developer
-  [11]  default/linux/x86/2008.0/server
-  [12]  hardened/linux/x86
-
-# <command>eselect profile set 8</command></programlisting>
-
-      <para>As you can see from the profile names, one profile can be a child
-      of another; if this is the case (for instance, profile number 9 from the
-      above list has profile number 8 as parent), the profile inherits the
-      settings from its parent.</para>
-    </section>
-
-    <section>
-      <title>Using Third Party Software Repositories</title>
-
-      <para>Next to Gentoo's main Portage tree, you can also select third
-      party software repositories. Those are trees of developers, users and
-      organisations that offer ebuilds for you to use which aren't available
-      in Gentoo's Portage tree (yet).</para>
-
-      <para>A great tool for managing third party software repositories is
-      <command>layman</command><indexterm>
-          <primary>layman</primary>
-        </indexterm>. Install <command>layman</command> and then see what
-      repositories layman supports:</para>
-
-      <programlisting># <command>layman -L</command>
-(...)
-xen          [Subversion] (source: http://overlays....)</programlisting>
-
-      <para>The output of this layman command shows you what third party
-      repositories are configured for use with layman. If you want to select
-      one, add it to your system:</para>
-
-      <programlisting># <command>layman -a xen</command></programlisting>
-
-      <para>Likewise, to stop using a repository, remove it with
-      <command>layman -d</command>. If you want to see what repositories you
-      are currently using, use <command>layman -l</command>.</para>
     </section>
   </section>
 

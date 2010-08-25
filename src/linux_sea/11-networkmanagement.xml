@@ -290,42 +290,104 @@ dns_servers_eth0=( "10.2.3.4 10.2.3.5" )</programlisting>
   <section>
     <title>Wireless Network Configuration</title>
 
-    <para>For wireless configurations, a few technologies on Linux exist. One
-    of them uses the native support for wireless cards, the other one is a
-    software component called wpa_supplicant which also supports wireless
-    cards through the device drivers provided for the Windows operating
-    system.</para>
+    <para>Wireless networking support is actively being developed on Linux.
+    Sadly, it is also one of the regions where a fully automated
+    out-of-the-box solution isn't available yet. Linux is lacking this because
+    the card providers themselves do not follow standards or refuse to help
+    out with (free software) driver development. As a result, wireless card
+    support (drivers) can be triggered through free software drivers (if
+    you're lucky), propriatary Linux drivers (if you're somewhat lucky) or
+    propriatary Windows drivers (if you're not lucky, but will still be able
+    to get your card working). A fourth state can be that you just ... won't
+    ... get ... it ... working. Yet.</para>
+
+    <para>However, development of wireless card support is - like I said -
+    actively being developed. Chances are that an unsupported card (or
+    chipset) now will be supported within 6 months.</para>
+
+    <para>Generally speaking though, 80% to 90% of the wireless cards/chipsets
+    are supported under Linux.</para>
 
     <section>
       <title>Supporting your Network Card</title>
 
       <para>If you have configured your kernel with support for your wireless
-      network card, you should be able to find the interface in the iwconfig
-      output:</para>
+      network card, you should be able to find the interface in the
+      <command>ifconfig -a</command> output:</para>
 
-      <programlisting># <command>iwconfig</command>
-lo     no wireless extensions.
+      <programlisting># <command>ifconfig -a</command>
+eth0      Link encap:Ethernet  HWaddr c8:0a:a9:42:9d:76  
+          inet addr:192.168.20.2  Bcast:192.168.20.255  Mask:255.255.255.0
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+          Interrupt:30 Base address:0x6000 
 
-eth0   no wireless extensions.
+eth1      Link encap:Ethernet  HWaddr f0:7b:cb:0f:5a:3b  
+          inet addr:192.168.1.3  Bcast:192.168.1.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:510358 errors:0 dropped:0 overruns:0 frame:13407
+          TX packets:300167 errors:5 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:732540912 (698.6 MiB)  TX bytes:26679459 (25.4 MiB)
+          Interrupt:16 
+</programlisting>
 
-eth1   IEEE 802.11g  ESSID:"aaa"  
-       Mode:Managed  Frequency:2.417 GHz Access Point: 00:11:0A:2A:73:03   
-       Bit Rate:54 Mb/s   Tx-Power=20 dBm   Sensitivity=8/0  
-       Retry limit:7   RTS thr:off   Fragment thr:off
-       Encryption key:off
-       Power Management:off
-       Link Quality=84/100  Signal level=-49 dBm  Noise level=-89 dBm
-       Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
-       Tx excessive retries:1  Invalid misc:2   Missed beacon:7</programlisting>
-
-      <para>In the above example, the eth0 interface (which is a regular
-      Ethernet interface) is detected but seen as not having a wireless
-      capability. The eth1 interface has wireless capabilities, and its
-      current wireless settings are displayed.</para>
+      <para>In the above example, two Ethernet interfaces are detected: eth0
+      (which in my case is a regular Ethernet interface) and eth1 (which,
+      since I only have a single wired interface on my system, is most likely
+      the wireless card). To be absolutely sure about the wireless
+      capabilities, you'll need to install <package>wireless-tools</package>
+      or <package>iw</package>.</para>
     </section>
 
     <section>
-      <title>Using Wireless Extensions Support</title>
+      <title>Using Wireless Extensions Support (wireless-tools)</title>
+
+      <para>The (old, yet still working) wireless extensions support toolset
+      is slowly being deprecated in favour of the new toolset. However, you
+      might be required to use the old set as the switch requires the wireless
+      card drivers to be rewritten as well. Especially with propriatary
+      drivers this might take a while, so support for wireless-tools is not
+      going to go away soon.</para>
+
+      <para>The information in this section will help you configure a wireless
+      card/network using command-line tools. For a more user-friendly
+      approach, please read <link
+      linkend="userfriendlynetworktools">User-friendly Network Configuration
+      Tools</link>.</para>
+
+      <section>
+        <title>Verifying Wireless Capabilities</title>
+
+        <para>To verify if a particular Ethernet interface really has wireless
+        capabilities, first install <package>wireless-tools</package> and then
+        run <command>iwconfig</command><indexterm>
+            <primary>iwconfig</primary>
+          </indexterm>:</para>
+
+        <programlisting># <command>emerge wireless-tools</command>
+# <command>iwconfig</command>
+lo        no wireless extensions.
+
+eth0      no wireless extensions.
+
+eth1      IEEE 802.11bgn  ESSID:"1de_verdiep"  Nickname:""
+          Mode:Managed  Frequency:2.462 GHz  Access Point: 02:26:5A:4B:E4:6A   
+          Bit Rate=54 Mb/s   Tx-Power:24 dBm   
+          Retry min limit:7   RTS thr:off   Fragment thr:off
+          Encryption key:off
+          Power Managementmode:All packets received
+          Link Quality=5/5  Signal level=-48 dBm  Noise level=-94 dBm
+          Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
+          Tx excessive retries:32  Invalid misc:0   Missed beacon:0
+</programlisting>
+
+        <para>As I already suspected, eth1 is indeed the wireless
+        interface.</para>
+      </section>
 
       <section>
         <title>Accessing a Wireless Network</title>
@@ -333,11 +395,6 @@ eth1   IEEE 802.11g  ESSID:"aaa"
         <para>To access an existing wireless network, you need a few settings.
         Some of them can be obtained quickly, others might require information
         from your network administrator.</para>
-
-        <para>To use the Linux wireless extensions, install the necessary
-        tools:</para>
-
-        <programlisting># <command>emerge -a wireless-tools</command></programlisting>
 
         <para>Let's first start with the wireless network name, called the
         ESSID<indexterm>
@@ -394,7 +451,8 @@ eth1      Scan completed :
         interface.</para>
 
         <para>Now, Gentoo Linux allows you to configure your wireless network
-        card through <filename>/etc/conf.d/net</filename> as well.</para>
+        card through <filename><filename>/etc/conf.d/net</filename></filename>
+        as well.</para>
 
         <para>In the next example, the wireless configuration is set so that
         the two networks (aaa and USR8022) are supported where aaa is the
@@ -405,6 +463,10 @@ key_aaa="key off"
 key_USR8022="s:MyPassPhraze enc open"
 preferred_aps=( "aaa" "USR8022" )</programlisting>
 
+        <para>Once your wireless interface is connected to a wireless network,
+        you can use the IP configuration commands as shown earlier for wired
+        networks.</para>
+
         <para>Again, you'll need to add the net.eth1 service to the default
         runlevel and then fire up the net.eth1 service:</para>
 
@@ -414,7 +476,157 @@ preferred_aps=( "aaa" "USR8022" )</programlisting>
     </section>
 
     <section>
-      <title>Using wpa_supplicant</title>
+      <title>Using the New Wireless Extensions Support (iw)</title>
+
+      <para>The new wireless extensions support requires kernel drivers that
+      use the (new) nl80211 netlink interface. Almost all free software
+      wireless drivers have been ported towards this interface, so if your
+      wireless card is by default supported by the Linux kernel, you will most
+      likely want to use the iw toolset.</para>
+
+      <section>
+        <title>Verifying Wireless Capabilities</title>
+
+        <para>To verify if a particular Ethernet interface really has wireless
+        capabilities, first install iw and then run <command>iw
+        list</command><indexterm>
+            <primary>iw</primary>
+
+            <secondary>list</secondary>
+          </indexterm>:</para>
+
+        <programlisting># <command>emerge iw</command>
+# <command>iw list</command>
+lWiphy phy0
+        Band 1:
+                Frequencies:
+                        * 2412 MHz [1] (20.0 dBm)
+                        * 2417 MHz [2] (20.0 dBm)
+...
+                        * 2484 MHz [14] (20.0 dBm) (passive scanning, no IBSS)
+                Bitrates (non-HT):
+                        * 1.0 Mbps
+                        * 2.0 Mbps (short preamble supported)
+...
+                         * 54.0 Mbps
+        max # scan SSIDs: 1
+        Supported interface modes:
+                 * IBSS
+                 * managed
+
+</programlisting>
+
+        <para>Unlike wireless-tools, iw lists the device as being phy0 (so no
+        immediate relation with eth0/eth1). The relation can be found using
+        <command>iw dev</command><indexterm>
+            <primary>iw</primary>
+
+            <secondary>dev</secondary>
+          </indexterm>:</para>
+
+        <programlisting># <command>iw dev</command>
+phy#0
+        Interface eth1
+                ifindex 4
+                type managed
+</programlisting>
+      </section>
+
+      <section>
+        <title>Accessing a Wireless Network</title>
+
+        <para>To access an existing wireless network, you need a few settings.
+        Some of them can be obtained quickly, others might require information
+        from your network administrator.</para>
+
+        <para>Let's first start with the wireless network name, called the
+        ESSID<indexterm>
+            <primary>ESSID</primary>
+          </indexterm>. With <command>iw scan</command><indexterm>
+            <primary>iw</primary>
+
+            <secondary>scan</secondary>
+          </indexterm> you can obtain a list of detected wireless networks and
+        their accompanying ESSIDs:</para>
+
+        <programlisting># <command>iw dev eth1 scan</command>
+
+BSS 02:87:11:26:39:f9 (on eth1)
+        TSF: 130175283584 usec (1d, 12:09:35)
+        freq: 2432
+        beacon interval: 100
+        capability: ESS Privacy ShortSlotTime (0x0411)
+        signal: 61.00 dBm
+        last seen: 930 ms ago
+        SSID: TM2300
+        Supported rates: 1.0* 2.0* 5.5* 11.0* 6.0 9.0 12.0 18.0
+        DS Parameter set: channel 5
+        ERP: Barker_Preamble_Mode
+        Extended supported rates: 24.0 36.0 48.0 54.0
+        RSN:     * Version: 1
+                 * Group cipher: CCMP
+                 * Pairwise ciphers: CCMP
+                 * Authentication suites: PSK
+                 * Capabilities: (0x0000)
+BSS 00:1a:70:eb:ae:f4 (on eth1)
+        TSF: 606247219588 usec (7d, 00:24:07)
+        freq: 2437
+        beacon interval: 100
+        capability: ESS ShortSlotTime (0x0401)
+        signal: 72.00 dBm
+        last seen: 870 ms ago
+        SSID: linksys
+        Supported rates: 1.0* 2.0* 5.5* 11.0* 18.0 24.0 36.0 54.0
+        DS Parameter set: channel 6
+        ERP: &lt;no flags&gt;
+        Extended supported rates: 6.0 9.0 12.0 48.0</programlisting>
+
+        <para>In this case, two wireless networks are found. The first one has
+        ESSID "TM2300" and requires WPA encryption (this can be deduced from
+        the RSN information). The second network has SSID "linksys" and does
+        not require encryption.</para>
+
+        <para>To configure your card to use a particular <emphasis>non-WPA
+        encrypted</emphasis> ESSID, you can use the <command>iw
+        connect</command><indexterm>
+            <primary>iw</primary>
+
+            <secondary>connect</secondary>
+          </indexterm> command:</para>
+
+        <programlisting># <command>iw eth1 connect linksys</command></programlisting>
+
+        <para>Suppose that you need to enter a WEP encryption key as well, you
+        can add the key either in its hexadecimal form, or through the ASCII
+        representation.</para>
+
+        <programlisting># <command>iw eth1 connect myssid keys d:0:FF83D9B358C4200FE8343033</command>
+# <command>iw eth1 connect myssid keys 0:MyPrivatePassword</command></programlisting>
+
+        <para>To verify that the connection succeeded, request the link status
+        using <command>iw link</command><indexterm>
+            <primary>iw</primary>
+
+            <secondary>link</secondary>
+          </indexterm>:</para>
+
+        <programlisting># <command>iw dev eth1 link</command>
+Connected to 68:7f:74:3b:b0:01 (on eth1)
+        SSID: linksys
+        freq: 5745
+        RX: 30206 bytes (201 packets)
+        TX: 4084 bytes (23 packets)
+        signal: -31 dBm
+        tx bitrate: 300.0 MBit/s MCS 15 40Mhz short GI</programlisting>
+
+        <para>Once you have attached your wireless interface to a particular
+        network, you can use the IP configuration commands as shown earlier
+        for wired networks.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Using wpa_supplicant for WPA Encrypted Networks</title>
 
       <para>The wpa_supplicant<indexterm>
           <primary>wpa_supplicant</primary>
@@ -521,7 +733,8 @@ wpa_supplicant_wlan0="-Dwext"</programlisting>
   </section>
 
   <section>
-    <title>User-friendly Network Configuration Tools</title>
+    <title id="userfriendlynetworktools">User-friendly Network Configuration
+    Tools</title>
 
     <para>The above information should allow you to work with any possible
     Linux installation. However, the commands might look a bit tricky and,
@@ -645,9 +858,9 @@ wpa_supplicant_wlan0="-Dwext"</programlisting>
       the clients to the Internet and back:</para>
 
       <programlisting># <command>iptables -A FORWARD -i eth0 -o wlan0 -s 192.168.20.1/24 
-  -d ! 192.168.20.1/24 -j ACCEPT</command>
+  ! -d 192.168.20.1/24 -j ACCEPT</command>
 # <command>iptables -A FORWARD -o eth0 -i wlan0 -d 192.168.20.1/24 
-  -s ! 192.168.20.1/24 -j ACCEPT</command></programlisting>
+  ! -s 192.168.20.1/24 -j ACCEPT</command></programlisting>
 
       <para>More information about iptables and masquerading can be found on
       the Internet...</para>
