@@ -2106,19 +2106,21 @@ LINGUAS="en nl fr de"</programlisting>
       <para>I'll start off with my example CFLAGS (CXXFLAGS is the
       same):</para>
 
-      <programlisting>CFLAGS="-O2 -march=pentium3 -pipe"
+      <programlisting>CFLAGS="-O2 -march=native -pipe"
 CXXFLAGS="${CFLAGS}"</programlisting>
 
       <para>Let's start off with the architecture selection: march. With
-      <varname>-march=pentium3</varname>, the compiler is asked to optimize
-      code for the pentium 3 architecture. Also, because I select
-      <varname>-march=</varname>, it will only run on pentium3 (or higher). If
-      you want to optimize code for a specific x86 architecture but want to be
-      able to run the code on any x86 architecture, use
-      <varname>-mcpu=</varname> instead. Since GCC 4.2, you can also use
-      <varname>-march=native</varname>: the compiler will then select the
-      architecture of the current system (your system), saving you the trouble
-      of finding out what your architecture is.</para>
+      <varname>-march=native</varname>, the compiler is asked to optimize code
+      for the architecture of the current system (say a pentium 3
+      architecture). Also, because I select <varname>-march=</varname>, it
+      will only run on this architecture (or architectures that are backwards
+      compatible with mine). If you want to optimize code for a specific
+      architecture but want to be able to run the code on any x86
+      architecture, use <varname>-mcpu=</varname> instead. You can also select
+      a particular architecture, like "core2" or "nocona". A full list of
+      supported architectures for the current GCC (make sure you are using the
+      current one) is available <ulink
+      url="http://gcc.gnu.org/onlinedocs/gcc/i386-and-x86_002d64-Options.html">online</ulink>.</para>
 
       <para>With <varname>-O2</varname> (<emphasis>O</emphasis>ptimizations,
       not zero) I ask GCC to use a list of optimization flags (-O2 is

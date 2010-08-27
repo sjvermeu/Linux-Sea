@@ -2,6 +2,8 @@
 	- Add information on kernel module parameters
 	- Add information on autoloading modules and blacklisting modules
 	- Add blurb about "make install" in kernel installation
+	- Use -march=native as default example, add reference to online list
+	  of GCC-supported architectures
 
 ** (2010-08-26) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Reorganize sections within "Software Management"
