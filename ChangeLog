@@ -1,3 +1,8 @@
+** (2010-08-27) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Add information on kernel module parameters
+	- Add information on autoloading modules and blacklisting modules
+	- Add blurb about "make install" in kernel installation
+
 ** (2010-08-26) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Reorganize sections within "Software Management"
 	- Add information on nl80211 iw toolset
