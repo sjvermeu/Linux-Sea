@@ -105,6 +105,8 @@
   &graphicenvironment.xml;
   <!-- Part - Installing Gentoo Linux -->
   &installgentoo.xml;
+  <!-- Part - Additional services on a Linux system -->
+  &logfilemanagement.xml;
   <!-- Part - Addenda -->
   &tipsandanswers.xml;
   &glossary.xml;
