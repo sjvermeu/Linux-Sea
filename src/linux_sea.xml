@@ -18,6 +18,7 @@
 <!ENTITY graphicenvironment.xml SYSTEM "linux_sea/15-graphicenvironment.xml">
 <!ENTITY installgentoo.xml SYSTEM      "linux_sea/16-installgentoo.xml">
 <!ENTITY logfilemanagement.xml SYSTEM  "linux_sea/17-logfilemanagement.xml">
+<!ENTITY backup.xml SYSTEM             "linux_sea/18-backup.xml">
 
 <!ENTITY tipsandanswers.xml SYSTEM     "linux_sea/90-tipsandanswers.xml">
 <!ENTITY glossary.xml SYSTEM           "linux_sea/91-glossary.xml">
@@ -107,6 +108,7 @@
   &installgentoo.xml;
   <!-- Part - Additional services on a Linux system -->
   &logfilemanagement.xml;
+  &backup.xml;
   <!-- Part - Addenda -->
   &tipsandanswers.xml;
   &glossary.xml;

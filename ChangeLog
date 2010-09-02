@@ -1,5 +1,6 @@
 ** (2010-09-02) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Add chapter on logfile management
+	- Add chapter on backups
 
 ** (2010-08-27) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Add information on kernel module parameters

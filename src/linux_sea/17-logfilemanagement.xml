@@ -7,6 +7,303 @@
   <section>
     <title>Introduction</title>
 
-    <para></para>
+    <para>If the previous chapters are all read through, you'll most likely
+    have succesfully installed Gentoo Linux. However, managing your Linux
+    system is only starting. Within this chapter, we go through how the
+    various Linux services log events on your system and how you can properly
+    manage these log files.</para>
+  </section>
+
+  <section>
+    <title>System Logger</title>
+
+    <para>The system logger is a service that allows for various software
+    tools to log their events through a unified, standardized interface. For
+    locally running software, these tools can log through the
+    <filename>/dev/log</filename> socket. Services that run remotely can send
+    their events through the network. For a general understanding of logging
+    daemons, having to deal with remotely running software might bring us too
+    far.</para>
+
+    <section>
+      <title>/dev/log</title>
+
+      <para>The <filename>/dev/log</filename> socket is created by the system
+      logger (which we have very briefly discussed previously) and is made
+      writeable for everyone. That is to be expected, as there are many tools
+      that will log through this socket. Every tool that wants to log through
+      the system logger logs a single line at a time inside this socket. The
+      system logger is listening "on the other side" of the socket and will
+      process these log events.</para>
+    </section>
+
+    <section>
+      <title>Log Event Meta Information</title>
+
+      <para>You will most likely never need to write your own tool that logs
+      through the system logger, yet understanding how a log event is sent is
+      vital if you want to manage your log files properly. The reason for this
+      is because you will want to filter based on criticality and origin of
+      the events, and these are passed on as part of the log event
+      itself.</para>
+
+      <para>When a tool wants to log an event, he needs to provide two
+      additional fields: </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the facility where the event is about, and</para>
+        </listitem>
+
+        <listitem>
+          <para>the importance level of the event</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The <emphasis>facility</emphasis><indexterm>
+          <primary>facility</primary>
+
+          <secondary>syslog</secondary>
+        </indexterm> defines the type of the program that is sending out the
+      event. This allows the system logger to properly filter messages,
+      possibly sending them into different log files. Example facilities are
+      authpriv (security/authorization messages), cron (scheduling messages)
+      and kern (kernel messages). A full list of facilities can be obtained
+      through the syslog man page</para>
+
+      <programlisting>~$ <command>man 3 syslog</command></programlisting>
+
+      <para>The <emphasis>importance level</emphasis><indexterm>
+          <primary>importance level</primary>
+
+          <secondary>syslog</secondary>
+        </indexterm> defines the criticality of the event. The set of
+      supported importance levels is:</para>
+
+      <table>
+        <title>System logger importance levels</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>DEBUG</entry>
+
+              <entry>Messages used for debugging purposes</entry>
+            </row>
+
+            <row>
+              <entry>INFO</entry>
+
+              <entry>Informational messages</entry>
+            </row>
+
+            <row>
+              <entry>NOTICE</entry>
+
+              <entry>A normal, yet somewhat more important message than
+              informational</entry>
+            </row>
+
+            <row>
+              <entry>WARNING</entry>
+
+              <entry>This message needs your attention</entry>
+            </row>
+
+            <row>
+              <entry>ERROR</entry>
+
+              <entry>Something wicked has occurred and will need further
+              investigation</entry>
+            </row>
+
+            <row>
+              <entry>CRIT</entry>
+
+              <entry>A critical error has occurred, regular operations might
+              be interrupted or run in a degraded mode</entry>
+            </row>
+
+            <row>
+              <entry>ALERT</entry>
+
+              <entry>Immediate action needs to be taken</entry>
+            </row>
+
+            <row>
+              <entry>EMERG</entry>
+
+              <entry>The system is unusable (no, this has nothing to do with
+              <command>emerge</command>, Gentoo Portage' installation
+              tool)</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>Based on these two fields, log messages are then filtered by the
+      system logger into one or more log files.</para>
+    </section>
+
+    <section>
+      <title>System Logger Configuration</title>
+
+      <para>How a system logger is configured depends on the system logger you
+      use. In this book, I'll focus on the <command>syslog-ng</command>
+      logger.</para>
+
+      <para>The configuration file for syslog-ng is
+      <filename>/etc/syslog-ng/syslog-ng.conf</filename><indexterm>
+          <primary>syslog-ng.conf</primary>
+        </indexterm>. An example configuration is displayed below.</para>
+
+      <programlisting>@version: 3.0
+options {
+  stats_freq(43200);
+};
+
+source src {
+  unix-stream("/dev/log" max-connections(256));
+  internal();
+  file("/proc/kmsg");
+};
+
+destination messages { file("/var/log/messages"); };
+destination cron { file("/var/log/cron.log"); };
+destination auth { file("/var/log/auth.log"); };
+
+filter f_messages { not facility(cron, auth, authpriv); };
+filter f_cron { facility(cron); };
+filter f_auth { facility(auth, authpriv); };
+
+filter f_warnplus { level(warn, err, crit, emerg); };
+
+log { source(src); filter(f_cron); filter(f_warnplus); destination(cron); };
+log { source(src); filter(f_auth); destination(auth); };
+log { source(src); filter(f_messages); destination(messages); };</programlisting>
+
+      <para>It might be easy to read the configuration file from the bottom
+      up. </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>The log entries define where messages come from (source),
+          which filters the system logger applies (filter) and where the
+          resulting messages are stored in (destination)</para>
+        </listitem>
+
+        <listitem>
+          <para>The filter entries define what the filters actually do. For
+          instance, the filter f_warnplus only accepts events with an
+          importance level of warn or higher.</para>
+        </listitem>
+
+        <listitem>
+          <para>The destination entries define where the events are stored in
+          (the logfiles)</para>
+        </listitem>
+
+        <listitem>
+          <para>The source entry defines where the system logger gets its
+          messages from (which, in this case, is the /dev/log socket, the
+          kernel message interface kmsg and its own internal logging)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>This fairly simple example immediately shows how flexible the logs
+      can work. There are many more interesting filters you can apply, such as
+      match() to match regular expressions within the logged event and
+      program() to match log events of a particular tool.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Non-Syslog Logfiles</title>
+
+    <para>Many tools log through the system logger, but it is not a huge
+    majority. Lots and lots of tools, server software and others have their
+    own logging system. This makes it a bit more difficult to fully manage the
+    logfiles properly. However, if you know where the logfiles are, then
+    that's a start.</para>
+
+    <section>
+      <title>Xorg Logging</title>
+
+      <para>The Xorg server stores it log file at
+      <filename>/var/log/Xorg.0.log</filename>. The trailing 0 denotes that
+      this is of the current/last startup. The logfile of the start before
+      that is called <filename>Xorg.1.log</filename>, and so on. </para>
+
+      <para>Xorg uses the following notations to identify the various
+      criticality levels:</para>
+
+      <programlisting>Markers: (--) probed, (**) from config file, (==) default setting,
+   (++) from command line, (!!) notice, (II) informational,
+   (WW) warning, (EE) error, (NI) not implemented, (??) unknown.</programlisting>
+
+      <para>The Xorg server will automatically rotate the log files, by
+      default 3 times, after which it will erase the oldest logfile.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Maintaining Logfiles</title>
+
+    <para>Most tools do not offer log rotation or cleanup by default. It is
+    therefore recommended to implement some sort of log rotation for your
+    files. An interesting tool to install for this purpose is
+    <package>app-admin/logrotate</package><indexterm>
+        <primary>logrotate</primary>
+      </indexterm>. The tool is triggered by your system scheduler (cron) and
+    is best configured by creating separate configuration files for your log
+    files. </para>
+
+    <section>
+      <title>Installing Logrotate</title>
+
+      <para>First, install logrotate:</para>
+
+      <programlisting>~# <command>emerge logrotate</command></programlisting>
+
+      <para>Next, make sure that it is scheduled to be ran every day. For
+      instance, you can have a script called logrotate.cron inside
+      <filename>/etc/cron.daily</filename> with the following content (Gentoo
+      users will have this as part of the installation):</para>
+
+      <programlisting>#!/bin/sh
+
+/usr/sbin/logrotate /etc/logrotate.conf</programlisting>
+    </section>
+
+    <section>
+      <title>Configuring Logrotate</title>
+
+      <para>To configure logrotate, create configuration files inside
+      /etc/logrotate.d. For instance, the following /etc/logrotate.d/syslog-ng
+      helps us rotate the logfiles that we identified as part of the system
+      logger configuration:</para>
+
+      <programlisting>/var/log/messages /var/log/cron.log /var/log/auth.log {
+  rotate 6
+  monthly
+  # It is ok if a logfile is missing
+  missingok
+  # Only execute postrotate after all 3 logfiles are rotated
+  # instead of after each logfile
+  sharedscripts
+  # Commands to run after the rotation has occurred
+  # This will instruct syslog-ng to reload its configuration
+  # and log files
+  postrotate 
+    /etc/init.d/syslog-ng reload &gt; /dev/null 2&gt;&amp;1 || true
+  endscript
+}</programlisting>
+
+      <para>The file informs logrotate that the mentioned logfiles are rotated
+      6 times on a monthly basis (so you keep 7 months of history). The tool
+      will automatically rename the "old" logfiles by adding a datestamp to
+      the filename. You can also instruct logrotate to compress the rotated
+      logfiles or even move them to a different location.</para>
+    </section>
   </section>
 </chapter>

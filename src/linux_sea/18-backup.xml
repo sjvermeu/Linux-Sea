@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Taking Backups</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>To finalize this book, lets focus on backups and restores. After
+    all, you don't want to put all that effort in your Linux system, only to
+    see it vanish with the next power surge or
+    daughter-spilled-milk-over-my-laptop incident.</para>
+  </section>
+
+  <section>
+    <title>Poor Mans' Backup</title>
+
+    <para>Not taking any backups is living on the edge. Especially in case of
+    Gentoo Linux, you don't want to lose all the effort you've put in setting
+    up your system. A basic, poor man's backup, is nothing more but an
+    off-line copy of your important files. This can be on a USB stick, an SD
+    card or a CD/DVD. But what to backup?</para>
+
+    <para>The following sections describe a possible set of files and
+    directories to back up, without resorting to lots and lots of storage
+    requirements.</para>
+
+    <section>
+      <title>System Settings</title>
+
+      <para>First of all, take a copy of your <filename>/etc</filename>
+      folder. The <filename>/etc</filename> directory contains all system
+      settings, including your file system table (<filename>fstab</filename>),
+      Portage-specific settings (<filename>/etc/make.conf</filename>,
+      <filename>/etc/portage</filename>), service configuration files (in
+      <filename>/etc/conf.d</filename> and <filename>/etc/env.d</filename>),
+      ... Really, this location is not to be forgotten.</para>
+
+      <para>Next, there are a few non-/etc files or directories that you want
+      to copy as well. </para>
+
+      <itemizedlist>
+        <listitem>
+          <para><filename>/var/lib/portage/world</filename> is your
+          world-file, which contains a list of all software you've installed
+          (well, not their dependencies, but that's not needed anyhow). In
+          case that you ever need to rebuild your system, this file will tell
+          you what needs to be installed</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>/usr/local</filename> contains all non-Portage
+          installed software and settings. Although you might not have
+          anything inside that, those of you that do will most likely take a
+          backup of that as well.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>/proc/config.gz</filename> (or
+          <filename>/usr/src/linux/.config</filename>) is your kernel
+          configuration. You've probably lost a lot of sweat and oxygen while
+          setting up your kernel configuration, so you definitely don't want
+          to lose it</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>User Settings</title>
+
+      <para>Next to the system settings, you'll find that your end user(s) on
+      your system also have gone through lots of trouble to set up their
+      system as they want it. End users' configuration settings are stored in
+      the end users' home directories. There is no single directory for all
+      configuration settings, so finding which ones to back up and which not
+      might be difficult. However, one way that works for me (and which
+      usually doesn't include the end users' personal files) is to backup all
+      <filename>${HOME}/.??*</filename> files and directories. Most
+      configuration directories (or files) are hidden files (i.e. starting
+      with a period).</para>
+    </section>
+
+    <section>
+      <title>Sample Script</title>
+
+      <para>The following command will make an archive of the above mentioned
+      settings. </para>
+
+      <programlisting>~# <command>tar cvzpf /var/tmp/poormanbackup.tar.gz /etc /var/lib/portage/world /usr/local /proc/config.gz /home/*/.??*</command></programlisting>
+
+      <para>Again, this is just a poor man's backup, because it is not really
+      managed, but it is still better than nothing. Make sure you copy the
+      poormanbackup.tar.gz to a safe(r) place. Note that it will still be
+      fairly large, because of the end user copy (as it contains lots of
+      software caches, like your browsers' cache). If you drop the end user
+      directories (the <filename>/home/*/.??*</filename>) the file is reduced
+      from many dozens (up to hundreds) of megabytes down to about half a
+      megabyte.</para>
+
+      <para>To restore files, get the file on your system (mount the USB
+      stick/CD) and extract the file(s) you need. For instance, to extract all
+      <filename>/etc/portage/*</filename> files:</para>
+
+      <programlisting>~# <command>tar xvzpf /media/usb/poormanbackup.tar.gz -C / etc/portage</command></programlisting>
+
+      <para>Note the space between <filename>/</filename> and
+      <filename>etc/portage</filename>!</para>
+    </section>
+  </section>
+
+  <section>
+    <title>More Managed Backups</title>
+
+    <para>A slightly more complicated, but probably safer method, is to use
+    tools that provide you with a managed backup solution. Managed means that
+    you tell them what to backup (although they do propose certain backup
+    situations) and they take care of the rest, such as repetitive backups, as
+    well as easy restore activities in case things go wrong.</para>
+
+    <para>If you take a look at the packages that Gentoo offers in its
+    app-backup category, you'll find that there are plenty of them. I can't
+    tell you which one is better, because that is a personal taste. But I will
+    provide a few pointers so you can get started.</para>
+
+    <section>
+      <title>Backup Ninja</title>
+
+      <para>The backupninja application is a tool which is scheduled to run
+      every night (for instance) and that will read in the configuration
+      file(s) in /etc/backup.d. Inside this directory, you define what needs
+      to be backed up, how often, etc. For instance, the same poor man's
+      backup settings of above would result in a file similar to the
+      following:</para>
+
+      <para> File <filename>/etc/backup.d/20-basic-system.rdiff</filename> to
+      backup regular files:</para>
+
+      <programlisting>when = daily
+options = --exclude-special-files
+nicelevel = 15
+
+[source]
+label = myhostname.mydomain
+type = local
+keep = 60
+include = /etc
+include = /var/lib/portage/world
+include = /usr/local
+include = /home/*/.??*
+exclude = /home/*/.mozilla/firefox/*.default/Cache
+
+[dest]
+type = local
+directory = /var/backups/backupninja</programlisting>
+
+      <para>File
+      <filename>/etc/backup.d/19-kernel-config.sh</filename>:</para>
+
+      <programlisting>zcat /proc/config.gz &gt; /etc/kernel-config</programlisting>
+
+      <para>File <filename>/etc/backup.d/21-copy-to-usb.sh</filename>:</para>
+
+      <programlisting>rsync -avug /var/backups/backupninja /media/usb</programlisting>
+
+      <para>The result of this is that the kernel configuration file is
+      generated first (into /etc/kernel-config) after which (incremental)
+      backups are taken of the presented locations, and stored in
+      /var/backups/backupninja. Finally, these files are copied (synchronized)
+      to /media/usb (which might be a USB stick or external disk drive). If
+      you ever want to store that backup outside of your home (for instance,
+      at your parents/kids house), detach the USB stick and store it there.
+      Just make sure another USB stick is attached and mounted for the next
+      backup cycle.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Bare Metal Recovery</title>
+
+    <para>When you want to make sure your system is up and running in no time,
+    even when the entire system crashed, you need to take bare metal backups
+    (full system backups) which you can restore quickly. A popular method to
+    accomplish this is to use imaging software tools.</para>
+
+    <section>
+      <title>PartImage</title>
+
+      <para>If you installed Gentoo using the sysresccd CD, then you already
+      have the tools at your disposal to perform imaging backups. A popular
+      tool is <emphasis>PartImage</emphasis><indexterm>
+          <primary>PartImage</primary>
+        </indexterm>, and is available on the sysresccd.</para>
+
+      <para>The tool offers a graphical (or curses) based interface, but you
+      don't need to use that: the tool also supports command-line
+      backups.</para>
+
+      <para>An example usage would be the following. Boot from the sysresccd,
+      and attach USB storage to your system on which you want to back up your
+      entire system:</para>
+
+      <programlisting>~# <command>mount /dev/sdc1 /media/usb</command></programlisting>
+
+      <para>Next, take image(s) of your partitions, or take a full disk
+      backup. Don't worry, PartImage is able to detect when diskspace isn't
+      used, and will skip those empty blocks. The following takes a full
+      backup of /dev/sda in blocks of 700Mbyte (in case you ever want to store
+      the files on CD or DVD):</para>
+
+      <programlisting>~# <command>partimage -b -z1 -o V700 save /dev/sda /media/usb/gentoo_full.sda.partimg.gz</command></programlisting>
+
+      <para>If you ever need to restore the system, use the following
+      command:</para>
+
+      <programlisting>~# <command>partimage -e restore /dev/sda /media/usb/gentoo_full.sda.partimg.gz.000</command></programlisting>
+    </section>
+  </section>
+</chapter>
