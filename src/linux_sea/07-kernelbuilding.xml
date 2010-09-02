@@ -406,7 +406,7 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
           </indexterm> or in a file inside the /etc/modprobe.d<indexterm>
             <primary>modprobe.d</primary>
           </indexterm> directory. The latter is more often used: people or
-        projects create a file inside /<filename>etc/modprobe.d</filename>
+        projects create a file inside <filename>/etc/modprobe.d</filename>
         named after the module itself, which makes management easier.</para>
 
         <para>The content of <filename>/etc/modprobe.d/uvcvideo</filename> in

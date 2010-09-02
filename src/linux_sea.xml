@@ -17,6 +17,7 @@
 <!ENTITY systemmanagement.xml SYSTEM   "linux_sea/14-systemmanagement.xml">
 <!ENTITY graphicenvironment.xml SYSTEM "linux_sea/15-graphicenvironment.xml">
 <!ENTITY installgentoo.xml SYSTEM      "linux_sea/16-installgentoo.xml">
+<!ENTITY logfilemanagement.xml SYSTEM  "linux_sea/17-logfilemanagement.xml">
 
 <!ENTITY tipsandanswers.xml SYSTEM     "linux_sea/90-tipsandanswers.xml">
 <!ENTITY glossary.xml SYSTEM           "linux_sea/91-glossary.xml">
