@@ -38,7 +38,7 @@
       ... Really, this location is not to be forgotten.</para>
 
       <para>Next, there are a few non-/etc files or directories that you want
-      to copy as well. </para>
+      to copy as well.</para>
 
       <itemizedlist>
         <listitem>
@@ -85,7 +85,7 @@
       <title>Sample Script</title>
 
       <para>The following command will make an archive of the above mentioned
-      settings. </para>
+      settings.</para>
 
       <programlisting>~# <command>tar cvzpf /var/tmp/poormanbackup.tar.gz /etc /var/lib/portage/world /usr/local /proc/config.gz /home/*/.??*</command></programlisting>
 
@@ -133,7 +133,7 @@
       backup settings of above would result in a file similar to the
       following:</para>
 
-      <para> File <filename>/etc/backup.d/20-basic-system.rdiff</filename> to
+      <para>File <filename>/etc/backup.d/20-basic-system.rdiff</filename> to
       backup regular files:</para>
 
       <programlisting>when = daily
@@ -214,6 +214,60 @@ directory = /var/backups/backupninja</programlisting>
       command:</para>
 
       <programlisting>~# <command>partimage -e restore /dev/sda /media/usb/gentoo_full.sda.partimg.gz.000</command></programlisting>
+    </section>
+
+    <section>
+      <title>Stage4/5/... Installation</title>
+
+      <para>Specifically for Gentoo, some users have created enhancements on
+      top of the standard "stage3" installation used by Gentoo Linux. With
+      stage4 or stage5 installations, the extracted tarball is a lot larger
+      (it contains almost an entire system) and is accompanied with additional
+      script(s) that set up or recover the system. These scripts can, for
+      instance, restore your partition layout, reformat the partitions,
+      reinstall the bootloader, etc.</para>
+
+      <para>You can find references to this installation approach on the
+      Gentoo Forums. </para>
+
+      <para>Compared with the poor man's backup approach described above, this
+      can be seen as a "entire system poor man's backup", with:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Backup &amp; restore of the master boot record and partition
+          table</para>
+
+          <programlisting>(Backup)
+dd if=/dev/sda of=/media/usb/full-stage-backup/mbr.img bs=512 count=1
+sfdisk -d /dev/sda &gt; /media/usb/full-stage-backup/sfdisk.dat
+
+(Restore)
+dd if=/media/usb/full-stage-backup/mbr.img of=/dev/sda
+sfdisk /dev/sda &lt; /media/usb/full-stage-backup/sfdisk.dat</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>Restoration of the boot loader</para>
+
+          <programlisting>(Restore: command after restoring /boot content)
+grub-install --root-directory=/mnt/gentoo/boot /dev/hda</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>Reformatting of partitions (be carefull here, this is very
+          error-prone and specific for your system)</para>
+
+          <programlisting>(Backup)
+mount | grep -v 'dev/mapper' | grep -v 'dev/md' | grep 'type ext' | awk -F' ' '{print "mkfs."$5" "$1}' &gt; /media/usb/full-stage-backup/reformat.sh
+
+(Restore)
+/media/usb/full-stage-backup/reformat.sh</programlisting>
+        </listitem>
+      </itemizedlist>
+
+      <para>I personally prefer imaging software for such large recovery
+      scenarios.</para>
     </section>
   </section>
 </chapter>
