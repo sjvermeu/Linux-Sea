@@ -1,0 +1,17 @@
+spellcheck from ch07
+
+install gentoo - start with information on minimum requirements like disk space and cpu and memory and ...
+
+device management: elaborate on device names (if not already done)
+
+shell scripting 101
+	- multiple commands ;
+	- return codes
+	- multiple commands && , ||
+	- stdout / stderr
+	- redirectino (>, |)
+
+file system -> checking file systems + correcting
+
+kernel configuration: update with more current kernel
+
