@@ -222,16 +222,14 @@ directory = /var/backups/backupninja</programlisting>
       <para>Specifically for Gentoo, some users have created enhancements on
       top of the standard "stage3" installation used by Gentoo Linux. With
       stage4 or stage5 installations, the extracted tarball is a lot larger
-      (it contains almost an entire system) and is accompanied with additional
-      script(s) that set up or recover the system. These scripts can, for
-      instance, restore your partition layout, reformat the partitions,
-      reinstall the bootloader, etc.</para>
-
-      <para>You can find references to this installation approach on the
-      Gentoo Forums. </para>
+      (it contains almost an entire system) and might be accompanied with
+      additional script(s) that set up or recover the system. These scripts
+      can, for instance, restore your partition layout, reformat the
+      partitions, reinstall the bootloader, etc.</para>
 
       <para>Compared with the poor man's backup approach described above, this
-      can be seen as a "entire system poor man's backup", with:</para>
+      can be seen as a "entire system poor man's backup", with
+      optionally</para>
 
       <itemizedlist>
         <listitem>
@@ -267,7 +265,41 @@ mount | grep -v 'dev/mapper' | grep -v 'dev/md' | grep 'type ext' | awk -F' ' '{
       </itemizedlist>
 
       <para>I personally prefer imaging software for such large recovery
-      scenarios.</para>
+      scenarios. However, such stage4/stage5 installations prove to be useful
+      when you migrate your system from one disk to another. Using imaging
+      tools might fail here, because they often require that the target hard
+      disk is equally sized, whereas you probably want to migrate to a larger
+      disk.</para>
+
+      <para>So, if you are interested in a stage4 or stage5 backup/restore,
+      you can take one from a running system or booted from a livecd. I
+      suggest using a livecd (or other live environment) as that will ensure
+      that the restore of the archive will give you a sane situation. If you
+      take such an archive while running inside the system itself, you will
+      also copy state files and other files that should not be there when a
+      system is being booted.</para>
+
+      <para>Mount your file systems (say at <filename>/mnt/gentoo</filename>)
+      except for the dynamically created ones (like proc, dev, sys, ...).
+      Then, run the following <command>tar</command> command to create the
+      archive:</para>
+
+      <programlisting>~# <command>tar -cvzpf /media/usb/backup/stage4.tar.gz --numeric-owner --strip-components=2 /mnt/gentoo</command></programlisting>
+
+      <para>The <option>--numeric-owner</option> will ensure that uid/gid
+      numbers are used rather than names, because the live environment can use
+      different name/id pairs than your own system. By using
+      <option>--strip-components=2</option>, all files are stored in the
+      archive without the leading "<filename>/mnt/gentoo</filename>".</para>
+
+      <para>If you need to put back the backup, you can recreate your
+      partitions (or create new ones), mount them somewhere (say
+      <filename>/mnt/gentoo</filename> again) and run:</para>
+
+      <programlisting>~# <command>tar xvzpf /media/usb/backup/stage4.tar.gz -C /mnt/gentoo</command></programlisting>
+
+      <para>Don't forget to reinstall the boot loader before you
+      reboot!</para>
     </section>
   </section>
 </chapter>

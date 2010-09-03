@@ -1,3 +1,6 @@
+** (2010-09-03) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Elaborate a bit more on stage4/5 backup/restores
+
 ** (2010-09-02) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Add chapter on logfile management
 	- Add chapter on backups
