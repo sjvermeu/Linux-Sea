@@ -150,7 +150,7 @@
           <primary>memory management</primary>
         </indexterm>component manages the memory usage of the system: it keeps
       track of used and unused memory, assigns memory to processes who require
-      it and ensures that processes can't manipulate each other's data. To do
+      it and ensures that processes can't manipulate the data of one another. To do
       this, it uses the concept of virtual memory addresses: addresses for one
       process are not the real addresses, and the kernel keeps track of the
       correct mappings. It is also possible for data not to be really present
@@ -436,7 +436,7 @@
         installation options exist. You can install a distribution from a
         network using net booting (a popular approach in enterprise
         environments as it makes unattended installations possible) or from
-        within another operationg system.</para>
+        within another operating system.</para>
       </listitem>
 
       <listitem>
@@ -473,9 +473,9 @@
       </listitem>
 
       <listitem>
-        <para>Is internationalisation of the software important?</para>
+        <para>Is internationalization of the software important?</para>
 
-        <para>Some distributions are targetting specific user groups tied to
+        <para>Some distributions are targeting specific user groups tied to
         their language and geography. There are distributions that are fully
         localized to a specific group (say "Belgian Dutch-speaking users" or
         "Canadian French-speaking users"), but also distributions that try to
@@ -520,10 +520,10 @@
       <listitem>
         <para>What policies does the distribution put on its software?</para>
 
-        <para>Organisations like FSF have a vision on how the (software) world
+        <para>Organizations like FSF have a vision on how the (software) world
         should look like. Many distributions offer a way of implementing these
         visions. For instance, some distributions only allow software that is
-        licensed under a FSF-approved license. Other distributions allow users
+        licensed under an FSF-approved license. Other distributions allow users
         to use non-free software. There are distributions that implement a
         higher security vision in the distribution, offering a more hardened
         approach to operating systems.</para>
@@ -811,7 +811,7 @@
         as a vulnerability is found or reported. There is often no need for a
         desktop user to obtain commercial support as the freely available
         support channels offer a major advantage compared to some other,
-        propriatary operating systems.</para>
+        proprietary operating systems.</para>
       </section>
 
       <section>
@@ -958,7 +958,7 @@
 
         <para>However, another trend is also emerging: more and more games are
         only being released on consoles, dropping the PC environment
-        alltogether. I personally don't know how games will evolve in the
+        altogether. I personally don't know how games will evolve in the
         future, but I think that real action games will focus on game consoles
         more.</para>
 

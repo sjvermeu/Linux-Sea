@@ -360,7 +360,7 @@
       </itemizedlist>
 
       <para>The restriction deletion flag needs some explanation. It is used
-      on world-writeable directories (a well-known example is
+      on world-writable directories (a well-known example is
       <filename>/tmp</filename>, where temporary files can be stored) and used
       to prevent users to remove files they didn't create. A world-writable
       directory would otherwise allow other users to remove files from that
@@ -519,7 +519,7 @@ $ <command>pwd</command>
           directory. The <filename>~</filename> can be used in two ways:
           either to denote your home directory (<command>cd
           ~/Documents</command> goes to
-          <filename>/home/captain/Documents</filename>) or someone elses home
+          <filename>/home/captain/Documents</filename>) or someone else's home
           directory. In the latter case, you append the user name to the
           <filename>~</filename> sign, so: "<command>cd
           ~raghat/public_html/</command>" translates to
@@ -596,7 +596,7 @@ Documents    Movies    Music    Pictures
       same.</para>
 
       <section>
-        <title>Analysing ls -l output</title>
+        <title>Analyzing ls -l output</title>
 
         <para>You will find that you often use "<command>ls -l</command>" to
         get the necessary information about a file or directory. As such I

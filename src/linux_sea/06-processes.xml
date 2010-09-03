@@ -11,7 +11,7 @@
       <title>Parent and Child Relationships</title>
 
       <para>Each Linux (and Unix) process has a parent (except for the top
-      process) and can have one or more childs. The relationship is crafted
+      process) and can have one or more children. The relationship is crafted
       when a process is launched: the process that launched the new process
       becomes the parent of that process. As a user, you might not know what
       process you are currently working in. Every program is a process, being
@@ -85,7 +85,7 @@ init-+-acpid
       process launches a shell process with the user id and group id of the
       user that logged on, so every command the user launches takes the user
       id and group id of that user, since the parent process of every launched
-      command is either the beforementioned shell process or one of its child
+      command is either the before mentioned shell process or one of its child
       processes.</para>
 
       <para>Some processes however explicitly ask the Linux kernel to use a
@@ -110,7 +110,7 @@ init-+-acpid
       has root privileges rather than the privileges for the user. For the
       <command>passwd</command> command, this is necessary because it needs to
       update the password files (<filename>/etc/passwd</filename> and
-      <filename>/etc/shadow</filename>) which are only writeable by the root
+      <filename>/etc/shadow</filename>) which are only writable by the root
       user (the <filename>/etc/shadow</filename> file is not even readable for
       regular users).</para>
     </section>
@@ -142,7 +142,7 @@ init-+-acpid
           </listitem>
 
           <listitem>
-            <para>TTY - controlling terminal (this is Unix inheritage where
+            <para>TTY - controlling terminal (this is Unix heritage where
             users were logged on through terminals, pts is a
             pseudoterminal)</para>
           </listitem>
@@ -213,7 +213,7 @@ Swap:  2008084k total,      132k used,  2007952k free,   776060k cached
         user launches 3 xterms inside a graphical session he will be shown as
         four logged on users) and the load average.</para>
 
-        <para>The load average is something many people misinterprete. The
+        <para>The load average is something many people misinterpret. The
         load average shows the number of processes that were running or asking
         for CPU time during the given interval. In the above example, this
         means that:</para>
@@ -396,7 +396,7 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
       process is still running, but it is running in the background. Most
       daemons do not have the possibility to reattach to the session. Wether
       or not a process is a daemon depends on the process itself as this is a
-      pure programmatical decision.</para>
+      pure programmatic decision.</para>
 
       <para>Backgrounded processes however are processes that stay in the
       running session, but do not "lock" the input devices (keyboard). As a
@@ -427,7 +427,7 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
 
       <para>If you want to put a process that you are running in the
       background, use Ctrl-Z to put the process in the background. Ctrl-Z also
-      pauzes the process, so if you want to continue the process in the
+      pauses the process, so if you want to continue the process in the
       background, enter "<command>bg</command>" afterwards as well:</para>
 
       <programlisting># <command>eix-update</command>
@@ -496,7 +496,7 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
       even "wrap" return codes to this range. If a program would ever have a
       return code of 512 for instance, it might be mapped into 0.</para>
 
-      <para>Every program that has succesfully finished its job will (or
+      <para>Every program that has successfully finished its job will (or
       should) return code 0. A non-zero return code means that the application
       has failed to finish its tasks (completely).</para>
 
@@ -516,7 +516,7 @@ $ <command>echo $?</command>
 2</programlisting>
 
       <para>These return codes are important as they are the means to
-      investigate if all commands went succesfully or not, allowing you to
+      investigate if all commands went successfully or not, allowing you to
       write quite intelligent shell scripts which trigger several commands and
       include logic to handle command failures.</para>
     </section>
@@ -528,7 +528,7 @@ $ <command>echo $?</command>
       Linux kernel does that for you, based on information about the process
       itself, including but not limited to if the process is I/O-bound (as
       such programs are most of the time user-interactive), its previous CPU
-      consumation, possible locks it is holding and more.</para>
+      consumption, possible locks it is holding and more.</para>
 
       <para>You can, however, inform the kernel on what you think the process'
       priority ought to be. For this, you can set a
@@ -596,7 +596,7 @@ $ <command>echo $?</command>
 
       <para>Its name might already inform you about its usual task: killing
       processes. By default, if you want to terminate a process but you can't
-      commicate with the process directly (like hitting "Quit" or "Exit"), you
+      communicate with the process directly (like hitting "Quit" or "Exit"), you
       should send a signal 15 (SIGTERM<indexterm>
           <primary>SIGTERM</primary>
         </indexterm>) to the program. This is also what

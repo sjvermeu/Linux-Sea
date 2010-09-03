@@ -249,7 +249,7 @@
       <para>Companies that <emphasis>sell</emphasis> software are of course
       often against free software. When these companies major income depends
       on the sales of their software, it would not be viable to make the
-      software free. If they would, competiting companies would have full
+      software free. If they would, competing companies would have full
       access to the source code and improve their own product with it.</para>
 
       <para>I don't think this is a disadvantage though. Software companies
@@ -267,7 +267,7 @@
       contributing it to the software project itself.</para>
 
       <para>A major proof of this is the acceptance of free software by major
-      software players such as Sun Microsystems and IBM, and the emergance of
+      software players such as Sun Microsystems and IBM, and the emergence of
       new software players that build their business upon free software, such
       as RedHat or MySQL<indexterm>
           <primary>MySQL</primary>
@@ -301,7 +301,7 @@
       distribution has to acquire itself (like infrastructure).</para>
 
       <para>Most distributions have free downloads with online documentation
-      and wonderfull community support (active mailing lists or Internet
+      and wonderful community support (active mailing lists or Internet
       fora), which is why Linux is that popular: you can download, install and
       use several distributions to decide which one is best for you. You can
       try the software (without loosing any functionality) and you don't even
@@ -318,7 +318,7 @@
       <para>Some distributions are only available when you pay for it. In that
       case you often pay for the support or for additional software in the
       distribution which isn't freely available. A popular distribution is
-      RedHat Enterprise Linux, a Linux distribution specifically targetting
+      RedHat Enterprise Linux, a Linux distribution specifically targeting
       companies who want to set up Linux servers. You don't just pay for the
       support, but also for the resources that RedHat has put in the
       distribution to make it certified for other software (such as Oracle and
@@ -436,7 +436,7 @@
         <listitem>
           <para><emphasis>development releases</emphasis> are intermediate
           releases, similar to nightly snapshots, but somewhat more
-          coördinated by the developers. They usually have a
+          coordinated by the developers. They usually have a
           ChangeLog<indexterm>
               <primary>ChangeLog</primary>
             </indexterm> which lists the changes in it since the previous
@@ -599,7 +599,7 @@
 
       <para>If at any time all the copyright owners of the free software
       decide that the software falls under a different license which you don't
-      agree after, you can take the sourcecode of the moment right before the
+      agree after, you can take the source code of the moment right before the
       copyright holders decided to switch the licenses and continue the
       development under that license (as that software is still under the
       original license and not the new one). This process (where a group of
@@ -691,7 +691,7 @@
       effort to ensure that no fragmentation occurs in the Linux world.</para>
 
       <para>Because the LSB is a broad standard, it comprises of other
-      standards, including the forementioned FHS but also the <emphasis>Single
+      standards, including the aforementioned FHS but also the <emphasis>Single
       Unix Specification</emphasis><indexterm>
           <primary>Single Unix Specification</primary>
         </indexterm> (SUS<indexterm>
@@ -757,7 +757,7 @@
       <listitem>
         <para>How is it possible that many distributions allow you to upgrade
         to the latest version without needing an installation CD or
-        reinstallation from scratch?</para>
+        re-installation from scratch?</para>
       </listitem>
     </orderedlist>
   </section>

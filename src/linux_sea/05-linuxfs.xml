@@ -266,7 +266,7 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
             successor, <emphasis>reiser4</emphasis><indexterm>
                 <primary>reiser4</primary>
               </indexterm>, is still quite premature and is, due to the
-            inprisonment of the main developer Hans Reiser, not being
+            imprisonment of the main developer Hans Reiser, not being
             developed that actively anymore.</para>
           </listitem>
         </itemizedlist>
@@ -678,7 +678,7 @@ Filename     Type      Size    Used  Priority
 
           <listitem>
             <para><filename>/usr/lib</filename> contains all the libraries for
-            the abovementioned programs</para>
+            the above mentioned programs</para>
           </listitem>
 
           <listitem>
@@ -782,7 +782,7 @@ Filename     Type      Size    Used  Priority
       file system. It is the first file system that is mounted when the kernel
       boots, and your system will not function properly if the kernel detects
       corruption on this file system. Also, due to the nature of the boot
-      process, this file system will eventually become writeable (as the boot
+      process, this file system will eventually become writable (as the boot
       process needs to store its state information, etc.)</para>
 
       <para>Some locations on the root file system need to remain on the root
@@ -886,7 +886,7 @@ Filename     Type      Size    Used  Priority
 
       <para>Another advantage of using a separate file system for /home is
       when you would decide to switch distributions: you can reuse your /home
-      file system for other Linux distributions (or after a reinstallation of
+      file system for other Linux distributions (or after a re-installation of
       your Linux distribution).</para>
     </section>
   </section>
@@ -929,7 +929,7 @@ Filename     Type      Size    Used  Priority
 
       <para>However, supporting these flags wouldn't make a system secure: you
       want to mix these privileges based on who works with the file. For
-      instance, the system configuration files should only be writeable by the
+      instance, the system configuration files should only be writable by the
       administrator(s); some might not even be readable by the users (like the
       file containing the user passwords).</para>
 
@@ -980,7 +980,7 @@ Filename     Type      Size    Used  Priority
       <programlisting>$ <command>ls -l /etc/fstab</command>
 -rw-r--r-- 1 root root 905 Nov 21 09:10 /etc/fstab</programlisting>
 
-      <para>In the above example, the fstab file is writeable by the root user
+      <para>In the above example, the fstab file is writable by the root user
       (rw-) and readable by anyone else (r--).</para>
 
       <para>In case of a directory,</para>
@@ -1011,7 +1011,7 @@ Filename     Type      Size    Used  Priority
 drwxr-x--- 2 root root 4096 Nov 26 18:17 /etc/cron.daily/</programlisting>
 
       <para>In the above example, the cron.daily directory is viewable (r),
-      writeable (w) and "enterable" (x) by the root user. People in the root
+      writable (w) and "enterable" (x) by the root user. People in the root
       group have view- and enter rights (r-x) whereas all other people have no
       rights to view, write or enter the directory (---).</para>
 
@@ -1249,7 +1249,7 @@ Change: 2010-02-06 13:50:43.000000000 +0100</programlisting>
         </itemizedlist>
 
         <para>Then you can set (=), add (+) or remove (-) privileges. For
-        instance, to make <filename>/etc/passwd</filename> writeable for the
+        instance, to make <filename>/etc/passwd</filename> writable for the
         members of the owning group:</para>
 
         <programlisting># <command>chmod g+w /etc/passwd</command></programlisting>

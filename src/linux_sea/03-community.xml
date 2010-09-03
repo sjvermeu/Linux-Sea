@@ -21,8 +21,8 @@
     the Internet as main communication channel. Hence, these communities
     aren't clustered in space like real life communities would, but are
     scattered throughout the world. Nevertheless, the Internet ensures that
-    participants of a community, even when they are lightyears (figure of
-    speech) apart, talk to each other the same way as neighbours do.</para>
+    participants of a community, even when they are light years (figure of
+    speech) apart, talk to each other the same way as neighbors do.</para>
 
     <para>The Internet is a great asset for these communities: you are not
     judged based on the color of your skin, your age or your looks. What
@@ -30,18 +30,18 @@
     how you react in discussions. Debates in a community can often become
     quite vivid, especially when the subject is one where facts aren't
     sufficient to provide good answers. And when these discussions change from
-    debates into almost insulting fights, a flamewar<indexterm>
-        <primary>flamewar</primary>
+    debates into almost insulting fights, a flame war<indexterm>
+        <primary>flame war</primary>
       </indexterm> is born.</para>
 
-    <para>In flamewars, facts and reason are often far away. You should
-    definitely try to avoid flamewars for discussions where decisions have to
+    <para>In flame wars, facts and reason are often far away. You should
+    definitely try to avoid flame wars for discussions where decisions have to
     be made, but it is impossible to really prevent them as they are the
     result of people who have an active interest in a subject they are eager
     to defend, especially when there is no clear answer to the question that
-    started the flamewar.</para>
+    started the flame war.</para>
 
-    <para>Examples of such flamewars are ``What is the best Linux
+    <para>Examples of such flame wars are ``What is the best Linux
     distribution?'' or ``What text editor should I choose?'' because these
     questions don't have clear answers: the best distribution for one person
     might be the worst for another, and there are many text editors around. In
@@ -49,7 +49,7 @@
     shouldn't argue about tastes and colors) and this is very true for these
     kind of questions.</para>
 
-    <para>When you don't have a choice, flamewars don't exist: you cannot
+    <para>When you don't have a choice, flame wars don't exist: you cannot
     compare one product with itself. But in the free software world, choice is
     an important concept. You have the choice between many free operating
     systems (next to Linux you have many BSD flavors, Sun Solaris 10 and even
@@ -69,13 +69,13 @@
     quite large. The Gentoo community for instance is known for its
     responsiveness: the Gentoo chat channel is always alive (with more than
     800 participants at any time) as is its forum (with more than a thousand
-    posts per day) and mailinglists. Of course, general flamewars on
+    posts per day) and mailinglists. Of course, general flame wars on
     distributions are often on more neutral grounds, but heated discussions on
     other topics are a daily routine.</para>
 
     <para>For this reason, most communities have people who keep the
-    discussions sane and prevent flamewars from growing too much. People who
-    try to induce flamewars on the communication channels (called
+    discussions sane and prevent flame wars from growing too much. People who
+    try to induce flame wars on the communication channels (called
     <emphasis>trolls</emphasis><indexterm>
         <primary>troll</primary>
       </indexterm>) are taken care of by these operators: channel operators
@@ -88,7 +88,7 @@
       <title>Local Communities</title>
 
       <para>A specific type of community is one which is local in space. Such
-      communities often organise meetings (conferences, talks, barbequeues,
+      communities often organize meetings (conferences, talks, barbequeues,
       ...) and offer help to people local to the location where the community
       is hosted.</para>
 
@@ -96,7 +96,7 @@
           <primary>LUG</primary>
         </indexterm>s (Linux User Group<indexterm>
           <primary>Linux User Group</primary>
-        </indexterm>s) are succesful examples of such communities: these
+        </indexterm>s) are successful examples of such communities: these
       groups aggregate together, debating on the evolution in the Linux world
       and help others with Linux installations (Linux Install Fests<indexterm>
           <primary>Linux Install Fest</primary>
@@ -136,7 +136,7 @@
 
       <para>When people want to discuss a particular software topic or
       distribution, online communities are often formed. These communities do
-      not (or to a less extend) organise meetings at a specific location
+      not (or to a less extend) organize meetings at a specific location
       (often called "in real life") but rather use the Internet as the meeting
       place ("online" meetings).</para>
 
@@ -165,7 +165,7 @@
         </listitem>
 
         <listitem>
-          <para>documentation, more specialised to the software title but
+          <para>documentation, more specialized to the software title but
           often also localised (translated)</para>
         </listitem>
       </itemizedlist>
@@ -194,7 +194,7 @@
 
         <listitem>
           <para>Mailinglists, which is similar (function-wise) to web forums,
-          but then organised through e-mail. People subscribe to a mailinglist
+          but then organized through e-mail. People subscribe to a mailinglist
           and then receive all mails sent to that mailinglist to their
           personal mailbox. Replies to these mails are sent back to the
           mailinglists where they are again distributed to all mailinglist
