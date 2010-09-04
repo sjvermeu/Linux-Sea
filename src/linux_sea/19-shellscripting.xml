@@ -102,8 +102,8 @@ Try 'ls --help' for more information
         <para>Well, the shell offers the <parameter>||</parameter> separator
         to chain such commands. Its use is less pertinent in regular shell
         operations, but more in shell scripts (for instance for error
-        handling). Yet, it is not unuseful for regular shell operations, as
-        the following example shows:</para>
+        handling). Yet, it is still useful for regular shell operations, as
+        the following (perhaps too simple, yet explanatory) example shows:</para>
 
         <programlisting>~$ <command>mount /media/usb || sudo mount /media/usb</command></programlisting>
 
@@ -163,7 +163,7 @@ dev-perl/libwww-perl-5.836
         containing the string 'completed emerge'. The results of the
         <command>grep</command> operation is then piped to the
         <command>awk</command> application which prints out the 8th field
-        (where whitespace is a field separator), which is the category/package
+        (where white space is a field separator), which is the category/package
         set. This allows you to follow a lengthy emerge process without having
         to keep an eye on the entire output of
         <command>emerge</command>.</para>
@@ -223,7 +223,7 @@ dev-perl/libwww-perl-5.836
       <title>Grouping Commands</title>
 
       <para>Shells also offer a way to group commands. If you do this, it is
-      said that you create a subshell that contains the commands you want to
+      said that you create a sub-shell that contains the commands you want to
       execute. Now why would this be interesting? </para>
 
       <para>Well, suppose that you want to update your system, followed by an
@@ -304,7 +304,7 @@ iptables -A FORWARD -o tap0 -i eth0 -d 192.168.100.1/24 ! -s 192.168.100.1/24 -j
         <title>Documenting</title>
 
         <para>You can easily document your steps in shell scripts. A comment
-        is prepended with #, like so:</para>
+        starts with #, like so:</para>
 
         <programlisting># Load in virtualisation modules
 modprobe tun
@@ -354,7 +354,7 @@ modprobe tun
         </para>
 
         <para>First, make sure that we are root. We can verify this by reading
-        the special variable $UID (a readonly variable giving the user id of
+        the special variable $UID (a read-only variable giving the user id of
         the user executing the script):</para>
 
         <programlisting>#!/bin/bash
@@ -478,7 +478,7 @@ Failed to load in module tun
   <section>
     <title>Want more?</title>
 
-    <para>This is as far as I want to go with a book targetting Linux
+    <para>This is as far as I want to go with a book targeting Linux
     starters. You should now have enough luggage to make it through various
     online resources and other books, and still have a reference at your
     disposal for your day-to-day activities on your (Gentoo) Linux
