@@ -36,7 +36,7 @@
         RTL-8169 Gigabit Ethernet (rev 10)</programlisting>
 
         <para>In this case, one network card was found that offered Ethernet
-        capabilities. The card uses the Realtek 8169 chipset.</para>
+        capabilities. The card uses the Realtek 8169 chip set.</para>
       </section>
 
       <section>
@@ -44,7 +44,7 @@
 
         <para>There are a few USB devices which offer networking capabilities
         (most of them wireless) which have native Linux support. An example
-        are the USB devices with the Intel 4965agn chipset. If your Linux
+        are the USB devices with the Intel 4965agn chip set. If your Linux
         kernel supports it, the moment you plug it in, a network interface
         should be made available. For instance, for wireless devices you could
         use <command>iwconfig</command>, for regular Ethernet cards
@@ -147,7 +147,7 @@ net8191se: driver installed, hardware present</programlisting>
           <primary>dmesg</primary>
         </indexterm> (which displays the last few thousands of lines produced
       by the Linux kernel) or <filename>/var/log/dmesg</filename> (depending
-      on your system logger) which is the logfile where all Linux kernel
+      on your system logger) which is the log file where all Linux kernel
       output is stored for the duration of the systems' session (i.e. until
       the next reboot).</para>
 
@@ -229,7 +229,7 @@ eth0: RTL8169sb/8110sb at 0xf8826000, 00:c0:9f:94:6b:f5, XID 10000000
 nameserver 10.2.3.4
 nameserver 10.2.3.5</programlisting>
 
-        <para>With this configuration file you tell Linux that a hostname can
+        <para>With this configuration file you tell Linux that a host name can
         be resolved through the DNS services at the corresponding IP addresses
         (the name servers) if it does not know the IP address itself.</para>
 
@@ -296,16 +296,16 @@ dns_servers_eth0=( "10.2.3.4 10.2.3.5" )</programlisting>
     the card providers themselves do not follow standards or refuse to help
     out with (free software) driver development. As a result, wireless card
     support (drivers) can be triggered through free software drivers (if
-    you're lucky), propriatary Linux drivers (if you're somewhat lucky) or
-    propriatary Windows drivers (if you're not lucky, but will still be able
+    you're lucky), proprietary Linux drivers (if you're somewhat lucky) or
+    proprietary Windows drivers (if you're not lucky, but will still be able
     to get your card working). A fourth state can be that you just ... won't
     ... get ... it ... working. Yet.</para>
 
     <para>However, development of wireless card support is - like I said -
     actively being developed. Chances are that an unsupported card (or
-    chipset) now will be supported within 6 months.</para>
+    chip set) now will be supported within 6 months.</para>
 
-    <para>Generally speaking though, 80% to 90% of the wireless cards/chipsets
+    <para>Generally speaking though, 80% to 90% of the wireless cards/chip sets
     are supported under Linux.</para>
 
     <section>
@@ -346,10 +346,10 @@ eth1      Link encap:Ethernet  HWaddr f0:7b:cb:0f:5a:3b
     <section>
       <title>Using Wireless Extensions Support (wireless-tools)</title>
 
-      <para>The (old, yet still working) wireless extensions support toolset
-      is slowly being deprecated in favour of the new toolset. However, you
+      <para>The (old, yet still working) wireless extensions support tool set
+      is slowly being deprecated in favour of the new tool set. However, you
       might be required to use the old set as the switch requires the wireless
-      card drivers to be rewritten as well. Especially with propriatary
+      card drivers to be rewritten as well. Especially with proprietary
       drivers this might take a while, so support for wireless-tools is not
       going to go away soon.</para>
 
@@ -482,7 +482,7 @@ preferred_aps=( "aaa" "USR8022" )</programlisting>
       use the (new) nl80211 netlink interface. Almost all free software
       wireless drivers have been ported towards this interface, so if your
       wireless card is by default supported by the Linux kernel, you will most
-      likely want to use the iw toolset.</para>
+      likely want to use the iw tool set.</para>
 
       <section>
         <title>Verifying Wireless Capabilities</title>
@@ -751,7 +751,7 @@ wpa_supplicant_wlan0="-Dwext"</programlisting>
     <section>
       <title>Wicd</title>
 
-      <para>My personal favorite is Wicd, installable through
+      <para>My personal favourite is Wicd, installable through
       net-misc/wicd<indexterm>
           <primary>wicd</primary>
         </indexterm>. The tool exists out of two parts: a daemon and an
@@ -937,7 +937,7 @@ subnet 192.168.20.0 netmask 255.255.255.0 {
       <command>ssh</command><indexterm>
           <primary>ssh</primary>
         </indexterm>, encrypts the data that is sent on the network so no-one
-      can eavesdrop on the network and see usernames, passwords or even more
+      can eavesdrop on the network and see user names, passwords or even more
       confidential information flow by.</para>
 
       <para>To enable SSH access to your system, first install the
@@ -960,7 +960,7 @@ subnet 192.168.20.0 netmask 255.255.255.0 {
       url="http://www.chiark.greenend.org.uk/~sgtatham/putty/">PuTTY</ulink>).
       For instance, to access your system from another Linux system, the
       command could look like so (assuming that your IP address is
-      192.168.2.100 and your username is "captain"):</para>
+      192.168.2.100 and your user name is "captain"):</para>
 
       <programlisting>$ <command>ssh -l captain 192.168.2.100</command></programlisting>
 
@@ -985,7 +985,7 @@ subnet 192.168.20.0 netmask 255.255.255.0 {
             <primary>scp</primary>
           </indexterm> (secure copy) you can copy files between systems. If
         your source or destination (or both) are on a remote system, prepend
-        the source/destination folder with the hostname or IP address followed
+        the source/destination folder with the host name or IP address followed
         by a colon, like so:</para>
 
         <programlisting>$ <command>scp thesis.tar.gz 192.168.2.1:/mnt/usb-stick</command></programlisting>

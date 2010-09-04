@@ -89,9 +89,9 @@
       controller manages the disks a, b, c and d; the second controller
       manages the disks e, f, g and h, etc. Every controller can manage four
       disks: the first two are called the primary disks, the last two are
-      called the secundary disks. Every pair of disks has a master (first
+      called the secondary disks. Every pair of disks has a master (first
       disk) and slave (second disk). So, the primary master disk of the first
-      IDE controller is <filename>/dev/hda</filename>, the secundary slave
+      IDE controller is <filename>/dev/hda</filename>, the secondary slave
       disk of the second IDE controller would be
       <filename>/dev/hdh</filename>.</para>
 
@@ -244,7 +244,7 @@ Command (m for help): </programlisting>
 
         <para>Once inside fdisk, you can view the current partitions using the
         <command>p</command> command. You can then remove the partitions you
-        do not want anymore with the d command, followed by the partition
+        do not want any more with the d command, followed by the partition
         identifier. For instance, suppose you want to remove the third
         partition (/dev/sda3):</para>
 
@@ -490,7 +490,7 @@ Changed system type of partition 4 to 82 (Linux swap)</programlisting>
     <section>
       <title>Mounting Removable Media</title>
 
-      <para>As seen before, media mountpoints can be defined in
+      <para>As seen before, media mount points can be defined in
       <filename>/etc/fstab</filename> to ease the mount process. Two examples
       (one for a CD-ROM device and one for a USB storage device) could
       be:</para>
@@ -504,7 +504,7 @@ Changed system type of partition 4 to 82 (Linux swap)</programlisting>
       location) and noauto (do not attempt to mount this when the system
       boots) as options.</para>
 
-      <para>But in order to succesfully edit the fstab file, you need to know
+      <para>But in order to successfully edit the fstab file, you need to know
       what device will be used and you also need to make sure that the
       destination directories exist.</para>
 
@@ -733,7 +733,7 @@ java ldap opengl pam -arts -debug -ieee1394 -joystick
 
       <para>Samba, offered by the net-fs/samba<indexterm>
           <primary>samba</primary>
-        </indexterm> package, is a toolset that offers interoperability with
+        </indexterm> package, is a tool set that offers interoperability with
       Microsoft Windows networks. Not only can you access files shared on a
       Microsoft Windows network or share files yourself on such a network, you
       can also use or manage printers that are exported to the Microsoft
@@ -749,7 +749,7 @@ java ldap opengl pam -arts -debug -ieee1394 -joystick
   </section>
 
   <section>
-    <title>Managing Diskspace</title>
+    <title>Managing Disk Space</title>
 
     <para>To identify the current file system usage, you can use the
     <command>df</command><indexterm>
@@ -771,7 +771,7 @@ none         tmpfs    754M     0  754M   0% /dev/shm
     mounted file systems.</para>
 
     <section>
-      <title>Finding Top Diskspace Consumers</title>
+      <title>Finding Top Disk Space Consumers</title>
 
       <para>To find out how much disk space a file (or, more interestingly, a
       directory with all files and subdirectories) you can use the
@@ -841,7 +841,7 @@ none         tmpfs    754M     0  754M   0% /dev/shm
           <programlisting># <command>eclean distfiles</command></programlisting>
 
           <para>As a result, all downloaded source code of packages that are
-          not installed on the system anymore is removed from the distfiles
+          not installed on the system any more is removed from the distfiles
           location.</para>
         </listitem>
 

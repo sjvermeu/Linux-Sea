@@ -274,17 +274,17 @@
       and the necessary tools to convert the source code to executable
       files.</para>
 
-      <para>These tools are called a <emphasis>toolchain</emphasis><indexterm>
-          <primary>toolchain</primary>
+      <para>These tools are called a <emphasis>tool chain</emphasis><indexterm>
+          <primary>tool chain</primary>
         </indexterm>: a set of tools that are used as in a chain in order to
-      produce a working application. A general toolchain consists out of a
+      produce a working application. A general tool chain consists out of a
       text editor (to write the code in), compiler (to convert code to
       machine-specific language), linker (to combine machine-code of several
       sources - including prebuilt "shared" libraries - into a single,
       executable file) and libraries (those I just mentioned as being "shared"
       libraries).</para>
 
-      <para>A toolchain is of the upmost importance for a developer; it is a
+      <para>A tool chain is of the utmost importance for a developer; it is a
       vital <emphasis>development tool</emphasis><indexterm>
           <primary>development tool</primary>
         </indexterm>, but not the only development tool. For instance,
@@ -334,12 +334,12 @@
       <para>The GNU Project is an effort of several programmers and developers
       to create a free, Unix-like operating system. GNU<indexterm>
           <primary>GNU</primary>
-        </indexterm> is a recursive acronym that stands for <emphasis>GNU's
+        </indexterm> is a recursive acronym that stands for <emphasis>GNU is
       Not Unix</emphasis>, because it is Unix-like but contains no Unix code
       and is (and remains) free. The GNU foundation, the legal entity behind
       the GNU project, sees free as more than just the financial meaning of
       free: the software should be free to use for any purpose whatsoever,
-      free to study and modify the source code and behavior, free to copy and
+      free to study and modify the source code and behaviour, free to copy and
       free to distribute the changes you made.</para>
 
       <para>This idea of free software is a noble thought that is active in
@@ -363,12 +363,12 @@
       </indexterm>.</para>
 
     <para>Now although all Linux Operating Systems use Linux as their kernel,
-    many of them use a different flavor. This is because the kernel
+    many of them use a different flavour. This is because the kernel
     development has several branches. The most important one I call the
     <emphasis>vanilla</emphasis> kernel. This kernel is the main development
     kernel where most kernel developers work on; every other kernel is based
     on this kernel. Other kernels introduce features that the vanilla kernel
-    doesn't want yet (or has tossed away in favor of another feature); still,
+    doesn't want yet (or has tossed away in favour of another feature); still,
     these kernels are fully compatible with the vanilla kernel.</para>
 
     <para>The Linux kernel saw its first light in 1991 and is created (and
@@ -380,7 +380,7 @@
     contributions happen from several hundreds volunteers (kernel 2.6.21 had
     contributions from more than 800 individuals).</para>
 
-    <para>The latest kernel version at thise time of writing is 2.6.32.1. The
+    <para>The latest kernel version at the time of writing is 2.6.32.1. The
     first two numbers play the role of the major version, the last number
     denotes a plain bug fix. The intermediate number is the one that
     increments most often: for every increment, users (and developers) know
@@ -402,7 +402,7 @@
     tools ...) and keep track of changes in the free software world (like new
     versions or security fixes). And although all this is perfectly possible
     (look for the <emphasis>Linux From Scratch</emphasis> project), most users
-    would want something that is a bit more... userfriendly.</para>
+    would want something that is a bit more... user friendly.</para>
 
     <para>Enter distributions<indexterm>
         <primary>distribution project</primary>
@@ -446,8 +446,8 @@
         software to the end users. This allows the distribution to become
         widely accepted as it fits the needs of many users. However, more
         advanced distributions exist that focus on a particular market (like
-        settop boxes for multimedia presentations, firewalls and network
-        management, domotica appliances, ...) and of course, these
+        set-top boxes for multimedia presentations, firewalls and network
+        management, home automation appliances, ...) and of course, these
         distributions offer different software titles to the users.</para>
       </listitem>
 
@@ -456,7 +456,7 @@
         ...)?</para>
 
         <para>If a distribution wants the software to run on as many processor
-        types as possible (pentium, i7, athlon, xeon, itanium, ...) it needs
+        types as possible (Pentium, i7, Athlon, Xeon, Itanium, ...) it needs
         to build the software for a generic platform (say i686) rather than
         for a specific one (Itanium). Of course, this means that the software
         doesn't use all features that new processors provide, but the software
@@ -713,7 +713,7 @@
         </indexterm> language of that CPU) can only be run on that CPU. That,
       and assembly is so low-level that it is far from easy to write a tool
       with it. The tools that still use assembly language are compilers (which
-      translate higher-level programming language to assembly), bootloaders
+      translate higher-level programming language to assembly), boot loaders
       (which load an operating system into memory) and some core components of
       operating systems (the Linux kernel has some assembly code).</para>
 
@@ -899,7 +899,7 @@
         branches are never lagging behind. The additional trees that exist are
         there because of development purposes (additional patches for
         unsupported hardware before it is merged with the mainline kernel,
-        additional patches for specific virtualization solutions that are
+        additional patches for specific virtualisation solutions that are
         otherwise incompatible or cannot be merged due to license issues,
         additional patches that are too intrusive and will take a while before
         they are stabilized, etc.)</para>
@@ -953,7 +953,7 @@
         games are developed for Microsoft Windows exclusively, and not all
         games can be run using emulators or libraries like WINE within Linux
         (luckily, many are). It is hard to ask game developers to develop for
-        Linux as most developers focus their endeavors on libraries (like
+        Linux as most developers focus their endeavours on libraries (like
         DirectX) that are only available for Microsoft Windows.</para>
 
         <para>However, another trend is also emerging: more and more games are
@@ -978,7 +978,7 @@
         <para>The same is true for wireless network cards. Whereas this was a
         weakness previously, support for wireless network cards is now well
         integrated within the community. A major reason here is that most
-        vendors are now officially supporting their wireless chipset for
+        vendors are now officially supporting their wireless chip set for
         Linux, offering drivers and documentation.</para>
       </section>
     </section>

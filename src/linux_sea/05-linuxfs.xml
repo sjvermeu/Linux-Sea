@@ -42,8 +42,8 @@ etc/     mnt/      sbin/     usr/</programlisting>
     instance, it appends a "/" to directories, an "@" to symbolic links and a
     "*" to executable files. The advantage is that, for this book, you can
     easily see what type of files you have. By default, Gentoo enables
-    color-mode for the <command>ls</command> command, telling you what kind of
-    files there are by the color. For books however, using the appended
+    colour-mode for the <command>ls</command> command, telling you what kind of
+    files there are by the colour. For books however, using the appended
     character is more sane.</para>
 
     <para>A popular way of representing the file system is through a tree. An
@@ -262,12 +262,12 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
             to share blocks with several files). Although quite popular a few
             years back, the file system has been seeing a lack of support
             through its popular years (harmful bugs stayed in for quite some
-            time) and is not frequently advised by distributions anymore. Its
+            time) and is not frequently advised by distributions any more. Its
             successor, <emphasis>reiser4</emphasis><indexterm>
                 <primary>reiser4</primary>
               </indexterm>, is still quite premature and is, due to the
             imprisonment of the main developer Hans Reiser, not being
-            developed that actively anymore.</para>
+            developed that actively any more.</para>
           </listitem>
         </itemizedlist>
 
@@ -290,7 +290,7 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
         you do not need to panic "to chose the right file system".</para>
 
         <para>Now, if we take a look at our previous mount output again, we
-        notice that there is a part of the line that sais which "type" a mount
+        notice that there is a part of the line that says which "type" a mount
         has. Well, this type is the file system used for that particular
         mount.</para>
 
@@ -358,7 +358,7 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
                 <primary>tmpfs</primary>
               </indexterm> is a temporary file system. Its contents is stored
             in memory and not on a persistent disk. As such, its storage is
-            usually very quick (memory is a lot faster than even the fastests
+            usually very quick (memory is a lot faster than even the fastest
             SSDs and hard disks out there). I do say usually, because tmpfs
             can swap out pages of its memory to the swap location, effectively
             making those parts of the tmpfs file system slower (as they need
@@ -484,7 +484,7 @@ brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
         definition file called <filename>/etc/fstab</filename><indexterm>
             <primary>fstab</primary>
           </indexterm>. The fstab file contains all the information mount
-        could need in order to succesfully mount a device. An example fstab is
+        could need in order to successfully mount a device. An example fstab is
         shown below:</para>
 
         <programlisting>/dev/sda8  /          ext3    defaults,noatime      0 0
@@ -506,7 +506,7 @@ brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
 
           <listitem>
             <para>The file system type, or auto if you want Linux to
-            autodetect the file system</para>
+            automatically detect the file system</para>
           </listitem>
 
           <listitem>
@@ -526,7 +526,7 @@ brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
         </orderedlist>
 
         <para>Thanks to this file, the previous <command>mount</command>
-        command example is not necessary anymore (as the mount is performed
+        command example is not necessary any more (as the mount is performed
         automatically) but in case the mount has not been done already, the
         command is simplified to:</para>
 
@@ -548,7 +548,7 @@ brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
         <programlisting># <command>mount /media/dvd</command>
 <remark>(The DVD is now mounted and accessible)</remark>
 # <command>umount /media/dvd</command>
-<remark>(The DVD is now not available on the file system anymore and can be
+<remark>(The DVD is now not available on the file system any more and can be
  removed from the tray)</remark></programlisting>
 
         <para>Of course, modern Linux operating systems have tools in place
@@ -607,7 +607,7 @@ Filename     Type      Size    Used  Priority
       specific meaning. We've already covered a few of them without explicitly
       telling that those are standard locations, such as
       <filename>/home</filename> which houses the local users' home
-      directories. The <link linkend="fhs">Linux Filesystem Standard</link>
+      directories. The <link linkend="fhs">Linux File system Standard</link>
       covers all these standard locations, but this chapter would be very
       incomplete if it didn't talk about these as well.</para>
 
@@ -631,7 +631,7 @@ Filename     Type      Size    Used  Priority
 
           <listitem>
             <para><filename>/lib</filename> contains the system libraries
-            necessary to succesfully boot the system and run the commands
+            necessary to successfully boot the system and run the commands
             which are located inside <filename>/bin</filename></para>
           </listitem>
 
@@ -782,7 +782,7 @@ Filename     Type      Size    Used  Priority
       file system. It is the first file system that is mounted when the kernel
       boots, and your system will not function properly if the kernel detects
       corruption on this file system. Also, due to the nature of the boot
-      process, this file system will eventually become writable (as the boot
+      process, this file system will eventually become writeable (as the boot
       process needs to store its state information, etc.)</para>
 
       <para>Some locations on the root file system need to remain on the root
@@ -929,7 +929,7 @@ Filename     Type      Size    Used  Priority
 
       <para>However, supporting these flags wouldn't make a system secure: you
       want to mix these privileges based on who works with the file. For
-      instance, the system configuration files should only be writable by the
+      instance, the system configuration files should only be writeable by the
       administrator(s); some might not even be readable by the users (like the
       file containing the user passwords).</para>
 
@@ -980,7 +980,7 @@ Filename     Type      Size    Used  Priority
       <programlisting>$ <command>ls -l /etc/fstab</command>
 -rw-r--r-- 1 root root 905 Nov 21 09:10 /etc/fstab</programlisting>
 
-      <para>In the above example, the fstab file is writable by the root user
+      <para>In the above example, the fstab file is writeable by the root user
       (rw-) and readable by anyone else (r--).</para>
 
       <para>In case of a directory,</para>
@@ -1011,7 +1011,7 @@ Filename     Type      Size    Used  Priority
 drwxr-x--- 2 root root 4096 Nov 26 18:17 /etc/cron.daily/</programlisting>
 
       <para>In the above example, the cron.daily directory is viewable (r),
-      writable (w) and "enterable" (x) by the root user. People in the root
+      writeable (w) and "enterable" (x) by the root user. People in the root
       group have view- and enter rights (r-x) whereas all other people have no
       rights to view, write or enter the directory (---).</para>
 
@@ -1249,7 +1249,7 @@ Change: 2010-02-06 13:50:43.000000000 +0100</programlisting>
         </itemizedlist>
 
         <para>Then you can set (=), add (+) or remove (-) privileges. For
-        instance, to make <filename>/etc/passwd</filename> writable for the
+        instance, to make <filename>/etc/passwd</filename> writeable for the
         members of the owning group:</para>
 
         <programlisting># <command>chmod g+w /etc/passwd</command></programlisting>
@@ -1399,7 +1399,7 @@ s-S--a---------  /tmp/foo</programlisting>
 
       <para>As you can see, the slocate command returns all files it has found
       where the string (in this case, "make.conf") is used in the filename,
-      even when the filename is different.</para>
+      even when the file name is different.</para>
     </section>
 
     <section>
@@ -1495,7 +1495,7 @@ s-S--a---------  /tmp/foo</programlisting>
 
         <programlisting>$ <command>find /etc -type f -mtime -7 | xargs ls -l '{}' </command></programlisting>
 
-        <para>The result is the same, but its behavior is somewhat
+        <para>The result is the same, but its behaviour is somewhat
         different.</para>
 
         <para>When using -exec, the find command executes the command for

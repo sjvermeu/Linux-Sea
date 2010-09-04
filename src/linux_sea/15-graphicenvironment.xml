@@ -12,7 +12,7 @@
     launch graphical environments on Linux. In this chapter, we briefly cover
     the graphical environments in Linux.</para>
 
-    <para>Graphical environments are the defacto standard for working with a
+    <para>Graphical environments are the de facto standard for working with a
     workstation. Many users know the Microsoft Windows family or the Apple
     MacOS series. However, those two aren't the only providers of a graphical
     environment. When the Intel-compliant PCs were hardly known to the world,
@@ -45,7 +45,7 @@
       </listitem>
 
       <listitem>
-        <para>Widget Toolkits</para>
+        <para>Widget Tool Kits</para>
       </listitem>
 
       <listitem>
@@ -76,14 +76,14 @@
 
     <para>An application is able to draw graphic components (buttons, windows,
     progress bars, labels etc.) through a common API called a <emphasis>widget
-    toolkit</emphasis><indexterm>
-        <primary>widget toolkit</primary>
-      </indexterm>. Popular widget toolkits on Linux are GTK+ and Qt. However,
-    not all applications require a widget toolkit - they can also talk to the
-    X server immediately. Using such toolkits however facilitates the
+    tool kit</emphasis><indexterm>
+        <primary>widget tool kit</primary>
+      </indexterm>. Popular widget tool kits on Linux are GTK+ and Qt. However,
+    not all applications require a widget tool kit - they can also talk to the
+    X server immediately. Using such tool kits however facilitates the
     development of graphical applications.</para>
 
-    <para>The widget toolkits communicate with the X server through an
+    <para>The widget tool kits communicate with the X server through an
     interface which basically drives all commands to a <emphasis>window
     manager</emphasis><indexterm>
         <primary>window manager</primary>
@@ -93,10 +93,10 @@
     metacity (used by the GNOME desktop environment), KWin (used by the KDE
     desktop environment), fluxbox, enlightenment, ...</para>
 
-    <para>Most window managers are written for specific widget toolkits, but
+    <para>Most window managers are written for specific widget tool kits, but
     some of their functionality extends beyond one particular window manager:
     this allows window managers to support not only rendering of applications
-    built with different widget toolkits, but also interoperability between
+    built with different widget tool kits, but also interoperability between
     these applications (copy/paste, drag 'n drop ...).</para>
 
     <para>The window manager receives commands from the <emphasis>X
@@ -147,7 +147,7 @@
 
         <listitem>
           <para>the drivers used to render stuff (i810, vesa, but also closed,
-          propriatary drivers like nVidia and ATIs)</para>
+          proprietary drivers like nVidia and ATIs)</para>
         </listitem>
 
         <listitem>
@@ -192,7 +192,7 @@ VIDEO_CARDS="vesa intel"</programlisting>
         <title>Testing Xorg</title>
 
         <para>Try out Xorg without using any configuration file. The Xorg
-        server will try to autodetect the necessary settings and, to be
+        server will try to automatically detect the necessary settings and, to be
         honest, does a fine job at that. Don't test out things as root
         though!</para>
 
@@ -422,7 +422,7 @@ VIDEO_CARDS="vesa intel"</programlisting>
     <para>When you have a graphic card capable of rendering 3D, you will need
     to configure the X Window System to hand over 3D rendering tasks to the
     graphic card. This can happen through either open standards or
-    specifications (such as OpenGL) or through closed, propriatary drivers
+    specifications (such as OpenGL) or through closed, proprietary drivers
     (such as the nVidia drivers).</para>
   </section>
 </chapter>

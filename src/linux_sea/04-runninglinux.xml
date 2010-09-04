@@ -87,7 +87,7 @@
     <para>Every task a user starts results in a process on the system. For
     instance, a user that fires up a browser results in at least one process
     representing the browser program. By default, this process runs with the
-    privileges of this user and has therefor only access to the files and
+    privileges of this user and has therefore only access to the files and
     resources of this user. Another reason why not to use the root account:
     you don't want a malicious script that gets executed in your browser, and
     which triggers an exploitable bug (this isn't fantasy, it might happen)
@@ -116,7 +116,7 @@
         </listitem>
 
         <listitem>
-          <para>disabling networking or changing network behavior</para>
+          <para>disabling networking or changing network behaviour</para>
         </listitem>
 
         <listitem>
@@ -127,7 +127,7 @@
         <listitem>
           <para>killing or otherwise manipulating the wrong process(es)
           (possibly resulting in service malfunction, shutdown or
-          misbehavior)</para>
+          misbehaviour)</para>
         </listitem>
 
         <listitem>
@@ -237,7 +237,7 @@
       <filename>/home/swift</filename>, which is the home directory of the
       "swift" user account. Another example is
       <filename>/usr/share/doc/googleearth-4.2.198.2451/</filename>, the
-      location where a specific version of the GoogleEarth program stores its
+      location where a specific version of the Google Earth program stores its
       package documentation.</para>
 
       <para>Next to regular files (like text files or program-related files)
@@ -360,9 +360,9 @@
       </itemizedlist>
 
       <para>The restriction deletion flag needs some explanation. It is used
-      on world-writable directories (a well-known example is
+      on world-writeable directories (a well-known example is
       <filename>/tmp</filename>, where temporary files can be stored) and used
-      to prevent users to remove files they didn't create. A world-writable
+      to prevent users to remove files they didn't create. A world-writeable
       directory would otherwise allow other users to remove files from that
       directory (as they too have write access to the directory). The
       restriction deletion flag is also known as the
@@ -384,14 +384,14 @@
 
 seaheaven login: </programlisting>
 
-    <para>At this prompt, you are asked to enter your username which you have
+    <para>At this prompt, you are asked to enter your user name which you have
     undoubtedly created during the Linux installation. Next, you are asked for
-    your account password. If the username exists and the password matches,
+    your account password. If the user name exists and the password matches,
     then you are greeted with a <emphasis>command line
     prompt</emphasis><indexterm>
         <primary>prompt</primary>
       </indexterm>. The next listing shows a typical prompt for the account
-    with user name "captain" on a system with hostname "seaheaven":</para>
+    with user name "captain" on a system with host name "seaheaven":</para>
 
     <programlisting>captain@seaheaven ~ $</programlisting>
 
@@ -399,11 +399,11 @@ seaheaven login: </programlisting>
 
     <orderedlist>
       <listitem>
-        <para>the username of the account logged on to the system</para>
+        <para>the user name of the account logged on to the system</para>
       </listitem>
 
       <listitem>
-        <para>the hostname of the system where the user is logged on to</para>
+        <para>the host name of the system where the user is logged on to</para>
       </listitem>
 
       <listitem>
@@ -606,7 +606,7 @@ Documents    Movies    Music    Pictures
         <programlisting>$ <command>ls -l 12-servicemanagement.xml</command>
 -rw-r--r-- 1 swift users 26976 Apr 22 21:21 12-servicemanagement.xml
 |&lt;+&gt;&lt;+&gt;&lt;+&gt; | &lt;-+-&gt; &lt;-+-&gt; &lt;-+-&gt; &lt;-----+----&gt; &lt;---------+-------------&gt;
-| |  |  |  |   |     |     |         |                `- filename or directory name
+| |  |  |  |   |     |     |         |                `- file name or directory name
 | |  |  |  |   |     |     |         `- last modification time
 | |  |  |  |   |     |     `- size (in bytes)
 | |  |  |  |   |     `- group owning the file or directory
@@ -655,7 +655,7 @@ $ <command>ls -l inittab</command>
 -rw-r--r-- 1 swift users 1890 Apr 22 22:49 inittab</programlisting>
 
         <para>You can ask <command>cp</command> to preserve all information
-        (like access privileges, ownership and timestamps) although you might
+        (like access privileges, ownership and time stamps) although you might
         need to be root to do so.</para>
 
         <para>To recursively copy an entire directory and its content, use the
@@ -725,16 +725,14 @@ rm: cannot remove '/etc/passwd': Permission denied</programlisting>
       <para>An important task for any Linux user is knowing how to edit text
       files. There are many text editors around, such as the popular vim and
       emacs. Gentoo recommends nano as your first editor because it is easy to
-      work with and understand. My preference is for vim but as the Latin
-      saying goes: <quote>de gustibus et coloribus non est
-      disputandum</quote>.</para>
+      work with and understand. My preference is for vim.</para>
 
       <section>
         <title>Using Nano</title>
 
         <para>As such, a quick primer in the use of nano. If you launch nano
         it shows you the main editor screen for a new file. If you launch nano
-        with a filename as its argument, it opens up the text file, ready for
+        with a file name as its argument, it opens up the text file, ready for
         editing. As an example, I open up the
         <filename>opentasks.txt</filename> file using nano:</para>
 
@@ -881,10 +879,10 @@ rm: cannot remove '/etc/passwd': Permission denied</programlisting>
         </indexterm>, are the easiest to understand. They're not real files,
       but rather references to files somewhere on the file system. Their
       reference is a location string, which allows the link to be used across
-      media and even to files that don't exist (anymore). As an example, you
+      media and even to files that don't exist (any more). As an example, you
       could have a symbolic link that points to
       <filename>/home/swift/opentasks.txt</filename>, even when this file
-      doesn't exist (anymore).</para>
+      doesn't exist (any more).</para>
 
       <para><emphasis>Hard links</emphasis><indexterm>
           <primary>link</primary>
@@ -997,8 +995,7 @@ seaheaven login: </programlisting>
 Password: <emphasis>(Enter root password)</emphasis>
 root@seaheaven ~ # </programlisting>
 
-      <para>Now, you can issue the shutdown command to shut down (-h) or
-      reboot<indexterm>
+      <para>Now, you can issue the shutdown command to shut down (-h) or reboot<indexterm>
           <primary>reboot</primary>
         </indexterm> (-r) the system immediately:</para>
 
@@ -1049,7 +1046,7 @@ root@seaheaven ~ # </programlisting>
 
         <listitem>
           <para>further information on the command, like usage restrictions,
-          default behavior, ...</para>
+          default behaviour, ...</para>
         </listitem>
 
         <listitem>

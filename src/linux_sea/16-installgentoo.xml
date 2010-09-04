@@ -134,7 +134,7 @@
     <title>Installing Gentoo Base</title>
 
     <para>First, set your system time correct so that the files you're going
-    to create do not have a weird timestamp:</para>
+    to create do not have a weird time stamp:</para>
 
     <programlisting>~# <command>ntpdate pool.ntp.org</command></programlisting>
 
@@ -200,7 +200,7 @@
 
     <para>Next, edit the <filename>/mnt/gentoo/etc/make.conf</filename> file.
     As discussed previously, this file contains variables that define Portage'
-    behavior. Right now I'm focussing on the variables CFLAGS, CXXFLAGS and
+    behaviour. Right now I'm focussing on the variables CFLAGS, CXXFLAGS and
     MAKEOPTS...</para>
 
     <itemizedlist>
@@ -239,7 +239,7 @@
         </indexterm> is the process of altering your sessions' file system
       root to another location. In our case, <filename>/mnt/gentoo</filename>
       should become <filename>/</filename> for your running session. In order
-      to chroot succesfully, we need to ensure that networking will still
+      to chroot successfully, we need to ensure that networking will still
       function properly and that both kernel data and device drivers are
       available inside the chroot:</para>
 
@@ -366,7 +366,7 @@ de_DE@euro ISO-8859-15
 none       /dev/shm tmpfs defaults          0 0</programlisting>
 
       <para>Next, configure your network settings. Start by setting the system
-      hostname in <filename>/etc/conf.d/hostname</filename> and then configure
+      host name in <filename>/etc/conf.d/hostname</filename> and then configure
       the networking settings in <filename>/etc/conf.d/net</filename>.
       Finally, add your network interface initialization script to the default
       run level so that networking is automatically started at boot
@@ -378,7 +378,7 @@ none       /dev/shm tmpfs defaults          0 0</programlisting>
 
       <para>Also edit your <filename>/etc/hosts</filename> file to include the
       IP addresses and host names of other systems you might need. Also add
-      your hostname to the 127.0.0.1 entry in
+      your host name to the 127.0.0.1 entry in
       <filename>/etc/hosts</filename>.</para>
 
       <programlisting>~# <command>nano -w /etc/hosts</command></programlisting>

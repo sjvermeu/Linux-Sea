@@ -144,8 +144,8 @@
           </listitem>
 
           <listitem>
-            <para>Gentoo hosts its mailinglists itself - you can find an
-            overview of the available mailinglists <ulink
+            <para>Gentoo hosts its mailing lists itself - you can find an
+            overview of the available mailing lists <ulink
             url="http://www.gentoo.org/main/en/lists.xml">online</ulink></para>
           </listitem>
 
@@ -379,7 +379,7 @@
       <listitem>
         <para>By default, <command>sudo</command> logs to the system logger,
         so you'll find it either on the messages console or general messages
-        file. You can alter this behavior in <command>sudo</command> if you
+        file. You can alter this behaviour in <command>sudo</command> if you
         wish (see <command>man sudoers</command>).</para>
       </listitem>
     </orderedlist>

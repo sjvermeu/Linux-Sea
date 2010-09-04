@@ -69,7 +69,7 @@
         <para>Locales are discussed later in this chapter. Its environment
         variables (<parameter>LANG</parameter> and the various
         <parameter>LC_*</parameter> variables) identify the users' language,
-        timezone, currency, number formatting and more.</para>
+        time zone, currency, number formatting and more.</para>
       </section>
 
       <section>
@@ -221,7 +221,7 @@ Pour en savoir davantage, faites: `ls --help`</programlisting>
     <section>
       <title>Managing Environment Entries</title>
 
-      <para>On Linux, the behavior of many commands is manipulated by values
+      <para>On Linux, the behaviour of many commands is manipulated by values
       of environment entries, or environment variables. Within Gentoo Linux,
       you can manage the system-wide environment variables through the
       <filename>/etc/env.d</filename> directory.</para>
@@ -247,7 +247,7 @@ PATH=/opt/blackdown-jdk-1.4.2.03/bin:/opt/blackdown-jdk-1.4.2.03/jre/bin</progra
         previously assigned to the variable).</para>
 
         <para>The order in which variable values are appended is based on the
-        filename inside <filename>/etc/env.d</filename>. This is why most
+        file name inside <filename>/etc/env.d</filename>. This is why most
         files start with a number (as most people find it easier to deal with
         order based on numbers, plus that the filenames themselves are still
         explanatory to what purpose they serve).</para>
@@ -263,7 +263,7 @@ PATH=/opt/blackdown-jdk-1.4.2.03/bin:/opt/blackdown-jdk-1.4.2.03/jre/bin</progra
         <filename>/etc/env.d</filename> without warning (this location is not
         protected, unlike many other configuration locations).</para>
 
-        <para>As such, it is adviseable to always add your own files rather
+        <para>As such, it is advisable to always add your own files rather
         than manipulate existing ones.</para>
 
         <para>When you have altered an environment file or added a new one,
@@ -286,7 +286,7 @@ PATH=/opt/blackdown-jdk-1.4.2.03/bin:/opt/blackdown-jdk-1.4.2.03/jre/bin</progra
 
     <para>When I talk about location specific settings, I mean the settings
     that your neighbour is most likely to need as well: language settings,
-    keyboard settings, timezone / currency settings, ... Within the Linux/Unix
+    keyboard settings, time zone / currency settings, ... Within the Linux/Unix
     environment, these settings are combined in the locale settings and
     keyboard settings.</para>
 
@@ -296,12 +296,12 @@ PATH=/opt/blackdown-jdk-1.4.2.03/bin:/opt/blackdown-jdk-1.4.2.03/jre/bin</progra
       <para>A <emphasis>locale</emphasis><indexterm>
           <primary>locale</primary>
         </indexterm> is a setting that identifies the language, number format,
-      date/time format, timezone, daylight saving time and currency
+      date/time format, time zone, daylight saving time and currency
       information for a particular user or system. This locale information is
       stored inside a variable called <parameter>LANG</parameter>; however, it
       is possible to switch a particular locale setting to another locale (for
       instance, use the American English settings for everything, but currency
-      to european euro).</para>
+      to European Euro).</para>
 
       <para>The following table gives an overview of the most important
       variables:</para>
@@ -357,7 +357,7 @@ PATH=/opt/blackdown-jdk-1.4.2.03/bin:/opt/blackdown-jdk-1.4.2.03/jre/bin</progra
 
       <para>There is another variable available as well, called
       <parameter>LC_ALL</parameter>. If this variable is set, none of the
-      above variables is used anymore. However, use of this variable is
+      above variables is used any more. However, use of this variable is
       strongly discouraged.</para>
 
       <para>To get an overview of your locale settings (including a full list
@@ -417,7 +417,7 @@ LANG="en_US.utf-8"
 LANG="nl_NL@euro"</programlisting>
 
       <para>These settings are read as environment variables (which are
-      discussed later) by the applications. You can mark locales systemwide,
+      discussed later) by the applications. You can mark locales system wide,
       but it is advised that this is stored on a per-user basis. As such, I
       recommend that you set something like the following in your
       <filename>~/.bashrc</filename> file (and in

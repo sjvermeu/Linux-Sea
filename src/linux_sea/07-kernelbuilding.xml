@@ -10,7 +10,7 @@
     <para>The Linux kernel is responsible for the majority of the hardware
     support. It contains the drivers to access and communicate with hardware.
     However, there are also quite some user-space tools required in order to
-    succesfully work with the hardware. For instance, support for printing
+    successfully work with the hardware. For instance, support for printing
     inside the kernel is limited to support to the LPT printer port or USB,
     but the printer drivers themselves are user-space.</para>
 
@@ -52,7 +52,7 @@
       very surprised if you know all components, including vendor and type of
       your system) you will be glad to know Linux has quite some interesting
       tools to tell you what it found. The results of these tools are
-      regardless of wether or not your kernel has support for these devices
+      regardless of whether or not your kernel has support for these devices
       (although some small support is required, but most, if not all default
       kernels have this included).</para>
     </section>
@@ -270,14 +270,14 @@ usb-storage: device scan complete</programlisting>
 
       <para>Kernel modules are often used for detachable devices (such as USB
       devices) but also for distributions who want to provide a kernel to
-      their users regardless of the hardware these users own: at bootup, the
-      distribution will load the modules needed to support the hardware found
+      their users regardless of the hardware these users own: during the boot-up
+      sequence, the distribution will load the modules needed to support the hardware found
       and leave all other modules untouched.</para>
 
       <para>It is important to understand though that these modules are read
       from somewhere - you can't put the driver for your disk in a module and
       store that module on disk - the Linux kernel doesn't know what a disk is
-      at that point and can therefor not find the module. Similar, don't put
+      at that point and can therefore not find the module. Similar, don't put
       support for a particular file system (such as ext3) in a module and
       store that module on an ext3 file system.</para>
 
@@ -290,7 +290,7 @@ usb-storage: device scan complete</programlisting>
 
           <see>initial root disk</see>
         </indexterm>). This contains the modules that might be needed in order
-      to succesfully boot the system. Support for the initrd format is built
+      to successfully boot the system. Support for the initrd format is built
       in-kernel (in-kernel is the term denoting that support is not built as a
       kernel module but immediately made part of the Linux kernel image loaded
       by the boot loader).</para>
@@ -333,7 +333,7 @@ tifm_core               6420  1 tifm_7xx1</programlisting>
         use it.</para>
 
         <para>To remove a loaded module, first ensure that the module is not
-        used by any other module anymore (i.e. the "Used by" listing should be
+        used by any other module any more (i.e. the "Used by" listing should be
         empty in the <command>lsmod</command> output) and then use
         <command>rmmod</command><indexterm>
             <primary>rmmod</primary>
@@ -345,7 +345,7 @@ tifm_core               6420  1 tifm_7xx1</programlisting>
         <command>modprobe</command><footnote>
             <para>There is another command called insmod - this tool is less
             intelligent than modprobe: it only attempts to load a kernel
-            module given its filename and it doesn't try to load the
+            module given its file name and it doesn't try to load the
             prerequirement modules (modules can prerequire other
             modules).</para>
           </footnote><indexterm>
@@ -355,7 +355,7 @@ tifm_core               6420  1 tifm_7xx1</programlisting>
         <programlisting># <command>modprobe ipw2200</command></programlisting>
 
         <para>One of the advantages of using modules is that you can pass on
-        additional options to a module, effectively changing its behavior. But
+        additional options to a module, effectively changing its behaviour. But
         first some information on getting more information on modules.</para>
 
         <para>An interesting command is <command>modinfo</command><indexterm>
@@ -460,7 +460,7 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
         <programlisting>blacklist uvcvideo</programlisting>
 
         <para>Blacklisting a module doesn't mean that the module cannot be
-        loaded anymore. It means that the automated load, based on the
+        loaded any more. It means that the automated load, based on the
         hardware information, is disabled. In other words, the link between a
         hardware device id and the module is blacklisted. A manual
         <command>modprobe</command> will still do the trick, and if the
@@ -533,7 +533,7 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
         kernel.</para>
       </blockquote>
 
-      <para>His idea is really worth persuing, so don't hesitate to take a
+      <para>His idea is really worth pursuing, so don't hesitate to take a
       look at <ulink
       url="http://www.kernel-seeds.org/">http://www.kernel-seeds.org/</ulink>.
       On the site, you can then navigate to your architecture (currently only
@@ -628,7 +628,7 @@ excludes, &lt;M&gt; modularizes features. Press &lt;Esc&gt;&lt;Esc&gt; to exit,
         <para>You should understand that your current Linux kernel (the one
         you're booted with) is stored elsewhere in the system (probably in
         <filename>/boot</filename>) and that this kernel doesn't need to know
-        its configuration file anymore - it has been built using a particular
+        its configuration file any more - it has been built using a particular
         configuration and will remain as-is.</para>
 
         <para>Configuring your own kernel is most likely a trial-and-error
@@ -775,7 +775,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
                 </indexterm> (Read Copy Update) is a synchronisation primitive
               supported by the Linux kernel which offers fast access to shared
               resources (programming-terms) in case of a many-read and
-              infrequent write access behavior. That might sound terribly
+              infrequent write access behaviour. That might sound terribly
               geekish and programmer-specific - and it is - but if you have
               multiple cores or processors in your system, it is wise to
               enable it. Otherwise, set it to UP-kernel (UniProcessor).</para>
@@ -832,7 +832,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
               <para>Module unloading</para>
 
               <para>You will probably want to unload kernel modules if you
-              don't need them anymore.</para>
+              don't need them any more.</para>
             </listitem>
 
             <listitem>
@@ -1248,7 +1248,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
           <para>The binary format used by Linux is ELF. Very old Linux systems
           and a couple of BSD operating systems use a.out binaries but it
-          isn't necessary to include support for those anymore.</para>
+          isn't necessary to include support for those any more.</para>
         </section>
 
         <section>
@@ -1554,15 +1554,15 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
                 <para>Intel ESB, ICH, PIIX3, PIIX4 PATA/SATA support</para>
 
                 <para>The only selection made in this configuration is the
-                support for my SATA chipset of which lspci told me it was an
-                Intel ICH6 chipset:</para>
+                support for my SATA chip set of which lspci told me it was an
+                Intel ICH6 chip set:</para>
 
                 <programlisting># <command>lspci | grep SATA</command>
 00:1f.2 SATA controller: Intel Corporation 82801FBM (ICH6M)
         SATA Controller (rev 04)</programlisting>
 
                 <para>All the other options are drivers for other
-                chipsets.</para>
+                chip sets.</para>
               </listitem>
             </itemizedlist>
           </section>
@@ -1647,7 +1647,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
                     <para>Intel PRO/Wireless 2200BG and 2915ABG Network
                     Connection</para>
 
-                    <para>lspci sais that my wireless card is an Intel
+                    <para>lspci says that my wireless card is an Intel
                     PRO/Wireless 2200BG one, so I need to enable support for
                     it:</para>
 
@@ -1699,7 +1699,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
                 <para>Generic input layer (needed for keyboard, mouse,
                 ...)</para>
 
-                <para>As the title sais already, I need this for
+                <para>As the title says already, I need this for
                 keyboard/mouse support</para>
               </listitem>
 
@@ -1874,7 +1874,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
         915GM/GMS/910GML Express Graphics Controller (rev 03)</programlisting>
 
                 <para>As such, I also enable 'Intel 440LX/BX/GX, I8xx and
-                E7x05 chipset support'. You might believe that I am in error
+                E7x05 chip set support'. You might believe that I am in error
                 because the title doesn't mention 915GM (as shown in lspci's
                 output) but if I read the help for the option, I read that
                 I915 is supported through this driver as well.</para>
@@ -2129,13 +2129,13 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
                 <para>The Linux kernel help system has informed me that this
                 helps performance on certain controllers. Although I don't
                 know if I really need this, I've enabled this as I was unsure,
-                and the help sais I need to say 'Y' if I am unsure.</para>
+                and the help says I need to say 'Y' if I am unsure.</para>
               </listitem>
 
               <listitem>
                 <para>Secure Digital Host Controller Interface support</para>
 
-                <para>Inside the help of this option it sais that this enables
+                <para>Inside the help of this option it says that this enables
                 SD controller support for controllers manufactured by Texas
                 Instruments, Ricoh and Toshiba. lspci informs me that I have a
                 Texas Instruments device, so I enable this:</para>
@@ -2223,7 +2223,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
               <para>Within this subsection, enable 'ISO 9660 CDROM file system
               support' as well as 'Microsoft Joliet CDROM extensions' (to
-              support the larger filename scheme used by Microsoft).</para>
+              support the larger file name scheme used by Microsoft).</para>
             </listitem>
 
             <listitem>
@@ -2410,7 +2410,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
     <section>
       <title>Rebuilding a Kernel</title>
 
-      <para>Suppose that you have succesfully built a kernel and are happily
+      <para>Suppose that you have successfully built a kernel and are happily
       working with it. At some point in time, you'll need to upgrade your
       kernel. Luckily, there is no reason to perform the above steps over and
       over again.</para>

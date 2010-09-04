@@ -61,8 +61,8 @@ init-+-acpid
       <command>init</command><indexterm>
           <primary>init</primary>
         </indexterm>. The root process is the first process launched by the
-      kernel when it boots up. It is responsible for running the necessary
-      startup services and prepare the system for its duties.</para>
+      kernel when it boots up. It is responsible for starting the necessary
+      services at boot time and prepare the system for its duties.</para>
 
       <para>Processes that become child of the root process usually do this
       because they don't want to be terminated when their parent process exits
@@ -110,7 +110,7 @@ init-+-acpid
       has root privileges rather than the privileges for the user. For the
       <command>passwd</command> command, this is necessary because it needs to
       update the password files (<filename>/etc/passwd</filename> and
-      <filename>/etc/shadow</filename>) which are only writable by the root
+      <filename>/etc/shadow</filename>) which are only writeable by the root
       user (the <filename>/etc/shadow</filename> file is not even readable for
       regular users).</para>
     </section>
@@ -161,13 +161,13 @@ init-+-acpid
         </orderedlist>
 
         <para>Of course, several arguments to ps exist which change its
-        behavior. For instance, with <command>ps -e</command> you see the same
+        behaviour. For instance, with <command>ps -e</command> you see the same
         information, but for all processes runnin on the system. With
         <command>ps -f</command> a few more columns are added, including the
         parent process id and the time the process started.</para>
 
         <para>You can also limit the processes to see based on the user
-        (<command>ps -u username</command>), command name (<command>ps -C
+        (<command>ps -u user name</command>), command name (<command>ps -C
         command</command>), really running processes (taking cpu time at the
         moment: <command>ps -r</command>) and more. For more information, see
         the ps manual page.</para>
@@ -377,7 +377,7 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
 
         <para>The same can be accomplished with files. For instance, to see
         what processes are using a particular file with fuser, just give the
-        filename (<command>fuser -v /path/to/file</command>).</para>
+        file name (<command>fuser -v /path/to/file</command>).</para>
       </section>
     </section>
 
@@ -394,7 +394,7 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
       The moment you launch a daemon process, you immediately get your prompt
       back as if the process has finished. However, this isn't true: the
       process is still running, but it is running in the background. Most
-      daemons do not have the possibility to reattach to the session. Wether
+      daemons do not have the possibility to reattach to the session. Whether
       or not a process is a daemon depends on the process itself as this is a
       pure programmatic decision.</para>
 
@@ -453,7 +453,7 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
           is still forwarded to your terminal. If you do not want this, you
           can redirect the output of a command using the &gt; redirect. For
           instance, to redirect the standard output (default - 1) of
-          update-eix to a logfile and do the same for the error output
+          update-eix to a log file and do the same for the error output
           (2):</para>
 
           <programlisting># <command>eix-update &gt; /var/tmp/update-eix.log 2&gt;&amp;1 &amp;</command></programlisting>
@@ -468,14 +468,14 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
   </section>
 
   <section>
-    <title>Process Behavior</title>
+    <title>Process Behaviour</title>
 
     <para>Programs are most often launched when a user selects a tool or
     executes a command. They can also be invoked automatically by a running
     program or by the Linux kernel (although the init tool is probably the
     only one ever invoked by the kernel autonomously).</para>
 
-    <para>The next few sections give pointers on process behavior and how you
+    <para>The next few sections give pointers on process behaviour and how you
     can modify it (if appropriate).</para>
 
     <section>
@@ -489,10 +489,10 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
           <primary>exit code</primary>
         </indexterm>) informing you how well it did its job.</para>
 
-      <para>A returncode is always an integer in the range of 0 to 255. Some
+      <para>A return code is always an integer in the range of 0 to 255. Some
       programs might attempt to return a code larger than 255 (or even
       negative). Although not technically restricted, this is not a good idea
-      as some applications only expect a returncode between 0 to 255 and might
+      as some applications only expect a return code between 0 to 255 and might
       even "wrap" return codes to this range. If a program would ever have a
       return code of 512 for instance, it might be mapped into 0.</para>
 

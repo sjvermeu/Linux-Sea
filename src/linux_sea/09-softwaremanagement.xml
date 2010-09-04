@@ -47,7 +47,7 @@
           <para>Prebuilt packages are supported as well: software built on a
           different Gentoo system, stored in a binary format file and made
           available to other Gentoo systems <emphasis>with</emphasis> the same
-          settngs (otherwise the binary packages might not be compatible with
+          settings (otherwise the binary packages might not be compatible with
           the system).</para>
         </listitem>
       </orderedlist>
@@ -112,7 +112,7 @@
           <para>the <emphasis>dependencies</emphasis><indexterm>
               <primary>dependency</primary>
             </indexterm> of the package (what other software is needed in
-          order to succesfully build or run this software)</para>
+          order to successfully build or run this software)</para>
         </listitem>
 
         <listitem>
@@ -964,7 +964,7 @@ This system is affected by the following GLSAs:
       <para>However, if this software is a dependency of an installed software
       title, your next system update will pull the software back in. Even
       worse, software that depends on it that is still being used / running
-      might even stop functioning properly or crash. A safer way of persuing
+      might even stop functioning properly or crash. A safer way of pursuing
       the desinstallation of a package is by asking Portage not to consider
       the package as your "main" requirement using the
       <command>--deselect</command><indexterm>
@@ -981,7 +981,7 @@ This system is affected by the following GLSAs:
 
           <secondary>depclean</secondary>
         </indexterm>. The <command>depclean</command> instruction asks Portage
-      to look for package that are installed but are not required anymore
+      to look for package that are installed but are not required any more
       (meaning: you haven't installed it yourself explicitly or the package is
       no dependency of another package):</para>
 
@@ -990,7 +990,7 @@ This system is affected by the following GLSAs:
       <para>With this command, Portage will remove packages that are not in
       use. In other words, if no other package depends upon acroread, it will
       remove acroread as you explicitly told Portage that you don't want to
-      consider it anymore. However, if some package still depends upon
+      consider it any more. However, if some package still depends upon
       acroread, Portage will let acroread remain on your system (until the
       package that depends on acroread is removed or deselected as
       well).</para>
@@ -1076,7 +1076,7 @@ ACCEPT_KEYWORDS="x86"</programlisting>
 - sys-boot/silo-1.4.14 (masked by: missing keyword)</programlisting>
 
         <para>Having an error due to an unsupported architecture, it is not
-        adviseable to try and work around this (forcing the package to be
+        advisable to try and work around this (forcing the package to be
         installable). It will most likely not work anyhow.</para>
 
         <para>Other related error messages that you might receive are:</para>
@@ -1129,7 +1129,7 @@ ACCEPT_KEYWORDS="x86"</programlisting>
         possible package definition bugs (like wrong dependencies) and helping
         the further development until the package is deemed stable.</para>
 
-        <para>There is an unwritten rule that sais that packages should
+        <para>There is an unwritten rule that says that packages should
         "linger" in the staging period for 30 bug-free days (no additional
         bugs found by the architecture testers) before it is released to the
         general public.</para>
@@ -1161,7 +1161,7 @@ ACCEPT_KEYWORDS="x86"</programlisting>
         <para>Whenever a package has a critical bug (critical = breaks your
         system severely), a security issue (like having an exploitable
         vulnerability that might grant malicious users access to your system)
-        or just isn't maintained anymore, the Gentoo developer might mask the
+        or just isn't maintained any more, the Gentoo developer might mask the
         package explicitly.</para>
 
         <para>Explicit masks do not only disallow the installation of the
@@ -1405,7 +1405,7 @@ ACCEPT_LICENSE="-* @FSF-APPROVED"</programlisting>
           </step>
 
           <step>
-            <para>Open <filename>/etc/make.conf</filename> in your favorite
+            <para>Open <filename>/etc/make.conf</filename> in your favourite
             text editor:</para>
 
             <programlisting># <command>nano -w /etc/make.conf</command></programlisting>
@@ -1499,7 +1499,7 @@ ACCEPT_KEYWORDS="x86"</programlisting>
           </step>
 
           <step>
-            <para>Open <filename>/etc/make.conf</filename> in your favorite
+            <para>Open <filename>/etc/make.conf</filename> in your favourite
             editor</para>
 
             <programlisting># <command>nano -w /etc/make.conf</command></programlisting>
@@ -1551,7 +1551,7 @@ ACCEPT_KEYWORDS="x86"</programlisting>
 
         <programlisting>$ <command>man portage</command>
 <emphasis>(...)
-(Type in "/" followed by the filename you want to know more about)</emphasis>
+(Type in "/" followed by the file name you want to know more about)</emphasis>
 <command>/package.mask</command>
 <emphasis>(Type "n" (next) until you get the section information)</emphasis>
 
@@ -1961,7 +1961,7 @@ make[4]: ***
 Error 2</programlisting>
 
         <para>The important part here is the error statement prefixed by the
-        filename (usually ending in .c or .cpp) and a number (which is the
+        file name (usually ending in .c or .cpp) and a number (which is the
         line number in the file where the compiler found an error). Whenever
         you get such error messages, chances are that the package itself is
         broken. You should check <ulink url="https://bugs.gentoo.org">Gentoo's
@@ -2004,7 +2004,7 @@ Error 2</programlisting>
 
       <para>Whenever a configuration file update is available, the file itself
       is stored on the file system next to the current configuration file.
-      These files (whose filename starts with <filename>.cfg_</filename>) can
+      These files (whose file name starts with <filename>.cfg_</filename>) can
       then be compared with the current configuration file.</para>
 
       <para>There are no tools available that do this automatically for you.
@@ -2134,7 +2134,7 @@ CXXFLAGS="${CFLAGS}"</programlisting>
     </section>
 
     <section>
-      <title>Portage Behavior</title>
+      <title>Portage Behaviour</title>
 
       <para>Portage itself also has a lot of features it supports. You can set
       them through the <parameter>FEATURES</parameter> variable.</para>
@@ -2180,7 +2180,7 @@ CXXFLAGS="${CFLAGS}"</programlisting>
   <section>
     <title>Fixing Postinstall Problems</title>
 
-    <para>Even when software installation has finished succesfully, you can
+    <para>Even when software installation has finished successfully, you can
     still get into trouble.</para>
 
     <section>

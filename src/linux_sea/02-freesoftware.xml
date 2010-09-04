@@ -366,13 +366,13 @@
       <title>Transparent Development</title>
 
       <para>Free software is usually developed transparently: if you are
-      interested in the development of your favorite software title, you can
+      interested in the development of your favourite software title, you can
       quickly find out how its development works and how to
       participate.</para>
 
-      <para>Usually, software projects use a <emphasis>concurrent versioning
+      <para>Usually, software projects use a <emphasis>concurrent versions
       system</emphasis><indexterm>
-          <primary>concurrent versioning system</primary>
+          <primary>concurrent versions system</primary>
         </indexterm> such as CVS<indexterm>
           <primary>CVS</primary>
         </indexterm> or SVN<indexterm>
@@ -468,7 +468,7 @@
             </indexterm> are proposals for final releases. They contain the
           software such as the developers would like to release it. They now
           wait for a certain period so that the testers and general public can
-          run their tests to ensure no bugs are in it anymore. New features
+          run their tests to ensure no bugs are in it any more. New features
           aren't added to the software now, only bug fixes. When no new (or
           major) bugs are found, the release candidate is converted to a new
           release</para>
@@ -583,7 +583,7 @@
       <title>Software Life Cycle</title>
 
       <para>If you buy software of an unknown, smaller company, you have the
-      chance that after a number of years, the company doesn't exist anymore
+      chance that after a number of years, the company doesn't exist any more
       or is taken over and doesn't support that software since. Something
       similar is true with free software: if the project decides that there
       aren't enough resources to continue the development of the software
@@ -629,12 +629,12 @@
     software world.</para>
 
     <section>
-      <title id="fhs" xreflabel="Filesystem Hierarchy Standard">Filesystem
+      <title id="fhs" xreflabel="File system Hierarchy Standard">File system
       Hierarchy Standard</title>
 
-      <para>The first standard I discuss is the <emphasis>Filesystem Hierarchy
+      <para>The first standard I discuss is the <emphasis>File system Hierarchy
       Standard</emphasis><indexterm>
-          <primary>Filesystem Hierarchy Standard</primary>
+          <primary>File system Hierarchy Standard</primary>
         </indexterm>, abbreviated to FHS<indexterm>
           <primary>FHS</primary>
         </indexterm>. This standard is used by almost all distributions and

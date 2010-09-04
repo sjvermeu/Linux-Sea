@@ -53,8 +53,8 @@
       <title>User Account Information</title>
 
       <para>A user is identified by his user id, which is an ordinary integer
-      number. However, it is much easier to use a username instead of a
-      number. For this purpose, a Unix/Linux system maps a username to a user
+      number. However, it is much easier to use a user name instead of a
+      number. For this purpose, a Unix/Linux system maps a user name to a user
       id. By default, this information is stored within the
       <filename>/etc/passwd</filename><indexterm>
           <primary>passwd</primary>
@@ -111,7 +111,7 @@
         is needed to improve the security of the system: the
         <filename>passwd</filename> file should be world readable because many
         tools rely on it. Storing the password (even when it is encrypted or
-        hashed) in a publically readable file is asking for troubles - tools
+        hashed) in a publicly readable file is asking for troubles - tools
         exist that attempt to crack user account passwords given the encrypted
         / hashed password values.</para>
 
@@ -147,7 +147,7 @@
             <primary>bash</primary>
           </indexterm> shell (bourne again shell), a powerfull shell with lots
         of additional functions such as command autocompletion, output
-        coloring and more. Smaller shells also exist, such as csh (c shell) or
+        colouring and more. Smaller shells also exist, such as csh (c shell) or
         ksh (korn shell).</para>
 
         <para>More information about shells is available online.</para>
@@ -254,14 +254,14 @@ hosts: files dns</programlisting>
         managed by the "compat" implementation. Compat is the default
         implementation provided by glibc (GNU C Library) which offers access
         to the various <filename>/etc/*</filename> files. The hosts service
-        (used to resolve hostnames to IP addresses and vice versa) is managed
+        (used to resolve host names to IP addresses and vice versa) is managed
         by two implementations:</para>
 
         <orderedlist>
           <listitem>
             <para>"files", which is the implementation that offers access to
             the /etc/hosts file (a table containing IP address and
-            hostname(s))</para>
+            host name(s))</para>
           </listitem>
 
           <listitem>
@@ -308,7 +308,7 @@ hosts: files dns</programlisting>
         </orderedlist>
 
         <para>It might seem strange to have a password on a group. After all,
-        a user logs on using his username. However, there is a sane reason for
+        a user logs on using his user name. However, there is a sane reason for
         this: you can add users to a different group and password-protect this
         group. If a user is logged on to the system (but doesn't use the
         particular group as primary group) and leaves his terminal, malicious
@@ -530,7 +530,7 @@ Password: <emphasis>(Enter the root password)</emphasis>
       "<command>-</command>" option, the regular users' environment would be
       used.</para>
 
-      <para>This environment defines the shell behavior; its most important
+      <para>This environment defines the shell behaviour; its most important
       setting is the PATH variable which defines where the binaries are
       located for the commands that this user might summon.</para>
 
@@ -610,7 +610,7 @@ $ </programlisting>
           </listitem>
 
           <listitem>
-            <para>All users in the operator group are allowed to shutdown the
+            <para>All users in the operator group are allowed to shut down the
             system</para>
           </listitem>
 
@@ -651,7 +651,7 @@ Enter password: <emphasis>(unless configured with NOPASSWD)</emphasis>
     <orderedlist>
       <listitem>
         <para>When invoking commands using sudo, sudo logs every attempt
-        (including username, working directory and command itself). Where is
+        (including user name, working directory and command itself). Where is
         this log?</para>
       </listitem>
     </orderedlist>

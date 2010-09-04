@@ -14,7 +14,7 @@
   </section>
 
   <section>
-    <title>Poor Mans' Backup</title>
+    <title>Poor Man's Backup</title>
 
     <para>Not taking any backups is living on the edge. Especially in case of
     Gentoo Linux, you don't want to lose all the effort you've put in setting
@@ -203,7 +203,7 @@ directory = /var/backups/backupninja</programlisting>
       <programlisting>~# <command>mount /dev/sdc1 /media/usb</command></programlisting>
 
       <para>Next, take image(s) of your partitions, or take a full disk
-      backup. Don't worry, PartImage is able to detect when diskspace isn't
+      backup. Don't worry, PartImage is able to detect when disk space isn't
       used, and will skip those empty blocks. The following takes a full
       backup of /dev/sda in blocks of 700Mbyte (in case you ever want to store
       the files on CD or DVD):</para>

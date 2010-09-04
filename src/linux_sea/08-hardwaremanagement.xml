@@ -8,9 +8,9 @@
     <title>Introduction</title>
 
     <para>Some hardware is automatically enabled once you have configured it
-    inside the Linux kernel: access to PCI chipsets, graphical card, disks,
+    inside the Linux kernel: access to PCI chip sets, graphical card, disks,
     USB storage, etc. Yet, most hardware requires additional work. After all,
-    the Linux kernel provides you with a programmatical interface to access
+    the Linux kernel provides you with a programmatic interface to access
     the devices, but you still need the necessary tooling to get the device to
     function properly. Good examples are network cards and printers, but also
     sound cards.</para>
@@ -79,7 +79,7 @@
           <primary>alsaconf</primary>
         </indexterm> tool will attempt to detect your sound card(s), load the
       necessary modules and configure those with sane settings. It will save
-      whatever it found to a general file which is read by your favorite
+      whatever it found to a general file which is read by your favourite
       distribution (which is undoubtedly Gentoo ;-) at start up so you don't
       have to rerun <command>alsaconf</command> after every boot.</para>
 
@@ -191,7 +191,7 @@
               <primary>esd</primary>
             </indexterm> (Enlightenment Sound Daemon) is GNOME's sound
           management daemon. esd, also known as ESounD, not only supports the
-          abovementioned mixing, but can also manage network-transparent
+          previously mentioned mixing, but can also manage network-transparent
           audio: audio played on one system can be heard on another. To this
           end, any application supporting esd can stream its audio to any
           system running esd on the network.</para>
@@ -347,7 +347,7 @@
       Administration page, enter your root login and password information and
       you can get started with the configuration. <ulink
       url="http://www.gentoo.org/doc/en/printing-howto.xml">The Gentoo
-      Printing HOWTO</ulink> offers a great walkthrough of the
+      Printing HOWTO</ulink> offers a great walk through of the
       configuration.</para>
 
       <para>You probably hoped for a more elaborate discussion on printer

@@ -8,7 +8,7 @@
     <title>Introduction</title>
 
     <para>If the previous chapters are all read through, you'll most likely
-    have succesfully installed Gentoo Linux. However, managing your Linux
+    have successfully installed Gentoo Linux. However, managing your Linux
     system is only starting. Within this chapter, we go through how the
     various Linux services log events on your system and how you can properly
     manage these log files.</para>
@@ -200,7 +200,7 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
 
         <listitem>
           <para>The destination entries define where the events are stored in
-          (the logfiles)</para>
+          (the log files)</para>
         </listitem>
 
         <listitem>
@@ -218,12 +218,12 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
   </section>
 
   <section>
-    <title>Non-Syslog Logfiles</title>
+    <title>Non-Syslog Log Files</title>
 
     <para>Many tools log through the system logger, but it is not a huge
     majority. Lots and lots of tools, server software and others have their
     own logging system. This makes it a bit more difficult to fully manage the
-    logfiles properly. However, if you know where the logfiles are, then
+    log files properly. However, if you know where the log files are, then
     that's a start.</para>
 
     <section>
@@ -231,7 +231,7 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
 
       <para>The Xorg server stores it log file at
       <filename>/var/log/Xorg.0.log</filename>. The trailing 0 denotes that
-      this is of the current/last startup. The logfile of the start before
+      this is of the current/last start. The log file of the start before
       that is called <filename>Xorg.1.log</filename>, and so on. </para>
 
       <para>Xorg uses the following notations to identify the various
@@ -242,14 +242,14 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
    (WW) warning, (EE) error, (NI) not implemented, (??) unknown.</programlisting>
 
       <para>The Xorg server will automatically rotate the log files, by
-      default 3 times, after which it will erase the oldest logfile.</para>
+      default 3 times, after which it will erase the oldest log file.</para>
     </section>
   </section>
 
   <section>
-    <title>Maintaining Logfiles</title>
+    <title>Maintaining Log Files</title>
 
-    <para>Most tools do not offer log rotation or cleanup by default. It is
+    <para>Most tools do not offer log rotation or clean up by default. It is
     therefore recommended to implement some sort of log rotation for your
     files. An interesting tool to install for this purpose is
     <package>app-admin/logrotate</package><indexterm>
@@ -280,16 +280,16 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
 
       <para>To configure logrotate, create configuration files inside
       /etc/logrotate.d. For instance, the following /etc/logrotate.d/syslog-ng
-      helps us rotate the logfiles that we identified as part of the system
+      helps us rotate the log files that we identified as part of the system
       logger configuration:</para>
 
       <programlisting>/var/log/messages /var/log/cron.log /var/log/auth.log {
   rotate 6
   monthly
-  # It is ok if a logfile is missing
+  # It is ok if a log file is missing
   missingok
-  # Only execute postrotate after all 3 logfiles are rotated
-  # instead of after each logfile
+  # Only execute postrotate after all 3 log files are rotated
+  # instead of after each log file
   sharedscripts
   # Commands to run after the rotation has occurred
   # This will instruct syslog-ng to reload its configuration
@@ -299,11 +299,11 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
   endscript
 }</programlisting>
 
-      <para>The file informs logrotate that the mentioned logfiles are rotated
+      <para>The file informs logrotate that the mentioned log files are rotated
       6 times on a monthly basis (so you keep 7 months of history). The tool
-      will automatically rename the "old" logfiles by adding a datestamp to
+      will automatically rename the "old" log files by adding a date stamp to
       the filename. You can also instruct logrotate to compress the rotated
-      logfiles or even move them to a different location.</para>
+      log files or even move them to a different location.</para>
     </section>
   </section>
 </chapter>

@@ -28,7 +28,7 @@
 
       <listitem>
         <para>the clock service, which sets the necessary environmental
-        definitions (like timezone information)</para>
+        definitions (like time zone information)</para>
       </listitem>
 
       <listitem>
@@ -218,7 +218,7 @@ Runlevel: default
             <primary>alsasound</primary>
           </indexterm> service is responsible for loading the appropriate
         sound kernel modules (if they are known as modules) and
-        saving/restoring the sound configuration at boot-up / shutdown.</para>
+        saving/restoring the sound configuration at boot-up / shut down.</para>
 
         <para>When the service is started, you might see kernel modules being
         loaded in memory. However, no other processes are started as part of
@@ -310,7 +310,7 @@ Runlevel: default
           </indexterm> service is responsible for setting the system time
         based on the BIOS clock and the settings defined in
         <filename>/etc/conf.d/clock</filename>. It will also synchronise the
-        system clock with your hardware clock during shutdown.</para>
+        system clock with your hardware clock during shut down.</para>
 
         <para>Once the service has finished starting, no additional processes
         will be running.</para>
@@ -343,14 +343,14 @@ Runlevel: default
       </section>
 
       <section>
-        <title>hostname</title>
+        <title>host name</title>
 
-        <para>The hostname<indexterm>
-            <primary>hostname</primary>
+        <para>The host name<indexterm>
+            <primary>host name</primary>
 
             <secondary>service</secondary>
           </indexterm> service is responsible for setting your systems'
-        hostname based on the input of
+        host name based on the input of
         <filename>/etc/conf.d/hostname</filename>.</para>
 
         <para>Once the service has finished starting, no additional processes
@@ -501,7 +501,7 @@ Runlevel: default
             <primary>urandom</primary>
           </indexterm> service is responsible for initializing the random
         number generator in a somewhat more secure manner (using a random seed
-        obtained during the last shutdown of the system). Without this, the
+        obtained during the last shut down of the system). Without this, the
         random number generator would be a bit more predictable.</para>
 
         <para>Once the service has finished starting, no additional processes
@@ -517,7 +517,7 @@ Runlevel: default
       <title>General Service Configuration</title>
 
       <para>Gentoo's general configuration file for the start-up service
-      behavior is <filename>/etc/rc.conf</filename> and
+      behaviour is <filename>/etc/rc.conf</filename> and
       <filename>/etc/conf.d/rc</filename>.</para>
 
       <section>
