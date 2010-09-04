@@ -22,6 +22,30 @@
     Handbook</ulink>. There are also <ulink type=""
     url="http://www.gentoo.org/doc/en/handbook">handbooks</ulink> available
     for other architectures.</para>
+
+    <section>
+      <title>System Requirements</title>
+
+      <para>Gentoo Linux can be as heavy as you want, or as small as you want.
+      Yet unless you deviate from the documented approach, Gentoo Linux
+      remains a source-based distribution. Because of that, it has a slightly
+      higher disk space requirement than other distributions. A minimal (base)
+      Gentoo Linux installation takes a little less than 2Gbyte of diskspace
+      (including Linux kernel source code and the Gentoo Portage tree, which
+      take about 640 Mbyte in total). But with 2Gbyte, you don't have room for
+      much more than a base installation.</para>
+
+      <para>To have a comfortable installation, yet with room to spare for
+      additional installations, you should consider a total diskspace of at
+      least 20 Gbyte for the applications alone. With current disk sizes, this
+      should not be a problem. If you don't install a full-blown KDE or GNOME,
+      you should have enough with 10Gbyte or less.</para>
+
+      <para>Disk space aside, Gentoo Linux can run and install with almost any
+      system specification. Of course, the lower the specs, the higher the
+      duration of an installation. Installing Gentoo Linux on a i486 with 32
+      Mbyte of memory is doable (but not recommended).</para>
+    </section>
   </section>
 
   <section>
@@ -57,8 +81,7 @@
 
     <para>First, mount all the necessary partitions onto your Linux
     environment. In the rest of this chapter I will assume the partitioning
-    layout as described in <link
-    linkend="example_partitiontable">here</link>.</para>
+    layout as described inthe following table:</para>
 
     <table id="example_partitiontable">
       <title>Example partition layout</title>
@@ -176,11 +199,11 @@
     a Gentoo Linux variant which offers freshly-built Gentoo Linux stable
     stages using Gentoo's official stable branch. You can use a funtoo stage
     instead of a Gentoo official stage if you want. After all, they both
-    contain roughly the same material. However, some caution is still in place:
-    the Funtoo stages continuously evolve and diverge into their own set so I
-    recommend to take a quick stab at the Funtoo installation instructions
-    nevertheless. At the time of writing, the instructions are quite
-    resembling.</para>
+    contain roughly the same material. However, some caution is still in
+    place: the Funtoo stages continuously evolve and diverge into their own
+    set so I recommend to take a quick stab at the Funtoo installation
+    instructions nevertheless. At the time of writing, the instructions are
+    quite resembling.</para>
 
     <para>Next, go back a few directories until you can select snapshots.
     Enter this directory and download the latest
@@ -366,11 +389,11 @@ de_DE@euro ISO-8859-15
 none       /dev/shm tmpfs defaults          0 0</programlisting>
 
       <para>Next, configure your network settings. Start by setting the system
-      host name in <filename>/etc/conf.d/hostname</filename> and then configure
-      the networking settings in <filename>/etc/conf.d/net</filename>.
-      Finally, add your network interface initialization script to the default
-      run level so that networking is automatically started at boot
-      time.</para>
+      host name in <filename>/etc/conf.d/hostname</filename> and then
+      configure the networking settings in
+      <filename>/etc/conf.d/net</filename>. Finally, add your network
+      interface initialization script to the default run level so that
+      networking is automatically started at boot time.</para>
 
       <programlisting>~# <command>nano -w /etc/conf.d/hostname</command>
 ~# <command>nano -w /etc/conf.d/net</command>
