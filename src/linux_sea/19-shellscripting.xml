@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Using A Shell</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>As the Linux basics have been unfolded in the previous chapters, I
+    want to close off this book with an introduction to shell scripting. Shell
+    scripting is one of Linux' (and Unix) powerful features. It allows you to
+    automate various tasks and is often used to help you manage your system.
+    One of Linux' main principles is "keep it simple", and by providing simple
+    tools that do simple jobs (but do them well) you can build powerful
+    systems. The downside of simple tools is that you need plenty of them to
+    do certain tasks, and shell scripts help you glue together these various
+    tools.</para>
+
+    <para>Before we launch off our shell scripting, we need to cover a few
+    basic items of running commands in Linux first. Some of them have been
+    described earlier in this book so it might not seem too unfamiliar for
+    most of you.</para>
+  </section>
+
+  <section>
+    <title>Chaining Commands</title>
+
+    <section>
+      <title>Running Multiple Commands</title>
+
+      <para>When you are inside a shell, you can run one or more commands
+      after another. We have seen such use cases previously, for instance to
+      view the content of a directory and then go inside a
+      subdirectory:</para>
+
+      <programlisting>~$ <command>mkdir Documents</command>
+~$ <command>cd Documents</command></programlisting>
+
+      <para>In the previous example, multiple commands are ran as single
+      commands one after another. But with a shell, you can execute multiple
+      on a single line. To do so, you separate the commands with a
+      semicolon:</para>
+
+      <programlisting>~$ <command>mkdir Documents; cd Documents</command></programlisting>
+
+      <para>You can add as many commands as you want. The shell will execute
+      each command when the previous one has finished. For instance:</para>
+
+      <programlisting>~# <command>emerge --sync; layman -S; emerge -uDN world; revdep-rebuild -p</command></programlisting>
+
+      <para>is the equivalent of</para>
+
+      <programlisting>~# <command>emerge --sync</command>
+~# <command>layman -S</command>
+~# <command>emerge -uDN world</command>
+~# <command>revdep-rebuild -p</command></programlisting>
+
+      <para>Nothing too powerful about that, but wait, there's more. Commands
+      in a Unix environment always finish with a particular return code. This
+      return code tells whomever called the command if the command exited
+      successfully (return code is 0) or not (return code is not 0) and why
+      not. This return code, as you might have guessed, is an integer, usually
+      within the range of 0...255. You can see the return code of a command by
+      showing the special shell variable <varname>$?</varname><indexterm>
+          <primary>$?</primary>
+        </indexterm> (which can be done using <command>echo</command>). Let's
+      see a simple example:</para>
+
+      <programlisting>~$ <command>ls</command>
+Documents     tasks.txt     bookmarks.html
+~$ <command>echo $?</command>
+0
+~$ <command>ls -z</command>
+ls: invalid option -- 'z'
+Try 'ls --help' for more information
+~$ <command>echo $?</command>
+2</programlisting>
+
+      <section>
+        <title>Conditional Execution</title>
+
+        <para>The use of return codes allows us to investigate conditional
+        execution. For instance, you want to update Portage and then update
+        your system, but the latter should only start if the update of Portage
+        finished successfully. If you run commands manually, you would wait
+        for the Portage update to finish, look at its output, and then decide
+        to continue with the update or not. By making use of the return code
+        of emerge --sync; we can run the following command only if the
+        synchronization finished with return code 0. Using shell scripting,
+        you can use <parameter>&amp;&amp;</parameter><indexterm>
+            <primary>&amp;&amp;</primary>
+          </indexterm> as separator between such commands.</para>
+
+        <programlisting>~# <command>emerge --sync &amp;&amp; emerge -uDN world</command></programlisting>
+
+        <para>By using <parameter>&amp;&amp;</parameter>, you instruct the
+        shell only to execute the following command if the previous one is
+        successful. Now what about when the command finishes with an
+        error?</para>
+
+        <para>Well, the shell offers the <parameter>||</parameter> separator
+        to chain such commands. Its use is less pertinent in regular shell
+        operations, but more in shell scripts (for instance for error
+        handling). Yet, it is not unuseful for regular shell operations, as
+        the following example shows:</para>
+
+        <programlisting>~$ <command>mount /media/usb || sudo mount /media/usb</command></programlisting>
+
+        <para>The command sequence tries to mount the /media/usb location. If
+        for any reason this fails (for instance, because the user does not
+        have the rights to mount), retry but using <command>sudo</command>.
+        </para>
+      </section>
+
+      <section>
+        <title>Input &amp; Output</title>
+
+        <para>Now on to another trick that we have seen before: working with
+        output and input. I already explained that we can chain multiple
+        simple tools to create a more useful, complex activity. One of the
+        most often used chaining methods is to use the output of one command
+        as the input of another. This is especially useful for text searching
+        and manipulation. Say you want to know the last 5 applications that
+        were installed on your system. There are many methods possible to do
+        this, one of them is using /var/log/emerge.log (which is where all
+        such activity is logged). You could just open the logfile, scroll to
+        the end and work backwards to get to know the last 5 installed
+        applications, or you can use a command like so:</para>
+
+        <programlisting>~$ <command>grep 'completed emerge' /var/log/emerge.log | tail -5</command>
+1283033552:   ::: completed emerge (1 of 1) app-admin/cvechecker-0.5 to /
+1283033552:   ::: completed emerge (1 of 3) dev-perl/HTML-Tagset-3.20 to /
+1283033552:   ::: completed emerge (2 of 3) dev-perl/MP3-Info-1.23 to /
+1283033552:   ::: completed emerge (3 of 3) app-pda/gnupod-0.99.8 to /
+1283033552:   ::: completed emerge (1 of 1) app-admin/cvechecker-0.5 to /</programlisting>
+
+        <para>What happened is that we first executed grep, to filter out
+        specific string patterns out of /var/log/emerge.log. In this case,
+        grep will show us all lines that have "completed emerge" in them. Yet,
+        the question was not to show all installations, but the last five. So
+        we <emphasis>piped</emphasis><indexterm>
+            <primary>pipe</primary>
+          </indexterm> the output (that's how this is called) to the
+        <command>tail</command><indexterm>
+            <primary>tail</primary>
+          </indexterm> application, whose sole task is to show the last N
+        lines of its input.</para>
+
+        <para>Of course, this can be extended to more and more applications or
+        tools. What about the following example:</para>
+
+        <programlisting>~$ <command>tail -f /var/log/emerge.log | grep 'completed emerge' | awk '{print $8}'</command>
+app-admin/cvechecker-9999
+dev-perl/libwww-perl-5.836
+...</programlisting>
+
+        <para>In this example, <command>tail</command> will "follow"
+        <filename>emerge.log</filename> as it grows. Every line that is added
+        to <filename>emerge.log</filename> is shown by
+        <command>tail</command>. This output is piped to
+        <command>grep</command>, which filters out all lines but those
+        containing the string 'completed emerge'. The results of the
+        <command>grep</command> operation is then piped to the
+        <command>awk</command> application which prints out the 8th field
+        (where whitespace is a field separator), which is the category/package
+        set. This allows you to follow a lengthy emerge process without having
+        to keep an eye on the entire output of
+        <command>emerge</command>.</para>
+
+        <para>The | sign passes through the standard output of a process. If
+        you want to have the standard error messages passed through as well,
+        you need to redirect that output (stderr) to the standard output
+        first. This is accomplished using the "2&gt;&amp;1" suffix:</para>
+
+        <programlisting>~# <command>emerge -uDN world 2&gt;&amp;1 | grep 'error: '</command></programlisting>
+
+        <para>In the above example, all lines (including those on standard
+        error) will be filtered out, except those having the "error: " string
+        in them. But what is that magical suffix?</para>
+
+        <para>Well, standard output, standard error and actually also standard
+        input are seen by Unix as files, but special files: you can't see them
+        when the application has finished. When an application has a file
+        open, it gets a <emphasis>file descriptor</emphasis><indexterm>
+            <primary>file descriptor</primary>
+          </indexterm> assigned. This is a number that uniquely identifies a
+        file for a specific application. The file descriptors 0, 1 and 2 are
+        reserved for standard input, standard output and standard error
+        output. </para>
+
+        <para>The 2&gt;&amp;1 suffix tells Unix/Linux that the file descriptor
+        2 (standard error) should be redirected (&gt;) to file descriptor 1
+        (&amp;1).</para>
+
+        <para>This also brings us to the redirection sign: &gt;. If you want
+        the output of a command to be saved in a file, you can use the
+        redirect sign (&gt;) to redirect the output into a file:</para>
+
+        <programlisting>~# <command>emerge -uDN world &gt; /var/tmp/emerge.log</command></programlisting>
+
+        <para>The above command will redirect all standard output to
+        /var/tmp/emerge.log (i.e. save the output into a file). Note that this
+        will not store the error messages on standard error in the file:
+        because we did not redirect the standard error output, it will still
+        be displayed on-screen. If we want to store that output as well, we
+        can either store it in the same file:</para>
+
+        <programlisting>~# <command>emerge -uDN world &gt; /var/tmp/emerge.log 2&gt;&amp;1 </command></programlisting>
+
+        <para>or store it in a different file:</para>
+
+        <programlisting>~# <command>emerge -uDN world &gt; /var/tmp/emerge.log 2&gt; /var/tmp/emerge-errors.log</command></programlisting>
+
+        <para>Now there is one thing you need to be aware: the redirection
+        sign needs to be directly attached to the output file descriptor, so
+        it is "2&gt;" and not "2 &gt;" (with a space). In case of standard
+        output, this is implied (&gt; is actually the same as 1&gt;).</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Grouping Commands</title>
+
+      <para>Shells also offer a way to group commands. If you do this, it is
+      said that you create a subshell that contains the commands you want to
+      execute. Now why would this be interesting? </para>
+
+      <para>Well, suppose that you want to update your system, followed by an
+      update of the file index. You don't want them to be ran simultaneously
+      as that would affect performance too much, but you also don't want this
+      to be done in the foreground (you want the shell free to do other
+      stuff). We have seen that you can background processes by appending a "
+      &amp;" at the end:</para>
+
+      <programlisting>~# <command>emerge -uDN world &gt; emerge-output.log 2&gt;&amp;1 &amp;</command></programlisting>
+
+      <para>However, chaining two commands together with the background sign
+      is not possible:</para>
+
+      <programlisting>~# <command>emerge -uDN world &gt; emerge-output.log 2&gt;&amp;1 &amp;; slocate -u &amp;</command>
+bash: syntax error near unexpected token ';'</programlisting>
+
+      <para>If you drop the ";" from the command, both processes will run
+      simultaneously. The grouping syntax comes to the rescue:</para>
+
+      <programlisting>~# <command>(emerge -uDN world &gt; emerge-output.log 2&gt;&amp;1; slocate -u) &amp;</command></programlisting>
+
+      <para>This also works for output redirection:</para>
+
+      <programlisting>~# <command>(emerge --sync; layman -S) &gt; sync-output.log 2&gt;&amp;1</command></programlisting>
+
+      <para>The above example will update the Portage tree and the overlays,
+      and the output of both commands will be redirected to the
+      <filename>sync-output.log</filename> file.</para>
+    </section>
+
+    <section>
+      <title>Storing Commands</title>
+
+      <para>All the above examples are examples that are run live from your
+      shell. You can however write commands in a text file and execute this
+      text file. The advantage is that the sequence of commands is manageable
+      (if you make a mistake, you edit the file), somewhat documented for the
+      future (how did I do that again?) and easier to use (just a single file
+      to execute rather than a sequence of commands).</para>
+
+      <para>A text file containing all this information is called a shell
+      script. As an- example, the following text file will load in the
+      necessary virtualisation modules, configure a special network device
+      that will be used to communicate with virtual runtimes, enable a virtual
+      switch between the virtual runtimes and the host system (the one where
+      the script is ran) and finally enables rerouting of network packages so
+      that the virtual runtimes can access the Internet:</para>
+
+      <programlisting>modprobe tun
+modprobe kvm-intel
+tunctl -b -u swift -t tap0
+ifconfig tap0 192.168.100.1 up
+vde_switch --numports 4 --hub --mod 770 --group users --tap tap0 -d
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+iptables --flush
+iptables -A POSTROUTING -t nat -o eth0 -j MASQUERADE
+iptables -A FORWARD -i tap0 -o eth0 -s 192.168.100.1/24 ! -d 192.168.100.1/24 -j ACCEP;
+iptables -A FORWARD -o tap0 -i eth0 -d 192.168.100.1/24 ! -s 192.168.100.1/24 -j ACCEPT</programlisting>
+
+      <para>Can you imagine having to retype all that (let alone on a single
+      command line, separated with ;) </para>
+
+      <para>To execute the script, give it an appropriate name (say
+      "enable_virt_internet"), mark it as executable, and execute it:</para>
+
+      <programlisting>~# <command>chmod +x enable_virt_internet</command>
+~# <command>./enable_virt_internet</command></programlisting>
+
+      <para>Note that we start the command using "./", informing Linux that we
+      want to execute the file that is stored in the current working
+      directory.</para>
+
+      <para>Now on to the advantages of using shell scripts even
+      more...</para>
+
+      <section>
+        <title>Documenting</title>
+
+        <para>You can easily document your steps in shell scripts. A comment
+        is prepended with #, like so:</para>
+
+        <programlisting># Load in virtualisation modules
+modprobe tun
+modprobe kvm-intel
+# Setup special networking device for communicating with the virtual environments
+tunctl -b -u swift -t tap0
+ifconfig tap0 192.168.100.1 up
+vde_switch --numports 4 --hub --mod 770 --group users --tap tap0 -d
+# Enable IP forwarding
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+# Set up "internet sharing" by allowing package forwarding towards the Internet
+iptables --flush
+iptables -A POSTROUTING -t nat -o eth0 -j MASQUERADE
+iptables -A FORWARD -i tap0 -o eth0 -s 192.168.100.1/24 ! -d 192.168.100.1/24 -j ACCEP;
+iptables -A FORWARD -o tap0 -i eth0 -d 192.168.100.1/24 ! -s 192.168.100.1/24 -j ACCEPT</programlisting>
+
+        <para>Comments can also be added at the end of a line, btw.</para>
+
+        <para>Another, special, comment, is one that tells your operating
+        system how the shell script should be called. There are plenty of
+        shells in Linux (bash, bsh, zsh, csh, ...) and there are even
+        scripting languages that also use text files for their content (perl,
+        python, ruby, ...). Linux does not use file extensions to know how to
+        execute or interpret a file. To help Linux determine the correct
+        execution environment, we add a special comment at the beginning of
+        the file (this must be the first line of the script), in this case to
+        inform Linux that this is a bash shell script:</para>
+
+        <programlisting>#!/bin/bash
+# Load in virtualisation modules
+modprobe tun
+...</programlisting>
+
+        <para>This line is quite important, and should always start with #!
+        (also called the <emphasis>shebang</emphasis><indexterm>
+            <primary>shebang</primary>
+          </indexterm>) followed by the interpreter (/bin/bash in our
+        case).</para>
+      </section>
+
+      <section>
+        <title>Introduce Loops, Conditionals, ...</title>
+
+        <para>A shell script like the above is still quite simple, but also
+        error-prone. If you had your share of issues / incidents with that
+        script, you will most likely start adding error conditions inside it.
+        </para>
+
+        <para>First, make sure that we are root. We can verify this by reading
+        the special variable $UID (a readonly variable giving the user id of
+        the user executing the script):</para>
+
+        <programlisting>#!/bin/bash
+
+if [[ $UID -ne 0 ]];
+then
+  echo "Sorry, this file needs to be executed as root!"
+  exit 1;
+fi
+
+# Load in virtualisation modules
+...</programlisting>
+
+        <para>The [[ ... ]] set is a test operator. It gives a return code of
+        0 (statement is true) or non-zero (statement is false). The if ...
+        then ... fi statement is a conditional which is executed when the test
+        operator returns true (0). Although [[ ... ]] seems strange, this is
+        nothing more than a command (actually, "[" is the command). But don't
+        let that confuse you ;-)</para>
+
+        <para>Next, we introduce a loop:</para>
+
+        <programlisting># Load in virtualisation modules
+for MODULE in tun kvm-intel;
+do
+  modprobe $MODULE
+done</programlisting>
+
+        <para>What the loop does is create a variable called
+        <varname>MODULE</varname>, and give it as content first "tun" and then
+        "kvm-intel". The shell expands the loop as follows:</para>
+
+        <programlisting>MODULE="tun"
+modprobe $MODULE     # So "modprobe tun"
+MODULE="kvm-intel"
+modprobe $MODULE     # So "modprobe kvm-intel"</programlisting>
+      </section>
+
+      <section>
+        <title>Introduce Functions</title>
+
+        <para>You can even made the script more readable by introducing
+        special functions.</para>
+
+        <programlisting>...
+
+# This is a function definition. It is not executed at this point.
+load_modules() {
+  for MODULE in tun kvm-intel;
+  do
+    modprobe $MODULE
+  done
+}
+
+setup_networking() {
+  tunctl -b -u swift -t tap0
+  ifconfig tap0 192.168.100.1 up
+  vde_switch --numports 4 --hub --mod 770 --group users --tap tap0 -d
+  echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+}
+
+share_internet() {
+  iptables --flush
+  iptables -A POSTROUTING -t nat -o eth0 -j MASQUERADE
+  iptables -A FORWARD -i tap0 -o eth0 -s 192.168.100.1/24 ! -d 192.168.100.1/24 -j ACCEP;
+  iptables -A FORWARD -o tap0 -i eth0 -d 192.168.100.1/24 ! -s 192.168.100.1/24 -j ACCEPT
+}
+
+# Only now are the functions called (and executed)
+load_modules
+setup_networking
+share_internet</programlisting>
+
+        <para>Functions are often used to help with error handling routines.
+        Say that we want the script to stop the moment an error has occurred,
+        and give a nice error message about it:</para>
+
+        <programlisting>...
+
+die() {
+  echo $* &gt;&amp;2;
+  exit 1;
+}
+
+load_modules() {
+  for MODULE in tun kvm-intel;
+  do
+    modprobe $MODULE || die "Failed to load in module $MODULE";
+  done
+}
+...</programlisting>
+
+        <para>If at any time the modprobe fails, a nice error message will
+        occur, like so:</para>
+
+        <programlisting>~# <command>./enable_virt_internet</command>
+Failed to load in module tun
+~# </programlisting>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>Advanced Shell Scripting</title>
+
+    <para>The above is just for starters. Much more advanced shell scripting
+    is possible - shells nowadays have so many features that some scripts are
+    even disclosed as full applications. You will be surprised how many
+    scripts you have on your system. Just for starters, in /usr/bin:</para>
+
+    <programlisting>~$ <command>file * | grep -c 'ELF '</command>
+1326
+~$ <command>file * | grep -c script</command>
+469</programlisting>
+
+    <para>So in my /usr/bin folder, I have 1326 binary applications, but also
+    469 scripts. That is more than one third of the number of binary
+    applications!</para>
+  </section>
+
+  <section>
+    <title>Want more?</title>
+
+    <para>This is as far as I want to go with a book targetting Linux
+    starters. You should now have enough luggage to make it through various
+    online resources and other books, and still have a reference at your
+    disposal for your day-to-day activities on your (Gentoo) Linux
+    system.</para>
+
+    <para>I would like to thank you for reading this document, and if you have
+    any particular questions or feedback, please don't hesitate to contact me
+    at <email>sven.vermeulen@siphos.be</email> or on the Freenode and OFTC IRC
+    networks (my nickname is SwifT).</para>
+  </section>
+</chapter>

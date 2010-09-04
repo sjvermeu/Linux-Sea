@@ -1,6 +1,7 @@
 ** (2010-09-04) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Simple spellcheck
 	- Add in system requirement paragraph (especially disk space)
+	- Add in shell scripting chapter as a closer of the book
 
 ** (2010-09-03) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Elaborate a bit more on stage4/5 backup/restores

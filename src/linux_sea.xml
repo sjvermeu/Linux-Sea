@@ -15,10 +15,11 @@
 <!ENTITY servicemanagement.xml SYSTEM  "linux_sea/12-servicemanagement.xml">
 <!ENTITY storagemanagement.xml SYSTEM  "linux_sea/13-storagemanagement.xml">
 <!ENTITY systemmanagement.xml SYSTEM   "linux_sea/14-systemmanagement.xml">
-<!ENTITY graphicenvironment.xml SYSTEM "linux_sea/15-graphicenvironment.xml">
-<!ENTITY installgentoo.xml SYSTEM      "linux_sea/16-installgentoo.xml">
+<!ENTITY installgentoo.xml SYSTEM      "linux_sea/15-installgentoo.xml">
+<!ENTITY graphicenvironment.xml SYSTEM "linux_sea/16-graphicenvironment.xml">
 <!ENTITY logfilemanagement.xml SYSTEM  "linux_sea/17-logfilemanagement.xml">
 <!ENTITY backup.xml SYSTEM             "linux_sea/18-backup.xml">
+<!ENTITY shellscripting.xml SYSTEM     "linux_sea/19-shellscripting.xml">
 
 <!ENTITY tipsandanswers.xml SYSTEM     "linux_sea/90-tipsandanswers.xml">
 <!ENTITY glossary.xml SYSTEM           "linux_sea/91-glossary.xml">
@@ -86,15 +87,12 @@
 
   <toc></toc>
 
-  <!-- Part - On Linux and Free Software -->
   &whatislinux.xml;
   &freesoftware.xml;
   &community.xml;
-  <!-- Part - Working with Linux -->
   &runninglinux.xml;
   &linuxfs.xml;
   &processes.xml;
-  <!-- Part - Simple System Administration -->
   &kernelbuilding.xml;
   &hardwaremanagement.xml;
   &softwaremanagement.xml;
@@ -103,13 +101,11 @@
   &servicemanagement.xml;
   &storagemanagement.xml;
   &systemmanagement.xml;
-  &graphicenvironment.xml;
-  <!-- Part - Installing Gentoo Linux -->
   &installgentoo.xml;
-  <!-- Part - Additional services on a Linux system -->
+  &graphicenvironment.xml;
   &logfilemanagement.xml;
   &backup.xml;
-  <!-- Part - Addenda -->
+  &shellscripting.xml;
   &tipsandanswers.xml;
   &glossary.xml;
 

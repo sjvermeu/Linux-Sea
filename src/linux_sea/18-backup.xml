@@ -7,7 +7,7 @@
   <section>
     <title>Introduction</title>
 
-    <para>To finalize this book, lets focus on backups and restores. After
+    <para>Before we finish this book, lets focus on backups and restores. After
     all, you don't want to put all that effort in your Linux system, only to
     see it vanish with the next power surge or
     daughter-spilled-milk-over-my-laptop incident.</para>
