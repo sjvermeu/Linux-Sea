@@ -281,7 +281,7 @@ vde_switch --numports 4 --hub --mod 770 --group users --tap tap0 -d
 echo 1 &gt; /proc/sys/net/ipv4/ip_forward
 iptables --flush
 iptables -A POSTROUTING -t nat -o eth0 -j MASQUERADE
-iptables -A FORWARD -i tap0 -o eth0 -s 192.168.100.1/24 ! -d 192.168.100.1/24 -j ACCEP;
+iptables -A FORWARD -i tap0 -o eth0 -s 192.168.100.1/24 ! -d 192.168.100.1/24 -j ACCEPT
 iptables -A FORWARD -o tap0 -i eth0 -d 192.168.100.1/24 ! -s 192.168.100.1/24 -j ACCEPT</programlisting>
 
       <para>Can you imagine having to retype all that (let alone on a single
