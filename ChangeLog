@@ -1,3 +1,8 @@
+** (2010-09-08) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Shell scripting using Posix SH, not bash
+	- Add 'multiple package instances within single package slot' install
+	  failure information
+
 ** (2010-09-04) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Simple spellcheck
 	- Add in system requirement paragraph (especially disk space)

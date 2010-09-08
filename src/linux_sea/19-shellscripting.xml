@@ -103,14 +103,15 @@ Try 'ls --help' for more information
         to chain such commands. Its use is less pertinent in regular shell
         operations, but more in shell scripts (for instance for error
         handling). Yet, it is still useful for regular shell operations, as
-        the following (perhaps too simple, yet explanatory) example shows:</para>
+        the following (perhaps too simple, yet explanatory) example
+        shows:</para>
 
         <programlisting>~$ <command>mount /media/usb || sudo mount /media/usb</command></programlisting>
 
         <para>The command sequence tries to mount the /media/usb location. If
         for any reason this fails (for instance, because the user does not
-        have the rights to mount), retry but using <command>sudo</command>.
-        </para>
+        have the rights to mount), retry but using
+        <command>sudo</command>.</para>
       </section>
 
       <section>
@@ -163,9 +164,9 @@ dev-perl/libwww-perl-5.836
         containing the string 'completed emerge'. The results of the
         <command>grep</command> operation is then piped to the
         <command>awk</command> application which prints out the 8th field
-        (where white space is a field separator), which is the category/package
-        set. This allows you to follow a lengthy emerge process without having
-        to keep an eye on the entire output of
+        (where white space is a field separator), which is the
+        category/package set. This allows you to follow a lengthy emerge
+        process without having to keep an eye on the entire output of
         <command>emerge</command>.</para>
 
         <para>The | sign passes through the standard output of a process. If
@@ -187,7 +188,7 @@ dev-perl/libwww-perl-5.836
           </indexterm> assigned. This is a number that uniquely identifies a
         file for a specific application. The file descriptors 0, 1 and 2 are
         reserved for standard input, standard output and standard error
-        output. </para>
+        output.</para>
 
         <para>The 2&gt;&amp;1 suffix tells Unix/Linux that the file descriptor
         2 (standard error) should be redirected (&gt;) to file descriptor 1
@@ -224,7 +225,7 @@ dev-perl/libwww-perl-5.836
 
       <para>Shells also offer a way to group commands. If you do this, it is
       said that you create a sub-shell that contains the commands you want to
-      execute. Now why would this be interesting? </para>
+      execute. Now why would this be interesting?</para>
 
       <para>Well, suppose that you want to update your system, followed by an
       update of the file index. You don't want them to be ran simultaneously
@@ -285,7 +286,7 @@ iptables -A FORWARD -i tap0 -o eth0 -s 192.168.100.1/24 ! -d 192.168.100.1/24 -j
 iptables -A FORWARD -o tap0 -i eth0 -d 192.168.100.1/24 ! -s 192.168.100.1/24 -j ACCEPT</programlisting>
 
       <para>Can you imagine having to retype all that (let alone on a single
-      command line, separated with ;) </para>
+      command line, separated with ;)</para>
 
       <para>To execute the script, give it an appropriate name (say
       "enable_virt_internet"), mark it as executable, and execute it:</para>
@@ -333,7 +334,7 @@ iptables -A FORWARD -o tap0 -i eth0 -d 192.168.100.1/24 ! -s 192.168.100.1/24 -j
         the file (this must be the first line of the script), in this case to
         inform Linux that this is a bash shell script:</para>
 
-        <programlisting>#!/bin/bash
+        <programlisting>#!/bin/sh
 # Load in virtualisation modules
 modprobe tun
 ...</programlisting>
@@ -350,16 +351,16 @@ modprobe tun
 
         <para>A shell script like the above is still quite simple, but also
         error-prone. If you had your share of issues / incidents with that
-        script, you will most likely start adding error conditions inside it.
-        </para>
+        script, you will most likely start adding error conditions inside
+        it.</para>
 
         <para>First, make sure that we are root. We can verify this by reading
         the special variable $UID (a read-only variable giving the user id of
         the user executing the script):</para>
 
-        <programlisting>#!/bin/bash
+        <programlisting>#!/bin/sh
 
-if [[ $UID -ne 0 ]];
+if [ $UID -ne 0 ];
 then
   echo "Sorry, this file needs to be executed as root!"
   exit 1;
@@ -478,11 +479,10 @@ Failed to load in module tun
   <section>
     <title>Want more?</title>
 
-    <para>This is as far as I want to go with a book targeting Linux
-    starters. You should now have enough luggage to make it through various
-    online resources and other books, and still have a reference at your
-    disposal for your day-to-day activities on your (Gentoo) Linux
-    system.</para>
+    <para>This is as far as I want to go with a book targeting Linux starters.
+    You should now have enough luggage to make it through various online
+    resources and other books, and still have a reference at your disposal for
+    your day-to-day activities on your (Gentoo) Linux system.</para>
 
     <para>I would like to thank you for reading this document, and if you have
     any particular questions or feedback, please don't hesitate to contact me

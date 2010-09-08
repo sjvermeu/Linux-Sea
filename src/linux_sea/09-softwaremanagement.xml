@@ -1869,6 +1869,48 @@ xen          [Subversion] (source: http://overlays....)</programlisting>
       </section>
 
       <section>
+        <title>Multiple packages within a single package slot</title>
+
+        <para>When software is being installed, Portage verifies if all
+        requirements are met. This includes USE requirements that some
+        packages have on others. For instance, kdelibs requires dbus, built
+        with the USE="X" setting. If for some other reason dbus is being
+        pulled in without X (an ebuild requires dbus without X, or you changed
+        your USE flags to disallow X in USE), you might get the following
+        error message:</para>
+
+        <programlisting>!!! Multiple package instances within a single package slot have been pulled
+!!! into the dependency graph, resulting in a slot conflict:
+
+sys-apps/dbus:0
+
+  ('ebuild', '/', 'sys-apps/dbus-1.2.24', 'merge') pulled in by
+    &gt;=sys-apps/dbus-1.0.2 required by ('installed', '/', 'x11-libs/qt-dbus-4.6.2', 'nomerge')
+    sys-apps/dbus required by ('installed', '/', 'app-misc/strigi-0.7.1', 'nomerge')
+    &gt;=sys-apps/dbus-1.1 required by ('installed', '/', 'dev-libs/dbus-glib-0.86', 'nomerge')
+
+  ('installed', '/', 'sys-apps/dbus-1.2.24', 'nomerge') pulled in by
+    sys-apps/dbus[X] required by ('installed', '/', 'kde-base/kdelibs-4.4.5', 'nomerge')
+    (and 3 more)
+
+  Explanation:
+
+    New USE for 'sys-apps/dbus:0' are incorrectly set. In order to solve
+    this, adjust USE to satisfy 'sys-apps/dbus[X]'.</programlisting>
+
+        <para>If this is due to a change in USE flags, undo the change (in the
+        above case, setting USE to "-X" generally was a bad idea). If you need
+        a particular USE setting, you can use /etc/portage/package.use to
+        change the USE settings of one or more packages without affecting the
+        entire system.</para>
+
+        <para>If this due to packages with conflicting dependencies, you'll
+        either need to drop one of the packages, or file a bug at <ulink
+        url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink> and ask
+        for a proper solution.</para>
+      </section>
+
+      <section>
         <title>Other Issues</title>
 
         <para>A few other issues can come up:</para>
