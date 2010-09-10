@@ -1,3 +1,6 @@
+** (2010-09-10) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Updates on kernel configuration
+
 ** (2010-09-08) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Shell scripting using Posix SH, not bash
 	- Add 'multiple package instances within single package slot' install

@@ -270,9 +270,9 @@ usb-storage: device scan complete</programlisting>
 
       <para>Kernel modules are often used for detachable devices (such as USB
       devices) but also for distributions who want to provide a kernel to
-      their users regardless of the hardware these users own: during the boot-up
-      sequence, the distribution will load the modules needed to support the hardware found
-      and leave all other modules untouched.</para>
+      their users regardless of the hardware these users own: during the
+      boot-up sequence, the distribution will load the modules needed to
+      support the hardware found and leave all other modules untouched.</para>
 
       <para>It is important to understand though that these modules are read
       from somewhere - you can't put the driver for your disk in a module and
@@ -333,8 +333,8 @@ tifm_core               6420  1 tifm_7xx1</programlisting>
         use it.</para>
 
         <para>To remove a loaded module, first ensure that the module is not
-        used by any other module any more (i.e. the "Used by" listing should be
-        empty in the <command>lsmod</command> output) and then use
+        used by any other module any more (i.e. the "Used by" listing should
+        be empty in the <command>lsmod</command> output) and then use
         <command>rmmod</command><indexterm>
             <primary>rmmod</primary>
           </indexterm>:</para>
@@ -355,8 +355,9 @@ tifm_core               6420  1 tifm_7xx1</programlisting>
         <programlisting># <command>modprobe ipw2200</command></programlisting>
 
         <para>One of the advantages of using modules is that you can pass on
-        additional options to a module, effectively changing its behaviour. But
-        first some information on getting more information on modules.</para>
+        additional options to a module, effectively changing its behaviour.
+        But first some information on getting more information on
+        modules.</para>
 
         <para>An interesting command is <command>modinfo</command><indexterm>
             <primary>modinfo</primary>
@@ -713,11 +714,10 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
     Kernel compression mode (Gzip) --&gt;
 [*] Support for paging of anonymous memory (swap)
 [*] System V IPC
-[ ] POSIX Message Queues
 [ ] BSD Process Accounting
 [ ] Auditing Support
     RCU Subsystem ---&gt;
-[*] Kernel .config support
+&lt;*&gt; Kernel .config support
 [*]   Enable access to .config through /proc/config.gz
 (16) Kernel log buffer size (16 =&gt; 64KB, 17 =&gt; 128 KB)
 [ ] Control Group support ---&gt;
@@ -726,7 +726,6 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 -*- Namespaces support
 [ ]   UTS namespace
 [ ]   IPC namespace
-[ ]   Network namespaces
 [ ] Initial RAM filesystem and RAM disk (initramfs/initrd) support
 [ ] Optimize for size
 [ ] Configure standard kernel features (for small systems) ---&gt;
@@ -820,7 +819,6 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
           <programlisting>--- Enable loadable module support
 [ ]   Forced module loading
 [*]   Module unloading
-[ ]     Forced module unloading
 [ ]   Module versioning support
 [ ]   Source checksum for all modules
 </programlisting>
@@ -834,15 +832,6 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
               <para>You will probably want to unload kernel modules if you
               don't need them any more.</para>
             </listitem>
-
-            <listitem>
-              <para>Automatic kernel module loading</para>
-
-              <para>If not enabled, you'll need to manually run a command to
-              load the kernel module you need. With this setting enabled, many
-              Linux kernel components will automatically load the necessary
-              kernel module when appropriate.</para>
-            </listitem>
           </itemizedlist>
         </section>
 
@@ -855,7 +844,6 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
           devices, the ext3 file system or USB storage).</para>
 
           <programlisting>--- Enable the block layer
-[ ]   Support for large (2TB+) block devices and files
 [ ]   Block layer SG support v4
 [ ]   Block layer data integrity support
       IO Schedulers ---&gt;</programlisting>
@@ -880,54 +868,49 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
           these settings depend heavily on the system you have (as your CPU is
           most likely different from the one I use):</para>
 
-          <programlisting>[ ] Tickless System (Dynamic Ticks)
+          <programlisting>[*] Tickless System (Dynamic Ticks)
 [*] High Resolution Timer Support
 [*] Symmetric multi-processing support
 [ ] Support sparse irq numbering
-[*] Enable MPS table
-[ ] Support for big SMP systems with more than 8 CPUs
+[ ] Enable MPS table
 [ ] Support for extended (non-PC) x86 platforms
 [*] Single-depth WCHAN output
 [ ] Paravirtualized guest support
 [*] Disable bootmem code
 [ ] Memtest
-    Processor family (Pentium M) ---&gt;
-[ ] Generic x86 support
-[*] HPET Timer Support
-(2) Maximum number of CPUs (2-255)
-[ ] SMT (Hyperthreading) scheduler support
+    Processor family (Core 2/newer Xeon) ---&gt;
+[ ] AMD IOMMU support
+(8) Maximum number of CPUs
+[*] SMT (Hyperthreading) scheduler support
 [*] Multi-core scheduler support
     Preemption Model (Preemptible Kernel (Low-Latency Desktop)) ---&gt;
 [ ] Reroute for broken boot IRQs
 [*] Machine Check / overheating reporting
 [*]   Intel MCE features
 [ ]   AMD MCE features
-[ ]   Support for old Pentium 5 / WinChip machine checks
 &lt; &gt; Machine check injector support
-&lt; &gt; Toshiba Laptop support
 &lt; &gt; Dell laptop support
 [ ] Enable X86 board specific fixups for reboot
 &lt; &gt; /dev/cpu/microcode - Intel IA32 CPU microcode support
 &lt; &gt; /dev/cpu/*/msr - Model-specific register support
 &lt; &gt; /dev/cpu/*/cpuid - CPU information support
-    High Memory Support (4GB) ---&gt;
-    Memory model (Flat Memory) ---&gt;
+[ ] Numa Memory Allocation and Scheduler Support
+    Memory model (Sparse Memory) ---&gt;
+[*] Sparse Memory virtual memmap
+[ ] Allow for memory hot-add
 [ ] Enable KSM for page merging
 (65536) Low address space to protect from user allocation
 [ ] Enable recovery from hardware memory errors
-[ ] Allocate 3rd-level pagetables from highmem
 [ ] Check for low memory corruption
 [ ] Reserve low 64K of RAM on AMI/Phoenix BIOSen
-[ ] Math emulation
 -*- MTRR (Memory Type Range Register)
 [ ]   MTRR cleanup support
 [ ] EFI runtime service support
-[ ] Enable seccomp to safely compute untrusted bytecode
+[*] Enable seccomp to safely compute untrusted bytecode
     Timer frequency (1000 HZ) ---&gt;
 [ ] kexec system call
 [ ] kernel crash dumps
 [ ] Build a relocatable kernel
-(0x100000) Alignment value to which kernel should be aligned
 -*- Support for hot-pluggable CPUs
 [ ] Compat VDSO support
 [ ] Built-in kernel command line</programlisting>
@@ -935,6 +918,14 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
           <para>The following settings are recommended:</para>
 
           <itemizedlist>
+            <listitem>
+              <para>Tickless System (Dynamic Ticks)</para>
+
+              <para>Unless you need the shortest latency possible, using
+              dynamic ticks will ensure that timer interrupts only fire when
+              needed.</para>
+            </listitem>
+
             <listitem>
               <para>High Resolution Timer Support</para>
 
@@ -949,15 +940,6 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
               <para>If you have multiple (identical) CPUs or your CPU has
               multiple cores, enable this.</para>
-            </listitem>
-
-            <listitem>
-              <para>Enable MPS Table</para>
-
-              <para>In case you have a somewhat older system (like I have) you
-              might need to enable this. It fixes some ACPI problems that
-              these systems have. Systems with 64-bit CPUs definitely don't
-              need this.</para>
             </listitem>
 
             <listitem>
@@ -987,6 +969,15 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
             </listitem>
 
             <listitem>
+              <para>SMT (Hyperthreading) scheduler support</para>
+
+              <para>This should be selected if you have a modern Pentium chip
+              with hyperthreading support. It is not mandatory though (the
+              kernel will run fine without it) but might improve scheduling
+              decisions made by the kernel.</para>
+            </listitem>
+
+            <listitem>
               <para>HPET Timer Support</para>
 
               <para>This enables support for the High Precision Event Timer,
@@ -994,13 +985,6 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
               modern systems. Especially if you have more than 1 core/CPU,
               enabling this offers "cheaper" time access than without HPET
               Timer support.</para>
-            </listitem>
-
-            <listitem>
-              <para>SMT (Hyperthreading) scheduler support</para>
-
-              <para>If you have an Intel CPU with hyperthreading, enable this
-              to improve the CPU scheduler performance.</para>
             </listitem>
 
             <listitem>
@@ -1060,22 +1044,14 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
             </listitem>
 
             <listitem>
-              <para>High Memory Support (4GB)</para>
-
-              <para>If you don't have more than around 900 Mbytes of memory,
-              you don't need to enable High Memory Support. If you have
-              between 900 Mbyte and around 4Gbyte, select 4GB. If you have
-              more than 4GB, select 64GB.</para>
-            </listitem>
-
-            <listitem>
-              <para>Memory Model (Flat Memory)</para>
+              <para>Memory Model (Sparse Memory)</para>
 
               <para>If you have a 32-bit processor, selecting Flat Memory is
               what you need. CPUs with a larger address space support (like
               64-bit CPUs) most likely only allow you to select "Sparse
               Memory" as you are not likely to have more than a few thousand
-              terabytes of RAM ;-)</para>
+              terabytes of RAM ;-) When "Sparse Memory" is selected, "Sparse
+              Memory virtual memmap" should be selected as well.</para>
             </listitem>
 
             <listitem>
@@ -1084,6 +1060,15 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
               <para>With MTRR support, applications such as the X server can
               control how the processor caches memory accesses, boosting
               performance for reads/writes to certain memory ranges.</para>
+            </listitem>
+
+            <listitem>
+              <para>Enable seccomp to safely compute untrusted bytecode</para>
+
+              <para>As recommended by its help description, we enable this in
+              case an application might want to use it. It has no impact if no
+              such applications exist on your system, and if they do, you most
+              likely want the added security measures this provides.</para>
             </listitem>
           </itemizedlist>
         </section>
@@ -1100,12 +1085,12 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 [*] Suspend to RAM and standby
 [*] Hibernation (aka 'suspend to disk')
 (/dev/sda5) Default resume partition
-[*] Run-time PM core functionality
+[ ] Run-time PM core functionality
 [*] ACPI (Advanced Configuration and Power Interface) Support ---&gt;
 [ ] SFI (Simple Firmware Interface) Support ---&gt;
-&lt; &gt; APM (Advanced Power Management) BIOS support ---&gt;
     CPU Frequency Scaling ---&gt;
--*- CPU idle PM support</programlisting>
+-*- CPU idle PM support
+    Memory power savings ---&gt;</programlisting>
 
           <para>The following options are of particular interest:</para>
 
@@ -1156,18 +1141,16 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
               <programlisting>--- ACPI (Advanced Configuration and Power Interface Support)
 [*]   Deprecated /proc/acpi files
 [*]   Deprecated power /proc/acpi directories
-[ ]   Future power /sys interface
+&lt; &gt; ACPI 4.0 power meter
+[*]   Future power /sys interface
 [*]   Deprecated /proc/acpi/event support
 &lt;*&gt; AC Adapter
 &lt;*&gt; Battery
-{*} Button
--*- Video
+&lt;*&gt; Button
+&lt;*&gt; Video
 &lt;*&gt; Fan
-[*] Dock
 &lt;*&gt; Processor
-&lt; &gt;   Processor Aggregator
 &lt;*&gt;   Thermal Zone
-(�) Disable ACPI for systems before Jan 1st this year
 [ ] Debug Statements
 &lt; &gt; PCI slot detection driver
 &lt; &gt; Smart Battery System</programlisting>
@@ -1191,6 +1174,29 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
               <para>If you own a laptop you'll most likely want to enable CPU
               Frequency scaling as it will slow down the CPU speed (and the
               power consumption with it) when the CPU isn't used.</para>
+
+              <programlisting>[*] CPU Frequency scaling
+[ ]   Enable CPUfreq debugging
+&lt;*&gt;   CPU frequency translation statistics
+[ ]      CPU frequency translation statistics details
+      Default CPUFreq governor (performance) ---&gt;
+-*- 'performance' governor
+&lt; &gt; 'powersave' governor
+&lt; &gt; 'userspace' governor for userspace frequency scaling
+&lt; &gt; 'ondemand' cpufreq policy governor
+&lt; &gt; 'conservative' cpufreq governor
+      *** CPUFreq processor drivers ***
+&lt; &gt;   Processor Clocking Control interface driver
+&lt;*&gt;   ACPI Processor P-States driver
+&lt; &gt;   AMD Opteron/Athlon64 PowerNow!
+&lt; &gt;   Intel Enhanced SpeedStep (deprecated)
+&lt; &gt;   Intel Pentium 4 clock modulation</programlisting>
+
+              <para>In the above, only the "performance" governor is selected,
+              as the laptop will always be used as a workstation. However, you
+              definitely want to enable additional governors for other
+              purposes as well. A governor can be seen as a policy when and
+              how the CPU frequency needs to be changed.</para>
             </listitem>
           </itemizedlist>
         </section>
@@ -1204,6 +1210,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
           PCMCIA).</para>
 
           <programlisting>[*] PCI Support
+[*]   Support mmconfig PCI config space access
       PCI access mode (Any) ---&gt;
 [*] PCI Express support
 [ ]   Root Port Advanced Error Reporting support
@@ -1212,17 +1219,14 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 &lt; &gt; PCI Stub driver
 [ ] Interrupts on hypertransport devices
 [ ] PCI IOV support
-[ ] ISA support
-[ ] MCA support
-&lt; &gt; NetSemi SCx200 support
-[ ] One Laptop Per Child support
 &lt; &gt; PCCard (PCMCIA/CardBus) support ---&gt;
 &lt; &gt; Support for PCI Hotplug ---&gt;</programlisting>
 
-          <para>In the above example I only selected PCI and PCI-X support;
-          laptop users will most likely enable PCCard support as well. Within
-          the submenu of the PCCard configuration you will be asked to select
-          the supporting bridge. A bridge<indexterm>
+          <para>In the above example I only selected PCI, mmconfig PCI config
+          space access and PCI-X support; laptop users will most likely enable
+          PCCard support as well. Within the submenu of the PCCard
+          configuration you will be asked to select the supporting bridge. A
+          bridge<indexterm>
               <primary>bridge</primary>
             </indexterm> is a component that links one bus technology with
           another. A PCMCIA bridge allows PCMCIA devices to connect to your
@@ -1243,12 +1247,15 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
           <programlisting>[*] Kernel support for ELF binaries
 [ ] Write ELF core dumps with partial segments
-&lt; &gt; Kernel support for a.out and ECOFF binaries
-&lt; &gt; Kernel support for MISC binaries</programlisting>
+&lt; &gt; Kernel support for MISC binaries
+[*] IA32 Emulation
+&lt; &gt; IA32 a.out support</programlisting>
 
           <para>The binary format used by Linux is ELF. Very old Linux systems
           and a couple of BSD operating systems use a.out binaries but it
-          isn't necessary to include support for those any more.</para>
+          isn't necessary to include support for those any more. If you are
+          configuring for a 64-bit system, definitely enable IA32 Emulation.
+          You'll need it. Trust me. </para>
         </section>
 
         <section>
@@ -1263,7 +1270,6 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 &lt; &gt;   CAN bus subsystem support ---&gt;
 &lt; &gt;   IrDA (infrared) subsystem support ---&gt;
 &lt; &gt;   Bluetooth subsystem support ---&gt;
-&lt; &gt;   RxRPC session sockets
 -*-   Wireless ---&gt;
 &lt; &gt;   WiMAX Wireless Broadband support ---&gt;
 &lt; &gt;   RF switch subsystem support ---&gt;</programlisting>
@@ -1275,7 +1281,6 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
           <programlisting>----- Networking Options -----
 &lt;*&gt; Packet socket
 &lt;*&gt; Unix domain sockets
-&lt; &gt; Transformation user configuration interface
 &lt; &gt; PF_KEY sockets
 [*] TCP/IP networking
 [ ]   IP: multicasting
@@ -1290,9 +1295,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 &lt; &gt; ANSI/IEEE 802.2 LLC type 2 Support
 &lt; &gt; The IPX protocol
 &lt; &gt; Appletalk protocol support
-&lt; &gt; WAN router
 &lt; &gt; Phonet protocols family
-&lt; &gt; IEEE Std 802.15.4 Low-Rate Wireless Personal Area Networks support
 [ ] QoS and/or fair queuing ---&gt;
 [ ] Data Center Bridging support
     Network testing ---&gt;</programlisting>
@@ -1359,7 +1362,9 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 [*]     enable powersave by default
 [ ]     cfg80211 DebugFS entries
 [ ]     cfg80211 wireless extensions compatibility
-&lt; &gt;  Common routines for IEEE802.11 drivers
+[*] Wireless extensions sysfs files
+-+-  Common routines for IEEE802.11 drivers
+[ ]   lib80211 debugging messages
 &lt; &gt;  Generic IEEE 802.11 Networking Stack (mac80211)</programlisting>
 
           <para>I've selected these options because IEEE 802.11 is the
@@ -1400,17 +1405,17 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 &lt; &gt; Parallel port support ---&gt;
 -*- Plug and Play support ---&gt;
 [*] Block devices ---&gt;
-[*] Misc devices ---&gt;
-&lt;*&gt; ATA/ATAPI/MFM/RLL support ---&gt;
+[ ] Misc devices ---&gt;
+&lt; &gt; ATA/ATAPI/MFM/RLL support (DEPREACATED) ---&gt;
     SCSI device support ---&gt;
-&lt;*&gt; Serial ATA (prod) and Parallel ATA (experimental) drivers ---&gt;
+&lt;*&gt; Serial ATA and Parallel ATA drivers ---&gt;
 [ ] Multiple devices driver support (RAID and LVM) ---&gt;
 [ ] Fusion MPT device support ---&gt;
     IEEE 1394 (FireWire) support ---&gt;
 &lt; &gt; I2O device support ---&gt;
 [ ] Macintosh device drivers ---&gt;
 [*] Network device support ---&gt;
-&lt; &gt; ISDN support ---&gt;
+[ ] ISDN support ---&gt;
 &lt; &gt; Telephony support ---&gt;
     Input device support ---&gt;
     Character devices ---&gt;
@@ -1419,7 +1424,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
     PPS support ---&gt;
 [ ] GPIO support ---&gt;
 &lt; &gt; Dallas's 1-wire support ---&gt;
-&lt; &gt; Power supply class support ---&gt;
+-*- Power supply class support ---&gt;
 &lt; &gt; Hardware Monitoring support ---&gt;
 -*- Generic Thermal sysfs driver ---&gt;
 [ ] Watchdog Timer Support ---&gt;
@@ -1433,6 +1438,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 [*] USB support ---&gt;
 &lt;M&gt; MMC/SD/SDIO card support ---&gt;
 [ ] LED Support ---&gt;
+[ ] Accessibility support ---&gt;
 &lt; &gt; InfiniBand support ---&gt;
 [ ] EDAC (Error Detection And Correction) reporting ---&gt;
 &lt; &gt; Real Time Clock ---&gt;
@@ -1466,6 +1472,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 &lt; &gt;   Mylex DAC960/DAC1100 PCI RAID Controller support
 &lt;*&gt;   Loopback device support
 &lt; &gt;     Cryptoloop Support
+&lt; &gt;   DRBD Distributed Replicated Block Device support
 &lt; &gt;   Network block device support
 &lt; &gt;   Promise SATA SX8 support
 &lt; &gt;   Low Performance USB Block driver
@@ -1561,8 +1568,8 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 00:1f.2 SATA controller: Intel Corporation 82801FBM (ICH6M)
         SATA Controller (rev 04)</programlisting>
 
-                <para>All the other options are drivers for other
-                chip sets.</para>
+                <para>All the other options are drivers for other chip
+                sets.</para>
               </listitem>
             </itemizedlist>
           </section>
