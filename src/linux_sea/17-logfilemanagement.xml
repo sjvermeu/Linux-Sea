@@ -48,7 +48,7 @@
       itself.</para>
 
       <para>When a tool wants to log an event, he needs to provide two
-      additional fields: </para>
+      additional fields:</para>
 
       <itemizedlist>
         <listitem>
@@ -183,7 +183,7 @@ log { source(src); filter(f_auth); destination(auth); };
 log { source(src); filter(f_messages); destination(messages); };</programlisting>
 
       <para>It might be easy to read the configuration file from the bottom
-      up. </para>
+      up.</para>
 
       <itemizedlist>
         <listitem>
@@ -231,8 +231,8 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
 
       <para>The Xorg server stores it log file at
       <filename>/var/log/Xorg.0.log</filename>. The trailing 0 denotes that
-      this is of the current/last start. The log file of the start before
-      that is called <filename>Xorg.1.log</filename>, and so on. </para>
+      this is of the current/last start. The log file of the start before that
+      is called <filename>Xorg.1.log</filename>, and so on.</para>
 
       <para>Xorg uses the following notations to identify the various
       criticality levels:</para>
@@ -244,10 +244,38 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
       <para>The Xorg server will automatically rotate the log files, by
       default 3 times, after which it will erase the oldest log file.</para>
     </section>
+
+    <section>
+      <title>Gentoo Related Logs</title>
+
+      <para>Gentoo Portage (and other Gentoo tools) have their own set of logs
+      as well.</para>
+
+      <section>
+        <title>Package Installation Logs</title>
+
+        <para>The package logs (known as elogs<indexterm>
+            <primary>elog</primary>
+          </indexterm>) as defined in the chapter on software management are
+        stored in <filename>/var/log/portage/elog</filename>. The variables in
+        <filename>/etc/make.conf</filename> that define the location and the
+        logging aspects are:</para>
+
+        <programlisting># Base directory for Portage logging
+PORT_LOGDIR="/var/log/portage"
+# Type of logging (save = separate log per installation)
+PORTAGE_ELOG_SYSTEM="save"
+# Log filter (what to log)
+PORTAGE_ELOG_CLASSES="info warn error log"</programlisting>
+
+        <para>Portage does not clean up old log files though, so we'll need to
+        implement something for ourselves.</para>
+      </section>
+    </section>
   </section>
 
   <section>
-    <title>Maintaining Log Files</title>
+    <title>Maintaining Log Files with Logrotate</title>
 
     <para>Most tools do not offer log rotation or clean up by default. It is
     therefore recommended to implement some sort of log rotation for your
@@ -256,7 +284,7 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
         <primary>logrotate</primary>
       </indexterm>. The tool is triggered by your system scheduler (cron) and
     is best configured by creating separate configuration files for your log
-    files. </para>
+    files.</para>
 
     <section>
       <title>Installing Logrotate</title>
@@ -299,11 +327,24 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
   endscript
 }</programlisting>
 
-      <para>The file informs logrotate that the mentioned log files are rotated
-      6 times on a monthly basis (so you keep 7 months of history). The tool
-      will automatically rename the "old" log files by adding a date stamp to
-      the filename. You can also instruct logrotate to compress the rotated
-      log files or even move them to a different location.</para>
+      <para>The file informs logrotate that the mentioned log files are
+      rotated 6 times on a monthly basis (so you keep 7 months of history).
+      The tool will automatically rename the "old" log files by adding a date
+      stamp to the filename. You can also instruct logrotate to compress the
+      rotated log files or even move them to a different location.</para>
     </section>
+  </section>
+
+  <section>
+    <title>Maintaining Log Files with Cron</title>
+
+    <para>Not all log files can be easily managed with logrotate. For
+    instance, you might want to only remove log files that are older than 1
+    month. This can be easily accomplished with a simple cron entry. For
+    instance, <filename>/etc/cron.weekly/elog-cleanup</filename>:</para>
+
+    <programlisting>#!/bin/sh
+
+find /var/log/portage/elog -type f -mtime +30 -exec rm '{}' \;</programlisting>
   </section>
 </chapter>

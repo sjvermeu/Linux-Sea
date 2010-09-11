@@ -669,6 +669,35 @@ app-portage/portage-utils (/usr/bin/qfile)</programlisting>
     </section>
 
     <section>
+      <title>Enabling Installation Logs</title>
+
+      <para>When a Gentoo developer wants to inform a package user about
+      certain changes or things to look out for, he often puts informational
+      messages in the package itself which are displayed the moment you've
+      finished the installation of the package. However, for lengthy updates
+      or installations, you often overlook these messages. For this purpose,
+      Gentoo Portage allows you to store these messages in separate log files.
+      By default, Portage only sets up a summary log for the installation. You
+      can stick with those defaults, or set up a more verbose logging:</para>
+
+      <programlisting># <command>nano /etc/make.conf</command>
+
+PORT_LOGDIR="/var/log/portage"
+PORTAGE_ELOG_SYSTEM="save"
+PORTAGE_ELOG_CLASSES="info warn error log"</programlisting>
+
+      <para>With this defined, you'll find per-package logs in
+      <filename>/var/log/portage/elog</filename>. You can then read those log
+      files with your favorite text reader (like <command>less</command> or
+      <command>view</command>) or using elog-specific tools like
+      <command>elogv</command><indexterm>
+          <primary>elogv</primary>
+        </indexterm> (console) or <command>elogviewer</command><indexterm>
+          <primary>elogviewer</primary>
+        </indexterm> (graphical).</para>
+    </section>
+
+    <section>
       <title>Installing New Software</title>
 
       <para>You've seen already that emerge is Gentoo's main tool to work with
