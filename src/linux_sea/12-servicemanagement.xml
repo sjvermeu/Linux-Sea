@@ -275,9 +275,9 @@ Runlevel: default
         <programlisting># <command>touch /forcefsck</command></programlisting>
 
         <para>On the other hand, if you want to ignore the file system checks,
-        add the <parameter>fastboot</parameter><indexterm>
-            <primary>fastboot</primary>
-          </indexterm> boot parameter.</para>
+        create the <filename>/fastboot</filename><indexterm><primary>fastboot</primary></indexterm>
+	file. It too will be automatically
+	removed, this time when the system has booted.</para>
 
         <para>Once the service has finished starting, no additional processes
         will be running.</para>

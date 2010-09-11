@@ -1,5 +1,7 @@
 ** (2010-09-11) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Add information on elog files
+	- Remove 'fastboot' as boot param (not supported, only /fastboot
+	  touchfile)
 
 ** (2010-09-10) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Updates on kernel configuration
