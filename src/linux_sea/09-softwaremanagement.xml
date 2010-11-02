@@ -1940,6 +1940,31 @@ sys-apps/dbus:0
       </section>
 
       <section>
+        <title>Dependency required with different USE flags</title>
+
+        <para>When a package has a dependency on another package, but requires
+        this dependency to be build with some USE flags which you currently
+        have not set, Portage will give you an appropriate error:</para>
+
+        <programlisting>emerge: there are no ebuilds built with USE flags to 
+satisfy "&gt;=x11-libs/qt-sql-4.5.0:4[mysql]".
+
+!!! One of the following packages is required to complete your request:
+- x11-libs/qt-sql-4.5.2 (Change USE: +mysql)
+
+(dependency required by "app-office/akonadi-server-1.2.1" [ebuild])</programlisting>
+
+        <para>In the above case, the package <package>akonadi-server</package>
+        requires <package>qt-sql</package> (as a dependency) to be built with
+        <parameter>USE="mysql"</parameter>.</para>
+
+        <para>The solution: either add the requested USE flag to your global
+        USE flags (in <filename>/etc/make.conf</filename>) or set the USE flag
+        specifically for the selected package (in
+        <filename>/etc/portage/package.use</filename>).</para>
+      </section>
+
+      <section>
         <title>Other Issues</title>
 
         <para>A few other issues can come up:</para>

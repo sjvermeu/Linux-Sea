@@ -1,5 +1,8 @@
 ** (2010-11-02) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Switch from slocate to mlocate
+	- Add information on Portage error where a dependency cannot
+	  be met because a dependency must be built with different USE
+	  settings
 
 ** (2010-09-11) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Add information on elog files
