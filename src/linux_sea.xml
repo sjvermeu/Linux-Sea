@@ -65,9 +65,13 @@
         "Linux Sea" will attempt to focus on topics that everyday users would
         probably need to know to continue working with Gentoo Linux.
       </para>
+      <para>
+        The version you are reading currently is v1.2 and has been generated
+	on 2010/11/02.
+      </para>
     </abstract>
 
-    <edition>Linux Sea v1.2</edition>
+    <edition>Linux Sea v1.2</edition> <!-- Update above paragraph too!! -->
 
     <copyright>
       <year>2009, 2010</year>
