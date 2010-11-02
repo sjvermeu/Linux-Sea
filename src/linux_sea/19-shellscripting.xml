@@ -239,13 +239,13 @@ dev-perl/libwww-perl-5.836
       <para>However, chaining two commands together with the background sign
       is not possible:</para>
 
-      <programlisting>~# <command>emerge -uDN world &gt; emerge-output.log 2&gt;&amp;1 &amp;; slocate -u &amp;</command>
+      <programlisting>~# <command>emerge -uDN world &gt; emerge-output.log 2&gt;&amp;1 &amp;; updatedb &amp;</command>
 bash: syntax error near unexpected token ';'</programlisting>
 
       <para>If you drop the ";" from the command, both processes will run
       simultaneously. The grouping syntax comes to the rescue:</para>
 
-      <programlisting>~# <command>(emerge -uDN world &gt; emerge-output.log 2&gt;&amp;1; slocate -u) &amp;</command></programlisting>
+      <programlisting>~# <command>(emerge -uDN world &gt; emerge-output.log 2&gt;&amp;1; updatedb) &amp;</command></programlisting>
 
       <para>This also works for output redirection:</para>
 

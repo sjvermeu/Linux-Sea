@@ -416,8 +416,8 @@ LANG="nl_BE"
 LANG="en_US.utf-8"
 LANG="nl_NL@euro"</programlisting>
 
-      <para>These settings are read as environment variables (which are
-      discussed later) by the applications. You can mark locales system wide,
+      <para>These settings are read as environment variables (which were 
+      discussed earlier) by the applications. You can mark locales system wide,
       but it is advised that this is stored on a per-user basis. As such, I
       recommend that you set something like the following in your
       <filename>~/.bashrc</filename> file (and in

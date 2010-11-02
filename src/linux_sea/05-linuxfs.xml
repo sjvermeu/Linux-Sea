@@ -42,8 +42,8 @@ etc/     mnt/      sbin/     usr/</programlisting>
     instance, it appends a "/" to directories, an "@" to symbolic links and a
     "*" to executable files. The advantage is that, for this book, you can
     easily see what type of files you have. By default, Gentoo enables
-    colour-mode for the <command>ls</command> command, telling you what kind of
-    files there are by the colour. For books however, using the appended
+    colour-mode for the <command>ls</command> command, telling you what kind
+    of files there are by the colour. For books however, using the appended
     character is more sane.</para>
 
     <para>A popular way of representing the file system is through a tree. An
@@ -484,8 +484,8 @@ brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
         definition file called <filename>/etc/fstab</filename><indexterm>
             <primary>fstab</primary>
           </indexterm>. The fstab file contains all the information mount
-        could need in order to successfully mount a device. An example fstab is
-        shown below:</para>
+        could need in order to successfully mount a device. An example fstab
+        is shown below:</para>
 
         <programlisting>/dev/sda8  /          ext3    defaults,noatime      0 0
 /dev/sda5  none       swap    sw                    0 0
@@ -1372,34 +1372,41 @@ s-S--a---------  /tmp/foo</programlisting>
     <para>Luckily, there are a few commands at your disposal to do so.</para>
 
     <section>
-      <title>slocate</title>
+      <title>mlocate</title>
 
-      <para>The <command>slocate</command><indexterm>
-          <primary>slocate</primary>
+      <para>The <command>locate</command><indexterm>
+          <primary>locate</primary>
         </indexterm> command manages and uses a database of files to help you
-      find a particular file. Before you can use <command>slocate</command>,
-      you first need to create this database. Also, this database is not
-      automatically brought up to date while you modify your system, so you'll
-      need to run this database update command every now and then:</para>
+      find a particular file. Before you can use <command>locate</command>,
+      you first need to install it (the package is called
+      <package>sys-apps/mlocate</package>) and then create the file database.
+      Also, this database is not automatically brought up to date while you
+      modify your system, so you'll need to run this command (which is the
+      same for creating a new database or updating an existing one) every now
+      and then:</para>
 
-      <programlisting># <command>slocate -u</command></programlisting>
+      <programlisting># <command>updatedb</command></programlisting>
 
       <para>A popular way of keeping this database up to date is to use the
       system scheduler (called cron) which is discussed later.</para>
 
       <para>When your database is build and somewhat up to date, you can
       locate any particular file on your filesystem using
-      <command>slocate</command>:</para>
+      <command>locate</command>:</para>
 
-      <programlisting># <command>slocate make.conf</command>
+      <programlisting># <command>locate make.conf</command>
 /etc/make.conf
 /etc/make.conf.example
 (...)
 /usr/portage/local/layman/make.conf</programlisting>
 
-      <para>As you can see, the slocate command returns all files it has found
+      <para>As you can see, the locate command returns all files it has found
       where the string (in this case, "make.conf") is used in the filename,
       even when the file name is different.</para>
+
+      <para>The name <emphasis>mlocate</emphasis> is the name of the project
+      that maintains the package. Earlier in history, the package of choice
+      for the locate functionality was <emphasis>slocate</emphasis>.</para>
     </section>
 
     <section>
@@ -1408,7 +1415,7 @@ s-S--a---------  /tmp/foo</programlisting>
       <para>The <command>find</command><indexterm>
           <primary>find</primary>
         </indexterm> command is a very important and powerful command. Unlike
-      <command>slocate</command>, it only returns live information (so it
+      <command>locate</command>, it only returns live information (so it
       doesn't use a database). This makes searches with
       <command>find</command> somewhat slow, but <command>find</command>'s
       power isn't speed, but the options you can give to find a particular
