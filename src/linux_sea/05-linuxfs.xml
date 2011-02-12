@@ -497,7 +497,8 @@ brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
 
         <orderedlist>
           <listitem>
-            <para>The device to mount</para>
+            <para>The device to mount (also supports labels - we'll discuss
+            that later)</para>
           </listitem>
 
           <listitem>

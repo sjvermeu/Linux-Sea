@@ -68,13 +68,16 @@
     <para>Once your environment is set up, you'll need to setup your disks by
     partitioning them and then putting a file system on them. Partitioning and
     file system management has been discussed <link
-    linkend="hdpartitions">beforehand</link>:</para>
+    linkend="hdpartitions">beforehand</link>. If you want, assign labels to
+    the file systems to make it easier to create your
+    <filename>fstab</filename> file later:</para>
 
     <programlisting># <command>fdisk /dev/sda</command>
 <emphasis>(Partition the disk)</emphasis>
-# <command>mkfs.ext2 /dev/sda1</command>
-# <command>mkfs.ext3 /dev/sda2</command>
-# <command>mkfs.ext3 /dev/sda3</command></programlisting>
+# <command>mkfs.ext2 -L BOOT /dev/sda1</command>
+# <command>mkfs.ext3 -L ROOT /dev/sda2</command>
+# <command>mkfs.ext3 -L HOME /dev/sda3</command>
+# <command>mkswap -L SWAP /dev/sda4</command></programlisting>
 
     <para>Once that your partitions are created and a file system is put on
     it, it is time to really start the Gentoo Linux installation.</para>
@@ -380,7 +383,9 @@ de_DE@euro ISO-8859-15
       <para>To start with the file system information, you need to edit the
       <filename>/etc/fstab</filename> file. The structure of this file has
       been discussed before so this shouldn't be an issue (see <link
-      linkend="mountsection">The mount command</link>).</para>
+      linkend="mountsection">The mount command</link>). If you want to use
+      labels instead of device locations, use the
+      <parameter>LABEL="..."</parameter> syntax in the first column.</para>
 
       <programlisting>/dev/sda1  /boot    ext2  noauto,noatime    0 0
 /dev/sda2  /        ext3  defaults,noatime  0 0

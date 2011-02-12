@@ -1,3 +1,6 @@
+** (2011-02-12) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Add information on file system UUIDs and LABELs
+
 ** (2010-11-02) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Switch from slocate to mlocate
 	- Add information on Portage error where a dependency cannot

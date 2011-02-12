@@ -505,6 +505,104 @@ is corrupt, and you might try running e2fsck with an alternate superblock:
         <programlisting>~# <command>e2fsck -y /dev/hda4</command></programlisting>
       </section>
     </section>
+
+    <section>
+      <title>Using File System Labels or IDs</title>
+
+      <para>Most, if not all file systems allow you to give them an
+      appropriate label. Such labels can then later be used to identify a file
+      system without having to mount it (and look at it). Linux even supports
+      the use of these labels for the various mount and file system
+      operations. The use of labels (or UUIDs, as we will see later) also
+      allows one to use configurations (such as in the
+      <filename>fstab</filename> file) which do not need to be modified when
+      your system gets changed (for instance, new partitions created, new
+      disks added, reshuffling of disks and more).</para>
+
+      <section>
+        <title>Labels versus UUIDs</title>
+
+        <para>There are two identifiers commonly used when dealing with file
+        systems: LABEL and UUID.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>a <emphasis>LABEL</emphasis><indexterm>
+                <primary>LABEL</primary>
+              </indexterm> is a user-provided name for a file system. An
+            example could be "ROOT", "HOME" or "DATA".</para>
+          </listitem>
+
+          <listitem>
+            <para>a <emphasis>UUID</emphasis><indexterm>
+                <primary>UUID</primary>
+              </indexterm> (Universally Unique Identifier) is a
+            system-generated identifier for a file system. Examples are
+            "bae98338-ec29-4beb-aacf-107e44599b2e" and
+            "31f8eb0d-612b-4805-835e-0e6d8b8c5591"</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>As you can imagine, a given label is much more user friendly
+        than a UUID. So, how do you set a label for a file system? Well, this
+        heavily depends on the file system you use. For ext2, ext3 or ext4
+        file systems, you can use the <command>e2label</command><indexterm>
+            <primary>e2label</primary>
+          </indexterm> command:</para>
+
+        <programlisting>~# <command>e2label /dev/sda2 ROOT</command></programlisting>
+
+        <para>For an XFS file system, the command would be given with
+        <command>xfs_admin</command>:</para>
+
+        <programlisting>~# <command>xfs_admin -L ROOT /dev/sda2</command></programlisting>
+
+        <para>You can even set labels for swap file systems (<command>mkswap
+        -L &lt;labelname&gt; &lt;device&gt;</command>), FAT file systems
+        (<command>mlabel -i &lt;device&gt; ::&lt;labelname&gt;</command>) and
+        JFS file systems (<command>jfs_tune -L &lt;labelname&gt;
+        &lt;device&gt;</command>).</para>
+
+        <para>The easiest method to read the label and UUID of a file system
+        is to use the <command>blkid</command><indexterm>
+            <primary>blkid</primary>
+          </indexterm> command:</para>
+
+        <programlisting>~# <command>blkid /dev/sda3</command>
+/dev/sda3: UUID="2bc32022-27a8-47d5-8d33-83c86e23618c" LABEL="ROOT" TYPE="ext4"</programlisting>
+      </section>
+
+      <section>
+        <title>Using Labels/UUIDs in fstab</title>
+
+        <para>If you have set a label for your file system(s) (or use UUIDs)
+        you can use this information in the <filename>/etc/fstab</filename>
+        file. Just substitute the value in the first column (where the device
+        is located) with the correct LABEL= or UUID= setting:</para>
+
+        <programlisting>/dev/sda2     /  ext4     defaults,noatime   0 0</programlisting>
+
+        <para>could then become one of the following:</para>
+
+        <programlisting>LABEL="ROOT"  /  ext4     defaults,noatime   0 0</programlisting>
+
+        <para>or</para>
+
+        <programlisting>UUID="bc32022-27a8-47d5-8d33-83c86e23618c"  /  ext4   defaults,noatime   0 0</programlisting>
+      </section>
+
+      <section>
+        <title>(Not) Using Labels/UUIDs as Kernel Options</title>
+
+        <para>Some people hope to use the same information as kernel option
+        (for instance, to change the <parameter>root=/dev/sda2</parameter>
+        kernel parameter to <parameter>root=LABEL=ROOT</parameter>). This is
+        possible, but only if you use an initramfs (so use this for the
+        <parameter>real_root=</parameter> parameter). The Linux kernel itself
+        does not support calling devices through their UUID or LABEL
+        information.</para>
+      </section>
+    </section>
   </section>
 
   <section>
