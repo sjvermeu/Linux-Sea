@@ -1,3 +1,6 @@
+** (2011-02-13) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Use package.accept_keywords instead of package.keywords
+
 ** (2011-02-12) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Add information on file system UUIDs and LABELs
 

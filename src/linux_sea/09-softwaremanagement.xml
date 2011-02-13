@@ -1365,13 +1365,24 @@ ACCEPT_LICENSE="-* @FSF-APPROVED"</programlisting>
           </listitem>
 
           <listitem>
-            <para><filename>/etc/portage/package.keywords</filename><indexterm>
-                <primary>package.keywords</primary>
+            <para><filename>/etc/portage/package.accept_keywords</filename><indexterm>
+                <primary>package.accept_keywords</primary>
               </indexterm> allows you to set keyword deviations (inform
             Portage that for this package, other keywords are accepted as
             well)</para>
           </listitem>
         </itemizedlist>
+
+        <note>
+          <para>Previous versions of Portage use
+          <filename>package.keywords</filename><indexterm>
+              <primary>package.keywords</primary>
+            </indexterm> instead of
+          <filename>package.accept_keywords</filename>. Recent Portage
+          versions still support this old location, but it is recommended to
+          rename them to package.accept_keywords to remain functional in the
+          future.</para>
+        </note>
 
         <para>Now, I did say "file or directory" in the previous paragraph.
         That's right: Portage allows you to either put the information in
@@ -1477,17 +1488,17 @@ ACCEPT_LICENSE="-* @FSF-APPROVED"</programlisting>
         <procedure>
           <step>
             <para>Create the
-            <filename>/etc/portage/package.keywords</filename>
+            <filename>/etc/portage/package.accept_keywords</filename>
             directory</para>
 
-            <programlisting># <command>mkdir -p /etc/portage/package.keywords</command></programlisting>
+            <programlisting># <command>mkdir -p /etc/portage/package.accept_keywords</command></programlisting>
           </step>
 
           <step>
             <para>Create a file (say benchmarks) and add
             "app-benchmarks/bonnie++" to it:</para>
 
-            <programlisting># <command>nano -w /etc/portage/package.keywords/benchmarks</command>
+            <programlisting># <command>nano -w /etc/portage/package.accept_keywords/benchmarks</command>
 app-benchmarks/bonnie++</programlisting>
           </step>
         </procedure>
@@ -1596,7 +1607,7 @@ package.mask
         <para>More than often, a staging-state masked package has dependencies
         upon other masked packages, who have dependencies upon other masked
         packages, etc. To manually enter these dependencies in
-        /<filename>etc/portage/package.keywords</filename> and, more
+        /<filename>etc/portage/package.accept_keywords</filename> and, more
         importantly, finding out about these packages, you would need to retry
         installing over and over again until you have met and resolved all
         errors.</para>
@@ -1606,8 +1617,8 @@ package.mask
             <primary>autounmask</primary>
           </indexterm>. <command>autounmask</command> allows you to select the
         main package you want, and it will automatically create a file inside
-        <filename>/etc/portage/package.keywords</filename> that unmasks all
-        depending packages as well.</para>
+        <filename>/etc/portage/package.accept_keywords</filename> that unmasks
+        all depending packages as well.</para>
 
         <programlisting># <command>emerge autounmask</command>
 # <command>autounmask x11-misc/googleearth</command></programlisting>
