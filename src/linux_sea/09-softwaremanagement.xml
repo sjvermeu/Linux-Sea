@@ -974,6 +974,32 @@ This system is affected by the following GLSAs:
         <programlisting># <command>glsa-check --fix all</command>
 <remark>(This will iterate over all GLSAs, including the matching one(s))</remark></programlisting>
       </section>
+
+      <section>
+        <title>Switching between software versions</title>
+
+        <para>Gentoo supports having multiple versions of the same software on
+        the system. Notable examples are gcc, python and java but many more
+        exist. Administrators are able to switch between these installed
+        versions using <command>eselect</command><indexterm>
+            <primary>eselect</primary>
+          </indexterm>. We have seen this tool already previously for
+        switching between profiles.</para>
+
+        <para>For instance, to display the installed Python versions:</para>
+
+        <programlisting># <command>eselect python list</command>
+Available Python interpreters:
+  [1] python2.7
+  [2] python3.1 *</programlisting>
+
+        <para>In the above example, Python 3.1 is the system default. You can
+        switch the system to 2.7 then using <command>eselect python set
+        1</command>.</para>
+
+        <para>To get an overview of the supported modules in eselect, run
+        <command>eselect help</command>.</para>
+      </section>
     </section>
 
     <section>
