@@ -2481,6 +2481,13 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
       <programlisting># <command>emerge grub</command></programlisting>
 
+      <para>If you are installing an x86_64 system (which uses the Gentoo
+      amd64 profile) with no multilib support (meaning there are no 32-bit
+      and 64-bit libraries built side by side), you will need to install
+      the static version of GRUB:</para>
+
+      <programlisting># <command>emerge grub-static</command></programlisting>
+
       <para>Next, we install GRUB onto the MBR. To have the installation
       command work, we need to create the /etc/mtab file:</para>
 

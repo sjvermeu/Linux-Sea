@@ -459,7 +459,8 @@ none       /dev/shm tmpfs defaults          0 0</programlisting>
   <section>
     <title>Configuring the Boot Loader</title>
 
-    <para>Now, we install the GRUB boot loader:</para>
+    <para>Now, we install the GRUB boot loader (remember to use grub-static if
+    you are using an amd64 (x86_64) system with no-multilib):</para>
 
     <programlisting>~# <command>emerge grub</command></programlisting>
 

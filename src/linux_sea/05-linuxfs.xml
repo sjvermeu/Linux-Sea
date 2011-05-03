@@ -916,7 +916,11 @@ Filename     Type      Size    Used  Priority
     default Linux kernel yet, I will talk about the standard, discretionary
     access control mechanism used by almost all Linux distributions. <ulink
     url="http://www.nsa.gov/selinux">SELinux</ulink>, which is part of the
-    default Linux kernel, will also not be discussed.</para>
+    default Linux kernel, will also not be discussed. If you are interested
+    in running a SELinux powered system, I recommend to use <ulink
+    url="http://www.gentoo.org/proj/en/hardened">Gentoo Hardened</ulink> which
+    supports SELinux. There is also a <ulink url="http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml">Gentoo
+    Hardened SELinux Handbook</ulink> which is worth reading through.</para>
 
     <section>
       <title>Read, Write and Execute</title>
