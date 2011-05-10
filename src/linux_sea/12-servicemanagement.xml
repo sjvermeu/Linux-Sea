@@ -218,7 +218,8 @@ Runlevel: default
             <primary>alsasound</primary>
           </indexterm> service is responsible for loading the appropriate
         sound kernel modules (if they are known as modules) and
-        saving/restoring the sound configuration at boot-up / shut down.</para>
+        saving/restoring the sound configuration at boot-up / shut
+        down.</para>
 
         <para>When the service is started, you might see kernel modules being
         loaded in memory. However, no other processes are started as part of
@@ -275,9 +276,10 @@ Runlevel: default
         <programlisting># <command>touch /forcefsck</command></programlisting>
 
         <para>On the other hand, if you want to ignore the file system checks,
-        create the <filename>/fastboot</filename><indexterm><primary>fastboot</primary></indexterm>
-	file. It too will be automatically
-	removed, this time when the system has booted.</para>
+        create the <filename>/fastboot</filename><indexterm>
+            <primary>fastboot</primary>
+          </indexterm> file. It too will be automatically removed, this time
+        when the system has booted.</para>
 
         <para>Once the service has finished starting, no additional processes
         will be running.</para>
@@ -290,7 +292,7 @@ Runlevel: default
             <primary>checkroot</primary>
           </indexterm> service is responsible for checking the consistency of
         the root file system. This service uses the same boot parameters
-        (forcefsck or fastboot) as the checkfs service. </para>
+        (forcefsck or fastboot) as the checkfs service.</para>
 
         <para>The service is also responsible for remounting the root file
         system read-write (by default it gets mounted read-only by the Linux
@@ -349,8 +351,8 @@ Runlevel: default
             <primary>host name</primary>
 
             <secondary>service</secondary>
-          </indexterm> service is responsible for setting your systems'
-        host name based on the input of
+          </indexterm> service is responsible for setting your systems' host
+        name based on the input of
         <filename>/etc/conf.d/hostname</filename>.</para>
 
         <para>Once the service has finished starting, no additional processes
@@ -456,8 +458,8 @@ Runlevel: default
             <secondary>service</secondary>
           </indexterm> service is responsible for launching the secure shell
         daemon, which allows you to access your system from a remote location
-        (as long as the network / firewalls permit it) in a secure manner.
-        </para>
+        (as long as the network / firewalls permit it) in a secure
+        manner.</para>
 
         <para>Once the service has finished starting, you will find the sshd
         process running.</para>
@@ -517,92 +519,20 @@ Runlevel: default
       <title>General Service Configuration</title>
 
       <para>Gentoo's general configuration file for the start-up service
-      behaviour is <filename>/etc/rc.conf</filename> and
-      <filename>/etc/conf.d/rc</filename>.</para>
+      behaviour is <filename>/etc/rc.conf</filename>.</para>
 
       <section>
         <title>/etc/rc.conf</title>
 
         <para>Inside the <filename>rc.conf</filename> file, generic settings
         which are (or might be) needed by several services can be configured.
-        The syntax is, as usual, "key=value".</para>
+        The syntax is, as usual, "key=value". Since openrc (new init system
+        for Gentoo), all settings are bundled in this file. Earlier systems
+        spread the configuration across <filename>/etc/rc.conf</filename> and
+        <filename>/etc/conf.d/rc</filename>. The latter is now
+        deprecated.</para>
 
-        <itemizedlist>
-          <listitem>
-            <para>UNICODE="yes" (or "no"), which specifies if you want to use
-            Unicode support at the console</para>
-          </listitem>
-
-          <listitem>
-            <para>EDITOR="/bin/nano" (or any other text editor), which
-            specifies the default text editor you want to use</para>
-          </listitem>
-
-          <listitem>
-            <para>XSESSION="Xfce4" (or any other supported graphical session
-            manager), which specifies the default graphical environment to
-            launch</para>
-          </listitem>
-        </itemizedlist>
-      </section>
-
-      <section>
-        <title>/etc/conf.d/rc</title>
-
-        <para>In the /etc/conf.d/rc file, you specify configuration settings
-        that affect or influence the system service handling behaviour. The
-        file contains lots of comments which should make it a bit easier to
-        work with. So consider the list below more of a small introduction
-        rather than a complete list. As usual, the syntax uses a key=value
-        set.</para>
-
-        <itemizedlist>
-          <listitem>
-            <para><parameter>RC_PARALLEL_STARTUP</parameter><indexterm>
-                <primary>RC_PARALLEL_STARTUP</primary>
-              </indexterm> ("yes" or "no") informs the system service handling
-            to attempt to start services in parallel as much as
-            possible.</para>
-          </listitem>
-
-          <listitem>
-            <para><parameter>RC_NET_STRICT_CHECKING</parameter><indexterm>
-                <primary>RC_NET_STRICT_CHECKING</primary>
-              </indexterm> ("none", "lo", "no", "yes") informs the system when
-            it should consider networking to be available:</para>
-
-            <itemizedlist>
-              <listitem>
-                <para>none = networking is always available</para>
-              </listitem>
-
-              <listitem>
-                <para>lo = networking is available the moment the loopback
-                interface (lo) is available</para>
-              </listitem>
-
-              <listitem>
-                <para>no = networking is available the moment at least one
-                non-loopback interface is available</para>
-              </listitem>
-
-              <listitem>
-                <para>yes = networking is available when all non-loopback
-                interfaces are available</para>
-              </listitem>
-            </itemizedlist>
-
-            <para>The <emphasis>loopback interface</emphasis><indexterm>
-                <primary>loopback interface</primary>
-              </indexterm> is a surreal interface which only supports local
-            traffic (localhost, 127.0.0.1). Linux by default enables this
-            interface (it is a kernel configuration) so that one can work with
-            networking tools even if the system isn't on any network. It also
-            makes the development of certain applications a lot easier once
-            they can assume some networking is available (even if it is "just"
-            localhost).</para>
-          </listitem>
-        </itemizedlist>
+        <para>The file is pretty well documented.</para>
       </section>
     </section>
 

@@ -259,17 +259,17 @@ nameserver 10.2.3.5</programlisting>
         192.168.0.100, gateway 192.168.0.1 and netmask 255.255.255.0 and the
         name servers are 10.2.3.4 and 10.2.3.5):</para>
 
-        <programlisting>config_eth0=( "192.168.0.100 netmask 255.255.255.0" )
-dns_servers_eth0=( "10.2.3.4 10.2.3.5" )</programlisting>
+        <programlisting>config_eth0="192.168.0.100 netmask 255.255.255.0"
+dns_servers_eth0="10.2.3.4 10.2.3.5"</programlisting>
 
         <para>If you want to configure the interface to use DHCP
         (automatically obtain IP address):</para>
 
-        <programlisting>config_eth0=( "dhcp" )</programlisting>
+        <programlisting>config_eth0="dhcp"</programlisting>
 
         <para>For more examples on the Gentoo Linux network configuration
         (with more advanced features), check out the
-        <filename>/etc/conf.d/net.example</filename> file.</para>
+        <filename>/usr/share/doc/openrc-*/net.example</filename> file.</para>
 
         <para>To enable this support, you need to add the net.eth0 service to
         the default runlevel and start the net.eth0 service.</para>
@@ -302,11 +302,11 @@ dns_servers_eth0=( "10.2.3.4 10.2.3.5" )</programlisting>
     ... get ... it ... working. Yet.</para>
 
     <para>However, development of wireless card support is - like I said -
-    actively being developed. Chances are that an unsupported card (or
-    chip set) now will be supported within 6 months.</para>
+    actively being developed. Chances are that an unsupported card (or chip
+    set) now will be supported within 6 months.</para>
 
-    <para>Generally speaking though, 80% to 90% of the wireless cards/chip sets
-    are supported under Linux.</para>
+    <para>Generally speaking though, 80% to 90% of the wireless cards/chip
+    sets are supported under Linux.</para>
 
     <section>
       <title>Supporting your Network Card</title>
@@ -458,10 +458,10 @@ eth1      Scan completed :
         the two networks (aaa and USR8022) are supported where aaa is the
         preferred network.</para>
 
-        <programlisting>modules=( "iwconfig" )
+        <programlisting>modules="iwconfig"
 key_aaa="key off"
 key_USR8022="s:MyPassPhraze enc open"
-preferred_aps=( "aaa" "USR8022" )</programlisting>
+preferred_aps="'aaa' 'USR8022'"</programlisting>
 
         <para>Once your wireless interface is connected to a wireless network,
         you can use the IP configuration commands as shown earlier for wired
@@ -714,7 +714,7 @@ network={
         Gentoo's networking scripts as well. First, edit
         <filename>/etc/conf.d/net</filename> to use wpa_supplicant:</para>
 
-        <programlisting>modules=( "wpa_supplicant" )
+        <programlisting>modules="wpa_supplicant"
 wpa_supplicant_wlan0="-Dwext"</programlisting>
 
         <para>To have the wireless support active when you boot up your
@@ -765,10 +765,10 @@ wpa_supplicant_wlan0="-Dwext"</programlisting>
       <programlisting># <command>rc-update add wicd default</command></programlisting>
 
       <para>Next, make sure Gentoo doesn't start its own network configuration
-      by editing <filename>/etc/conf.d/rc</filename>, setting the
+      by editing <filename>/etc/rc.conf</filename>, setting the
       following:</para>
 
-      <programlisting>RC_PLUG_SERVICES="!net.*"</programlisting>
+      <programlisting>rc_hotplug="!net.*"</programlisting>
 
       <para>Now, start the wicd service (and shut down the services you are
       currently using):</para>
@@ -985,8 +985,8 @@ subnet 192.168.20.0 netmask 255.255.255.0 {
             <primary>scp</primary>
           </indexterm> (secure copy) you can copy files between systems. If
         your source or destination (or both) are on a remote system, prepend
-        the source/destination folder with the host name or IP address followed
-        by a colon, like so:</para>
+        the source/destination folder with the host name or IP address
+        followed by a colon, like so:</para>
 
         <programlisting>$ <command>scp thesis.tar.gz 192.168.2.1:/mnt/usb-stick</command></programlisting>
 

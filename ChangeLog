@@ -1,3 +1,6 @@
+** (2011-05-10) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Update to openrc / baselayout-2
+
 ** (2011-05-03) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Mention grub-static for x86_64 installations
 
