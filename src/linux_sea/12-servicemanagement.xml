@@ -377,11 +377,16 @@ Runlevel: default
 
         <para>The local<indexterm>
             <primary>local</primary>
-          </indexterm> service is responsible for handling your custom
-        activities which you have stated in
-        <filename>/etc/conf.d/local.start</filename> and
-        <filename>/etc/conf.d/local.stop</filename>. The local service is ran
-        as last service before you can log on to your system.</para>
+          </indexterm> service is responsible for handling the scripts defined 
+	  in <filename>/etc/local.d</filename>. The scripts, with suffix
+	  <filename>.start</filename> or <filename>.stop</filename>, are executed
+	  in lexical order (of course during start or stop of the system, depending
+	  on the suffix).
+	</para>
+	
+	<para>The local service is started as the last service before you can log on 
+	to your system. It is also the first one to be stopped when the system is 
+	shutting down.</para>
 
         <para>As you completely manage what this service does, I can't tell
         you what will happen when the service has finished starting. By
