@@ -403,7 +403,8 @@ seaheaven login: </programlisting>
       </listitem>
 
       <listitem>
-        <para>the host name of the system where the user is logged on to</para>
+        <para>the host name of the system where the user is logged on
+        to</para>
       </listitem>
 
       <listitem>
@@ -475,7 +476,7 @@ captain@seaheaven Documents $ <command>pwd</command>
           the "<command>cd Documents</command>" goes from
           <filename>/home/captain</filename> to
           <filename>/home/captain/Documents</filename> through the relative
-          path "<filename>Documents</filename>". </para>
+          path "<filename>Documents</filename>".</para>
 
           <programlisting>$ <command>pwd</command>
 /home/captain
@@ -995,7 +996,8 @@ seaheaven login: </programlisting>
 Password: <emphasis>(Enter root password)</emphasis>
 root@seaheaven ~ # </programlisting>
 
-      <para>Now, you can issue the shutdown command to shut down (-h) or reboot<indexterm>
+      <para>Now, you can issue the shutdown command to shut down (-h) or
+      reboot<indexterm>
           <primary>reboot</primary>
         </indexterm> (-r) the system immediately:</para>
 
@@ -1026,6 +1028,8 @@ root@seaheaven ~ # </programlisting>
       that command, explaining what the command does, what syntax you should
       use, what options it supports and what commands or files are related to
       this command.</para>
+
+      <programlisting>~$ <command>man emerge</command></programlisting>
 
       <para>The manual page is usually structured as follows:</para>
 
@@ -1119,6 +1123,21 @@ root@seaheaven ~ # </programlisting>
         </indexterm> tool) can be obtained by pressing 'h'.</para>
 
       <para>To quit viewing the manual page, press 'q'.</para>
+
+      <para>If you know that a manual page exists somewhere, but you do not
+      know its name, you can use the <command>apropos</command><indexterm>
+          <primary>apropos</primary>
+        </indexterm> command (which is the equivalent of <command>man
+      -k</command>). Giving a keyword, the command will give a list of manual
+      pages that are related to the keyword given. To build the database, you
+      might need to run <command>makewhatis</command><indexterm>
+          <primary>makewhatis</primary>
+        </indexterm> first. On most systems, this is already scheduled to
+      happen in the background on a daily basis.</para>
+
+      <programlisting>~$ <command>apropos ebuild</command>
+<xi:include href="../../../../../T" parse="text"
+          xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
     </section>
 
     <section>
