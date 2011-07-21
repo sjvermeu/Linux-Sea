@@ -1,3 +1,6 @@
+** (2011-07-21) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Add information on "make -k" (aka apropos)
+
 ** (2011-05-10) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Update to openrc / baselayout-2
 
