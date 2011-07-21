@@ -1,4 +1,2 @@
 - Add information / blurb on GPT partition tables, depends on Grub2
 - Add Grub2 information
-- Use "make install" for kernel installation (rather than copying the bzImage)
-- Add information on apropos / man -k in the manual page section
