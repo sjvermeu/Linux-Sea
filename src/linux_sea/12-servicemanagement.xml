@@ -137,6 +137,13 @@ l6:6:wait:/sbin/rc reboot    # init level 6  &gt; run the Gentoo "reboot" runlev
       provided by the tools themselves (udhcp and syslog-ng in our examples)
       but sometimes you might need to write one yourself. Luckily, this is
       less and less the case.</para>
+
+      <para>Next to directly executing the scripts, you can also use the
+      <command>rc-service</comment><indexterm><primary>rc-service</primary></indexterm>
+      tool:</para>
+
+      <programlisting># <command>rc-service syslog-ng start</command></programlisting>
+
     </section>
 
     <section>

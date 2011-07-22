@@ -1,3 +1,6 @@
+** (2011-07-22) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Add information on rc-service
+
 ** (2011-07-21) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Add information on "make -k" (aka apropos)
 
