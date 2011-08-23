@@ -1136,8 +1136,7 @@ root@seaheaven ~ # </programlisting>
       happen in the background on a daily basis.</para>
 
       <programlisting>~$ <command>apropos ebuild</command>
-<xi:include href="../../../../../T" parse="text"
-          xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+</programlisting>
     </section>
 
     <section>
