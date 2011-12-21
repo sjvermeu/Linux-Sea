@@ -535,7 +535,7 @@ $ <command>echo $?</command>
       <emphasis>nice</emphasis><indexterm>
           <primary>nice value</primary>
         </indexterm> value for the application. The value, in the range of -20
-      to 10, informs the Linux kernel about how nice the program should be
+      to 19, informs the Linux kernel about how nice the program should be
       towards the rest of the system. Negative numbers (-1 to -20) are not
       that nice; the Linux kernel will thus assign those a larger time slice
       and you'll notice that such programs usually get a higher priority.
