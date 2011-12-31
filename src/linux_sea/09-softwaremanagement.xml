@@ -170,7 +170,7 @@
       application in Gentoo supports the following USE flags:</para>
 
       <table>
-        <title>USE flags in use by Mozilla Firefox version 2.0.0.12</title>
+        <title>USE flags in use by Mozilla Firefox version 9.0</title>
 
         <tgroup cols="2">
           <thead>
@@ -182,17 +182,60 @@
           </thead>
 
           <tbody>
+	    <row>
+	      <entry>also</entry>
+	      <entry>Enable support for ALSA, the Advanced Linux Sound Architecture</entry>
+	    </row>
+	    <row>
+	      <entry>crashreporter</entry>
+	      <entry>Enable support for the firefox crash reporting plugin</entry>
+	    </row>
+	    <row>
+	      <entry>custom-cflags</entry>
+	      <entry>Build with user-specific CFLAGS (this removes any filtering the ebuild does). Note that
+	      you loose support when you enable this for Firefox</entry>
+	    </row>
+	    <row>
+	      <entry>custom-optimization</entry>
+	      <entry>Fine-tune custom compiler optimizations (not recommended)</entry>
+	    </row>
+	    <row>
+	      <entry>dbus</entry>
+	      <entry>Enable support for DBUS</entry>
+	    </row>
+	    <row>
+	      <entry>ipc</entry>
+	      <entry>Use inter-process communication between tabs and plugins. Allows for greater stability in case of plugin crashes</entry>
+	    </row>
+	    <row>
+	      <entry>libnotify</entry>
+	      <entry>Enable desktop notification support</entry>
+	    </row>
+	    <row>
+	      <entry>pgo</entry>
+	      <entry>Add support for profile-guided optimization using gcc-4.5, for faster binaries.</entry>
+	    </row>
+	    <row>
+	      <entry>startup-notification</entry>
+	      <entry>Enable application startup event feedback mechanism</entry>
+	    </row>
+	    <row>
+	      <entry>system-sqlite</entry>
+	      <entry>Use the system-wide sqlite installation with secure-delete enabled</entry>
+	    </row>
+	    <row>
+	      <entry>webm</entry>
+	      <entry>Use system media-libs/libvpx for HTML5 WebM video support</entry>
+	    </row>
+	    <row>
+	      <entry>wifi</entry>
+	      <entry>Enable wireless network functions</entry>
+	    </row>
             <row>
               <entry>gnome</entry>
 
               <entry>Enables support for the GNOME user interface (within
               Firefox) as well as GNOME file system event support</entry>
-            </row>
-
-            <row>
-              <entry>ipv6</entry>
-
-              <entry>Enables support for the IPv6 protocol</entry>
             </row>
 
             <row>
@@ -218,60 +261,6 @@
               in the software)</entry>
             </row>
 
-            <row>
-              <entry>filepicker</entry>
-
-              <entry>Enables the old GTK filepicker from Firefox
-              1.0.x.</entry>
-            </row>
-
-            <row>
-              <entry>iceweasel</entry>
-
-              <entry>Use the Ice Weasel branding (look and feel) instead of
-              the default Bon Echo.</entry>
-            </row>
-
-            <row>
-              <entry>mozdevelop</entry>
-
-              <entry>Enables features for web developers</entry>
-            </row>
-
-            <row>
-              <entry>moznopango</entry>
-
-              <entry>Disables support for the Pango text rendering library.
-              This increases Firefox' rendering of pages</entry>
-            </row>
-
-            <row>
-              <entry>restrict-javascript</entry>
-
-              <entry>Enables support for the noscript extension, disabling
-              javascript globally</entry>
-            </row>
-
-            <row>
-              <entry>xforms</entry>
-
-              <entry>Enables support for the XForms standard (which splits up
-              XHTML into XForms, instance data and user interface)</entry>
-            </row>
-
-            <row>
-              <entry>xinerama</entry>
-
-              <entry>Enables support for the X11 Xinerama extension, allowing
-              you to stretch your display across multiple monitors</entry>
-            </row>
-
-            <row>
-              <entry>xprint</entry>
-
-              <entry>Enables support for xprint (a common printing API
-              developed by Mozilla)</entry>
-            </row>
           </tbody>
         </tgroup>
       </table>
@@ -495,17 +484,17 @@ Searching...
 [ Applications found : 2 ]
  
 *  app-text/acroread
-      Latest version available: 8.1.2
+      Latest version available: 9.4.2
       Latest version installed: [ Not Installed ]
-      Size of files: 747,975 kB
+      Size of files: 121,848 kB
       Homepage:      http://www.adobe.com/products/acrobat/
       Description:   Adobe's PDF reader
       License:       Adobe
 
 *  media-fonts/acroread-asianfonts
-      Latest version available: 7.0.8
+      Latest version available: 9.1
       Latest version installed: [ Not Installed ]
-      Size of files: 40,076 kB
+      Size of files: 5,767 kB
       Homepage:      http://www.adobe.com/products/acrobat/acrrasianfontpack.html
       Description:   Asian font packs for Adobe Acrobat Reader
       License:       Adobe</programlisting>
@@ -550,7 +539,7 @@ Searching...
 [ Applications found : 3 ]
  
 *  app-admin/watchfolder
-      Latest version available: 0.3.1.1
+      Latest version available: 0.3.3
       Latest version installed: [ Not Installed ]
       Size of files: 93 kB
       Homepage:      http://freshmeat.net/projects/watchd/
@@ -563,14 +552,6 @@ Searching...
       Size of files: 5,591 kB
       Homepage:      http://www.adobe.com/devnet/acrobat/fdftoolkit.html
       Description:   Acrobat FDF Toolkit
-      License:       Adobe
-
-*  media-fonts/acroread-asianfonts
-      Latest version available: 7.0.8
-      Latest version installed: [ Not Installed ]
-      Size of files: 40,076 kB
-      Homepage:      http://www.adobe.com/products/acrobat/acrrasianfontpack.html
-      Description:   Asian font packs for Adobe Acrobat Reader
       License:       Adobe</programlisting>
 
         <para>Running <command>--searchdesc</command> takes quite some time. I
@@ -1702,24 +1683,24 @@ lrwxrwxrwx 1 root root 57 Dec 2007 make.profile -&gt;
 
       <programlisting># <command>eselect profile list</command>
 Available profile symlink targets:
-  [1]   default-linux/x86/2006.1
-  [2]   default-linux/x86/2006.1/desktop
-  [3]   default-linux/x86/2007.0
-  [4]   default-linux/x86/2007.0/desktop *
-  [5]   hardened/x86/2.6
-  [6]   selinux/2007.0/x86
-  [7]   selinux/2007.0/x86/hardened
-  [8]   default/linux/x86/2008.0
-  [9]   default/linux/x86/2008.0/desktop
-  [10]  default/linux/x86/2008.0/developer
-  [11]  default/linux/x86/2008.0/server
-  [12]  hardened/linux/x86
+  [1]   default/linux/amd64/10.0 *
+  [2]   default/linux/amd64/10.0/selinux
+  [3]   default/linux/amd64/10.0/desktop
+  [4]   default/linux/amd64/10.0/desktop/gnome
+  [5]   default/linux/amd64/10.0/desktop/kde
+  [6]   default/linux/amd64/10.0/developer
+  [7]   default/linux/amd64/10.0/no-multilib
+  [8]   default/linux/amd64/10.0/server
+  [9]   hardened/linux/amd64
+  [10]  hardened/linux/amd64/selinux *
+  [11]  hardened/linux/amd64/no-multilib
+  [12]  hardened/linux/amd64/no-multilib/selinux
 
-# <command>eselect profile set 8</command></programlisting>
+# <command>eselect profile set 4</command></programlisting>
 
       <para>As you can see from the profile names, one profile can be a child
-      of another; if this is the case (for instance, profile number 9 from the
-      above list has profile number 8 as parent), the profile inherits the
+      of another; if this is the case (for instance, profile number 4 from the
+      above list has profile number 3 as parent), the profile inherits the
       settings from its parent and may extend or override particular settings
       itself.</para>
     </section>

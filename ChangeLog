@@ -1,3 +1,7 @@
+** (2011-12-31) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Update to recent versions
+	- Drop reference to /etc/modules.autoload.d, it is now /etc/conf.d/modules
+
 ** (2011-12-21) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Fix typo about nice values, thanks to nomilieu (on Gentoo Forums) for
 	  reporting
