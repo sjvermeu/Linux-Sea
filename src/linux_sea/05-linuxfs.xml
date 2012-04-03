@@ -10,7 +10,13 @@
     <para>The Linux file system is a hierarchically structured tree where
     every location has its distinct meaning. The file system structure is
     standardized through the file system hierarchy standard of which you'll
-    find this chapter to be a description off. Of course, a file system is
+    find this chapter to be a description off. Lately however, more and more
+    distributions are making a small change towards their file system layout
+    (but all consistent) so the standard is in need of updating. When a
+    setting deviates from the current standard, I will say so in this chapter.
+    </para>
+    
+    <para>Of course, a file system is
     always stored on media (be it a hard drive, a CD or a memory fragment);
     how these media relate to the file system and how Linux keeps track of
     those is also covered in this chapter.</para>
@@ -621,8 +627,11 @@ Filename     Type      Size    Used  Priority
 
         <itemizedlist>
           <listitem>
-            <para><filename>/bin</filename> contains executable programs
-            needed to bring the system up and running</para>
+            <para><filename>/bin</filename> usually contains executable
+	    programs needed to bring the system up and running. Recently
+	    however, more and more distributions are moving all applications
+	    towards <filename>/usr/bin</filename> and are using symbolic links
+	    to transition towards this new structure.</para>
           </listitem>
 
           <listitem>
@@ -631,9 +640,11 @@ Filename     Type      Size    Used  Priority
           </listitem>
 
           <listitem>
-            <para><filename>/lib</filename> contains the system libraries
-            necessary to successfully boot the system and run the commands
-            which are located inside <filename>/bin</filename></para>
+            <para><filename>/lib</filename> usually contains the system
+	    libraries necessary to successfully boot the system and run 
+	    the commands which are located inside
+	    <filename>/bin</filename>. Recently however, these files are also
+	    being migrated towards <filename>/usr/lib</filename>.</para>
           </listitem>
 
           <listitem>
@@ -652,9 +663,9 @@ Filename     Type      Size    Used  Priority
         <para>Userland locations are the locations which contain the files for
         the regular operation of a system (such as application data and the
         applications themselves). These can be stored on separate media if you
-        want. Most system administrators in larger environments do place this
-        on a separate media and mount it read-only because the file system
-        shouldn't be touched during normal operations.</para>
+        want, but if you do, you will need to setup an initial ram disk to
+	boot your system with. More about initial ramdisks later. 
+        </para>
 
         <itemizedlist>
           <listitem>
@@ -781,25 +792,25 @@ Filename     Type      Size    Used  Priority
 
       <para>As said before, the root file system / is the parent of the entire
       file system. It is the first file system that is mounted when the kernel
-      boots, and your system will not function properly if the kernel detects
-      corruption on this file system. Also, due to the nature of the boot
-      process, this file system will eventually become writeable (as the boot
+      boots (unless you use an initial ramdisk), and your system will not
+      function properly if the kernel detects corruption on this file system.
+      Also, due to the nature of the boot process, this file system will
+      eventually become writeable (as the boot
       process needs to store its state information, etc.)</para>
 
-      <para>Some locations on the root file system need to remain on the root
-      file system (i.e. you should never ever mount another file system on top
-      of that location). These locations are:</para>
+      <para>Some locations on the root file system are strongly advised to
+      remain on the root file system (i.e. you should never ever mount
+      another file system on top of that location). These locations
+      are:</para>
 
       <itemizedlist>
         <listitem>
-          <para>/bin and /sbin as these contain the binaries (commands) that
-          are needed to get a system up to the point it
-          <emphasis>can</emphasis> mount other file systems. The locations
-          contain all binaries that would be needed to troubleshoot boot-up
-          issues (including mounting other file systems).</para>
-
-          <para>A prime example of a binary inside /bin is
-          <command>mount</command> itself.</para>
+          <para>/bin and /sbin as these contain the binaries (commands) or links
+	  to binaries that are needed to get a system up to the point it
+          <emphasis>can</emphasis> mount other file systems. Although this
+	  functionality is gradually becoming less and less so, it would still
+	  break systems if you make separate mounts for these (small) locations.
+	  </para>
         </listitem>
 
         <listitem>
