@@ -238,9 +238,7 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
                 <primary>ext3</primary>
               </indexterm> file system is an improvement on the ext2 file
             system, adding, amongst other things, the concept of journalling.
-            The file system is very popular because it builds upon the
-            reliability of the ext2 file system and is in fact the default
-            choice for most users and distributions.</para>
+            </para>
           </listitem>
 
           <listitem>
@@ -249,11 +247,10 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
               </indexterm> file system is an improvement on the ext3 file
             system, adding, amongst other things, support for very large file
             systems/files, extents (contiguous physical blocks),
-            pre-allocation and delayed allocation and more. It has recently
-            been integrated in the main Linux kernel tree so still has to
-            prove itself as a worthy successor to ext3. The ext4 file system
-            is backwards compatible with ext3 as long as you do not use
-            extents.</para>
+            pre-allocation and delayed allocation and more. The ext4 file
+	    system is backwards compatible with ext3 as long as you do not
+	    use extents. Ext4 is frequently seen as the default file system
+	    of choice amongst administrators and distributions.</para>
           </listitem>
 
           <listitem>
@@ -275,6 +272,19 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
             imprisonment of the main developer Hans Reiser, not being
             developed that actively any more.</para>
           </listitem>
+
+	  <listitem>
+	    <para>
+	      The <emphasis>btrfs</emphasis><indexterm><primary>btrfs</primary></indexterm>
+	      file system is a highly experimental but promising file system. 
+	      It addresses concerns regarding huge storage backend volumes, 
+	      multi-device spanning, snapshotting and more. Although its primary
+	      target was enterprise usage, it also offers interesting features
+	      to home users such as online grow/shrink (both on file system as
+	      well as underlying storage level), object-level redundancy, 
+	      transparent compression and cloning.
+	    </para>
+	  </listitem>
         </itemizedlist>
 
         <para>A <emphasis>file system journal</emphasis><indexterm>
