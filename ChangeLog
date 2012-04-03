@@ -1,3 +1,7 @@
+** (2012-04-03) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Update regarding separate /usr or not
+	- Introduce btrfs information and switch to ext4 as "default"
+
 ** (2011-12-31) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Update to recent versions
 	- Drop reference to /etc/modules.autoload.d, it is now /etc/conf.d/modules
