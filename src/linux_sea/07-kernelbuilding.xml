@@ -289,15 +289,18 @@ usb-storage: device scan complete</programlisting>
           <primary>initrd</primary>
 
           <see>initial root disk</see>
-        </indexterm>). This contains the modules that might be needed in order
-      to successfully boot the system. Support for the initrd format is built
-      in-kernel (in-kernel is the term denoting that support is not built as a
-      kernel module but immediately made part of the Linux kernel image loaded
-      by the boot loader).</para>
+        </indexterm> or <emphasis>initial ram file system</emphasis><indexterm>
+	<primary>initial ram file system</primary></indexterm> or 
+	<emphasis>initramfs</emphasis><indexterm><primary>initramfs</primary>
+	<see>initial ram file system</see></indexterm>). This contains the modules that might be needed in order
+      to successfully boot the system. Support for the initrd or initramfs 
+      format is built in-kernel (in-kernel is the term denoting that support
+      is not built as a kernel module but immediately made part of the Linux
+      kernel image loaded by the boot loader).</para>
 
-      <para>The boot loader itself is responsible for placing the initrd in
-      memory and informing the Linux kernel where the initial root disk can be
-      found.</para>
+      <para>The boot loader itself is responsible for placing the initrd or
+      initramfs in memory and informing the Linux kernel where the initial
+      root disk/file system can be found.</para>
 
       <section>
         <title>Working with Modules</title>
@@ -2451,6 +2454,31 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
       the <command>mount</command> and copy commands to install the new kernel
       at the <filename>/boot</filename> location.</para>
     </section>
+    <section>
+      <title>Initial ram file systems</title>
+
+      <para>I have touched the concept of initrd and initramfs already
+      in the earlier sections. Its purpose is clear: to offer the booting
+      system the necessary tools, files, libraries and modules so that
+      the boot process can be continued on a fully prepared (and all hardware
+      properly detected) system.</para>
+
+      <para>Although initrd might still be in use, most distributions
+      nowadays suggest the use of initramfs. Whereas an initrd is a full
+      device (for which you pass on an image), an initramfs is an archive that
+      is extracted on an <emphasis>tmpfs</emphasis> file system. This offers
+      more flexibility and less resource consumption within the kernel.</para>
+
+      <para>To generate an initial ram file system, I recommend that you use
+      the <command>genkernel</command> application (even if you configured
+      and build your kernel manually). Its usage is quite simple:</para>
+
+      <programlisting># <command>genkernel --install --lvm initramfs</command></programlisting>
+
+      <para>When <command>genkernel</command> has built its initial ram file
+      system archive, you will find it in the <filename>/boot</filename>
+      location, cleverly named starting with <filename>initramfs-</filename>.</para>
+    </section>
   </section>
 
   <section>
@@ -2510,6 +2538,7 @@ timeout 5
 
 title=Gentoo Linux 3.1.2
 kernel /kernel-3.1.2 root=/dev/sda8
+initrd /initramfs-genkernel-x86_64-3.1.2
 
 title=Gentoo Linux 2.6.39
 kernel /kernel-2.6.39 root=/dev/sda8</programlisting>
@@ -2542,6 +2571,8 @@ kernel /kernel-2.6.39 root=/dev/sda8</programlisting>
               <para>Also, the root partition (which is the partition where my
               Linux installation is on) is at
               <filename>/dev/sda8</filename>.</para>
+
+	      <para>The entry also uses an initial ram file system.</para>
             </listitem>
 
             <listitem>
@@ -2567,9 +2598,11 @@ timeout 5
 
 title=Gentoo Linux 3.1.6 Revision 2
 kernel /kernel-3.1.6-r2 root=/dev/sda8
+initrd /initramfs-genkernel-x86_64-3.1.6-gentoo-r2
 
 title=Gentoo Linux 3.1.2
-kernel /kernel-3.1.2 root=/dev/sda8</programlisting>
+kernel /kernel-3.1.2 root=/dev/sda8
+initrd /initramfs-genkernel-x86_64-3.1.2</programlisting>
 
       <para>After this, I unmount the /boot partition again (<command>umount
       /boot</command>). If I now reboot my system, I am booted with the new
@@ -2579,7 +2612,8 @@ kernel /kernel-3.1.2 root=/dev/sda8</programlisting>
       attempt to fix the configuration.</para>
 
       <para>If you, right after the kernel compilation, used the make install
-      method for installing the kernel image, your Grub configuration file can
+      method for installing the kernel image and you do not need an initial
+      ram file system, then your Grub configuration file can
       look (and stay) like so:</para>
 
       <programlisting>default 0
