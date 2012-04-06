@@ -39,10 +39,11 @@
 
     <authorblurb>
       <para>
-      Sven Vermeulen is a former Gentoo Linux documentation developer, largely
+      Sven Vermeulen is a Gentoo Linux documentation developer, largely
       to blame for the Gentoo Handbook and a large number of Gentoo-related
       guides. You can find him online under the alias "SwifT" or reach him
-      through his e-mail address "sven.vermeulen@siphos.be".
+      through his e-mail address "sven.vermeulen@siphos.be". He is also in
+      charge of the SELinux support within Gentoo Linux.
       </para>
     </authorblurb>
 
