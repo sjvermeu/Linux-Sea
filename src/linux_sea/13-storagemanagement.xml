@@ -1095,7 +1095,7 @@ none         tmpfs    754M     0  754M   0% /dev/shm
       when the system will start complaining, the hard limit is a final limit
       - the user or group cannot go beyond that.</para>
 
-      <para>To use quota, first install the qouta utilities.</para>
+      <para>To use quota, first install the quota utilities.</para>
 
       <programlisting># <command>emerge sys-fs/quota</command></programlisting>
 

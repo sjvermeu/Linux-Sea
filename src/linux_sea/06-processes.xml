@@ -162,7 +162,7 @@ init-+-acpid
 
         <para>Of course, several arguments to ps exist which change its
         behaviour. For instance, with <command>ps -e</command> you see the same
-        information, but for all processes runnin on the system. With
+        information, but for all processes running on the system. With
         <command>ps -f</command> a few more columns are added, including the
         parent process id and the time the process started.</para>
 
@@ -426,7 +426,7 @@ apache2  4346   root    3u  IPv4  11484       TCP *:https (LISTEN)</programlisti
       <programlisting># <command>fg %3</command></programlisting>
 
       <para>If you want to put a process that you are running in the
-      background, use Ctrl-Z to put the process in the background. Ctrl-Z also
+      background, use Ctrl-Z. Ctrl-Z also
       pauses the process, so if you want to continue the process in the
       background, enter "<command>bg</command>" afterwards as well:</para>
 
@@ -557,7 +557,7 @@ $ <command>echo $?</command>
       possible nice value (as this is something you usually want to perform in
       the background):</para>
 
-      <programlisting># <command>nice -n 19 emerge -uDN world</command></programlisting>
+      <programlisting># <command>nice -n 19 emerge -uDN @world</command></programlisting>
 
       <para>If a process is already running, you can change its nice value
       with the renice tool (for instance, to increase the nice value of the

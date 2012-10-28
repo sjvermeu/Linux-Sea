@@ -87,7 +87,7 @@
       <para>The following command will make an archive of the above mentioned
       settings.</para>
 
-      <programlisting>~# <command>tar cvzpf /var/tmp/poormanbackup.tar.gz /etc /var/lib/portage/world /usr/local /proc/config.gz /home/*/.??*</command></programlisting>
+      <programlisting>~# <command>tar cvzf /var/tmp/poormanbackup.tar.gz /etc /var/lib/portage/world /usr/local /proc/config.gz /home/*/.??*</command></programlisting>
 
       <para>Again, this is just a poor man's backup, because it is not really
       managed, but it is still better than nothing. Make sure you copy the
@@ -284,7 +284,7 @@ mount | grep -v 'dev/mapper' | grep -v 'dev/md' | grep 'type ext' | awk -F' ' '{
       Then, run the following <command>tar</command> command to create the
       archive:</para>
 
-      <programlisting>~# <command>tar -cvzpf /media/usb/backup/stage4.tar.gz --numeric-owner --strip-components=2 /mnt/gentoo</command></programlisting>
+      <programlisting>~# <command>tar -cvzf /media/usb/backup/stage4.tar.gz --numeric-owner --strip-components=2 /mnt/gentoo</command></programlisting>
 
       <para>The <option>--numeric-owner</option> will ensure that uid/gid
       numbers are used rather than names, because the live environment can use

@@ -254,7 +254,7 @@
 
       <programlisting># <command>nano -w /etc/make.conf</command>
 <emphasis>(Edit USE, add the appropriate USE flag)</emphasis>
-# <command>emerge --update --deep --newuse world</command></programlisting>
+# <command>emerge --update --deep --newuse @world</command></programlisting>
 
       <para>You can also ask euse which packages are affected by a USE flag
       change:</para>

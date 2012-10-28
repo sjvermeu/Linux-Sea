@@ -1,3 +1,7 @@
+** (2012-10-28) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Many changes thanks to Francesco Turco
+	- Added in information on sets (like @world)
+
 ** (2012-04-03) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Update regarding separate /usr or not
 	- Introduce btrfs information and switch to ext4 as "default"
