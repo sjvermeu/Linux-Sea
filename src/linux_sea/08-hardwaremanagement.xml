@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="hardwaremanagement"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Hardware Support</title>
 
   <section>
@@ -10,8 +15,8 @@
     <para>Some hardware is automatically enabled once you have configured it
     inside the Linux kernel: access to PCI chip sets, graphical card, disks,
     USB storage, etc. Yet, most hardware requires additional work. After all,
-    the Linux kernel provides you with a programmatic interface to access
-    the devices, but you still need the necessary tooling to get the device to
+    the Linux kernel provides you with a programmatic interface to access the
+    devices, but you still need the necessary tooling to get the device to
     function properly. Good examples are network cards and printers, but also
     sound cards.</para>
   </section>
@@ -252,7 +257,7 @@
       that are influenced by the USE flag change and incorporate support for
       the selected sound daemon in those packages:</para>
 
-      <programlisting># <command>nano -w /etc/make.conf</command>
+      <programlisting># <command>nano -w /etc/portage/make.conf</command>
 <emphasis>(Edit USE, add the appropriate USE flag)</emphasis>
 # <command>emerge --update --deep --newuse @world</command></programlisting>
 

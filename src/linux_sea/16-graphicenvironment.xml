@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="graphicenvironment"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Introducing the Graphical Environment</title>
 
   <section>
@@ -69,7 +74,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/xschema.png" scale="75" />
+          <imagedata fileref="images/xschema.png" scale="75"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -78,10 +83,10 @@
     progress bars, labels etc.) through a common API called a <emphasis>widget
     tool kit</emphasis><indexterm>
         <primary>widget tool kit</primary>
-      </indexterm>. Popular widget tool kits on Linux are GTK+ and Qt. However,
-    not all applications require a widget tool kit - they can also talk to the
-    X server immediately. Using such tool kits however facilitates the
-    development of graphical applications.</para>
+      </indexterm>. Popular widget tool kits on Linux are GTK+ and Qt.
+    However, not all applications require a widget tool kit - they can also
+    talk to the X server immediately. Using such tool kits however facilitates
+    the development of graphical applications.</para>
 
     <para>The widget tool kits communicate with the X server through an
     interface which basically drives all commands to a <emphasis>window
@@ -192,8 +197,8 @@ VIDEO_CARDS="vesa intel"</programlisting>
         <title>Testing Xorg</title>
 
         <para>Try out Xorg without using any configuration file. The Xorg
-        server will try to automatically detect the necessary settings and, to be
-        honest, does a fine job at that. Don't test out things as root
+        server will try to automatically detect the necessary settings and, to
+        be honest, does a fine job at that. Don't test out things as root
         though!</para>
 
         <programlisting>$ <command>startx</command></programlisting>
@@ -284,17 +289,6 @@ VIDEO_CARDS="vesa intel"</programlisting>
       <para>Gentoo has a <ulink
       url="http://www.gentoo.org/doc/en/gnome-config.xml">GNOME Configuration
       HOWTO</ulink> available as well.</para>
-
-      <figure>
-        <title>An example view of a GNOME desktop</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/gnomedesktop.png" scale="75"
-                       width="13cm" />
-          </imageobject>
-        </mediaobject>
-      </figure>
     </section>
 
     <section>
@@ -309,16 +303,6 @@ VIDEO_CARDS="vesa intel"</programlisting>
       <para>Gentoo provides a <ulink
       url="http://www.gentoo.org/doc/en/kde-config.xml">KDE Configuration
       HOWTO</ulink>.</para>
-
-      <figure>
-        <title>An example view of a KDE desktop</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/kdedesktop.png" scale="75" />
-          </imageobject>
-        </mediaobject>
-      </figure>
     </section>
 
     <section>
@@ -332,17 +316,6 @@ VIDEO_CARDS="vesa intel"</programlisting>
       <para>Gentoo provides an <ulink
       url="http://www.gentoo.org/doc/en/xfce-config.xml">XFCE Configuration
       Howto</ulink>.</para>
-
-      <figure>
-        <title>An example view of an XFCE4 desktop</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/xfce4desktop.png" scale="75"
-                       scalefit="" />
-          </imageobject>
-        </mediaobject>
-      </figure>
     </section>
 
     <section>

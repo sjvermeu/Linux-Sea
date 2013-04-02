@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="installgentoo"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Installing Gentoo Linux</title>
 
   <section>
@@ -214,15 +219,7 @@
     in <filename>/mnt/gentoo</filename> as well. Finally, quit your browser
     and extract the downloaded files on your installation location.</para>
 
-    <programlisting>~# <command>tar xvjpf stage3-*.tar.bz2</command>
-~# <command>tar xvjf portage-*.tar.bz2 -C /mnt/gentoo/usr</command></programlisting>
-
-    <para>Again, you can use <command>wget</command> if you want:</para>
-
-    <programlisting># <command>wget http://gentoo.osuosl.org/snapshots/portage-latest.tar.bz2</command></programlisting>
-
-    <para>The <filename>portage-</filename> file is a snapshot of Gentoo's
-    Portage tree.</para>
+    <programlisting>~# <command>tar xvjpf stage3-*.tar.bz2</command></programlisting>
 
     <para>Next, edit the <filename>/mnt/gentoo/etc/make.conf</filename> file.
     As discussed previously, this file contains variables that define Portage'
@@ -296,7 +293,7 @@
       <para>Now, update the Portage tree to make sure you have the current set
       of packages at your disposal:</para>
 
-      <programlisting>~# <command>emerge --sync</command></programlisting>
+      <programlisting>~# <command>mkdir /usr/portage; emerge-webrsync;</command></programlisting>
 
       <para>Next, select a Gentoo profile for your environment. A
       <emphasis>Gentoo profile</emphasis><indexterm>
@@ -312,10 +309,10 @@
 ~# <command>eselect profile set &lt;number&gt;</command></programlisting>
 
       <para>Finally, set the USE flags you want in either
-      <filename>/etc/make.conf</filename> (global USE flags) or
+      <filename>/etc/portage/make.conf</filename> (global USE flags) or
       <filename>/etc/portage/package.use</filename> (local USE flags).</para>
 
-      <programlisting>~# <command>nano -w /etc/make.conf</command></programlisting>
+      <programlisting>~# <command>nano -w /etc/portage/make.conf</command></programlisting>
 
       <para>For those of you who want to run Gentoo Linux with support for
       international locales, edit <filename>/etc/locale.gen</filename> and

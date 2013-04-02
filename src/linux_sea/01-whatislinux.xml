@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="whatislinux"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>What is Linux?</title>
 
   <section>
@@ -150,13 +155,13 @@
           <primary>memory management</primary>
         </indexterm>component manages the memory usage of the system: it keeps
       track of used and unused memory, assigns memory to processes who require
-      it and ensures that processes can't manipulate the data of one another. To do
-      this, it uses the concept of virtual memory addresses: addresses for one
-      process are not the real addresses, and the kernel keeps track of the
-      correct mappings. It is also possible for data not to be really present
-      in memory although it is present for a process: such data is stored on a
-      swap space. Because swap space is much, much slower than real memory,
-      use of this space should be limited to data that isn't read
+      it and ensures that processes can't manipulate the data of one another.
+      To do this, it uses the concept of virtual memory addresses: addresses
+      for one process are not the real addresses, and the kernel keeps track
+      of the correct mappings. It is also possible for data not to be really
+      present in memory although it is present for a process: such data is
+      stored on a swap space. Because swap space is much, much slower than
+      real memory, use of this space should be limited to data that isn't read
       often.</para>
 
       <para>To ensure that each process gets enough CPU time, the kernel gives
@@ -380,13 +385,13 @@
     contributions happen from several hundreds volunteers (kernel 2.6.21 had
     contributions from more than 800 individuals).</para>
 
-    <para>The latest kernel version at the time of writing is 2.6.32.1. The
-    first two numbers play the role of the major version, the last number
-    denotes a plain bug fix. The intermediate number is the one that
-    increments most often: for every increment, users (and developers) know
-    that the kernel has new features but, as the major number doesn't change,
-    the kernel remains fully compatible with older versions (so it is safe to
-    upgrade).</para>
+    <para>The latest kernel version at the time of writing is 3.8.5. The first
+    two numbers play the role of the major version, the third number is the
+    minor version (mostly bugfix releases). Sometimes a fourth number is added
+    when a one-off bug fix was needed. The Linux kernel development generally
+    increments the major numbers (most of the time the second number) for
+    functional improvement releases: for every increment, users (and
+    developers) know that the kernel has new features.</para>
 
     <para>Once a new version of the Linux kernel is released, it isn't
     distributed to all of its users. No, this is where distributions come into
@@ -523,9 +528,9 @@
         <para>Organizations like FSF have a vision on how the (software) world
         should look like. Many distributions offer a way of implementing these
         visions. For instance, some distributions only allow software that is
-        licensed under an FSF-approved license. Other distributions allow users
-        to use non-free software. There are distributions that implement a
-        higher security vision in the distribution, offering a more hardened
+        licensed under an FSF-approved license. Other distributions allow
+        users to use non-free software. There are distributions that implement
+        a higher security vision in the distribution, offering a more hardened
         approach to operating systems.</para>
       </listitem>
 
@@ -915,7 +920,7 @@
         general) offers. Controlled, because it is matched with open standards
         and free specifications that are well documented and that all software
         adheres to. Fragmented because the community wants to offer more
-        choices to the end users. </para>
+        choices to the end users.</para>
       </section>
 
       <section>
@@ -936,7 +941,7 @@
         Linux operating system wants nothing more than be fully interoperable
         with any other operating system. Software projects most definitely
         want their software to run on any operating system, not only Microsoft
-        Windows or Linux. </para>
+        Windows or Linux.</para>
       </section>
     </section>
 

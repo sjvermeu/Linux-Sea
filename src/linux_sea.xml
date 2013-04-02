@@ -1,31 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
-<!ENTITY whatislinux.xml SYSTEM        "linux_sea/01-whatislinux.xml">
-<!ENTITY freesoftware.xml SYSTEM       "linux_sea/02-freesoftware.xml">
-<!ENTITY community.xml SYSTEM          "linux_sea/03-community.xml">
-<!ENTITY runninglinux.xml SYSTEM       "linux_sea/04-runninglinux.xml">
-<!ENTITY linuxfs.xml SYSTEM            "linux_sea/05-linuxfs.xml">
-<!ENTITY processes.xml SYSTEM          "linux_sea/06-processes.xml">
-<!ENTITY kernelbuilding.xml SYSTEM     "linux_sea/07-kernelbuilding.xml">
-<!ENTITY hardwaremanagement.xml SYSTEM "linux_sea/08-hardwaremanagement.xml">
-<!ENTITY softwaremanagement.xml SYSTEM "linux_sea/09-softwaremanagement.xml">
-<!ENTITY usermanagement.xml SYSTEM     "linux_sea/10-usermanagement.xml">
-<!ENTITY networkmanagement.xml SYSTEM  "linux_sea/11-networkmanagement.xml">
-<!ENTITY servicemanagement.xml SYSTEM  "linux_sea/12-servicemanagement.xml">
-<!ENTITY storagemanagement.xml SYSTEM  "linux_sea/13-storagemanagement.xml">
-<!ENTITY systemmanagement.xml SYSTEM   "linux_sea/14-systemmanagement.xml">
-<!ENTITY installgentoo.xml SYSTEM      "linux_sea/15-installgentoo.xml">
-<!ENTITY graphicenvironment.xml SYSTEM "linux_sea/16-graphicenvironment.xml">
-<!ENTITY logfilemanagement.xml SYSTEM  "linux_sea/17-logfilemanagement.xml">
-<!ENTITY backup.xml SYSTEM             "linux_sea/18-backup.xml">
-<!ENTITY shellscripting.xml SYSTEM     "linux_sea/19-shellscripting.xml">
-
-<!ENTITY tipsandanswers.xml SYSTEM     "linux_sea/90-tipsandanswers.xml">
-<!ENTITY glossary.xml SYSTEM           "linux_sea/91-glossary.xml">
-<!ENTITY genindex.sgm SYSTEM "genindex.sgm">
-]>
-<book>
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="en">
   <title>Linux Sea</title>
 
   <bookinfo>
@@ -67,15 +41,15 @@
         probably need to know to continue working with Gentoo Linux.
       </para>
       <para>
-        The version you are reading currently is v1.11 and has been generated
-	on 2012/10/28.
+        The version you are reading currently is v1.12 and has been generated
+	on 2013/04/02.
       </para>
     </abstract>
 
-    <edition>Linux Sea v1.11</edition> <!-- Update above paragraph too!! -->
+    <edition>Linux Sea v1.12</edition> <!-- Update above paragraph too!! -->
 
     <copyright>
-      <year>2009-2012</year>
+      <year>2009-2013</year>
 
       <holder>Sven Vermeulen</holder>
     </copyright>
@@ -92,27 +66,27 @@
 
   <toc></toc>
 
-  &whatislinux.xml;
-  &freesoftware.xml;
-  &community.xml;
-  &runninglinux.xml;
-  &linuxfs.xml;
-  &processes.xml;
-  &kernelbuilding.xml;
-  &hardwaremanagement.xml;
-  &softwaremanagement.xml;
-  &usermanagement.xml;
-  &networkmanagement.xml;
-  &servicemanagement.xml;
-  &storagemanagement.xml;
-  &systemmanagement.xml;
-  &installgentoo.xml;
-  &graphicenvironment.xml;
-  &logfilemanagement.xml;
-  &backup.xml;
-  &shellscripting.xml;
-  &tipsandanswers.xml;
-  &glossary.xml;
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/01-whatislinux.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/02-freesoftware.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/03-community.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/04-runninglinux.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/05-linuxfs.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/06-processes.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/07-kernelbuilding.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/08-hardwaremanagement.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/09-softwaremanagement.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/10-usermanagement.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/11-networkmanagement.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/12-servicemanagement.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/13-storagemanagement.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/14-systemmanagement.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/15-installgentoo.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/16-graphicenvironment.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/17-logfilemanagement.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/18-backup.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/19-shellscripting.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/90-tipsandanswers.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="linux_sea/91-glossary.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="genindex.sgm" />
 
-  &genindex.sgm;
 </book>

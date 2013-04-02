@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="systemmanagement"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>System Management</title>
 
   <section>
@@ -286,9 +291,9 @@ PATH=/opt/blackdown-jdk-1.4.2.03/bin:/opt/blackdown-jdk-1.4.2.03/jre/bin</progra
 
     <para>When I talk about location specific settings, I mean the settings
     that your neighbour is most likely to need as well: language settings,
-    keyboard settings, time zone / currency settings, ... Within the Linux/Unix
-    environment, these settings are combined in the locale settings and
-    keyboard settings.</para>
+    keyboard settings, time zone / currency settings, ... Within the
+    Linux/Unix environment, these settings are combined in the locale settings
+    and keyboard settings.</para>
 
     <section>
       <title>Locale Settings</title>
@@ -416,10 +421,10 @@ LANG="nl_BE"
 LANG="en_US.utf-8"
 LANG="nl_NL@euro"</programlisting>
 
-      <para>These settings are read as environment variables (which were 
-      discussed earlier) by the applications. You can mark locales system wide,
-      but it is advised that this is stored on a per-user basis. As such, I
-      recommend that you set something like the following in your
+      <para>These settings are read as environment variables (which were
+      discussed earlier) by the applications. You can mark locales system
+      wide, but it is advised that this is stored on a per-user basis. As
+      such, I recommend that you set something like the following in your
       <filename>~/.bashrc</filename> file (and in
       <filename>/etc/skel/.bashrc</filename> so that newly created user
       accounts have this set automatically as well):</para>
@@ -435,12 +440,12 @@ LANG="en_US.utf-8"</programlisting>
 
       <para>When you aren't using the default qwerty layout, you'll need to
       modify the keyboard mapping setting on your system. Gentoo makes this
-      easy for you: edit /etc/conf.d/keymaps and set the KEYMAP variable to
-      the mapping you need:</para>
+      easy for you: edit <filename>/etc/conf.d/keymaps</filename> and set the
+      <varname>keymap</varname> variable to the mapping you need:</para>
 
       <programlisting># <command>nano -w /etc/conf.d/keymaps</command>
 ...
-KEYMAP="be-latin1"</programlisting>
+keymap="be-latin1"</programlisting>
 
       <para>A list of supported keymaps can be found in the subdirectories of
       <filename>/usr/share/keymaps</filename>.</para>
@@ -498,7 +503,7 @@ KEYMAP="be-latin1"</programlisting>
 # <command>/etc/init.d/vixie-cron start</command></programlisting>
 
     <para>When the cron service is running, every user can define one or more
-    commands he wants to periodically execute. </para>
+    commands he wants to periodically execute.</para>
 
     <para>To edit your personal scheduling rules, run <command>crontab
     -e</command><indexterm>

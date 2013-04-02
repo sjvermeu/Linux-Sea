@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="community"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>The Role of the Community</title>
 
   <section>
@@ -88,9 +93,9 @@
       <title>Local Communities</title>
 
       <para>A specific type of community is one which is local in space. Such
-      communities often organize meetings (conferences, talks, barbecues,
-      ...) and offer help to people local to the location where the community
-      is hosted.</para>
+      communities often organize meetings (conferences, talks, barbecues, ...)
+      and offer help to people local to the location where the community is
+      hosted.</para>
 
       <para>LUG<indexterm>
           <primary>LUG</primary>
@@ -194,8 +199,8 @@
 
         <listitem>
           <para>Mailinglists, which is similar (function-wise) to web forums,
-          but then organized through e-mail. People subscribe to a mailing list
-          and then receive all mails sent to that mailing list to their
+          but then organized through e-mail. People subscribe to a mailing
+          list and then receive all mails sent to that mailing list to their
           personal mailbox. Replies to these mails are sent back to the
           mailing lists where they are again distributed to all mailing list
           participants. Mailinglists are quite popular in free software
@@ -210,10 +215,19 @@
             </indexterm> (Internet Relay Chat) is a way of communicating with
           many people interactively. Most people know Instant Messaging
           software such as MSN or Google Talk. Well, IRC is somewhat older but
-          still very much used as it supports chat rooms where several hundreds
-          of people can participate. IRC is the fastest medium for
+          still very much used as it supports chat rooms where several
+          hundreds of people can participate. IRC is the fastest medium for
           participating in discussions and can be seen as a method for
           creating "online" meetings.</para>
+        </listitem>
+
+        <listitem>
+          <para>People-centric social media, such as Google Plus or Facebook,
+          where likeminded people collaborate and discuss their favorite
+          topics. The advantage of these is that they are much better
+          integrated with recent technological evolutions; people with modern
+          cellphones (smartphones) are continuously available and can quickly
+          interact with whatever is happening on the communities.</para>
         </listitem>
       </itemizedlist>
     </section>
@@ -298,19 +312,20 @@
           <primary>mailing list</primary>
         </indexterm>, e-mail addresses where several dozens (or even hundreds)
       individuals listen to. A mailing list is often perceived to be a bit
-      faster than forums because many developers frequent mailing lists but not
-      forums due to the ease of use: mailing lists result in plain e-mails
+      faster than forums because many developers frequent mailing lists but
+      not forums due to the ease of use: mailing lists result in plain e-mails
       which can be easily filtered.</para>
 
       <para>Most mailing lists are archived as well, allowing you to skim
       through the older topics in the list. Whereas forums are usually pure
       for user experience, mailing lists are used as the primary communication
       channel for development purposes. Some projects also have internal
-      development mailing lists which aren't readable to the public. This isn't
-      because they want to hide development stuff from the users: such mailing
-      lists are used to communicate security issues, personal information
-      (including account information) but also to talk about topics that are
-      juridically difficult to defend if they are made public.</para>
+      development mailing lists which aren't readable to the public. This
+      isn't because they want to hide development stuff from the users: such
+      mailing lists are used to communicate security issues, personal
+      information (including account information) but also to talk about
+      topics that are juridically difficult to defend if they are made
+      public.</para>
     </section>
 
     <section>
@@ -343,11 +358,11 @@
           <primary>hack fest</primary>
         </indexterm> are organized. During these meetings, developers
       aggregate together with a single goal: to develop new features or remove
-      bugs from the software. Although this can well be done offline,
-      hack fests allow developers to communicate freely and help other
-      developers with their problems. Meeting in real life allows developers
-      to easily show the problem they have (some problems can be difficult or
-      too time consuming to write down).</para>
+      bugs from the software. Although this can well be done offline, hack
+      fests allow developers to communicate freely and help other developers
+      with their problems. Meeting in real life allows developers to easily
+      show the problem they have (some problems can be difficult or too time
+      consuming to write down).</para>
     </section>
   </section>
 
@@ -418,7 +433,7 @@
       non-commercial organisations.</para>
 
       <para>It's slogan is "Where .COM meets .ORG". You can visit LinuxTag
-      around spring every year. </para>
+      around spring every year.</para>
     </section>
   </section>
 
@@ -427,8 +442,8 @@
 
     <orderedlist>
       <listitem>
-        <para>Try to find the online discussion methods (web forum,
-        mailing lists, IRC) offered by the Gentoo Linux distribution.</para>
+        <para>Try to find the online discussion methods (web forum, mailing
+        lists, IRC) offered by the Gentoo Linux distribution.</para>
       </listitem>
     </orderedlist>
   </section>

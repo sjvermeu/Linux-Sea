@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="servicemanagement"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Service Management</title>
 
   <section>
@@ -139,11 +144,11 @@ l6:6:wait:/sbin/rc reboot    # init level 6  &gt; run the Gentoo "reboot" runlev
       less and less the case.</para>
 
       <para>Next to directly executing the scripts, you can also use the
-      <command>rc-service</command><indexterm><primary>rc-service</primary></indexterm>
-      tool:</para>
+      <command>rc-service</command><indexterm>
+          <primary>rc-service</primary>
+        </indexterm> tool:</para>
 
       <programlisting># <command>rc-service syslog-ng start</command></programlisting>
-
     </section>
 
     <section>
@@ -384,16 +389,15 @@ Runlevel: default
 
         <para>The local<indexterm>
             <primary>local</primary>
-          </indexterm> service is responsible for handling the scripts defined 
-	  in <filename>/etc/local.d</filename>. The scripts, with suffix
-	  <filename>.start</filename> or <filename>.stop</filename>, are executed
-	  in lexical order (of course during start or stop of the system, depending
-	  on the suffix).
-	</para>
-	
-	<para>The local service is started as the last service before you can log on 
-	to your system. It is also the first one to be stopped when the system is 
-	shutting down.</para>
+          </indexterm> service is responsible for handling the scripts defined
+        in <filename>/etc/local.d</filename>. The scripts, with suffix
+        <filename>.start</filename> or <filename>.stop</filename>, are
+        executed in lexical order (of course during start or stop of the
+        system, depending on the suffix).</para>
+
+        <para>The local service is started as the last service before you can
+        log on to your system. It is also the first one to be stopped when the
+        system is shutting down.</para>
 
         <para>As you completely manage what this service does, I can't tell
         you what will happen when the service has finished starting. By
@@ -587,10 +591,10 @@ Runlevel: default
       configuration entries:</para>
 
       <programlisting>title=Gentoo Linux @Home
-kernel /kernel-2.6.31 root=/dev/sda2 softlevel=home
+kernel /kernel-3.8.5 root=/dev/sda2 softlevel=home
 
 title=Gentoo Linux @Work
-kernel /kernel-2.6.31 root=/dev/sda2 softlevel=work</programlisting>
+kernel /kernel-3.8.5 root=/dev/sda2 softlevel=work</programlisting>
 
       <para>Whenever a service is started (or stopped), it will look for its
       configuration file called

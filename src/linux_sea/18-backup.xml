@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="backup" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Taking Backups</title>
 
   <section>
     <title>Introduction</title>
 
-    <para>Before we finish this book, lets focus on backups and restores. After
-    all, you don't want to put all that effort in your Linux system, only to
-    see it vanish with the next power surge or
+    <para>Before we finish this book, lets focus on backups and restores.
+    After all, you don't want to put all that effort in your Linux system,
+    only to see it vanish with the next power surge or
     daughter-spilled-milk-over-my-laptop incident.</para>
   </section>
 
@@ -32,10 +36,10 @@
       <para>First of all, take a copy of your <filename>/etc</filename>
       folder. The <filename>/etc</filename> directory contains all system
       settings, including your file system table (<filename>fstab</filename>),
-      Portage-specific settings (<filename>/etc/make.conf</filename>,
-      <filename>/etc/portage</filename>), service configuration files (in
-      <filename>/etc/conf.d</filename> and <filename>/etc/env.d</filename>),
-      ... Really, this location is not to be forgotten.</para>
+      Portage-specific settings (<filename>/etc/portage</filename>), service
+      configuration files (in <filename>/etc/conf.d</filename> and
+      <filename>/etc/env.d</filename>), ... Really, this location is not to be
+      forgotten.</para>
 
       <para>Next, there are a few non-/etc files or directories that you want
       to copy as well.</para>

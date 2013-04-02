@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="softwaremanagement"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Software Management</title>
 
   <section>
@@ -167,8 +172,8 @@
 
       <para>Most applications have optional support for one or more tools and
       libraries. For instance, at the time of writing, the Mozilla Firefox
-      application in Gentoo supports the USE flags as shown in
-      <xref linkend="use-mozilla" /></para>
+      application in Gentoo supports the USE flags as shown in <xref
+      linkend="use-mozilla"/></para>
 
       <table id="use-mozilla">
         <title>USE flags in use by Mozilla Firefox version 9.0</title>
@@ -183,55 +188,88 @@
           </thead>
 
           <tbody>
-	    <row>
-	      <entry>also</entry>
-	      <entry>Enable support for ALSA, the Advanced Linux Sound Architecture</entry>
-	    </row>
-	    <row>
-	      <entry>crashreporter</entry>
-	      <entry>Enable support for the firefox crash reporting plugin</entry>
-	    </row>
-	    <row>
-	      <entry>custom-cflags</entry>
-	      <entry>Build with user-specific CFLAGS (this removes any filtering the ebuild does). Note that
-	      you loose support when you enable this for Firefox</entry>
-	    </row>
-	    <row>
-	      <entry>custom-optimization</entry>
-	      <entry>Fine-tune custom compiler optimizations (not recommended)</entry>
-	    </row>
-	    <row>
-	      <entry>dbus</entry>
-	      <entry>Enable support for DBUS</entry>
-	    </row>
-	    <row>
-	      <entry>ipc</entry>
-	      <entry>Use inter-process communication between tabs and plugins. Allows for greater stability in case of plugin crashes</entry>
-	    </row>
-	    <row>
-	      <entry>libnotify</entry>
-	      <entry>Enable desktop notification support</entry>
-	    </row>
-	    <row>
-	      <entry>pgo</entry>
-	      <entry>Add support for profile-guided optimization using gcc-4.5, for faster binaries.</entry>
-	    </row>
-	    <row>
-	      <entry>startup-notification</entry>
-	      <entry>Enable application startup event feedback mechanism</entry>
-	    </row>
-	    <row>
-	      <entry>system-sqlite</entry>
-	      <entry>Use the system-wide sqlite installation with secure-delete enabled</entry>
-	    </row>
-	    <row>
-	      <entry>webm</entry>
-	      <entry>Use system media-libs/libvpx for HTML5 WebM video support</entry>
-	    </row>
-	    <row>
-	      <entry>wifi</entry>
-	      <entry>Enable wireless network functions</entry>
-	    </row>
+            <row>
+              <entry>also</entry>
+
+              <entry>Enable support for ALSA, the Advanced Linux Sound
+              Architecture</entry>
+            </row>
+
+            <row>
+              <entry>crashreporter</entry>
+
+              <entry>Enable support for the firefox crash reporting
+              plugin</entry>
+            </row>
+
+            <row>
+              <entry>custom-cflags</entry>
+
+              <entry>Build with user-specific CFLAGS (this removes any
+              filtering the ebuild does). Note that you loose support when you
+              enable this for Firefox</entry>
+            </row>
+
+            <row>
+              <entry>custom-optimization</entry>
+
+              <entry>Fine-tune custom compiler optimizations (not
+              recommended)</entry>
+            </row>
+
+            <row>
+              <entry>dbus</entry>
+
+              <entry>Enable support for DBUS</entry>
+            </row>
+
+            <row>
+              <entry>ipc</entry>
+
+              <entry>Use inter-process communication between tabs and plugins.
+              Allows for greater stability in case of plugin crashes</entry>
+            </row>
+
+            <row>
+              <entry>libnotify</entry>
+
+              <entry>Enable desktop notification support</entry>
+            </row>
+
+            <row>
+              <entry>pgo</entry>
+
+              <entry>Add support for profile-guided optimization using
+              gcc-4.5, for faster binaries.</entry>
+            </row>
+
+            <row>
+              <entry>startup-notification</entry>
+
+              <entry>Enable application startup event feedback
+              mechanism</entry>
+            </row>
+
+            <row>
+              <entry>system-sqlite</entry>
+
+              <entry>Use the system-wide sqlite installation with
+              secure-delete enabled</entry>
+            </row>
+
+            <row>
+              <entry>webm</entry>
+
+              <entry>Use system media-libs/libvpx for HTML5 WebM video
+              support</entry>
+            </row>
+
+            <row>
+              <entry>wifi</entry>
+
+              <entry>Enable wireless network functions</entry>
+            </row>
+
             <row>
               <entry>gnome</entry>
 
@@ -261,7 +299,6 @@
               larger and slower, but allows developers to debug possible bugs
               in the software)</entry>
             </row>
-
           </tbody>
         </tgroup>
       </table>
@@ -272,10 +309,10 @@
       features based on your USE flags.</para>
 
       <para>You can set your global USE flags inside
-      <filename>/etc/make.conf</filename>. To disable a USE flag, prepend it
-      with the minus sign.</para>
+      <filename>/etc/portage/make.conf</filename>. To disable a USE flag,
+      prepend it with the minus sign.</para>
 
-      <programlisting># <command>nano -w /etc/make.conf</command>
+      <programlisting># <command>nano -w /etc/portage/make.conf</command>
 <remark>(...)</remark>
 USE="acpi apm pmu sasl howl -cdr -dvdread ..."</programlisting>
 
@@ -284,7 +321,7 @@ USE="acpi apm pmu sasl howl -cdr -dvdread ..."</programlisting>
       is shipped with a sane default for your USE variable. To find out what
       your current USE flags are (based on Gentoo's default USE flags plus the
       USE flags you enabled or disabled in
-      <filename>/etc/make.conf</filename>), use <command>emerge
+      <filename>/etc/portage/make.conf</filename>), use <command>emerge
       --info</command><indexterm>
           <primary>emerge</primary>
 
@@ -378,11 +415,11 @@ media-video/vlc +mp3</programlisting>
       <programlisting># <command>emerge --sync</command></programlisting>
 
       <para>You can easily configure what mirror <command>emerge</command>
-      should use. For this, open up <filename>/etc/make.conf</filename>
-      (Gentoo Portage's main configuration file) and locate the SYNC
-      setting:</para>
+      should use. For this, open up
+      <filename>/etc/portage/make.conf</filename> (Gentoo Portage's main
+      configuration file) and locate the SYNC setting:</para>
 
-      <programlisting># <command>nano -w /etc/make.conf</command>
+      <programlisting># <command>nano -w /etc/portage/make.conf</command>
 <remark>(...)</remark>
 SYNC="rsync://rsync.us.gentoo.org/gentoo-portage"</programlisting>
 
@@ -425,7 +462,7 @@ SYNC="rsync://rsync.us.gentoo.org/gentoo-portage"</programlisting>
       <para>When a news item is added, you will be notified of this at the end
       of a Portage update session:</para>
 
-      <programlisting>* IMPORTANT: 2 news items need reading for repository 'gentoo'.
+      <programlisting>* IMPORTANT: 21news items need reading for repository 'gentoo'.
 * Use eselect news to read news items.</programlisting>
 
       <para>When you find such a notice at the end of your update, you can use
@@ -435,18 +472,24 @@ SYNC="rsync://rsync.us.gentoo.org/gentoo-portage"</programlisting>
 
       <programlisting># <command>eselect news list</command>
 News items:
-  [1]   unread  2010-03-23  New desktop subprofiles for GNOME and KDE
-  [2]   unread  2010-02-28  Layman storage path changed from version 1.3.0 on
-  [3]   read    2009-04-06  Migration from teTeX to TeXLive
-  [4]   read    2009-04-06  Migration to X.org Server 1.5
-  [5]   read    2009-04-18  Generation 1 Java Setup Deprecated
-  [6]   read    2009-07-02  kdeprefix and monolithic ebuilds issues
-  [7]   read    2009-07-12  xorg-x11-7.4 and xorg-server-1.5 kernel support
-  [8]   read    2009-09-27  Qt 4.5.2 default USE flag changes
-  [9]   read    2009-10-02  Migration to X.org Server 1.6 and libxcb 1.4
-  [10]  read    2009-10-08  Upgrade to GNOME 2.26
-  [11]  read    2009-11-02  KDE3 to be masked and removed from portage
-  [12]  read    2010-01-31  Removal of libGL.la</programlisting>
+  [1]      2009-04-18  Generation 1 Java Setup Deprecated
+  [2]      2009-07-02  (2009-07-02-kdeprefix+monolithics - removed?)
+  [3]      2010-03-25  Python 3.1
+  [4]      2010-08-01  (2010-08-01-as-needed-default - removed?)
+  [5]      2010-10-22  Perl 5.12 upgrade procedure
+  [6]      2011-04-27  Upgrade to GLIB 2.28
+  [7]      2011-05-01  Baselayout update
+  [8]      2011-05-22  (2011-05-22-kdeprefix - removed?)
+  [9]      2011-08-28  Mesa r600 driver now defaults to gallium
+  [10]     2011-10-15  Upgrade to libpng15
+  [11]     2012-03-16  (2012-03-16-udev-181-unmasking - removed?)
+  [12]     2012-04-24  The default JPEG implementation
+  [13]     2012-05-21  Portage config-protect-if-modified default
+  [14]     2012-09-09  make.conf and make.profile move
+  [15]     2012-09-09  Catalyst updates
+  [16]     2012-11-06  PYTHON_TARGETS deployment
+  [17]     2013-01-23  (2013-01-23-udev-upgrade - removed?)
+  [18]  N  2013-03-29  Upgrading udev to version &gt;=200</programlisting>
 
       <para>You can then read the news items one by one (<command>eselect news
       read &lt;number&gt;</command>) but I prefer to just tell eselect to
@@ -662,7 +705,7 @@ app-portage/portage-utils (/usr/bin/qfile)</programlisting>
       By default, Portage only sets up a summary log for the installation. You
       can stick with those defaults, or set up a more verbose logging:</para>
 
-      <programlisting># <command>nano /etc/make.conf</command>
+      <programlisting># <command>nano /etc/portage/make.conf</command>
 
 PORT_LOGDIR="/var/log/portage"
 PORTAGE_ELOG_SYSTEM="save"
@@ -882,12 +925,11 @@ mozilla-firefox: 1 hour, 15 minutes, 22 seconds for 27 merges</programlisting>
         <para>From now onwards, I will be using the <command>--ask</command>
         argument where appropriate.</para>
 
-	<para>You might have noticed that the world argument is prefixed
-	with the at sign (@). This is not mandatory - in the past it was without
-	- but a while ago, Portage started supporting what we call "sets" of
-	packages. The world target is one of such sets, and sets are prefixed with
-	an at sign to distinguish them from regular packages.</para>
-
+        <para>You might have noticed that the world argument is prefixed with
+        the at sign (@). This is not mandatory - in the past it was without -
+        but a while ago, Portage started supporting what we call "sets" of
+        packages. The world target is one of such sets, and sets are prefixed
+        with an at sign to distinguish them from regular packages.</para>
       </section>
 
       <section>
@@ -941,7 +983,7 @@ mozilla-firefox: 1 hour, 15 minutes, 22 seconds for 27 merges</programlisting>
           </indexterm> (<emphasis>Gentoo Linux Security
         Advisory</emphasis><indexterm>
             <primary>Gentoo Linux Security Advisory</primary>
-          </indexterm>) documents to inform its users about possible sucurity
+          </indexterm>) documents to inform its users about possible security
         issues (except kernel issues). These GLSA documents are parsed by the
         <command>glsa-check</command><indexterm>
             <primary>glsa-check</primary>
@@ -1025,10 +1067,10 @@ Available Python interpreters:
 
           <secondary>depclean</secondary>
         </indexterm>. The <command>depclean</command> instruction asks Portage
-      to look for package that are installed but are not required any more. It decides
-      this based on the list of packages you have installed explicitly and their dependencies.
-      If the package is not in those results, then it is most likely not needed anymore.
-      </para>
+      to look for package that are installed but are not required any more. It
+      decides this based on the list of packages you have installed explicitly
+      and their dependencies. If the package is not in those results, then it
+      is most likely not needed anymore.</para>
 
       <programlisting># <command>emerge --depclean --ask</command></programlisting>
 
@@ -1110,7 +1152,7 @@ Available Python interpreters:
         --info</command>:</para>
 
         <programlisting>$ <command>emerge --info | grep ACCEPT_KEYWORDS</command>
-ACCEPT_KEYWORDS="x86"</programlisting>
+ACCEPT_KEYWORDS="amd64"</programlisting>
 
         <para>Whenever a mismatch occurs (the package doesn't have the keyword
         that you have defined in <varname>ACCEPT_KEYWORDS</varname>) you get
@@ -1193,7 +1235,7 @@ ACCEPT_KEYWORDS="x86"</programlisting>
 
         <programlisting>!!! All ebuilds that could satisfy "&gt;=sys-apps/portage-2.1.8" have been masked.
 !!! One of the following masked packages is required to complete your request:
-- sys-apps/portage-2.2_rc62 (masked by: ~x86 keyword)</programlisting>
+- sys-apps/portage-2.2_rc62 (masked by: ~amd64 keyword)</programlisting>
 
         <para>If you get such an error message, I recommend to wait until the
         package is generally available (and let the architecture testers bring
@@ -1410,7 +1452,7 @@ ACCEPT_LICENSE="-* @FSF-APPROVED"</programlisting>
         reason.</para>
 
         <para>If you want to make a system-wide deviation, you need to edit
-        the <filename>/etc/make.conf</filename> file.</para>
+        the <filename>/etc/portage/make.conf</filename> file.</para>
       </section>
 
       <section>
@@ -1461,10 +1503,10 @@ ACCEPT_LICENSE="-* @FSF-APPROVED"</programlisting>
           </step>
 
           <step>
-            <para>Open <filename>/etc/make.conf</filename> in your favourite
-            text editor:</para>
+            <para>Open <filename>/etc/portage/make.conf</filename> in your
+            favourite text editor:</para>
 
-            <programlisting># <command>nano -w /etc/make.conf</command></programlisting>
+            <programlisting># <command>nano -w /etc/portage/make.conf</command></programlisting>
           </step>
 
           <step>
@@ -1544,7 +1586,7 @@ app-benchmarks/bonnie++</programlisting>
 
         <para>To allow the staging packages to be installable on your system
         (any package in the staging state), edit
-        <filename>/etc/make.conf</filename> accordingly:</para>
+        <filename>/etc/portage/make.conf</filename> accordingly:</para>
 
         <procedure>
           <step>
@@ -1555,10 +1597,10 @@ ACCEPT_KEYWORDS="x86"</programlisting>
           </step>
 
           <step>
-            <para>Open <filename>/etc/make.conf</filename> in your favourite
-            editor</para>
+            <para>Open <filename>/etc/portage/make.conf</filename> in your
+            favourite editor</para>
 
-            <programlisting># <command>nano -w /etc/make.conf</command></programlisting>
+            <programlisting># <command>nano -w /etc/portage/make.conf</command></programlisting>
           </step>
 
           <step>
@@ -1692,20 +1734,21 @@ lrwxrwxrwx 1 root root 57 Dec 2007 make.profile -&gt;
 
       <programlisting># <command>eselect profile list</command>
 Available profile symlink targets:
-  [1]   default/linux/amd64/10.0 *
-  [2]   default/linux/amd64/10.0/selinux
-  [3]   default/linux/amd64/10.0/desktop
-  [4]   default/linux/amd64/10.0/desktop/gnome
-  [5]   default/linux/amd64/10.0/desktop/kde
-  [6]   default/linux/amd64/10.0/developer
-  [7]   default/linux/amd64/10.0/no-multilib
-  [8]   default/linux/amd64/10.0/server
+  [1]   default/linux/amd64/13.0 *
+  [2]   default/linux/amd64/13.0/selinux
+  [3]   default/linux/amd64/13.0/desktop
+  [4]   default/linux/amd64/13.0/desktop/gnome
+  [5]   default/linux/amd64/13.0/desktop/kde
+  [6]   default/linux/amd64/13.0/developer
+  [7]   default/linux/amd64/13.0/no-multilib
+  [8]   default/linux/amd64/13.0/x32
   [9]   hardened/linux/amd64
-  [10]  hardened/linux/amd64/selinux *
+  [10]  hardened/linux/amd64/selinux
   [11]  hardened/linux/amd64/no-multilib
   [12]  hardened/linux/amd64/no-multilib/selinux
+  [13]  hardened/linux/uclibc/amd64
 
-# <command>eselect profile set 4</command></programlisting>
+# <command>eselect profile set 10</command></programlisting>
 
       <para>As you can see from the profile names, one profile can be a child
       of another; if this is the case (for instance, profile number 4 from the
@@ -1747,11 +1790,11 @@ xen          [Subversion] (source: http://overlays....)</programlisting>
   <section>
     <title>When Things Go Wrong</title>
 
-    <para>Of course, both Gentoo and the upstream projects that Gentoo
-    relies on are still ran and developed by humans, and humans are programmed
-    to make occasional mistakes, so things can go wrong. If you have
-    installation or build failures, the following sections might help you
-    troubleshoot it.</para>
+    <para>Of course, both Gentoo and the upstream projects that Gentoo relies
+    on are still ran and developed by humans, and humans are programmed to
+    make occasional mistakes, so things can go wrong. If you have installation
+    or build failures, the following sections might help you troubleshoot
+    it.</para>
 
     <section>
       <title>Portage Refuses To Install A Package</title>
@@ -1875,8 +1918,9 @@ xen          [Subversion] (source: http://overlays....)</programlisting>
         <para>If it isn't, check if the problem has been reported or not. You
         can also try synchronising the Portage tree from a different Gentoo
         mirror (change the value of the <parameter>SYNC</parameter> variable
-        in <filename>/etc/make.conf</filename>) as it might be possible that
-        the rsync server you are synchronising with is corrupt.</para>
+        in <filename>/etc/portage/make.conf</filename>) as it might be
+        possible that the rsync server you are synchronising with is
+        corrupt.</para>
 
         <para>Another occurring problem can be that a particular file is
         missing:</para>
@@ -1986,8 +2030,8 @@ satisfy "&gt;=x11-libs/qt-sql-4.5.0:4[mysql]".
         <parameter>USE="mysql"</parameter>.</para>
 
         <para>The solution: either add the requested USE flag to your global
-        USE flags (in <filename>/etc/make.conf</filename>) or set the USE flag
-        specifically for the selected package (in
+        USE flags (in <filename>/etc/portage/make.conf</filename>) or set the
+        USE flag specifically for the selected package (in
         <filename>/etc/portage/package.use</filename>).</para>
       </section>
 
@@ -2113,7 +2157,7 @@ Error 2</programlisting>
       <para>Both variables are defined by the profile used by your system and
       expanded by the environment files offered by various applications and,
       optionally, the setting you gave inside
-      <filename>/etc/make.conf</filename>.</para>
+      <filename>/etc/portage/make.conf</filename>.</para>
     </note>
 
     <para>To be able to identify possible configuration file upgrades, Portage
@@ -2179,7 +2223,7 @@ Error 2</programlisting>
     <para>I have already covered the use of USE flags to help Portage decide
     which features you want (or don't want) in a package. However, there are
     more items that Portage needs to decide upon and you can offer your choice
-    inside <filename>/etc/make.conf</filename><indexterm>
+    inside <filename>/etc/portage/make.conf</filename><indexterm>
         <primary>make.conf</primary>
       </indexterm>, Portage' main configuration file.</para>
 
@@ -2190,11 +2234,12 @@ Error 2</programlisting>
       select what languages you want supported on your system through the
       <varname>LINGUAS</varname><indexterm>
           <primary>LINGUAS</primary>
-        </indexterm> variable. You set the LINGUAS variable in /etc/make.conf
-      with the languages of your choice. In the next example, I select the
-      English (en), Dutch (nl), French (fr) and German (de) languages.</para>
+        </indexterm> variable. You set the LINGUAS variable in
+      /etc/portage/make.conf with the languages of your choice. In the next
+      example, I select the English (en), Dutch (nl), French (fr) and German
+      (de) languages.</para>
 
-      <programlisting>~# <command>nano -w /etc/make.conf</command>
+      <programlisting>~# <command>nano -w /etc/portage/make.conf</command>
 LINGUAS="en nl fr de"</programlisting>
 
       <para>For instance, when enabled, OpenOffice.org's ebuild will pull in
@@ -2224,7 +2269,7 @@ LINGUAS="en nl fr de"</programlisting>
         </indexterm> (C-code) and <varname>CXXFLAGS</varname><indexterm>
           <primary>CXXFLAGS</primary>
         </indexterm> (C++-code) variables, again inside
-      <filename>/etc/make.conf</filename>.</para>
+      <filename>/etc/portage/make.conf</filename>.</para>
 
       <para>I'll start off with my example CFLAGS (CXXFLAGS is the
       same):</para>

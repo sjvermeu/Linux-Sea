@@ -1,6 +1,17 @@
+** (2013-04-02) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Update on kernel numbering (now on 3.x series) and description of the
+	  numbering fields
+	- Use KDE 4.9 release date example instead of 4.1
+	- Add social online communities
+	- /dev nowadays is also kernel-provided (well, optionally)
+	- Use /etc/portage for make.conf
+	- Drop section on HAL (and automounting)
+	- Drop screenshots of graphical environments (outdated)
+
 ** (2012-10-28) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Many changes thanks to Francesco Turco
 	- Added in information on sets (like @world)
+	- Convert towards DocBook version 5
 
 ** (2012-04-03) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Update regarding separate /usr or not

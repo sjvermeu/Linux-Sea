@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="runninglinux"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Running Linux</title>
 
   <section>
@@ -232,7 +237,7 @@
         </indexterm>, which is named "<filename>/</filename>"<indexterm>
           <primary>/</primary>
         </indexterm>. Below you'll have files and directories, following the
-      standard described in a previous section, <xref linkend="fhs" />. Every
+      standard described in a previous section, <xref linkend="fhs"/>. Every
       position within the structure has its meaning. An example is
       <filename>/home/swift</filename>, which is the home directory of the
       "swift" user account. Another example is
@@ -380,7 +385,7 @@
     Linux, this isn't the case. Rather, you'll be greeted with a command-line
     prompt asking you to identify yourself:</para>
 
-    <programlisting>This is seaheaven.homeworld (Linux i686 2.6.23) 22:30:00
+    <programlisting>This is seaheaven.homeworld (Linux x86_64 3.8.5) 22:30:00
 
 seaheaven login: </programlisting>
 
@@ -561,11 +566,11 @@ $ <command>pwd</command>
       directory) but also information about each file / directory:</para>
 
       <programlisting>captain@seaheaven ~ $ <command>ls -l</command>
-drwxr-xr-x 2 captain users 4096 2007-10-31 22:24 Documents
-drwxr-xr-x 2 captain users 4096 2007-10-31 22:24 Movies
-drwxr-xr-x 2 captain users 4096 2007-10-31 22:25 Music
-drwxr-xr-x 2 captain users 4096 2007-10-31 22:24 Pictures
--rw-r--r-- 1 captain users   66 2007-10-31 22:30 opentasks.txt</programlisting>
+drwxr-xr-x 2 captain users 4096 2013-10-31 22:24 Documents
+drwxr-xr-x 2 captain users 4096 2013-10-31 22:24 Movies
+drwxr-xr-x 2 captain users 4096 2013-10-31 22:25 Music
+drwxr-xr-x 2 captain users 4096 2013-10-31 22:24 Pictures
+-rw-r--r-- 1 captain users   66 2013-10-31 22:30 opentasks.txt</programlisting>
 
       <para>The information contains, amongst other things, the permission
       sets (three times three characters: Read, Write and eXecute), the owning
@@ -745,7 +750,7 @@ rm: cannot remove '/etc/passwd': Permission denied</programlisting>
 
           <mediaobject>
             <imageobject>
-              <imagedata align="left" fileref="images/nano.png" width="10cm" />
+              <imagedata align="left" fileref="images/nano.png" width="10cm"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -976,7 +981,7 @@ $ <command>na</command></programlisting>
 
       <programlisting>captain@seaheaven ~ $ <command>exit</command>
 
-This is seaheaven.homeworld (Linux i686 2.6.23) 22:30:00
+This is seaheaven.homeworld (Linux x86_64 3.8.5) 22:30:00
 
 seaheaven login: </programlisting>
     </section>

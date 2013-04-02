@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="storagemanagement"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Storage Management</title>
 
   <section>
@@ -178,7 +183,7 @@ Command (m for help): </programlisting>
         physical memory is full.</para>
 
         <para>An example partitioning scheme is given in <xref
-        linkend="partschemetable" />.</para>
+        linkend="partschemetable"/>.</para>
 
         <table id="partschemetable">
           <title>Example partitioning scheme for a Linux desktop</title>
@@ -395,7 +400,7 @@ Changed system type of partition 4 to 82 (Linux swap)</programlisting>
       available as an empty space, but has no file system on it. File systems
       are mandatory to use as they structure the partition and allow the
       operating system to manage files, directories and more on the partition.
-      We covered this already in <xref linkend="filesystems" />.</para>
+      We covered this already in <xref linkend="filesystems"/>.</para>
 
       <para>To place a file system on a partition you need to use the
       <command>mkfs.&lt;type&gt;</command><indexterm>
@@ -469,7 +474,7 @@ Changed system type of partition 4 to 82 (Linux swap)</programlisting>
 
         <para>To enable a file system on a partition, you need to mount it on
         your file system. This has already been covered in <xref
-        linkend="mountsection" />.</para>
+        linkend="mountsection"/>.</para>
       </section>
 
       <section>
@@ -695,62 +700,6 @@ sd 4:0:0:0: [sdb] Attached SCSI removable disk</programlisting>
 /dev/disk/by-id/usb-_USB_DISK_2.0_07891E600025-0:0-part1
 /dev/disk/by-path/pci-0000:00:1d.7-usb-0:1:1.0-scsi-0:0:0:0-part1
 /dev/block/8:17</programlisting>
-      </section>
-    </section>
-
-    <section>
-      <title>Automounting Devices</title>
-
-      <para>You can also have Linux configured so that removable media is
-      automatically mounted. In almost all cases, this is done through a
-      deamon process provided by the desktop environment. It starts with
-      hal...</para>
-
-      <section>
-        <title id="HAL">Using HAL</title>
-
-        <para>The <command>hal</command><indexterm>
-            <primary>hal</primary>
-          </indexterm> (Hardware Abstraction Layer) software daemon provides
-        an interface to other programs about plugged in hardware. It attempts
-        to provide an abstraction layer on top of the device: is the device an
-        USB stick or a digital camera plugged in through USB? The idea is that
-        a multitude of hardware devices should be seen as the same kind of
-        hardware devices (so the same actions need to be taken when the device
-        is plugged in), regardless of brand and type.</para>
-
-        <para>In effect, <command>hal</command> itself isn't sufficient to
-        automatically mount a device, but it is part of a more global
-        architecture. For instance, with GNOME, you need
-        <command>hal</command>, <command>dbus</command> and
-        <command>gnome-volume-manager</command>. The tool that actually does
-        the auto-mounting is <command>gnome-volume-manager</command>. It
-        listens for hal events through <command>dbus</command><indexterm>
-            <primary>dbus</primary>
-          </indexterm> (which is a service that allows processes to
-        communicate with each other through a unified specification). The hal
-        software gets an event from udev (which we've seen before), identifies
-        the hardware and submits an event to dbus.</para>
-
-        <para>If you have GNOME installed, these tools are probably already
-        set up. You can configure the <command>hal</command> device manager
-        through the GNOME menu (Desktop &gt; Administration &gt; Device
-        Manager) as you can for the GNOME volume manager (Desktop &gt;
-        Preferences &gt; Removable Drives and Media).</para>
-
-        <para>If you use KDE, the necessary tools are probably installed as
-        well (only the volume manager isn't called gnome-volume-manager
-        ;-).</para>
-
-        <para>In both cases I say "probably", because many packages rely on
-        USE flags to decide if a certain functionality needs to be enabled
-        (check the hal USE flag).</para>
-
-        <programlisting>$ <command>emerge -pv kdebase</command>
-[ebuild   R   ] kde-base/kdebase-3.5.9-r3  USE="branding cups hal
-java ldap opengl pam -arts -debug -ieee1394 -joystick 
--kdeenablefinal -kdehiddenvisibility -lm_sensors -logitech-mouse
--openexr -samba -xcomposite -xinerama -xscreensaver"  0 kB</programlisting>
       </section>
     </section>
   </section>
@@ -1140,11 +1089,6 @@ none         tmpfs    754M     0  754M   0% /dev/shm
         HOWTO</ulink>, section "<ulink
         url="http://tldp.org/HOWTO/Partition/fdisk_partitioning.html">Partitioning
         with fdisk</ulink>"</para>
-      </listitem>
-
-      <listitem>
-        <para><ulink url="http://www.mythic-beasts.com/~mark/random/hal/">HAL
-        and device management</ulink>, written by Mark Longair</para>
       </listitem>
 
       <listitem>

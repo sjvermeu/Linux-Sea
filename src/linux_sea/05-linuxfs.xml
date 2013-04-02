@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter version="5.0" xml:id="linuxfs" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>The Linux File System</title>
 
   <section>
@@ -13,13 +17,13 @@
     find this chapter to be a description off. Lately however, more and more
     distributions are making a small change towards their file system layout
     (but all consistent) so the standard is in need of updating. When a
-    setting deviates from the current standard, I will say so in this chapter.
-    </para>
-    
-    <para>Of course, a file system is
-    always stored on media (be it a hard drive, a CD or a memory fragment);
-    how these media relate to the file system and how Linux keeps track of
-    those is also covered in this chapter.</para>
+    setting deviates from the current standard, I will say so in this
+    chapter.</para>
+
+    <para>Of course, a file system is always stored on media (be it a hard
+    drive, a CD or a memory fragment); how these media relate to the file
+    system and how Linux keeps track of those is also covered in this
+    chapter.</para>
   </section>
 
   <section>
@@ -137,7 +141,7 @@ etc/     mnt/      sbin/     usr/</programlisting>
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="images/filesystem-partitions.png" />
+              <imagedata fileref="images/filesystem-partitions.png"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -237,8 +241,8 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
             <para>The <emphasis>ext3</emphasis><indexterm>
                 <primary>ext3</primary>
               </indexterm> file system is an improvement on the ext2 file
-            system, adding, amongst other things, the concept of journalling.
-            </para>
+            system, adding, amongst other things, the concept of
+            journalling.</para>
           </listitem>
 
           <listitem>
@@ -248,9 +252,9 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
             system, adding, amongst other things, support for very large file
             systems/files, extents (contiguous physical blocks),
             pre-allocation and delayed allocation and more. The ext4 file
-	    system is backwards compatible with ext3 as long as you do not
-	    use extents. Ext4 is frequently seen as the default file system
-	    of choice amongst administrators and distributions.</para>
+            system is backwards compatible with ext3 as long as you do not use
+            extents. Ext4 is frequently seen as the default file system of
+            choice amongst administrators and distributions.</para>
           </listitem>
 
           <listitem>
@@ -273,18 +277,18 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
             developed that actively any more.</para>
           </listitem>
 
-	  <listitem>
-	    <para>
-	      The <emphasis>btrfs</emphasis><indexterm><primary>btrfs</primary></indexterm>
-	      file system is a highly experimental but promising file system. 
-	      It addresses concerns regarding huge storage backend volumes, 
-	      multi-device spanning, snapshotting and more. Although its primary
-	      target was enterprise usage, it also offers interesting features
-	      to home users such as online grow/shrink (both on file system as
-	      well as underlying storage level), object-level redundancy, 
-	      transparent compression and cloning.
-	    </para>
-	  </listitem>
+          <listitem>
+            <para>The <emphasis>btrfs</emphasis><indexterm>
+                <primary>btrfs</primary>
+              </indexterm> file system is an experimental but promising file
+            system. It addresses concerns regarding huge storage backend
+            volumes, multi-device spanning, snapshotting and more. Although
+            its primary target was enterprise usage, it also offers
+            interesting features to home users such as online grow/shrink
+            (both on file system as well as underlying storage level),
+            object-level redundancy, transparent compression and
+            cloning.</para>
+          </listitem>
         </itemizedlist>
 
         <para>A <emphasis>file system journal</emphasis><indexterm>
@@ -638,10 +642,10 @@ Filename     Type      Size    Used  Priority
         <itemizedlist>
           <listitem>
             <para><filename>/bin</filename> usually contains executable
-	    programs needed to bring the system up and running. Recently
-	    however, more and more distributions are moving all applications
-	    towards <filename>/usr/bin</filename> and are using symbolic links
-	    to transition towards this new structure.</para>
+            programs needed to bring the system up and running. Recently
+            however, more and more distributions are moving all applications
+            towards <filename>/usr/bin</filename> and are using symbolic links
+            to transition towards this new structure.</para>
           </listitem>
 
           <listitem>
@@ -651,10 +655,10 @@ Filename     Type      Size    Used  Priority
 
           <listitem>
             <para><filename>/lib</filename> usually contains the system
-	    libraries necessary to successfully boot the system and run 
-	    the commands which are located inside
-	    <filename>/bin</filename>. Recently however, these files are also
-	    being migrated towards <filename>/usr/lib</filename>.</para>
+            libraries necessary to successfully boot the system and run the
+            commands which are located inside <filename>/bin</filename>.
+            Recently however, these files are also being migrated towards
+            <filename>/usr/lib</filename>.</para>
           </listitem>
 
           <listitem>
@@ -674,8 +678,9 @@ Filename     Type      Size    Used  Priority
         the regular operation of a system (such as application data and the
         applications themselves). These can be stored on separate media if you
         want, but if you do, you will need to setup an initial ram disk to
-	boot your system with. More about initial ramdisks later. 
-        </para>
+        boot your system with. More about initial ramdisks later. The location
+        for the userland locations is <filename>/usr</filename> (which comes
+        from Unix System Resources).</para>
 
         <itemizedlist>
           <listitem>
@@ -793,6 +798,13 @@ Filename     Type      Size    Used  Priority
             <para><filename>/sys</filename> contains information about the
             available hardware and kernel tasks</para>
           </listitem>
+
+          <listitem>
+            <para><filename>/dev</filename> nowadays can be provided by the
+            Linux kernel as well, offering a small set of default device nodes
+            (so that the system can boot until udev is ready to take over
+            control of /dev)</para>
+          </listitem>
         </itemizedlist>
       </section>
     </section>
@@ -805,22 +817,21 @@ Filename     Type      Size    Used  Priority
       boots (unless you use an initial ramdisk), and your system will not
       function properly if the kernel detects corruption on this file system.
       Also, due to the nature of the boot process, this file system will
-      eventually become writeable (as the boot
-      process needs to store its state information, etc.)</para>
+      eventually become writeable (as the boot process needs to store its
+      state information, etc.)</para>
 
       <para>Some locations on the root file system are strongly advised to
-      remain on the root file system (i.e. you should never ever mount
-      another file system on top of that location). These locations
-      are:</para>
+      remain on the root file system (i.e. you should never ever mount another
+      file system on top of that location). These locations are:</para>
 
       <itemizedlist>
         <listitem>
-          <para>/bin and /sbin as these contain the binaries (commands) or links
-	  to binaries that are needed to get a system up to the point it
+          <para>/bin and /sbin as these contain the binaries (commands) or
+          links to binaries that are needed to get a system up to the point it
           <emphasis>can</emphasis> mount other file systems. Although this
-	  functionality is gradually becoming less and less so, it would still
-	  break systems if you make separate mounts for these (small) locations.
-	  </para>
+          functionality is gradually becoming less and less so, it would still
+          break systems if you make separate mounts for these (small)
+          locations.</para>
         </listitem>
 
         <listitem>
@@ -937,10 +948,11 @@ Filename     Type      Size    Used  Priority
     default Linux kernel yet, I will talk about the standard, discretionary
     access control mechanism used by almost all Linux distributions. <ulink
     url="http://www.nsa.gov/selinux">SELinux</ulink>, which is part of the
-    default Linux kernel, will also not be discussed. If you are interested
-    in running a SELinux powered system, I recommend to use <ulink
+    default Linux kernel, will also not be discussed. If you are interested in
+    running a SELinux powered system, I recommend to use <ulink
     url="http://www.gentoo.org/proj/en/hardened">Gentoo Hardened</ulink> which
-    supports SELinux. There is also a <ulink url="http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml">Gentoo
+    supports SELinux. There is also a <ulink
+    url="http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml">Gentoo
     Hardened SELinux Handbook</ulink> which is worth reading through.</para>
 
     <section>
@@ -1152,9 +1164,9 @@ drwxrwx--- 2 root portage 4096 Jul 14 18:47 /var/log/sandbox</programlisting>
   Size: 3678        Blocks: 8          IO Block: 4096   regular file
 Device: 808h/2056d  Inode: 3984335     Links: 1
 Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2010-03-18 21:46:06.000000000 +0100
-Modify: 2010-03-18 21:46:06.000000000 +0100
-Change: 2010-03-18 21:46:06.000000000 +0100</programlisting>
+Access: 2013-03-18 21:46:06.000000000 +0100
+Modify: 2013-03-18 21:46:06.000000000 +0100
+Change: 2013-03-18 21:46:06.000000000 +0100</programlisting>
 
         <para>In the output of the <command>stat</command> command, you notice
         the same access flags as we identified before (-rw-r--r-- in this
@@ -1222,9 +1234,9 @@ Change: 2010-03-18 21:46:06.000000000 +0100</programlisting>
   Size: 28672      Blocks: 56         IO Block: 4096   directory
 Device: 808h/2056d Inode: 3096577     Links: 759
 Access: (1777/drwxrwxrwt)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2008-01-10 17:44:04.000000000 +0100
-Modify: 2010-04-24 00:04:36.000000000 +0200
-Change: 2010-04-24 00:04:36.000000000 +0200</programlisting>
+Access: 2010-01-10 17:44:04.000000000 +0100
+Modify: 2013-04-02 00:04:36.000000000 +0200
+Change: 2013-04-02 00:04:36.000000000 +0200</programlisting>
 
         <para>Another specific privilege that we have identified before is the
         setuid<indexterm>
@@ -1246,8 +1258,8 @@ Change: 2010-04-24 00:04:36.000000000 +0200</programlisting>
 Device: 808h/2056d Inode: 262481      Links: 1
 Access: (4711/-rws--x--x)  Uid: (    0/    root)   Gid: (    0/    root)
 Access: 2010-02-06 13:50:35.000000000 +0100
-Modify: 2010-02-06 13:50:35.000000000 +0100
-Change: 2010-02-06 13:50:43.000000000 +0100</programlisting>
+Modify: 2013-01-02 13:50:35.000000000 +0100
+Change: 2013-01-02 13:50:43.000000000 +0100</programlisting>
       </section>
 
       <section>
@@ -1421,8 +1433,7 @@ s-S--a---------  /tmp/foo</programlisting>
       <command>locate</command>:</para>
 
       <programlisting># <command>locate make.conf</command>
-/etc/make.conf
-/etc/make.conf.example
+/etc/portage/make.conf
 (...)
 /usr/portage/local/layman/make.conf</programlisting>
 
