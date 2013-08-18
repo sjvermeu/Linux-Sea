@@ -366,9 +366,9 @@
       </itemizedlist>
 
       <para>The restriction deletion flag needs some explanation. It is used
-      on world-writeable directories (a well-known example is
+      on world-writable directories (a well-known example is
       <filename>/tmp</filename>, where temporary files can be stored) and used
-      to prevent users to remove files they didn't create. A world-writeable
+      to prevent users to remove files they didn't create. A world-writable
       directory would otherwise allow other users to remove files from that
       directory (as they too have write access to the directory). The
       restriction deletion flag is also known as the

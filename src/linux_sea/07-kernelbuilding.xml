@@ -6,8 +6,7 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook"
-	 xmlns:xl="http://www.w3.org/1999/xlink">
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Configuring a Linux Kernel</title>
 
   <section>
@@ -399,7 +398,8 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
         license, is the USB Video Class driver, ... and supports parameters
         clock, nodrop, quirks, trace and timeout. Of course, it does not give
         you information what these parameters mean, but that is what you have
-        <link xl:href="http://www.google.com">Google</link> for, right?</para>
+        <link xlink:href="http://www.google.com">Google</link> for,
+        right?</para>
 
         <para>Anyway, suppose you want to load the uvcvideo module with the
         <parameter>nodrop=1</parameter> argument (you might be instructed to
@@ -550,7 +550,7 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
 
       <para>His idea is really worth pursuing, so don't hesitate to take a
       look at <link
-      xl:href="http://www.kernel-seeds.org/">http://www.kernel-seeds.org/</link>.
+      xlink:href="http://www.kernel-seeds.org/">http://www.kernel-seeds.org/</link>.
       On the site, you can then navigate to your architecture (currently only
       x86 and x86_64 are supported), select the kernel tree you have installed
       (most likely gentoo if you have installed the gentoo-sources) and
@@ -2407,7 +2407,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
     mounted, mount it first:</para>
 
     <programlisting># <command>mount /boot</command>
-# <command>cp /usr/src/linux/arch/x86/boot/bzImage /boot/kernel-3.8.5-r2</command></programlisting>
+# <command>cp /usr/src/linux/arch/x86/boot/bzImage /boot/kernel-3.10.7</command></programlisting>
 
     <para>You can also use <command>make install</command> right after (or
     before) the <command>make modules_install</command> step. This will copy
@@ -2424,9 +2424,9 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
     <para>To safely support make install, do the following steps only
     once:</para>
 
-    <programlisting># <command>cp /usr/src/linux/arch/x86/boot/bzImage /boot/vmlinuz-3.8.5-r2</command>
+    <programlisting># <command>cp /usr/src/linux/arch/x86/boot/bzImage /boot/vmlinuz-3.10.7</command>
 # <command>cd /boot</command>
-# <command>ln -s vmlinuz-3.8.5-r2 vmlinuz</command></programlisting>
+# <command>ln -s vmlinuz-3.10.7-r2 vmlinuz</command></programlisting>
 
     <section>
       <title>Rebuilding a Kernel</title>
@@ -2501,7 +2501,8 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
         <primary>GRUB</primary>
       </indexterm>, the GRand Unified Bootloader, but others exist (especially
     for non-x86 compatible architectures which might need different boot
-    loaders).</para>
+    loaders). In this section, I'll focus on GRUB2 (the previous GRUB,
+    nowadays called GRUB Legacy, is no longer maintained).</para>
 
     <section>
       <title>Installing GRUB</title>
@@ -2518,123 +2519,59 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
       <para>By installing GRUB into the MBR, GRUB is automatically started
       after the BIOS POST processing (Power On Self Test).</para>
 
-      <para>First of all, you need to install GRUB:</para>
+      <para>First of all, you need to install GRUB2:</para>
 
-      <programlisting># <command>emerge grub</command></programlisting>
+      <programlisting># <command>emerge grub:2</command></programlisting>
 
-      <para>If you are installing an x86_64 system (which uses the Gentoo
-      amd64 profile) with no multilib support (meaning there are no 32-bit and
-      64-bit libraries built side by side), you will need to install the
-      static version of GRUB:</para>
+      <para>Next, we install GRUB onto the MBR:</para>
 
-      <programlisting># <command>emerge grub-static</command></programlisting>
+      <programlisting># <command>grub2-install /dev/sda</command></programlisting>
 
-      <para>Next, we install GRUB onto the MBR. To have the installation
-      command work, we need to create the /etc/mtab file:</para>
+      <para>If the disk is not configured with sufficient space after the MBR
+      but before the first partition, you will need to force the installation.
+      GRUB2 will use a special support mode in that case:</para>
 
-      <programlisting># <command>grep -v rootfs /proc/mounts &gt; /etc/mtab</command>
-# <command>grub-install --no-floppy /dev/sda</command></programlisting>
+      <programlisting># <command>grub2-install -f /dev/sda</command></programlisting>
     </section>
 
     <section>
       <title>Configuring GRUB</title>
 
-      <para>The GRUB configuration file is
-      <filename>/boot/grub/grub.conf</filename><indexterm>
-          <primary>grub.conf</primary>
-        </indexterm>. It's configuration is quite simple:</para>
+      <para>Unlike GRUB Legacy, GRUB2 is configured through variables in
+      /etc/default/grub, which are used to auto-generate the configuration
+      file.</para>
 
-      <programlisting>default 0
-timeout 5
+      <programlisting># <command>nano -w /etc/default/grub</command></programlisting>
 
-title=Gentoo Linux 3.8.5
-kernel /kernel-3.8.5 root=/dev/sda8
-initrd /initramfs-genkernel-x86_64-3.8.5
+      <para>The variable that, if you need to set anything, is the most likely
+      candidate, is GRUB_CMDLINE_LINUX. This variable content is added to the
+      kernel line and is used to pass on additional kernel parameters. For
+      instance, to pass on the parameter "dolvm" (to support a logical volume
+      as root file system, needed for some init scripts):</para>
 
-title=Gentoo Linux 3.1.2
-kernel /kernel-3.1.2 root=/dev/sda8</programlisting>
+      <programlisting>GRUB_CMDLINE_LINUX="dolvm"</programlisting>
 
-      <para>You can read this (very simple yet fully functional) configuration
-      file as:</para>
+      <para>In most cases though, you will not need to set anything. For
+      instance the root file system, which needed to be set individually in
+      the past, is automatically detected by the GRUB2 configuration
+      command.</para>
 
-      <itemizedlist>
-        <listitem>
-          <para>By default, use the first (0) entry (paragraph beginning with
-          'title=')</para>
-        </listitem>
+      <para>So, let's generate the configuration file:</para>
 
-        <listitem>
-          <para>Provide the user with a selection for at most 5 seconds</para>
-        </listitem>
+      <important>
+        <para>Make sure that the output of the command shows that linux (and
+        perhaps initrd) images are detected. If none are detected, then GRUB
+        will not be able to boot the system as it has not found a Linux kernel
+        to boot with.</para>
+      </important>
 
-        <listitem>
-          <para>Two entries can be found:</para>
+      <programlisting># <command>grub2-mkconfig -o /boot/grub2/grub.cfg</command>
+Generating grub.cfg ...
+Found linux image: /boot/vmlinuz-3.10.7
+Found initrd image: /boot/initramfs-genkernel-x86_64-3.10.7
+done</programlisting>
 
-          <itemizedlist>
-            <listitem>
-              <para>Gentoo Linux 3.8.5</para>
-
-              <para>This entry uses the kernel image /boot/kernel-3.8.5 (the
-              GRUB kernel argument starts looking for files from its boot
-              partition, and as /boot is a separate partition on my system,
-              /boot/kernel-3.8.5 for GRUB is actually /kernel-3.8.5).</para>
-
-              <para>Also, the root partition (which is the partition where my
-              Linux installation is on) is at
-              <filename>/dev/sda8</filename>.</para>
-
-              <para>The entry also uses an initial ram file system.</para>
-            </listitem>
-
-            <listitem>
-              <para>Gentoo Linux 3.1.2</para>
-
-              <para>This is the entry for my previous kernel. It isn't used by
-              default (remember, the default entry that is booted is the first
-              one) but I always allow my last kernel to be bootable in case
-              the kernel configuration for the new kernel went haywire.</para>
-            </listitem>
-          </itemizedlist>
-        </listitem>
-      </itemizedlist>
-
-      <para>To use the new kernel (which I stored as
-      <filename>kernel-3.8.5-r2</filename> inside <filename>/boot</filename>)
-      I remove the second entry and put a new one before the entry that is
-      currently the first one (so that the new entry becomes the default
-      entry):</para>
-
-      <programlisting>default 0
-timeout 5
-
-title=Gentoo Linux 3.8.5 Revision 2
-kernel /kernel-3.8.5-r2 root=/dev/sda8
-initrd /initramfs-genkernel-x86_64-3.8.5-gentoo-r2
-
-title=Gentoo Linux 3..8.5
-kernel /kernel-3.8.5 root=/dev/sda8
-initrd /initramfs-genkernel-x86_64-3.8.5</programlisting>
-
-      <para>After this, I unmount the /boot partition again (<command>umount
-      /boot</command>). If I now reboot my system, I am booted with the new
-      Linux kernel (at least if everything works). If for some reason the
-      kernel doesn't work, I can restart the system and select the second
-      entry in the menu to boot the old kernel (which I know works) and
-      attempt to fix the configuration.</para>
-
-      <para>If you, right after the kernel compilation, used the make install
-      method for installing the kernel image and you do not need an initial
-      ram file system, then your Grub configuration file can look (and stay)
-      like so:</para>
-
-      <programlisting>default 0
-timeout 5
-
-title=Gentoo Linux
-kernel /vmlinuz root=/dev/sda8</programlisting>
-
-      <para>In case the kernel fails to boot, you can execute the steps as
-      described in <xref linkend="rescue_kernel_boot_entry"/>.</para>
+      <para>That's it - GRUB is now installed and configured.</para>
     </section>
   </section>
 
@@ -2670,26 +2607,6 @@ kernel /vmlinuz root=/dev/sda8</programlisting>
       easiest to resolve (hint: it's the hardware malfunction one). The other
       ones, well, they require a bit preparation in order to easily
       troubleshoot and, eventually, solve.</para>
-
-      <section xml:id="rescue_kernel_boot_entry">
-        <title>Rescue Kernel Boot Entry</title>
-
-        <para>Whenever you have a kernel that boots (regardless of the fact
-        that the kernel doesn't support your sound card or doesn't play 3D
-        action games well), make a new entry in your boot loader to boot this
-        kernel:</para>
-
-        <programlisting># <command>mount /boot</command>
-# <command>nano /boot/grub/grub.conf</command>
-(...)
-
-title=Rescue Gentoo Linux 3.8.5
-kernel /kernel-3.8.5 root=/dev/sda8</programlisting>
-
-        <para>If a boot failure occurs due to a malconfigured kernel, just
-        boot the backup (rescue) kernel and retry configuring your
-        kernel.</para>
-      </section>
 
       <section>
         <title>Kernel Parameters</title>
@@ -2732,12 +2649,12 @@ kernel /kernel-3.8.5 root=/dev/sda8</programlisting>
 
         <para>If a system fails to boot due to a system configuration issue, I
         recommend to boot from a rescue environment (<link
-        xl:href="http://www.sysresccd.org">SysRescCD</link> comes to mind). Since
-        USB sticks are widely spread and easy to work with, I suggest that you
-        configure your system to be able to boot from USB <emphasis>and test
-        it</emphasis>. It is faster than booting from most CD/DVD drives
-        (sorry, I still don't have a BlueRay drive at the time of writing) and
-        a rescue USB stick is easier to carry with you.</para>
+        xlink:href="http://www.sysresccd.org">SysRescCD</link> comes to mind).
+        Since USB sticks are widely spread and easy to work with, I suggest
+        that you configure your system to be able to boot from USB
+        <emphasis>and test it</emphasis>. It is faster than booting from most
+        CD/DVD drives (sorry, I still don't have a BlueRay drive at the time
+        of writing) and a rescue USB stick is easier to carry with you.</para>
 
         <para>Having a rescue live Linux environment around you is really
         worth it. Configuration failures are easily made, and can have serious
@@ -2810,11 +2727,11 @@ Please append a correct "root=" boot option; here are the available partitions:
           <listitem>
             <para>the kernel configuration is missing drivers for your HDD
             controller (cases <link
-            xl:href="https://forums.gentoo.org/viewtopic-t-810063.html">1</link>,
+            xlink:href="https://forums.gentoo.org/viewtopic-t-810063.html">1</link>,
             <link
-            xl:href="https://forums.gentoo.org/viewtopic-p-6075078.html#6075078">4</link>,
+            xlink:href="https://forums.gentoo.org/viewtopic-p-6075078.html#6075078">4</link>,
             <link
-            xl:href="https://forums.gentoo.org/viewtopic-t-801465.html">5</link>)</para>
+            xlink:href="https://forums.gentoo.org/viewtopic-t-801465.html">5</link>)</para>
           </listitem>
 
           <listitem>
@@ -2830,9 +2747,9 @@ Please append a correct "root=" boot option; here are the available partitions:
           <listitem>
             <para>the device is misidentified in your root= parameter (cases
             <link
-            xl:href="https://forums.gentoo.org/viewtopic-t-809455.html">2</link>,
+            xlink:href="https://forums.gentoo.org/viewtopic-t-809455.html">2</link>,
             <link
-            xl:href="https://forums.gentoo.org/viewtopic-t-805518.html">3</link>)</para>
+            xlink:href="https://forums.gentoo.org/viewtopic-t-805518.html">3</link>)</para>
           </listitem>
         </itemizedlist>
 
@@ -2861,7 +2778,7 @@ Please append a correct "root=" boot option; here are the available partitions:
             forgot to select the HDD controller driver itself (like Intel
             PIIX). Try running the following <command>lscpi</command> command,
             and paste its output on <link
-            xl:href="http://kmuto.jp/debian/hcl/">http://kmuto.jp/debian/hcl/</link>.
+            xlink:href="http://kmuto.jp/debian/hcl/">http://kmuto.jp/debian/hcl/</link>.
             The site will show you which kernel drivers you need to select for
             your system. Within the menuconfig, you can type "/" to open the
             search function, and type in the driver name to find out where it

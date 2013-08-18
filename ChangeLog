@@ -1,3 +1,8 @@
+** (2013-08-18) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Switch to GRUB2
+	- Explain devtmpfs a bit where we currently already explain other
+	  "special" file systems
+
 ** (2013-04-02) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Update on kernel numbering (now on 3.x series) and description of the
 	  numbering fields

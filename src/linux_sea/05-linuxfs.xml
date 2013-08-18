@@ -5,8 +5,7 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook"
-	 xmlns:xl="http://www.w3.org/1999/xlink">
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>The Linux File System</title>
 
   <section>
@@ -823,7 +822,7 @@ Filename     Type      Size    Used  Priority
       boots (unless you use an initial ramdisk), and your system will not
       function properly if the kernel detects corruption on this file system.
       Also, due to the nature of the boot process, this file system will
-      eventually become writeable (as the boot process needs to store its
+      eventually become writable (as the boot process needs to store its
       state information, etc.)</para>
 
       <para>Some locations on the root file system are strongly advised to
@@ -947,17 +946,18 @@ Filename     Type      Size    Used  Priority
     administrator can force security policies on files and processes.</para>
 
     <para>As most MAC-based security projects (such as <link
-    xl:href="http://www.rsbac.org">RSBAC</link>, <link
-    xl:href="http://www.lids.org">LIDS</link> and <link
-    xl:href="http://www.grsecurity.net">grSecurity</link>) are not part of the
-    default Linux kernel yet, I will talk about the standard, discretionary
-    access control mechanism used by almost all Linux distributions. <link
-    xl:href="http://www.nsa.gov/selinux">SELinux</link>, which is part of the
-    default Linux kernel, will also not be discussed. If you are interested in
-    running a SELinux powered system, I recommend to use <link
-    xl:href="http://www.gentoo.org/proj/en/hardened">Gentoo Hardened</link> which
-    supports SELinux. There is also a <link
-    xl:href="http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml">Gentoo
+    xlink:href="http://www.rsbac.org">RSBAC</link>, <link
+    xlink:href="http://www.lids.org">LIDS</link> and <link
+    xlink:href="http://www.grsecurity.net">grSecurity</link>) are not part of
+    the default Linux kernel yet, I will talk about the standard,
+    discretionary access control mechanism used by almost all Linux
+    distributions. <link
+    xlink:href="http://www.nsa.gov/selinux">SELinux</link>, which is part of
+    the default Linux kernel, will also not be discussed. If you are
+    interested in running a SELinux powered system, I recommend to use <link
+    xlink:href="http://www.gentoo.org/proj/en/hardened">Gentoo Hardened</link>
+    which supports SELinux. There is also a <link
+    xlink:href="http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml">Gentoo
     Hardened SELinux Handbook</link> which is worth reading through.</para>
 
     <section>
@@ -972,7 +972,7 @@ Filename     Type      Size    Used  Priority
 
       <para>However, supporting these flags wouldn't make a system secure: you
       want to mix these privileges based on who works with the file. For
-      instance, the system configuration files should only be writeable by the
+      instance, the system configuration files should only be writable by the
       administrator(s); some might not even be readable by the users (like the
       file containing the user passwords).</para>
 
@@ -1023,7 +1023,7 @@ Filename     Type      Size    Used  Priority
       <programlisting>$ <command>ls -l /etc/fstab</command>
 -rw-r--r-- 1 root root 905 Nov 21 09:10 /etc/fstab</programlisting>
 
-      <para>In the above example, the fstab file is writeable by the root user
+      <para>In the above example, the fstab file is writable by the root user
       (rw-) and readable by anyone else (r--).</para>
 
       <para>In case of a directory,</para>
@@ -1054,7 +1054,7 @@ Filename     Type      Size    Used  Priority
 drwxr-x--- 2 root root 4096 Nov 26 18:17 /etc/cron.daily/</programlisting>
 
       <para>In the above example, the cron.daily directory is viewable (r),
-      writeable (w) and "enterable" (x) by the root user. People in the root
+      writable (w) and "enterable" (x) by the root user. People in the root
       group have view- and enter rights (r-x) whereas all other people have no
       rights to view, write or enter the directory (---).</para>
 
@@ -1292,7 +1292,7 @@ Change: 2013-01-02 13:50:43.000000000 +0100</programlisting>
         </itemizedlist>
 
         <para>Then you can set (=), add (+) or remove (-) privileges. For
-        instance, to make <filename>/etc/passwd</filename> writeable for the
+        instance, to make <filename>/etc/passwd</filename> writable for the
         members of the owning group:</para>
 
         <programlisting># <command>chmod g+w /etc/passwd</command></programlisting>

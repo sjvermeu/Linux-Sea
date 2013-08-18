@@ -255,7 +255,7 @@
       </listitem>
 
       <listitem>
-        <para>The <filename>/tmp</filename> directory is world-writeable, but
+        <para>The <filename>/tmp</filename> directory is world-writable, but
         has a specific flag set: the sticky bit. Check out the manual page of
         chmod to find out why a possible solution to this question would
         be:</para>

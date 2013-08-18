@@ -6,8 +6,7 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook"
-	 xmlns:xl="http://www.w3.org/1999/xlink">
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>Software Management</title>
 
   <section>
@@ -173,136 +172,32 @@
 
       <para>Most applications have optional support for one or more tools and
       libraries. For instance, at the time of writing, the Mozilla Firefox
-      application in Gentoo supports the USE flags as shown in <xref
-      linkend="use-mozilla"/></para>
+      application in Gentoo supports the following use flags (I dropped the
+      various linguas flags which enable/disable support for certain language
+      locales in the output to make it more readable):</para>
 
-      <table xml:id="use-mozilla">
-        <title>USE flags in use by Mozilla Firefox version 9.0</title>
-
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>USE flag</entry>
-
-              <entry>Support description</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry>also</entry>
-
-              <entry>Enable support for ALSA, the Advanced Linux Sound
-              Architecture</entry>
-            </row>
-
-            <row>
-              <entry>crashreporter</entry>
-
-              <entry>Enable support for the firefox crash reporting
-              plugin</entry>
-            </row>
-
-            <row>
-              <entry>custom-cflags</entry>
-
-              <entry>Build with user-specific CFLAGS (this removes any
-              filtering the ebuild does). Note that you loose support when you
-              enable this for Firefox</entry>
-            </row>
-
-            <row>
-              <entry>custom-optimization</entry>
-
-              <entry>Fine-tune custom compiler optimizations (not
-              recommended)</entry>
-            </row>
-
-            <row>
-              <entry>dbus</entry>
-
-              <entry>Enable support for DBUS</entry>
-            </row>
-
-            <row>
-              <entry>ipc</entry>
-
-              <entry>Use inter-process communication between tabs and plugins.
-              Allows for greater stability in case of plugin crashes</entry>
-            </row>
-
-            <row>
-              <entry>libnotify</entry>
-
-              <entry>Enable desktop notification support</entry>
-            </row>
-
-            <row>
-              <entry>pgo</entry>
-
-              <entry>Add support for profile-guided optimization using
-              gcc-4.5, for faster binaries.</entry>
-            </row>
-
-            <row>
-              <entry>startup-notification</entry>
-
-              <entry>Enable application startup event feedback
-              mechanism</entry>
-            </row>
-
-            <row>
-              <entry>system-sqlite</entry>
-
-              <entry>Use the system-wide sqlite installation with
-              secure-delete enabled</entry>
-            </row>
-
-            <row>
-              <entry>webm</entry>
-
-              <entry>Use system media-libs/libvpx for HTML5 WebM video
-              support</entry>
-            </row>
-
-            <row>
-              <entry>wifi</entry>
-
-              <entry>Enable wireless network functions</entry>
-            </row>
-
-            <row>
-              <entry>gnome</entry>
-
-              <entry>Enables support for the GNOME user interface (within
-              Firefox) as well as GNOME file system event support</entry>
-            </row>
-
-            <row>
-              <entry>java</entry>
-
-              <entry>Enables support for the java plug-in</entry>
-            </row>
-
-            <row>
-              <entry>bindist</entry>
-
-              <entry>Disables the official Mozilla Firefox branding (unless
-              USE="iceweasel" is selected) so that you can distribute prebuilt
-              versions of the package across your network or even across the
-              Internet.</entry>
-            </row>
-
-            <row>
-              <entry>debug</entry>
-
-              <entry>Enables debugging support (which makes the software
-              larger and slower, but allows developers to debug possible bugs
-              in the software)</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+      <programlisting>$ <command>equery uses firefox</command>
+ + + alsa                 : Add support for media-libs/alsa-lib (Advanced Linux Sound Architecture)
+ - - bindist              : Disable official Firefox branding (icons, name) which are not binary-redistributable according to upstream.
+ - - custom-cflags        : Build with user-specified CFLAGS (unsupported)
+ - - custom-optimization  : Fine-tune custom compiler optimizations, setting this is not recommended.
+ + + dbus                 : Enable dbus support for anything that needs it (gpsd, gnomemeeting, etc)
+ - - debug                : Enable extra debug codepaths, like asserts and extra output. If you want to get meaningful backtraces see http://www.gentoo.org/proj/en/qa/backtraces.xml
+ - - gstreamer            : Add support for media-libs/gstreamer (Streaming media)
+ - - jit                  : Enable just-in-time compilation for improved performance. May prevent use of some PaX memory protection features in Gentoo Hardened.
+ - - libnotify            : Enable desktop notification support
+ + + minimal              : Prevent sdk and headers from being installed
+ - - pulseaudio           : Add support for PulseAudio sound server
+ - - startup-notification : Enable application startup event feedback mechanism
+ - - system-cairo         : Use the system-wide x11-libs/cairo Use system cairo instead of bundled.
+ - - system-jpeg          : Use the system-wide media-libs/libjpeg-turbo Use system jpeg instead of bundled.
+ - - system-sqlite        : Use the system-wide dev-db/sqlite installation with secure-delete enabled
+ - - wifi                 : Enable wireless network functions
+[ Legend : U - final flag setting for installation]
+[        : I - package is installed with flag     ]
+[ Colors : set, unset                             ]
+ * Found these USE flags for www-client/firefox-23.0:
+ U I</programlisting>
 
       <para>Other distributions choose what support they want enabled and what
       not when building the software. Because with Gentoo, you build the
@@ -652,7 +547,7 @@ app-portage/portage-utils (/usr/bin/qfile)</programlisting>
         <title>Searching Software (Installed or Not) Based on File(s)</title>
 
         <para>A Gentoo community project, called <link
-        xl:href="http://www.portagefilelist.de">PortageFileList</link>, is
+        xlink:href="http://www.portagefilelist.de">PortageFileList</link>, is
         attempting to store information about files provided by all packages.
         This isn't as simple as it sounds, since the files in a package depend
         heavily on the user his system: USE flags, other installed packages
@@ -1052,41 +947,21 @@ Available Python interpreters:
       title, your next system update will pull the software back in. Even
       worse, software that depends on it that is still being used / running
       might even stop functioning properly or crash. A safer way of pursuing
-      the desinstallation of a package is by asking Portage not to consider
-      the package as your "main" requirement using the
-      <command>--deselect</command><indexterm>
-          <primary>emerge</primary>
-
-          <secondary>deselect</secondary>
-        </indexterm> option:</para>
-
-      <programlisting># <command>emerge --deselect acroread</command></programlisting>
-
-      <para>This will not remove the package by itself. To actually remove it,
-      run <command>emerge --depclean</command><indexterm>
+      the de-installation of a package is by asking Portage to delete the
+      package but only if no other dependencies point to it. To do so, use
+      <command>emerge --depclean</command><indexterm>
           <primary>emerge</primary>
 
           <secondary>depclean</secondary>
-        </indexterm>. The <command>depclean</command> instruction asks Portage
-      to look for package that are installed but are not required any more. It
-      decides this based on the list of packages you have installed explicitly
-      and their dependencies. If the package is not in those results, then it
-      is most likely not needed anymore.</para>
+        </indexterm> (or in short, <command>emerge -c</command>):</para>
 
-      <programlisting># <command>emerge --depclean --ask</command></programlisting>
+      <programlisting># <command>emerge --depclean acroread</command></programlisting>
 
-      <para>With this command, Portage will remove packages that are not in
-      use. In other words, if no other package depends upon acroread, it will
-      remove acroread as you explicitly told Portage that you don't want to
-      consider it any more. However, if some package still depends upon
-      acroread, Portage will let acroread remain on your system (until the
-      package that depends on acroread is removed or deselected as
-      well).</para>
-
-      <warning>
-        <para>Always first verify depclean's output before resuming. Never run
-        depclean if your system isn't fully up to date.</para>
-      </warning>
+      <para>With this command, Portage will remove the package if it is no
+      longer in use otherwise. In other words, if no other package depends
+      upon acroread, it will remove acroread. However, if some package still
+      depends upon acroread, Portage will let acroread remain on your system
+      and inform you of the dependencies towards it.</para>
     </section>
   </section>
 
@@ -1273,7 +1148,7 @@ ACCEPT_KEYWORDS="amd64"</programlisting>
         <para>In this example, you find out who masked the package, when the
         mask occurs, and why (including a bug number which can be checked at
         <link
-        xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>).</para>
+        xlink:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>).</para>
       </section>
 
       <section>
@@ -1912,9 +1787,9 @@ xen          [Subversion] (source: http://overlays....)</programlisting>
         honest mistake (he uploaded a file, found an issue, resolved it in
         Portage but forgot to upload the modified file). In this case, the
         problem will most likely be reported to <link
-        xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link> and
-        quickly resolved. Try synchronising the Portage tree after a few hours
-        and retry.</para>
+        xlink:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>
+        and quickly resolved. Try synchronising the Portage tree after a few
+        hours and retry.</para>
 
         <para>If it isn't, check if the problem has been reported or not. You
         can also try synchronising the Portage tree from a different Gentoo
@@ -1935,8 +1810,9 @@ xen          [Subversion] (source: http://overlays....)</programlisting>
         is temporarily down. You can try again later or search for a different
         mirror (see the Gentoo Handbook for more information). If the file is
         really missing (i.e. other mirrors are also not hosting it), check
-        <link xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>
-        to see if this is a known issue.</para>
+        <link
+        xlink:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link> to
+        see if this is a known issue.</para>
       </section>
 
       <section>
@@ -2007,8 +1883,8 @@ sys-apps/dbus:0
 
         <para>If this due to packages with conflicting dependencies, you'll
         either need to drop one of the packages, or file a bug at <link
-        xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link> and ask
-        for a proper solution.</para>
+        xlink:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>
+        and ask for a proper solution.</para>
       </section>
 
       <section>
@@ -2049,7 +1925,7 @@ satisfy "&gt;=x11-libs/qt-sql-4.5.0:4[mysql]".
             this means an ebuild has a missing dependency or dependency which
             isn't available for you. If it does occur, please file a bug at
             <link
-            xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>.</para>
+            xlink:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>.</para>
           </listitem>
 
           <listitem>
@@ -2132,9 +2008,10 @@ Error 2</programlisting>
         file name (usually ending in .c or .cpp) and a number (which is the
         line number in the file where the compiler found an error). Whenever
         you get such error messages, chances are that the package itself is
-        broken. You should check <link xl:href="https://bugs.gentoo.org">Gentoo's
-        Bugzilla</link> to see if it is a known error (usually is) and if a
-        fix is already available (or a workaround).</para>
+        broken. You should check <link
+        xlink:href="https://bugs.gentoo.org">Gentoo's Bugzilla</link> to see
+        if it is a known error (usually is) and if a fix is already available
+        (or a workaround).</para>
       </section>
     </section>
   </section>
@@ -2289,7 +2166,7 @@ CXXFLAGS="${CFLAGS}"</programlisting>
       a particular architecture, like "core2" or "nocona". A full list of
       supported architectures for the current GCC (make sure you are using the
       current one) is available <link
-      xl:href="http://gcc.gnu.org/onlinedocs/gcc/i386-and-x86_002d64-Options.html">online</link>.</para>
+      xlink:href="http://gcc.gnu.org/onlinedocs/gcc/i386-and-x86_002d64-Options.html">online</link>.</para>
 
       <para>With <varname>-O2</varname> (<emphasis>O</emphasis>ptimizations,
       not zero) I ask GCC to use a list of optimization flags (-O2 is

@@ -36,7 +36,7 @@
 
       <para>The <filename>/dev/log</filename> socket is created by the system
       logger (which we have very briefly discussed previously) and is made
-      writeable for everyone. That is to be expected, as there are many tools
+      writable for everyone. That is to be expected, as there are many tools
       that will log through this socket. Every tool that wants to log through
       the system logger logs a single line at a time inside this socket. The
       system logger is listening "on the other side" of the socket and will
