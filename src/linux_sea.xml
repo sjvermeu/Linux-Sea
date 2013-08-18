@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="en">
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="en"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Linux Sea</title>
 
   <bookinfo>
@@ -42,7 +43,9 @@
       </para>
       <para>
         The version you are reading currently is v1.13 and has been generated
-	on 2013/08/18.
+	on 2013/08/18. <link xl:href="http://swift.siphos.be/linux_sea/linux_sea.pdf">PDF</link>
+	and <link xl:href="http://swift.siphos.be/linux_sea/linux_sea.epub">ePUB</link> versions
+	are available as well.
       </para>
     </abstract>
 
