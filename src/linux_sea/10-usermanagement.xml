@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>User Management</title>
 
   <section>
@@ -70,8 +71,8 @@
       service), similar to how Windows can be configured to connect to an
       Active Directory.</para>
 
-      <section>
-        <title id="passwdfile">The passwd file</title>
+      <section xml:id="passwdfile">
+        <title>The passwd file</title>
 
         <para>The <filename>passwd</filename> file contains a line for every
         user. Each line contains 7 fields, separated by colons:</para>

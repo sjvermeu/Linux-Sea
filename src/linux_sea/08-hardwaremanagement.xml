@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Hardware Support</title>
 
   <section>
@@ -347,19 +348,19 @@
       <title>Configuring CUPS</title>
 
       <para>CUPS offers a web interface to configure CUPS (and configure your
-      printer). You can reach it through <ulink
-      url="http://localhost:631">http://localhost:631</ulink>. In the
+      printer). You can reach it through <link
+      xl:href="http://localhost:631">http://localhost:631</link>. In the
       Administration page, enter your root login and password information and
-      you can get started with the configuration. <ulink
-      url="http://www.gentoo.org/doc/en/printing-howto.xml">The Gentoo
-      Printing HOWTO</ulink> offers a great walk through of the
+      you can get started with the configuration. <link
+      xl:href="http://www.gentoo.org/doc/en/printing-howto.xml">The Gentoo
+      Printing HOWTO</link> offers a great walk through of the
       configuration.</para>
 
       <para>You probably hoped for a more elaborate discussion on printer
       configuration. Perhaps in the far future I will discuss printer
       configuration more, but for the time being I'm going to limit this and
-      refer to Gentoo's guide and the main <ulink
-      url="http://www.cups.org">CUPS</ulink> site.</para>
+      refer to Gentoo's guide and the main <link
+      xl:href="http://www.cups.org">CUPS</link> site.</para>
     </section>
   </section>
 
@@ -405,21 +406,21 @@
 
     <itemizedlist>
       <listitem>
-        <para><ulink url="http://www.gentoo.org/doc/en/alsa-guide.xml">Gentoo
-        ALSA Guide</ulink>, an excellent resource on configuring ALSA within
+        <para><link xl:href="http://www.gentoo.org/doc/en/alsa-guide.xml">Gentoo
+        ALSA Guide</link>, an excellent resource on configuring ALSA within
         Gentoo.</para>
       </listitem>
 
       <listitem>
-        <para><ulink
-        url="http://www.reactivated.net/writing_udev_rules.html">Writing udev
-        rules</ulink>, written by Daniel Drake</para>
+        <para><link
+        xl:href="http://www.reactivated.net/writing_udev_rules.html">Writing udev
+        rules</link>, written by Daniel Drake</para>
       </listitem>
 
       <listitem>
-        <para><ulink
-        url="http://www.gentoo.org/doc/en/printing-howto.xml">Gentoo Printing
-        HOWTO</ulink>, another excellent resource by Gentoo, now on printer
+        <para><link
+        xl:href="http://www.gentoo.org/doc/en/printing-howto.xml">Gentoo Printing
+        HOWTO</link>, another excellent resource by Gentoo, now on printer
         configuration.</para>
       </listitem>
     </itemizedlist>

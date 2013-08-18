@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Running Linux</title>
 
   <section>
@@ -17,8 +18,8 @@
     but you can use other environments such as Linux Live CDs (bootable CDs
     with a ready-to-run operating system on it). Installing Linux is very
     distribution-specific and Gentoo's installation procedure is well
-    documented on the <ulink
-    url="http://www.gentoo.org/doc/en/handbook">Gentoo site</ulink>. I will
+    documented on the <link
+    xl:href="http://www.gentoo.org/doc/en/handbook">Gentoo site</link>. I will
     not discuss the installation procedure yet. Later in this book, I will
     focus on the command-line Gentoo installation because then you'll have a
     much better view on the various installation steps. Right now, I'm going
@@ -35,8 +36,8 @@
     Linux). Finally, I cover how to find help on the commands.</para>
   </section>
 
-  <section>
-    <title id="runninglinux_systemarchitecture">System Architecture</title>
+  <section xml:id="runninglinux_systemarchitecture">
+    <title>System Architecture</title>
 
     <para>Linux is a multi-user platform. The administrator user is called the
     <emphasis>root</emphasis><indexterm>
@@ -685,11 +686,13 @@ $ <command>ls -l inittab</command>
         <filename>Documents</filename> folder to the
         <filename>/media/usb/workdocuments</filename> directory:</para>
 
-        <programlisting>captain@seaheaven ~ $ <command>mv Documents/tasks.txt /media/usb/workdocuments</command>
-captain@seaheaven ~ $ <command>ls</command>
+        <programlisting>captain@seaheaven ~ $ <command>ls Documents/</command>
 opentasks.txt     tasks.txt
+captain@seaheaven ~ $ <command>mv Documents/tasks.txt /media/usb/workdocuments</command>
+captain@seaheaven ~ $ <command>ls Documents/</command>
+opentasks.txt
 captain@seaheaven ~ $ <command>ls /media/usb/workdocuments</command>
-opentasks.txt</programlisting>
+tasks.txt</programlisting>
       </section>
 
       <section>
@@ -1328,11 +1331,11 @@ $ <command>bunzip2 -c algoritm.txt.bz2 &gt; ~/algorithm.txt</command></programli
 
     <itemizedlist>
       <listitem>
-        <para><ulink
-        url="http://www.tldp.org/LDP/intro-linux/html/index.html">Introduction
-        to Linux, A Hands-On Guide</ulink> by Machtelt Garrels (also available
-        as <ulink
-        url="http://www.tldp.org/LDP/intro-linux/intro-linux.pdf">PDF</ulink>)</para>
+        <para><link
+        xl:href="http://www.tldp.org/LDP/intro-linux/html/index.html">Introduction
+        to Linux, A Hands-On Guide</link> by Machtelt Garrels (also available
+        as <link
+        xl:href="http://www.tldp.org/LDP/intro-linux/intro-linux.pdf">PDF</link>)</para>
       </listitem>
     </itemizedlist>
   </section>

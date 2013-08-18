@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Introducing the Graphical Environment</title>
 
   <section>
@@ -132,9 +133,9 @@
     <section>
       <title>Installing Xorg</title>
 
-      <para>To install Xorg on Gentoo Linux, I suggest to read the <ulink
-      url="http://www.gentoo.org/doc/en/xorg-config.xml">X Server
-      Configuration HOWTO</ulink> from Gentoo's documentation repository. It
+      <para>To install Xorg on Gentoo Linux, I suggest to read the <link
+      xl:href="http://www.gentoo.org/doc/en/xorg-config.xml">X Server
+      Configuration HOWTO</link> from Gentoo's documentation repository. It
       describes how to install Xorg, configure it to work with your hardware
       and more. This chapter only gives a quick introduction to this.</para>
 
@@ -210,9 +211,9 @@ VIDEO_CARDS="vesa intel"</programlisting>
         screen.</para>
 
         <para>If the graphical server doesn't seem to function properly, make
-        sure to read up on Gentoo's <ulink
-        url="http://www.gentoo.org/doc/en/xorg-config.xml">Xorg Server
-        Configuration HOWTO</ulink>.</para>
+        sure to read up on Gentoo's <link
+        xl:href="http://www.gentoo.org/doc/en/xorg-config.xml">Xorg Server
+        Configuration HOWTO</link>.</para>
       </section>
     </section>
   </section>
@@ -240,9 +241,9 @@ VIDEO_CARDS="vesa intel"</programlisting>
       emerge it.</para>
 
       <para>For fluxbox, a popular, lightweight window manager, Gentoo even
-      has official documentation available: the <ulink
-      url="http://www.gentoo.org/doc/en/fluxbox-config.xml">Fluxbox
-      Configuration HOWTO</ulink>.</para>
+      has official documentation available: the <link
+      xl:href="http://www.gentoo.org/doc/en/fluxbox-config.xml">Fluxbox
+      Configuration HOWTO</link>.</para>
     </section>
 
     <section>
@@ -282,13 +283,13 @@ VIDEO_CARDS="vesa intel"</programlisting>
       interface guideline.</para>
 
       <para>The GNOME community offers a good introduction to the graphical
-      environment called the <ulink
-      url="http://www.gnome.org/learn/users-guide/latest/">GNOME User
-      Guide</ulink>.</para>
+      environment called the <link
+      xl:href="http://www.gnome.org/learn/users-guide/latest/">GNOME User
+      Guide</link>.</para>
 
-      <para>Gentoo has a <ulink
-      url="http://www.gentoo.org/doc/en/gnome-config.xml">GNOME Configuration
-      HOWTO</ulink> available as well.</para>
+      <para>Gentoo has a <link
+      xl:href="http://www.gentoo.org/doc/en/gnome-config.xml">GNOME Configuration
+      HOWTO</link> available as well.</para>
     </section>
 
     <section>
@@ -300,9 +301,9 @@ VIDEO_CARDS="vesa intel"</programlisting>
       (browsers, IM, P2P) to office tools, multimedia tools, authoring and
       even development environments.</para>
 
-      <para>Gentoo provides a <ulink
-      url="http://www.gentoo.org/doc/en/kde-config.xml">KDE Configuration
-      HOWTO</ulink>.</para>
+      <para>Gentoo provides a <link
+      xl:href="http://www.gentoo.org/doc/en/kde-config.xml">KDE Configuration
+      HOWTO</link>.</para>
     </section>
 
     <section>
@@ -313,9 +314,9 @@ VIDEO_CARDS="vesa intel"</programlisting>
       memory systems just to reduce the memory overhead of the graphical
       environment.</para>
 
-      <para>Gentoo provides an <ulink
-      url="http://www.gentoo.org/doc/en/xfce-config.xml">XFCE Configuration
-      Howto</ulink>.</para>
+      <para>Gentoo provides an <link
+      xl:href="http://www.gentoo.org/doc/en/xfce-config.xml">XFCE Configuration
+      Howto</link>.</para>
     </section>
 
     <section>

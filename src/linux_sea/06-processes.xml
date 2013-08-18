@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Working with Processes</title>
 
   <section>
@@ -642,9 +643,9 @@ $ <command>echo $?</command>
 
     <itemizedlist>
       <listitem>
-        <para><ulink
-        url="http://www.gnu.org/software/bash/manual/bashref.html#Redirections">Bash
-        redirection</ulink></para>
+        <para><link
+        xl:href="http://www.gnu.org/software/bash/manual/bashref.html#Redirections">Bash
+        redirection</link></para>
       </listitem>
     </itemizedlist>
   </section>

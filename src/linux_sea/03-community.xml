@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>The Role of the Community</title>
 
   <section>
@@ -455,49 +456,49 @@
 
     <itemizedlist>
       <listitem>
-        <para>The <ulink url="http://www.linuxsymposium.org">Ottawa Linux
-        Symposium</ulink> is held every year in Ottawa, Canada during summer
+        <para>The <link xl:href="http://www.linuxsymposium.org">Ottawa Linux
+        Symposium</link> is held every year in Ottawa, Canada during summer
         break.</para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://www.linux-kongress.org">Linux
-        Kongress</ulink> has almost always been held in Germany although a
+        <para><link xl:href="http://www.linux-kongress.org">Linux
+        Kongress</link> has almost always been held in Germany although a
         single instance was in Cambridge, England.</para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://linux.conf.au/">Linux.conf.au</ulink> is
+        <para><link xl:href="http://linux.conf.au/">Linux.conf.au</link> is
         hosted in Australia in the beginning of every year</para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://www.ohiolinux.org/">Ohio Linux Fest</ulink>
+        <para><link xl:href="http://www.ohiolinux.org/">Ohio Linux Fest</link>
         is held in Ohio every fall.</para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://www.linuxfestnorthwest.org/">Linux Fest
-        Northwest</ulink> is held in Washington every spring.</para>
+        <para><link xl:href="http://www.linuxfestnorthwest.org/">Linux Fest
+        Northwest</link> is held in Washington every spring.</para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://scale7x.socallinuxexpo.org/">SCaLE (Southern
-        California Linux Expo)</ulink> is held late winter.</para>
+        <para><link xl:href="http://scale7x.socallinuxexpo.org/">SCaLE (Southern
+        California Linux Expo)</link> is held late winter.</para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://onlinux.ca/">Ontario Linux
-        Fest</ulink></para>
+        <para><link xl:href="http://onlinux.ca/">Ontario Linux
+        Fest</link></para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://www.linuxworldexpo.com/">LinuxWorld
-        Conference and Expo</ulink></para>
+        <para><link xl:href="http://www.linuxworldexpo.com/">LinuxWorld
+        Conference and Expo</link></para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://freed.in/">Freed.IN</ulink></para>
+        <para><link xl:href="http://freed.in/">Freed.IN</link></para>
       </listitem>
     </itemizedlist>
   </section>

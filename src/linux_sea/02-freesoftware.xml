@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>How does Free Software affect Linux?</title>
 
   <section>
@@ -563,10 +564,10 @@
       </itemizedlist>
 
       <para>Just for your information, KDE 4.10 beta 1 is released on November
-      21st, 2012, merely 4 months after KDE 4.9's beta release, and KDE 4.10
+      21st, 2012, merely 6 months after KDE 4.9's beta release, and KDE 4.10
       (now called "KDE Software Compilation" as the applications for KDE
       themselves are following their own release cycle) has been released on
-      February 6th, 2013.</para>
+      February 6th, 2013 - 6 months after KDE 4.9.</para>
     </section>
 
     <section>
@@ -644,8 +645,8 @@
     few important standards or well perceived specifications in the free
     software world.</para>
 
-    <section>
-      <title id="fhs" xreflabel="File system Hierarchy Standard">File system
+    <section xml:id="fhs">
+      <title xreflabel="File system Hierarchy Standard">File system
       Hierarchy Standard</title>
 
       <para>The first standard I discuss is the <emphasis>File system
@@ -655,9 +656,9 @@
           <primary>FHS</primary>
         </indexterm>. This standard is used by almost all distributions and
       discusses the file locations on a Linux file system. One can read the
-      FHS online at <ulink url="http://www.pathname.com/fhs">
+      FHS online at <link xl:href="http://www.pathname.com/fhs">
           <uri>http://www.pathname.com/fhs/</uri>
-        </ulink> but many other resources describe the FHS layout as
+        </link> but many other resources describe the FHS layout as
       well.</para>
 
       <para>The file system layout for Unix/Linux is quite different from the
@@ -668,11 +669,11 @@
       are the directories and the leaves are the files. If you think you have
       not encountered a Unix/Linux file system before, think again: URLs that
       you use on the Internet are based upon this structure. For instance, the
-      URL <ulink
-      url="http://www.gentoo.org/doc/en/faq.xml">http://www.gentoo.org/doc/en/faq.xml</ulink>
+      URL <link
+      xl:href="http://www.gentoo.org/doc/en/faq.xml">http://www.gentoo.org/doc/en/faq.xml</link>
       denotes the file called <filename>faq.xml</filename> which can be found
-      on the server of <ulink
-      url="http://www.gentoo.org">www.gentoo.org</ulink>, in the directory
+      on the server of <link
+      xl:href="http://www.gentoo.org">www.gentoo.org</link>, in the directory
       <filename>/doc/en</filename>. So, / is the root, "doc" is a branch of
       this root and "en" is a branch of "doc".</para>
 
@@ -784,23 +785,23 @@
 
     <itemizedlist>
       <listitem>
-        <para><ulink
-        url="http://www.catb.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">The
-        Cathedral and The Bazaar</ulink>, by Eric Steven Raymond - an essay on
+        <para><link
+        xl:href="http://www.catb.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">The
+        Cathedral and The Bazaar</link>, by Eric Steven Raymond - an essay on
         two different development models used in the Free Software
         community.</para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://www.ffii.org">Foundation for a Free
-        Information Infrastructure</ulink>, a NPO dedicated to establishing a
+        <para><link xl:href="http://www.ffii.org">Foundation for a Free
+        Information Infrastructure</link>, a NPO dedicated to establishing a
         free market in information technology.</para>
       </listitem>
 
       <listitem>
-        <para><ulink
-        url="http://www.gnu.org/philosophy/fighting-software-patents.html">Fighting
-        Software Patents</ulink>, by Richard Stallman - GNUs vision on
+        <para><link
+        xl:href="http://www.gnu.org/philosophy/fighting-software-patents.html">Fighting
+        Software Patents</link>, by Richard Stallman - GNUs vision on
         software patents.</para>
       </listitem>
     </itemizedlist>

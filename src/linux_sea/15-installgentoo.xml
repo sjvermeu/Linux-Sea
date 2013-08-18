@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Installing Gentoo Linux</title>
 
   <section>
@@ -22,10 +23,10 @@
     <para>With the previous chapters discussed, you should now be able to
     install a Gentoo Linux yourself with the following simple set of
     instructions. However, if you want to do it the official way, do not
-    hesitate to read the <ulink
-    url="http://www.gentoo.org/doc/en/handbook/handbook-x86.xml">Gentoo
-    Handbook</ulink>. There are also <ulink type=""
-    url="http://www.gentoo.org/doc/en/handbook">handbooks</ulink> available
+    hesitate to read the <link
+    xl:href="http://www.gentoo.org/doc/en/handbook/handbook-x86.xml">Gentoo
+    Handbook</link>. There are also <link type=""
+    xl:href="http://www.gentoo.org/doc/en/handbook">handbooks</link> available
     for other architectures.</para>
 
     <section>
@@ -60,8 +61,8 @@
     use any Linux environment you want, but most people suggest to use a
     LiveCD.</para>
 
-    <para>A popular LiveCD to install Gentoo from is <ulink
-    url="http://www.sysresccd.org">System Rescue CD</ulink>. All necessary
+    <para>A popular LiveCD to install Gentoo from is <link
+    xl:href="http://www.sysresccd.org">System Rescue CD</link>. All necessary
     documentation about booting the CD, including setting up networking (which
     you definitely need to do in order to install Gentoo) is available on the
     site.</para>
@@ -91,7 +92,7 @@
     environment. In the rest of this chapter I will assume the partitioning
     layout as described inthe following table:</para>
 
-    <table id="example_partitiontable">
+    <table xml:id="example_partitiontable">
       <title>Example partition layout</title>
 
       <tgroup cols="3">
@@ -169,9 +170,9 @@
 
     <programlisting>~# <command>ntpdate pool.ntp.org</command></programlisting>
 
-    <para>Next, surf to the <ulink
-    url="http://www.gentoo.org/main/en/mirrors2.xml">Gentoo mirror
-    list</ulink> and pick a mirror close to you. On most LiveCDs browsers are
+    <para>Next, surf to the <link
+    xl:href="http://www.gentoo.org/main/en/mirrors2.xml">Gentoo mirror
+    list</link> and pick a mirror close to you. On most LiveCDs browsers are
     available. On the sysresccd you can use links or lynx (command-line
     browsers). Navigate to releases, select your architecture, autobuilds, the
     latest date directory to find a listing of stage3 files and install
@@ -201,8 +202,8 @@
     <programlisting># <command>cd /mnt/gentoo</command>
 # <command>wget http://gentoo.osuosl.org/releases/x86/autobuilds/20091201/stage3-i686-20091201.tar.bz2</command></programlisting>
 
-    <para>On many forums, you will find the notion of "funtoo" stages. <ulink
-    url="http://www.funtoo.org">Funtoo</ulink> is, to say it in the author's
+    <para>On many forums, you will find the notion of "funtoo" stages. <link
+    xl:href="http://www.funtoo.org">Funtoo</link> is, to say it in the author's
     own words (who happens to be Daniel Robbins, the founder of Gentoo Linux),
     a Gentoo Linux variant which offers freshly-built Gentoo Linux stable
     stages using Gentoo's official stable branch. You can use a funtoo stage

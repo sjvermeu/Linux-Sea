@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Storage Management</title>
 
   <section>
@@ -23,8 +24,8 @@
     in the <filename>fstab</filename> file.</para>
   </section>
 
-  <section>
-    <title id="hdpartitions">Hard Disk Partitions</title>
+  <section xml:id="hdpartitions">
+    <title>Hard Disk Partitions</title>
 
     <para>The most common storage is a hard disk partition. I'll only cover
     the x86 partitions as those are most used at this moment.</para>
@@ -185,7 +186,7 @@ Command (m for help): </programlisting>
         <para>An example partitioning scheme is given in <xref
         linkend="partschemetable"/>.</para>
 
-        <table id="partschemetable">
+        <table xml:id="partschemetable">
           <title>Example partitioning scheme for a Linux desktop</title>
 
           <tgroup cols="3">
@@ -1085,16 +1086,16 @@ none         tmpfs    754M     0  754M   0% /dev/shm
 
     <itemizedlist>
       <listitem>
-        <para><ulink url="http://tldp.org/HOWTO/Partition/">Linux Partition
-        HOWTO</ulink>, section "<ulink
-        url="http://tldp.org/HOWTO/Partition/fdisk_partitioning.html">Partitioning
-        with fdisk</ulink>"</para>
+        <para><link xl:href="http://tldp.org/HOWTO/Partition/">Linux Partition
+        HOWTO</link>, section "<link
+        xl:href="http://tldp.org/HOWTO/Partition/fdisk_partitioning.html">Partitioning
+        with fdisk</link>"</para>
       </listitem>
 
       <listitem>
-        <para><ulink
-        url="http://docs.kde.org/stable/en/kdebase-runtime/userguide/multimedia.html">Multimedia
-        with KDE</ulink>, part of KDE base documentation</para>
+        <para><link
+        xl:href="http://docs.kde.org/stable/en/kdebase-runtime/userguide/multimedia.html">Multimedia
+        with KDE</link>, part of KDE base documentation</para>
       </listitem>
     </itemizedlist>
   </section>

@@ -5,7 +5,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>The Linux File System</title>
 
   <section>
@@ -163,15 +164,15 @@ etc/     mnt/      sbin/     usr/</programlisting>
         list of mounted file systems:</para>
 
         <programlisting>$ <command>mount</command>
-/dev/sda8 on /             type ext3 (rw,noatime)
-proc      on /proc         type proc (rw)
-sysfs     on /sys          type sysfs (rw,nosuid,nodev,noexec,relatime)
-udev      on /dev          type tmpfs (rw,nosuid,relatime,size=10240k,mode=755)
-devpts    on /dev/pts      type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620)
-/dev/sda7 on /home         type ext3 (rw,noatime)
-none      on /dev/shm      type tmpfs (rw)
-/dev/sda1 on /mnt/data     type ext3 (rw,noatime)
-usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)</programlisting>
+/dev/sda8 on /             type ext3       (rw,noatime)
+proc      on /proc         type proc       (rw)
+sysfs     on /sys          type sysfs      (rw,nosuid,nodev,noexec,relatime)
+udev      on /dev          type devtmpfs   (rw,nosuid,relatime,size=10240k,mode=755)
+devpts    on /dev/pts      type devpts     (rw,nosuid,noexec,relatime,gid=5,mode=620)
+/dev/sda7 on /home         type ext3       (rw,noatime)
+none      on /dev/shm      type tmpfs      (rw)
+/dev/sda1 on /mnt/data     type ext3       (rw,noatime)
+usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid=85)</programlisting>
 
         <para>The above example, although bloated with a lot of other file
         systems we know nothing about yet, tells us that the file system can
@@ -204,7 +205,7 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
         partitions, network storage, removable media and more.</para>
       </section>
 
-      <section id="filesystems">
+      <section xml:id="filesystems">
         <title>File Systems</title>
 
         <para>Each medium which can contain files is internally structured.
@@ -280,14 +281,13 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
           <listitem>
             <para>The <emphasis>btrfs</emphasis><indexterm>
                 <primary>btrfs</primary>
-              </indexterm> file system is an experimental but promising file
-            system. It addresses concerns regarding huge storage backend
-            volumes, multi-device spanning, snapshotting and more. Although
-            its primary target was enterprise usage, it also offers
-            interesting features to home users such as online grow/shrink
-            (both on file system as well as underlying storage level),
-            object-level redundancy, transparent compression and
-            cloning.</para>
+              </indexterm> file system is a promising file system. It
+            addresses concerns regarding huge storage backend volumes,
+            multi-device spanning, snapshotting and more. Although its primary
+            target was enterprise usage, it also offers interesting features
+            to home users such as online grow/shrink (both on file system as
+            well as underlying storage level), object-level redundancy,
+            transparent compression and cloning.</para>
           </listitem>
         </itemizedlist>
 
@@ -315,15 +315,15 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
         mount.</para>
 
         <programlisting>$ <command>mount</command>
-/dev/sda8 on /             type ext3 (rw,noatime)
-proc      on /proc         type proc (rw)
-sysfs     on /sys          type sysfs (rw,nosuid,nodev,noexec,relatime)
-udev      on /dev          type tmpfs (rw,nosuid,relatime,size=10240k,mode=755)
-devpts    on /dev/pts      type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620)
-/dev/sda7 on /home         type ext3 (rw,noatime)
-none      on /dev/shm      type tmpfs (rw)
-/dev/sda1 on /mnt/data     type ext3 (rw,noatime)
-usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)</programlisting>
+/dev/sda8 on /             type ext3       (rw,noatime)
+proc      on /proc         type proc       (rw)
+sysfs     on /sys          type sysfs      (rw,nosuid,nodev,noexec,relatime)
+udev      on /dev          type devtmpfs   (rw,nosuid,relatime,size=10240k,mode=755)
+devpts    on /dev/pts      type devpts     (rw,nosuid,noexec,relatime,gid=5,mode=620)
+/dev/sda7 on /home         type ext3       (rw,noatime)
+none      on /dev/shm      type tmpfs      (rw)
+/dev/sda1 on /mnt/data     type ext3       (rw,noatime)
+usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid=85)</programlisting>
 
         <para>As you can see, all partitions (the non-special lines) are all
         typed as ext3. But what are those other file systems that you
@@ -384,9 +384,18 @@ usbfs     on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)<
             making those parts of the tmpfs file system slower (as they need
             to be read from disk again before they can be used).</para>
 
-            <para>Within Linux, tmpfs is used for things like the device files
-            in /dev (which are populated dynamically with udev - more about
-            that later) and /tmp.</para>
+            <para>Within Linux, tmpfs is used for things like the shared
+            memory in /dev/shm and /tmp.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis>devtmpfs</emphasis><indexterm>
+                <primary>devtmpfs</primary>
+              </indexterm> is similar to the tmpfs file system, but contains
+            device files managed by the kernel. The devtmpfs file system was
+            brought to life to handle the concern of providing important
+            device files before udev (the device manager) is able to start up
+            and take control.</para>
           </listitem>
 
           <listitem>
@@ -474,7 +483,7 @@ brw-r----- 1 root disk 8, 7 Sep 30 18:11 /dev/sda7
 brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
       </section>
 
-      <section id="mountsection">
+      <section xml:id="mountsection">
         <title>The 'mount' Command and the fstab file</title>
 
         <para>The act of mounting a medium to the file system is performed by
@@ -678,9 +687,9 @@ Filename     Type      Size    Used  Priority
         the regular operation of a system (such as application data and the
         applications themselves). These can be stored on separate media if you
         want, but if you do, you will need to setup an initial ram disk to
-        boot your system with. More about initial ramdisks later. The location
-        for the userland locations is <filename>/usr</filename> (which comes
-        from Unix System Resources).</para>
+        boot your system with. More about initial ram file systems later. The
+        location for the userland locations is <filename>/usr</filename>
+        (which comes from Unix System Resources).</para>
 
         <itemizedlist>
           <listitem>
@@ -800,10 +809,7 @@ Filename     Type      Size    Used  Priority
           </listitem>
 
           <listitem>
-            <para><filename>/dev</filename> nowadays can be provided by the
-            Linux kernel as well, offering a small set of default device nodes
-            (so that the system can boot until udev is ready to take over
-            control of /dev)</para>
+            <para><filename>/dev</filename> contains device files</para>
           </listitem>
         </itemizedlist>
       </section>
@@ -871,12 +877,11 @@ Filename     Type      Size    Used  Priority
 
       <para>The usr location contains the systems' day-to-day application
       files. A specific property of the location is that, if you are not
-      updating your system, it should be left unmodified. In other words, you
-      should be able to have only read-only access to the /usr
-      location.</para>
-
-      <para>For this reason, some larger installations use a network-mounted,
-      read-only /usr location.</para>
+      updating your system, it could be left unmodified. In other words, you
+      should be able to have only read-only access to the /usr location. Most
+      distributions however do not support this feature anymore and assume
+      that the /usr location is writable by the administrator at all
+      times.</para>
 
       <para>Having /usr on a separate file system also has other advantages
       (although some might be quite far-fetched ;-)</para>
@@ -941,19 +946,19 @@ Filename     Type      Size    Used  Priority
       </indexterm>) on Linux, which bases privileges on roles and where the
     administrator can force security policies on files and processes.</para>
 
-    <para>As most MAC-based security projects (such as <ulink
-    url="http://www.rsbac.org">RSBAC</ulink>, <ulink
-    url="http://www.lids.org">LIDS</ulink> and <ulink
-    url="http://www.grsecurity.net">grSecurity</ulink>) are not part of the
+    <para>As most MAC-based security projects (such as <link
+    xl:href="http://www.rsbac.org">RSBAC</link>, <link
+    xl:href="http://www.lids.org">LIDS</link> and <link
+    xl:href="http://www.grsecurity.net">grSecurity</link>) are not part of the
     default Linux kernel yet, I will talk about the standard, discretionary
-    access control mechanism used by almost all Linux distributions. <ulink
-    url="http://www.nsa.gov/selinux">SELinux</ulink>, which is part of the
+    access control mechanism used by almost all Linux distributions. <link
+    xl:href="http://www.nsa.gov/selinux">SELinux</link>, which is part of the
     default Linux kernel, will also not be discussed. If you are interested in
-    running a SELinux powered system, I recommend to use <ulink
-    url="http://www.gentoo.org/proj/en/hardened">Gentoo Hardened</ulink> which
-    supports SELinux. There is also a <ulink
-    url="http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml">Gentoo
-    Hardened SELinux Handbook</ulink> which is worth reading through.</para>
+    running a SELinux powered system, I recommend to use <link
+    xl:href="http://www.gentoo.org/proj/en/hardened">Gentoo Hardened</link> which
+    supports SELinux. There is also a <link
+    xl:href="http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml">Gentoo
+    Hardened SELinux Handbook</link> which is worth reading through.</para>
 
     <section>
       <title>Read, Write and Execute</title>

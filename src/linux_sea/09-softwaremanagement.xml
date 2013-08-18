@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Software Management</title>
 
   <section>
@@ -175,7 +176,7 @@
       application in Gentoo supports the USE flags as shown in <xref
       linkend="use-mozilla"/></para>
 
-      <table id="use-mozilla">
+      <table xml:id="use-mozilla">
         <title>USE flags in use by Mozilla Firefox version 9.0</title>
 
         <tgroup cols="2">
@@ -650,8 +651,8 @@ app-portage/portage-utils (/usr/bin/qfile)</programlisting>
       <section>
         <title>Searching Software (Installed or Not) Based on File(s)</title>
 
-        <para>A Gentoo community project, called <ulink
-        url="http://www.portagefilelist.de">PortageFileList</ulink>, is
+        <para>A Gentoo community project, called <link
+        xl:href="http://www.portagefilelist.de">PortageFileList</link>, is
         attempting to store information about files provided by all packages.
         This isn't as simple as it sounds, since the files in a package depend
         heavily on the user his system: USE flags, other installed packages
@@ -1271,8 +1272,8 @@ ACCEPT_KEYWORDS="amd64"</programlisting>
 
         <para>In this example, you find out who masked the package, when the
         mask occurs, and why (including a bug number which can be checked at
-        <ulink
-        url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>).</para>
+        <link
+        xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>).</para>
       </section>
 
       <section>
@@ -1910,8 +1911,8 @@ xen          [Subversion] (source: http://overlays....)</programlisting>
         <para>Most of the time this occurs when the developer has made a
         honest mistake (he uploaded a file, found an issue, resolved it in
         Portage but forgot to upload the modified file). In this case, the
-        problem will most likely be reported to <ulink
-        url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink> and
+        problem will most likely be reported to <link
+        xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link> and
         quickly resolved. Try synchronising the Portage tree after a few hours
         and retry.</para>
 
@@ -1934,7 +1935,7 @@ xen          [Subversion] (source: http://overlays....)</programlisting>
         is temporarily down. You can try again later or search for a different
         mirror (see the Gentoo Handbook for more information). If the file is
         really missing (i.e. other mirrors are also not hosting it), check
-        <ulink url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>
+        <link xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>
         to see if this is a known issue.</para>
       </section>
 
@@ -2005,8 +2006,8 @@ sys-apps/dbus:0
         entire system.</para>
 
         <para>If this due to packages with conflicting dependencies, you'll
-        either need to drop one of the packages, or file a bug at <ulink
-        url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink> and ask
+        either need to drop one of the packages, or file a bug at <link
+        xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link> and ask
         for a proper solution.</para>
       </section>
 
@@ -2047,8 +2048,8 @@ satisfy "&gt;=x11-libs/qt-sql-4.5.0:4[mysql]".
             to satisfy &lt;dependency&gt;</emphasis>". This shouldn't occur as
             this means an ebuild has a missing dependency or dependency which
             isn't available for you. If it does occur, please file a bug at
-            <ulink
-            url="https://bugs.gentoo.org">https://bugs.gentoo.org</ulink>.</para>
+            <link
+            xl:href="https://bugs.gentoo.org">https://bugs.gentoo.org</link>.</para>
           </listitem>
 
           <listitem>
@@ -2131,8 +2132,8 @@ Error 2</programlisting>
         file name (usually ending in .c or .cpp) and a number (which is the
         line number in the file where the compiler found an error). Whenever
         you get such error messages, chances are that the package itself is
-        broken. You should check <ulink url="https://bugs.gentoo.org">Gentoo's
-        Bugzilla</ulink> to see if it is a known error (usually is) and if a
+        broken. You should check <link xl:href="https://bugs.gentoo.org">Gentoo's
+        Bugzilla</link> to see if it is a known error (usually is) and if a
         fix is already available (or a workaround).</para>
       </section>
     </section>
@@ -2258,8 +2259,8 @@ LINGUAS="en nl fr de"</programlisting>
       <programlisting>VIDEO_CARDS="i915 i810 intel vesa"</programlisting>
     </section>
 
-    <section>
-      <title id="compilerdirectives">Compiler Directives</title>
+    <section xml:id="compilerdirectives">
+      <title>Compiler Directives</title>
 
       <para>When building packages, Portage offers optimization directives to
       the compiler, telling the compiler for which architecture it should
@@ -2287,8 +2288,8 @@ CXXFLAGS="${CFLAGS}"</programlisting>
       architecture, use <varname>-mcpu=</varname> instead. You can also select
       a particular architecture, like "core2" or "nocona". A full list of
       supported architectures for the current GCC (make sure you are using the
-      current one) is available <ulink
-      url="http://gcc.gnu.org/onlinedocs/gcc/i386-and-x86_002d64-Options.html">online</ulink>.</para>
+      current one) is available <link
+      xl:href="http://gcc.gnu.org/onlinedocs/gcc/i386-and-x86_002d64-Options.html">online</link>.</para>
 
       <para>With <varname>-O2</varname> (<emphasis>O</emphasis>ptimizations,
       not zero) I ask GCC to use a list of optimization flags (-O2 is
@@ -2351,8 +2352,8 @@ CXXFLAGS="${CFLAGS}"</programlisting>
     <para>Even when software installation has finished successfully, you can
     still get into trouble.</para>
 
-    <section>
-      <title id="revdep-rebuild">Dynamic Linking Inconsistency</title>
+    <section xml:id="revdep-rebuild">
+      <title>Dynamic Linking Inconsistency</title>
 
       <para>When Portage (prior to 2.2) upgrades a library, it removes the old
       shared libraries from the system. As a result, some applications who

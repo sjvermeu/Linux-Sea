@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Configuring a Linux Kernel</title>
 
   <section>
@@ -241,8 +242,8 @@ usb-storage: device scan complete</programlisting>
     </section>
   </section>
 
-  <section>
-    <title id="configuringkernel">Configuring a Linux Kernel</title>
+  <section xml:id="configuringkernel">
+    <title>Configuring a Linux Kernel</title>
 
     <para>There are two ways you can configure a Linux kernel in Gentoo Linux.
     One is the easiest method, yet not 100% reliable regarding supported
@@ -398,7 +399,7 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
         license, is the USB Video Class driver, ... and supports parameters
         clock, nodrop, quirks, trace and timeout. Of course, it does not give
         you information what these parameters mean, but that is what you have
-        <ulink url="http://www.google.com">Google</ulink> for, right?</para>
+        <link xl:href="http://www.google.com">Google</link> for, right?</para>
 
         <para>Anyway, suppose you want to load the uvcvideo module with the
         <parameter>nodrop=1</parameter> argument (you might be instructed to
@@ -548,8 +549,8 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
       </blockquote>
 
       <para>His idea is really worth pursuing, so don't hesitate to take a
-      look at <ulink
-      url="http://www.kernel-seeds.org/">http://www.kernel-seeds.org/</ulink>.
+      look at <link
+      xl:href="http://www.kernel-seeds.org/">http://www.kernel-seeds.org/</link>.
       On the site, you can then navigate to your architecture (currently only
       x86 and x86_64 are supported), select the kernel tree you have installed
       (most likely gentoo if you have installed the gentoo-sources) and
@@ -2670,8 +2671,8 @@ kernel /vmlinuz root=/dev/sda8</programlisting>
       ones, well, they require a bit preparation in order to easily
       troubleshoot and, eventually, solve.</para>
 
-      <section id="rescue_kernel_boot_entry">
-        <title id="rescue_kernel_boot_entry">Rescue Kernel Boot Entry</title>
+      <section xml:id="rescue_kernel_boot_entry">
+        <title>Rescue Kernel Boot Entry</title>
 
         <para>Whenever you have a kernel that boots (regardless of the fact
         that the kernel doesn't support your sound card or doesn't play 3D
@@ -2730,8 +2731,8 @@ kernel /kernel-3.8.5 root=/dev/sda8</programlisting>
         <title>Rescue Live Linux Environment</title>
 
         <para>If a system fails to boot due to a system configuration issue, I
-        recommend to boot from a rescue environment (<ulink
-        url="http://www.sysresccd.org">SysRescCD</ulink> comes to mind). Since
+        recommend to boot from a rescue environment (<link
+        xl:href="http://www.sysresccd.org">SysRescCD</link> comes to mind). Since
         USB sticks are widely spread and easy to work with, I suggest that you
         configure your system to be able to boot from USB <emphasis>and test
         it</emphasis>. It is faster than booting from most CD/DVD drives
@@ -2808,12 +2809,12 @@ Please append a correct "root=" boot option; here are the available partitions:
         <itemizedlist>
           <listitem>
             <para>the kernel configuration is missing drivers for your HDD
-            controller (cases <ulink
-            url="https://forums.gentoo.org/viewtopic-t-810063.html">1</ulink>,
-            <ulink
-            url="https://forums.gentoo.org/viewtopic-p-6075078.html#6075078">4</ulink>,
-            <ulink
-            url="https://forums.gentoo.org/viewtopic-t-801465.html">5</ulink>)</para>
+            controller (cases <link
+            xl:href="https://forums.gentoo.org/viewtopic-t-810063.html">1</link>,
+            <link
+            xl:href="https://forums.gentoo.org/viewtopic-p-6075078.html#6075078">4</link>,
+            <link
+            xl:href="https://forums.gentoo.org/viewtopic-t-801465.html">5</link>)</para>
           </listitem>
 
           <listitem>
@@ -2828,10 +2829,10 @@ Please append a correct "root=" boot option; here are the available partitions:
 
           <listitem>
             <para>the device is misidentified in your root= parameter (cases
-            <ulink
-            url="https://forums.gentoo.org/viewtopic-t-809455.html">2</ulink>,
-            <ulink
-            url="https://forums.gentoo.org/viewtopic-t-805518.html">3</ulink>)</para>
+            <link
+            xl:href="https://forums.gentoo.org/viewtopic-t-809455.html">2</link>,
+            <link
+            xl:href="https://forums.gentoo.org/viewtopic-t-805518.html">3</link>)</para>
           </listitem>
         </itemizedlist>
 
@@ -2859,8 +2860,8 @@ Please append a correct "root=" boot option; here are the available partitions:
             your harddisk controller protocol (IDE, SATA, SCSI, ...) but
             forgot to select the HDD controller driver itself (like Intel
             PIIX). Try running the following <command>lscpi</command> command,
-            and paste its output on <ulink
-            url="http://kmuto.jp/debian/hcl/">http://kmuto.jp/debian/hcl/</ulink>.
+            and paste its output on <link
+            xl:href="http://kmuto.jp/debian/hcl/">http://kmuto.jp/debian/hcl/</link>.
             The site will show you which kernel drivers you need to select for
             your system. Within the menuconfig, you can type "/" to open the
             search function, and type in the driver name to find out where it

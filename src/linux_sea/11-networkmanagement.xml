@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Network Management</title>
 
   <section>
@@ -737,8 +738,8 @@ wpa_supplicant_wlan0="-Dwext"</programlisting>
     </section>
   </section>
 
-  <section>
-    <title id="userfriendlynetworktools">User-friendly Network Configuration
+  <section xml:id="userfriendlynetworktools">
+    <title>User-friendly Network Configuration
     Tools</title>
 
     <para>The above information should allow you to work with any possible
@@ -792,8 +793,8 @@ wpa_supplicant_wlan0="-Dwext"</programlisting>
         </indexterm>. This client will connect with the service and allow you
       to configure your networks (both wired and wireless) more easily.</para>
 
-      <para>I refer you to the <ulink url="http://wicd.sourceforge.net">Wicd
-      homepage</ulink> for more information / documentation on the
+      <para>I refer you to the <link xl:href="http://wicd.sourceforge.net">Wicd
+      homepage</link> for more information / documentation on the
       tool.</para>
     </section>
   </section>
@@ -961,8 +962,8 @@ subnet 192.168.20.0 netmask 255.255.255.0 {
 
       <para>Now that that is accomplished, you (or other users on your
       network) can access your system using any SSH client (on Windows, I
-      seriously recommend <ulink
-      url="http://www.chiark.greenend.org.uk/~sgtatham/putty/">PuTTY</ulink>).
+      seriously recommend <link
+      xl:href="http://www.chiark.greenend.org.uk/~sgtatham/putty/">PuTTY</link>).
       For instance, to access your system from another Linux system, the
       command could look like so (assuming that your IP address is
       192.168.2.100 and your user name is "captain"):</para>
@@ -1032,9 +1033,9 @@ sftp&gt; </programlisting>
 
     <itemizedlist>
       <listitem>
-        <para><ulink
-        url="http://www.linuxquestions.org/linux/answers/Networking/NdisWrapper_The_Ultimate_Guide/">NdisWrapper:
-        The Ultimate Guide</ulink> on www.linuxquestions.org</para>
+        <para><link
+        xl:href="http://www.linuxquestions.org/linux/answers/Networking/NdisWrapper_The_Ultimate_Guide/">NdisWrapper:
+        The Ultimate Guide</link> on www.linuxquestions.org</para>
       </listitem>
     </itemizedlist>
   </section>

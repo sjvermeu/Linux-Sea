@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>What is Linux?</title>
 
   <section>
@@ -385,7 +386,7 @@
     contributions happen from several hundreds volunteers (kernel 2.6.21 had
     contributions from more than 800 individuals).</para>
 
-    <para>The latest kernel version at the time of writing is 3.8.5. The first
+    <para>The latest kernel version at the time of writing is 3.10.7. The first
     two numbers play the role of the major version, the third number is the
     minor version (mostly bugfix releases). Sometimes a fourth number is added
     when a one-off bug fix was needed. The Linux kernel development generally
@@ -424,8 +425,8 @@
         <para>How should the users install the operating system?</para>
 
         <para>Perhaps users are encouraged to perform as many steps as
-        possible during the installation process (the "distribution" <ulink
-        url="http://www.linuxfromscratch.org/">Linux from Scratch</ulink>
+        possible during the installation process (the "distribution" <link
+        xl:href="http://www.linuxfromscratch.org/">Linux from Scratch</link>
         probably has the most intensive installation process). The very
         inverse is an installation CD or USB image that doesn't even require
         any configuration or installation: it just boots the environment and
@@ -1011,18 +1012,18 @@
     </orderedlist>
   </section>
 
-  <section>
-    <title id="whatislinux_resources">Further Resources</title>
+  <section xml:id="whatislinux_resources">
+    <title>Further Resources</title>
 
     <itemizedlist>
       <listitem>
-        <para><ulink url="http://www.dwheeler.com/oss_fs_why.html">Why Open
-        Source / Free Software</ulink>, by David A. Wheeler - a paper on using
+        <para><link xl:href="http://www.dwheeler.com/oss_fs_why.html">Why Open
+        Source / Free Software</link>, by David A. Wheeler - a paper on using
         Open Source Software / Free Software (OSS/FS).</para>
       </listitem>
 
       <listitem>
-        <para><ulink url="http://www.distrowatch.com">Distrowatch</ulink>, a
+        <para><link xl:href="http://www.distrowatch.com">Distrowatch</link>, a
         popular site that attempts to track all available Linux distributions
         and has weekly news coverage.</para>
       </listitem>

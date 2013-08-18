@@ -6,7 +6,8 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook">
+         xmlns:db="http://docbook.org/ns/docbook"
+	 xmlns:xl="http://www.w3.org/1999/xlink">
   <title>Tips and Answers to Questions</title>
 
   <section>
@@ -15,10 +16,10 @@
     <orderedlist>
       <listitem>
         <para>You can find information about various Linux distributions at
-        <ulink url="http://www.distrowatch.com">DistroWatch</ulink>. Also,
-        <ulink url="http://en.wikipedia.org">Wikipedia</ulink> has a <ulink
-        url="http://en.wikipedia.org/wiki/List_of_linux_distributions">List of
-        Linux Distributions</ulink>. However, you will most likely have to
+        <link xl:href="http://www.distrowatch.com">DistroWatch</link>. Also,
+        <link xl:href="http://en.wikipedia.org">Wikipedia</link> has a <link
+        xl:href="http://en.wikipedia.org/wiki/List_of_linux_distributions">List of
+        Linux Distributions</link>. However, you will most likely have to
         look at the homepage of each distribution to learn how they perform in
         the fields you find important.</para>
       </listitem>
@@ -90,8 +91,8 @@
 
     <orderedlist>
       <listitem>
-        <para>You can find information about GPL at the <ulink
-        url="http://www.gnu.org/copyleft/gpl.html">GNU site</ulink>.</para>
+        <para>You can find information about GPL at the <link
+        xl:href="http://www.gnu.org/copyleft/gpl.html">GNU site</link>.</para>
       </listitem>
 
       <listitem>
@@ -143,15 +144,15 @@
 
         <itemizedlist>
           <listitem>
-            <para>The <ulink url="http://forums.gentoo.org">Gentoo Linux
-            Forums</ulink> are heavily used (over a thousand postings a day)
+            <para>The <link xl:href="http://forums.gentoo.org">Gentoo Linux
+            Forums</link> are heavily used (over a thousand postings a day)
             web forums</para>
           </listitem>
 
           <listitem>
             <para>Gentoo hosts its mailing lists itself - you can find an
-            overview of the available mailing lists <ulink
-            url="http://www.gentoo.org/main/en/lists.xml">online</ulink></para>
+            overview of the available mailing lists <link
+            xl:href="http://www.gentoo.org/main/en/lists.xml">online</link></para>
           </listitem>
 
           <listitem>
@@ -160,8 +161,8 @@
           </listitem>
         </itemizedlist>
 
-        <para>There is also the (unofficial) <ulink
-        url="http://www.gentoo-wiki.com">Gentoo Wiki</ulink>, but this is not
+        <para>There is also the (unofficial) <link
+        xl:href="http://www.gentoo-wiki.com">Gentoo Wiki</link>, but this is not
         officially supported nor hosted by the Gentoo Linux distribution (it
         really is a community site).</para>
       </listitem>
@@ -226,8 +227,8 @@
       </listitem>
 
       <listitem>
-        <para><ulink
-        url="http://www.cgsecurity.org/wiki/PhotoRec">Photorec</ulink> is a
+        <para><link
+        xl:href="http://www.cgsecurity.org/wiki/PhotoRec">Photorec</link> is a
         software tool that allows you to recover removed files from a file
         system. In Gentoo, you can install this tool through
         <package>app-admin/testdisk</package>.</para>
@@ -354,9 +355,9 @@
 
     <orderedlist>
       <listitem>
-        <para>One alternative package manager is called <ulink
-        url="http://paludis.pioto.org/">Paludis</ulink>, another is <ulink
-        url="http://www.pkgcore.org/">pkgcore</ulink>.</para>
+        <para>One alternative package manager is called <link
+        xl:href="http://paludis.pioto.org/">Paludis</link>, another is <link
+        xl:href="http://www.pkgcore.org/">pkgcore</link>.</para>
       </listitem>
 
       <listitem>
