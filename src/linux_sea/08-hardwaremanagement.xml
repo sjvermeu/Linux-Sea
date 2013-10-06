@@ -406,9 +406,7 @@
 
     <itemizedlist>
       <listitem>
-        <para><link xl:href="http://www.gentoo.org/doc/en/alsa-guide.xml">Gentoo
-        ALSA Guide</link>, an excellent resource on configuring ALSA within
-        Gentoo.</para>
+        <para>The <link xl:href="https://wiki.gentoo.org/wiki/ALSA">ALSA</link> article on the Gentoo Wiki.</para>
       </listitem>
 
       <listitem>

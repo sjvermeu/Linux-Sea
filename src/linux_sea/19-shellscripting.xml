@@ -64,7 +64,7 @@
 
       <para>Nothing too powerful about that, but wait, there's more. Commands
       in a Unix environment always finish with a particular return code. This
-      return code tells whomever called the command if the command exited
+      return code tells whoever called the command if the command exited
       successfully (return code is 0) or not (return code is not 0) and why
       not. This return code, as you might have guessed, is an integer, usually
       within the range of 0...255. You can see the return code of a command by
@@ -375,12 +375,10 @@ fi
 # Load in virtualisation modules
 ...</programlisting>
 
-        <para>The [[ ... ]] set is a test operator. It gives a return code of
+        <para>The [ ... ] set is a test operator. It gives a return code of
         0 (statement is true) or non-zero (statement is false). The if ...
         then ... fi statement is a conditional which is executed when the test
-        operator returns true (0). Although [[ ... ]] seems strange, this is
-        nothing more than a command (actually, "[" is the command). But don't
-        let that confuse you ;-)</para>
+        operator returns true (0).</para>
 
         <para>Next, we introduce a loop:</para>
 

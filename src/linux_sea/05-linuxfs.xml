@@ -1176,7 +1176,7 @@ Change: 2013-03-18 21:46:06.000000000 +0100</programlisting>
         <para>In the output of the <command>stat</command> command, you notice
         the same access flags as we identified before (-rw-r--r-- in this
         case), but also a number. This number identifies the same rights in a
-        mort short-hand notation.</para>
+        short-hand notation.</para>
 
         <para>To be able to read the number, you need to know the values of
         each right:</para>

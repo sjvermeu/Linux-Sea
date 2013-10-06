@@ -81,7 +81,7 @@
       configuration settings, so finding which ones to back up and which not
       might be difficult. However, one way that works for me (and which
       usually doesn't include the end users' personal files) is to backup all
-      <filename>${HOME}/.??*</filename> files and directories. Most
+      <filename>${HOME}/.?*</filename> files and directories. Most
       configuration directories (or files) are hidden files (i.e. starting
       with a period).</para>
     </section>
@@ -289,11 +289,9 @@ mount | grep -v 'dev/mapper' | grep -v 'dev/md' | grep 'type ext' | awk -F' ' '{
       Then, run the following <command>tar</command> command to create the
       archive:</para>
 
-      <programlisting>~# <command>tar -cvzf /media/usb/backup/stage4.tar.gz --numeric-owner --strip-components=2 /mnt/gentoo</command></programlisting>
+      <programlisting>~# <command>tar -cvzf /media/usb/backup/stage4.tar.gz --strip-components=2 /mnt/gentoo</command></programlisting>
 
-      <para>The <option>--numeric-owner</option> will ensure that uid/gid
-      numbers are used rather than names, because the live environment can use
-      different name/id pairs than your own system. By using
+      <para>By using
       <option>--strip-components=2</option>, all files are stored in the
       archive without the leading "<filename>/mnt/gentoo</filename>".</para>
 

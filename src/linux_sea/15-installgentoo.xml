@@ -14,7 +14,7 @@
     <title>Introduction</title>
 
     <para>I've waited a few chapters before I started discussing the Gentoo
-    Linux installation because it isn't for the faint of hearted. Although
+    Linux installation because it isn't for the faint of heart. Although
     Gentoo has tried to offer a graphical installer in the past, its user- and
     developer base swore by the manual installation approach. As a result, the
     graphical installer has been deprecated and the installation procedure is
@@ -302,9 +302,8 @@
         </indexterm> is a collection of default Portage settings. If you want
       to know what a particular profile selects of default settings, check out
       its content at <filename>/usr/portage/profiles</filename> (and don't
-      forget to read up on cascading profiles). Currently, the 2008.0 set of
-      profiles is the stable, default one. The 10.0 set of profiles is still
-      being developed for the upcoming Gentoo 10 release.</para>
+      forget to read up on cascading profiles). Currently, the '13.0' set of
+      profiles is the stable, default one. </para>
 
       <programlisting>~# <command>eselect profile list</command>
 ~# <command>eselect profile set &lt;number&gt;</command></programlisting>

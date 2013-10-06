@@ -2394,6 +2394,17 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
         <primary>bzImage</primary>
       </indexterm>.</para>
 
+    <para>By default, the make command will launch the build instructions one
+    at a time. However, most systems have multiple cores (or even CPUs) at their disposal,
+    so it makes sense to - when possible - run multiple instructions next to each other.
+    This can be accomplished using the <command>-j#</command> command (where '#' is the number
+    of parallel build instructions).</para>
+    
+    <para>A common value is the number of cores available on the
+    system, so for a 4-core single-processor system:</para>
+
+    <programlisting>$ <command>make -j4</command></programlisting>
+
     <para>Next, you need to install the kernel modules (if any) on your
     system. Type in <command>make modules_install</command> to have the
     <command>make</command> command automatically copy the kernel modules to
@@ -2458,8 +2469,9 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
       <programlisting># <command>make oldconfig</command></programlisting>
 
-      <para>When this is finished, continue with the <command>make</command>
-      and <command>make modules_install</command> commands, finishing off with
+      <para>When this is finished, continue with the <command>make</command> (or
+      <command>make -j#</command> with # the number of parallel build instructions
+      allowed) and <command>make modules_install</command> commands, finishing off with
       the <command>mount</command> and copy commands to install the new kernel
       at the <filename>/boot</filename> location.</para>
     </section>
@@ -2653,7 +2665,7 @@ done</programlisting>
         Since USB sticks are widely spread and easy to work with, I suggest
         that you configure your system to be able to boot from USB
         <emphasis>and test it</emphasis>. It is faster than booting from most
-        CD/DVD drives (sorry, I still don't have a BlueRay drive at the time
+        CD/DVD drives (sorry, I still don't have a Blu-Ray drive at the time
         of writing) and a rescue USB stick is easier to carry with you.</para>
 
         <para>Having a rescue live Linux environment around you is really

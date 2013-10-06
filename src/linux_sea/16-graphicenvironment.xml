@@ -134,7 +134,7 @@
       <title>Installing Xorg</title>
 
       <para>To install Xorg on Gentoo Linux, I suggest to read the <link
-      xl:href="http://www.gentoo.org/doc/en/xorg-config.xml">X Server
+      xl:href="https://wiki.gentoo.org/wiki/Xorg/Configuration">X Server
       Configuration HOWTO</link> from Gentoo's documentation repository. It
       describes how to install Xorg, configure it to work with your hardware
       and more. This chapter only gives a quick introduction to this.</para>
@@ -212,7 +212,7 @@ VIDEO_CARDS="vesa intel"</programlisting>
 
         <para>If the graphical server doesn't seem to function properly, make
         sure to read up on Gentoo's <link
-        xl:href="http://www.gentoo.org/doc/en/xorg-config.xml">Xorg Server
+        xl:href="https://wiki.gentoo.org/wiki/Xorg/Configuration">Xorg Server
         Configuration HOWTO</link>.</para>
       </section>
     </section>
@@ -276,16 +276,11 @@ VIDEO_CARDS="vesa intel"</programlisting>
       <para>The GNOME<indexterm>
           <primary>GNOME</primary>
         </indexterm> desktop environment is the default desktop environment
-      for many Linux distributions, including Ubuntu and Fedora. Its desktop
+      for many Linux distributions such as Fedora and RHEL. Its desktop
       is very simple to use: the number of visible options is kept low to not
       confuse users, and all applications that want to integrate with the
       GNOME desktop should adhere to various guidelines such as the user
       interface guideline.</para>
-
-      <para>The GNOME community offers a good introduction to the graphical
-      environment called the <link
-      xl:href="http://www.gnome.org/learn/users-guide/latest/">GNOME User
-      Guide</link>.</para>
 
       <para>Gentoo has a <link
       xl:href="http://www.gentoo.org/doc/en/gnome-config.xml">GNOME Configuration
@@ -302,7 +297,7 @@ VIDEO_CARDS="vesa intel"</programlisting>
       even development environments.</para>
 
       <para>Gentoo provides a <link
-      xl:href="http://www.gentoo.org/doc/en/kde-config.xml">KDE Configuration
+      xl:href="http://wiki.gentoo.org/wiki/KDE">KDE Configuration
       HOWTO</link>.</para>
     </section>
 

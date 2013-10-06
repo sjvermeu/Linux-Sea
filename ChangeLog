@@ -1,3 +1,24 @@
+** (2013-10-06) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Updates reported by Francesco Turco:
+	  - LibreOffice instead of OpenOffice
+	  - Document bzless usage as well
+	  - Fix typo in 'a mort short-hand' -> 'a short-hand'
+	  - Document 'make -j#' for kernel builds
+	  - Point to ALSA article on wiki
+	  - Typo in USE flag configuration in vlc example
+	  - Typo in software configuration (emerge --newuse, not --new)
+	  - Wrong grep instruction for finding removable media
+	  - Faint of heart, not faint of hearted.
+	  - Current stable profiles are '13.0'
+	  - Point to Xorg/Configuration article on wiki
+	  - Point to KDE article on wiki
+	  - Use '.?*' instead of '.??*' to catch single-char files/directories
+	    in the home directory backup approach
+	  - Drop numeric-owner, is already implied while creating the archive
+	  - Fix typo whomever -> whoever
+	  - Use [ ... ] in tests and description
+	  - Refer to official Gentoo wiki
+
 ** (2013-08-18) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Switch to GRUB2
 	- Explain devtmpfs a bit where we currently already explain other

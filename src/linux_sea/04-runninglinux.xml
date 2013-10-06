@@ -1285,6 +1285,12 @@ $ <command>bunzip2 -c algoritm.txt.bz2 &gt; ~/algorithm.txt</command></programli
       on the screen, but rather redirected into a file
       (<filename>algorithm.txt</filename>). Redirection is discussed later
       on.</para>
+
+      <para>It is also possible to immediately read the (compressed) file
+      using the <command>bzless</command> command:</para>
+
+      <programlisting>$ <command>bzless algorithm.txt.bz2</command></programlisting>
+
     </section>
 
     <section>

@@ -43,7 +43,7 @@
       <orderedlist>
         <listitem>
           <para>Software titles that would take a very long time to build on a
-          users' system (such as the popular OpenOffice.org office suite) are
+          users' system (such as the popular LibreOffice.org office suite) are
           available as binary packages. In this case, Gentoo downloads the
           binary files and installs those on the file system.</para>
         </listitem>
@@ -278,7 +278,7 @@ no matching entries found</programlisting>
 
       <programlisting># <command>mkdir /etc/portage/package.use</command>
 # <command>nano -w /etc/portage/package.use/media-flags</command>
-media-video/vlc +mp3</programlisting>
+media-video/vlc mp3</programlisting>
     </section>
   </section>
 
@@ -790,7 +790,7 @@ mozilla-firefox: 1 hour, 15 minutes, 22 seconds for 27 merges</programlisting>
           </listitem>
 
           <listitem>
-            <para><command>--new</command> (or <command>-N</command>), asking
+            <para><command>--newuse</command> (or <command>-N</command>), asking
             emerge to update software when new dynamic switches are used (USE
             flags),</para>
           </listitem>
@@ -2120,7 +2120,7 @@ Error 2</programlisting>
       <programlisting>~# <command>nano -w /etc/portage/make.conf</command>
 LINGUAS="en nl fr de"</programlisting>
 
-      <para>For instance, when enabled, OpenOffice.org's ebuild will pull in
+      <para>For instance, when enabled, LibreOffice.org's ebuild will pull in
       the language packs for those languages.</para>
     </section>
 

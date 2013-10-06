@@ -680,7 +680,7 @@ is corrupt, and you might try running e2fsck with an alternate superblock:
         which device file is used is to filter the <command>dmesg</command>
         output for text such as "removable media":</para>
 
-        <programlisting>~# <command>dmesg | grep 'removable media'</command>
+        <programlisting>~# <command>dmesg | grep 'removable'</command>
 sd 4:0:0:0: [sdb] Attached SCSI removable disk</programlisting>
 
         <para>In this example, the hardware device file is for /dev/sdb. The

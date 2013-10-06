@@ -161,10 +161,8 @@
           </listitem>
         </itemizedlist>
 
-        <para>There is also the (unofficial) <link
-        xl:href="http://www.gentoo-wiki.com">Gentoo Wiki</link>, but this is not
-        officially supported nor hosted by the Gentoo Linux distribution (it
-        really is a community site).</para>
+        <para>There is also the official <link
+        xl:href="https://wiki.gentoo.org">Gentoo Wiki</link>.</para>
       </listitem>
     </orderedlist>
   </section>
