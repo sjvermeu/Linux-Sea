@@ -81,7 +81,7 @@
       configuration settings, so finding which ones to back up and which not
       might be difficult. However, one way that works for me (and which
       usually doesn't include the end users' personal files) is to backup all
-      <filename>${HOME}/.?*</filename> files and directories. Most
+      <filename>${HOME}/.[^.]*</filename> files and directories. Most
       configuration directories (or files) are hidden files (i.e. starting
       with a period).</para>
     </section>
@@ -92,14 +92,14 @@
       <para>The following command will make an archive of the above mentioned
       settings.</para>
 
-      <programlisting>~# <command>tar cvzf /var/tmp/poormanbackup.tar.gz /etc /var/lib/portage/world /usr/local /proc/config.gz /home/*/.??*</command></programlisting>
+      <programlisting>~# <command>tar cvzf /var/tmp/poormanbackup.tar.gz /etc /var/lib/portage/world /usr/local /proc/config.gz /home/*/.[^.]*</command></programlisting>
 
       <para>Again, this is just a poor man's backup, because it is not really
       managed, but it is still better than nothing. Make sure you copy the
       poormanbackup.tar.gz to a safe(r) place. Note that it will still be
       fairly large, because of the end user copy (as it contains lots of
       software caches, like your browsers' cache). If you drop the end user
-      directories (the <filename>/home/*/.??*</filename>) the file is reduced
+      directories (the <filename>/home/*/.[^.]*</filename>) the file is reduced
       from many dozens (up to hundreds) of megabytes down to about half a
       megabyte.</para>
 
@@ -152,7 +152,7 @@ keep = 60
 include = /etc
 include = /var/lib/portage/world
 include = /usr/local
-include = /home/*/.??*
+include = /home/*/.[^.]*
 exclude = /home/*/.mozilla/firefox/*.default/Cache
 
 [dest]
