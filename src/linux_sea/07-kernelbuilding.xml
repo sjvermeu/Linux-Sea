@@ -2395,13 +2395,14 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
       </indexterm>.</para>
 
     <para>By default, the make command will launch the build instructions one
-    at a time. However, most systems have multiple cores (or even CPUs) at their disposal,
-    so it makes sense to - when possible - run multiple instructions next to each other.
-    This can be accomplished using the <command>-j#</command> command (where '#' is the number
-    of parallel build instructions).</para>
-    
-    <para>A common value is the number of cores available on the
-    system, so for a 4-core single-processor system:</para>
+    at a time. However, most systems have multiple cores (or even CPUs) at
+    their disposal, so it makes sense to - when possible - run multiple
+    instructions next to each other. This can be accomplished using the
+    <command>-j#</command> command (where '#' is the number of parallel build
+    instructions).</para>
+
+    <para>A common value is the number of cores available on the system, so
+    for a 4-core single-processor system:</para>
 
     <programlisting>$ <command>make -j4</command></programlisting>
 
@@ -2469,11 +2470,12 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
       <programlisting># <command>make oldconfig</command></programlisting>
 
-      <para>When this is finished, continue with the <command>make</command> (or
-      <command>make -j#</command> with # the number of parallel build instructions
-      allowed) and <command>make modules_install</command> commands, finishing off with
-      the <command>mount</command> and copy commands to install the new kernel
-      at the <filename>/boot</filename> location.</para>
+      <para>When this is finished, continue with the <command>make</command>
+      (or <command>make -j#</command> with # the number of parallel build
+      instructions allowed) and <command>make modules_install</command>
+      commands, finishing off with the <command>mount</command> and copy
+      commands to install the new kernel at the <filename>/boot</filename>
+      location.</para>
     </section>
 
     <section>
@@ -2531,35 +2533,36 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
       <para>By installing GRUB into the MBR, GRUB is automatically started
       after the BIOS POST processing (Power On Self Test).</para>
 
-      <para>First of all, you need to install GRUB2:</para>
+      <para>First of all, you need to install GRUB:</para>
 
-      <programlisting># <command>emerge grub:2</command></programlisting>
+      <programlisting># <command>emerge grub</command></programlisting>
 
       <para>Next, we install GRUB onto the MBR:</para>
 
-      <programlisting># <command>grub2-install /dev/sda</command></programlisting>
+      <programlisting># <command>grub-install /dev/sda</command></programlisting>
 
       <para>If the disk is not configured with sufficient space after the MBR
       but before the first partition, you will need to force the installation.
-      GRUB2 will use a special support mode in that case:</para>
+      GRUB will use a special support mode in that case:</para>
 
-      <programlisting># <command>grub2-install -f /dev/sda</command></programlisting>
+      <programlisting># <command>grub-install -f /dev/sda</command></programlisting>
     </section>
 
     <section>
       <title>Configuring GRUB</title>
 
-      <para>Unlike GRUB Legacy, GRUB2 is configured through variables in
-      /etc/default/grub, which are used to auto-generate the configuration
-      file.</para>
+      <para>Unlike GRUB Legacy, GRUB is configured through variables in
+      <filename>/etc/default/grub</filename>, which are used to auto-generate
+      the configuration file.</para>
 
       <programlisting># <command>nano -w /etc/default/grub</command></programlisting>
 
       <para>The variable that, if you need to set anything, is the most likely
-      candidate, is GRUB_CMDLINE_LINUX. This variable content is added to the
-      kernel line and is used to pass on additional kernel parameters. For
-      instance, to pass on the parameter "dolvm" (to support a logical volume
-      as root file system, needed for some init scripts):</para>
+      candidate, is <varname>GRUB_CMDLINE_LINUX</varname>. This variable
+      content is added to the kernel line and is used to pass on additional
+      kernel parameters. For instance, to pass on the parameter "dolvm" (to
+      support a logical volume as root file system, needed for some init
+      scripts):</para>
 
       <programlisting>GRUB_CMDLINE_LINUX="dolvm"</programlisting>
 

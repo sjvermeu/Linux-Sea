@@ -6,8 +6,7 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:db="http://docbook.org/ns/docbook"
-	 xmlns:xl="http://www.w3.org/1999/xlink">
+         xmlns:db="http://docbook.org/ns/docbook">
   <title>System Management</title>
 
   <section>
@@ -495,13 +494,13 @@ keymap="be-latin1"</programlisting>
     <emphasis>cron</emphasis><indexterm>
         <primary>cron</primary>
       </indexterm>. There are quite a few cron implementations available, such
-    as the popular <command>vixie-cron</command>, <command>fcron</command>,
+    as the popular <command>cronie</command>, <command>fcron</command>,
     <command>bcron</command> and <command>anacron</command>. Once installed,
     you start the cron service through an init script (which you most likely
     add to the default runlevel):</para>
 
-    <programlisting># <command>rc-update add vixie-cron default</command>
-# <command>/etc/init.d/vixie-cron start</command></programlisting>
+    <programlisting># <command>rc-update add cronie default</command>
+# <command>/etc/init.d/cronie start</command></programlisting>
 
     <para>When the cron service is running, every user can define one or more
     commands he wants to periodically execute.</para>

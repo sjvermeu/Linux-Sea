@@ -1,3 +1,12 @@
+** (2013-12-16) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Add ZFS and XFS as filesystems in chapter 5 (Linux file systems)
+	- Add UUID info in file system chapter
+	- Add getfattr/setfattr and POSIX ACLs in the ownership/permissions
+	  section
+	- Add PYTHON_TARGETS and RUBY_TARGETS info in software management
+	  chapter
+	- Use cronie instead of vixie-cron
+
 ** (2013-10-06) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Updates reported by Francesco Turco:
 	  - LibreOffice instead of OpenOffice

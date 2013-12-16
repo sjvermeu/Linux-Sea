@@ -790,9 +790,9 @@ mozilla-firefox: 1 hour, 15 minutes, 22 seconds for 27 merges</programlisting>
           </listitem>
 
           <listitem>
-            <para><command>--newuse</command> (or <command>-N</command>), asking
-            emerge to update software when new dynamic switches are used (USE
-            flags),</para>
+            <para><command>--newuse</command> (or <command>-N</command>),
+            asking emerge to update software when new dynamic switches are
+            used (USE flags),</para>
           </listitem>
 
           <listitem>
@@ -2122,6 +2122,9 @@ LINGUAS="en nl fr de"</programlisting>
 
       <para>For instance, when enabled, LibreOffice.org's ebuild will pull in
       the language packs for those languages.</para>
+
+      <para>Underlyingly, Gentoo's package manager will expand this into USE
+      flags. For instance, "linguas_en".</para>
     </section>
 
     <section>
@@ -2220,6 +2223,27 @@ CXXFLAGS="${CFLAGS}"</programlisting>
           download files in the background while it is building</para>
         </listitem>
       </itemizedlist>
+    </section>
+
+    <section>
+      <title>Specific software choices</title>
+
+      <para>Some software items (mainly scripting languages) can have multiple
+      versions installed side by side. In Gentoo, users can not only define
+      what versions they want installed, but also for which versions other
+      software should build. For instance, applications that provide Python
+      bindings can be configured to provide Python bindings for Python version
+      2.7 and 3.2 (if supported by the application of course).</para>
+
+      <para>These software choices are provided by their respective
+      variables:</para>
+
+      <programlisting>PYTHON_TARGETS="python2_7 python3_2"
+RUBY_TARGETS="ruby18 ruby19"</programlisting>
+
+      <para>Underlyingly, Gentoo's package manager will expand these variables
+      into USE flags (like "python_targets_python2_7" or
+      "ruby_targets_ruby18").</para>
     </section>
   </section>
 

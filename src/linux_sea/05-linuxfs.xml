@@ -288,6 +288,25 @@ usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid
             well as underlying storage level), object-level redundancy,
             transparent compression and cloning.</para>
           </listitem>
+
+          <listitem>
+            <para>The <emphasis>xfs</emphasis><indexterm>
+                <primary>xfs</primary>
+              </indexterm> file system is an enterprise-ready, high
+            performance journaling file system. It offers very high parallel
+            throughput and is therefore a common choice amongst
+            enterprises.</para>
+          </listitem>
+
+          <listitem>
+            <para>The <emphasis>zfs</emphasis><indexterm>
+                <primary>zfs</primary>
+              </indexterm> file system (ZFSonLinux) is a multi-featured file
+            system offering block-level checksumming, compression,
+            snapshotting, copy-on-write, deduplication, extremely large
+            volumes, remote replication and more. It has been recently ported
+            from (Open)Solaris to Linux and is gaining ground.</para>
+          </listitem>
         </itemizedlist>
 
         <para>A <emphasis>file system journal</emphasis><indexterm>
@@ -308,25 +327,41 @@ usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid
         (except ext2 &lt;&gt; ext3) but as most file systems are mature enough
         you do not need to panic "to chose the right file system".</para>
 
-        <para>Now, if we take a look at our previous mount output again, we
-        notice that there is a part of the line that says which "type" a mount
-        has. Well, this type is the file system used for that particular
+        <para>Now, if we take a look at the following mount output, we notice
+        that there is a part of the line that says which "type" a mount has.
+        Well, this type is the file system used for that particular
         mount.</para>
 
         <programlisting>$ <command>mount</command>
-/dev/sda8 on /             type ext3       (rw,noatime)
-proc      on /proc         type proc       (rw)
-sysfs     on /sys          type sysfs      (rw,nosuid,nodev,noexec,relatime)
-udev      on /dev          type devtmpfs   (rw,nosuid,relatime,size=10240k,mode=755)
-devpts    on /dev/pts      type devpts     (rw,nosuid,noexec,relatime,gid=5,mode=620)
-/dev/sda7 on /home         type ext3       (rw,noatime)
-none      on /dev/shm      type tmpfs      (rw)
-/dev/sda1 on /mnt/data     type ext3       (rw,noatime)
-usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid=85)</programlisting>
+rootfs      on /                        type rootfs      (rw)
+sysfs       on /sys                     type sysfs       (rw,seclabel,relatime)
+selinuxfs   on /sys/fs/selinux          type selinuxfs   (rw,relatime)
+/dev/md3    on /                        type ext4        (rw,seclabel,noatime,nodelalloc)
+/dev/md4    on /srv/virt                type ext4        (rw,noatime,data=ordered,barrier=0)
+proc        on /proc                    type proc        (rw,nosuid,nodev,noexec,relatime)
+tmpfs       on /run                     type tmpfs       (rw,rootcontext=system_u:object_r:var_run_t,seclabel,nosuid,nodev,noexec,relatime)
+udev        on /dev                     type devtmpfs    (rw,seclabel,nosuid,relatime,size=10240k,nr_inodes=493003,mode=755)
+/dev/mapper/volgrp-nfs    on /srv/nfs   type ext4        (rw,noatime,data=journal)
+/dev/mapper/volgrp-usr    on /usr       type ext4        (rw,noatime,data=journal)
+/dev/mapper/volgrp-home   on /home      type ext4        (rw,noatime,nosuid,nodev,data=journal)
+/dev/mapper/volgrp-opt    on /opt       type ext4        (rw,noatime,data=journal)
+/dev/mapper/volgrp-var    on /var       type ext4        (rw,noatime,data=journal)
+/dev/mapper/volgrp-vartmp on /var/portage type ext4      (rw,noatime,data=ordered,rootcontext="system_u:object_r:tmp_t")
+mqueue      on /dev/mqueue              type mqueue      (rw,seclabel,nosuid,nodev,noexec,relatime)
+devpts      on /dev/pts                 type devpts      (rw,seclabel,nosuid,noexec,relatime,gid=5,mode=620)
+shm         on /dev/shm                 type tmpfs       (rw,seclabel,nosuid,nodev,noexec,relatime)
+securityfs  on /sys/kernel/security     type securityfs  (rw,nosuid,nodev,noexec,relatime)
+debugfs     on /sys/kernel/debug        type debugfs     (rw,nosuid,nodev,noexec,relatime)
+none        on /selinux                 type selinuxfs   (rw)
+tmpfs       on /var/tmp                 type tmpfs       (rw,nosuid,noexec,nodev,rootcontext="system_u:object_r:tmp_t")
+tmpfs       on /tmp                     type tmpfs       (rw,nosuid,noexec,nodev,rootcontext="system_u:object_r:tmp_t")
+rc-svcdir   on /lib64/rc/init.d         type tmpfs       (rw,nosuid,nodev,noexec,relatime,rootcontext="system_u:object_r:initrc_state_t",seclabel,size=1024k,mode=755)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,nodev,noexec,nosuid)
+rpc_pipefs  on /var/lib/nfs/rpc_pipefs  type rpc_pipefs  (rw)
+nfsd        on /proc/fs/nfsd            type nfsd        (rw,nodev,noexec,nosuid)</programlisting>
 
         <para>As you can see, all partitions (the non-special lines) are all
-        typed as ext3. But what are those other file systems that you
-        notice?</para>
+        typed as ext4. But what are those other file systems?</para>
 
         <itemizedlist>
           <listitem>
@@ -430,9 +465,37 @@ usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid
             devices based on their characteristics, through the usbfs file
             system.</para>
           </listitem>
+
+          <listitem>
+            <para><emphasis>selinuxfs</emphasis><indexterm>
+                <primary>selinuxfs</primary>
+              </indexterm> is a pseudo file system that represents the SELinux
+            subsystem in the Linux kernel. It is used by the SELinux libraries
+            to interact with the SELinux security server, querying the SELinux
+            policy and more. Linux systems that do not have SELinux enabled
+            will not have this file system mounted.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis>mqueue</emphasis><indexterm>
+                <primary>mqueue</primary>
+              </indexterm> is a pseudo file system used for inter-process
+            message queue support (POSIX message queues)</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis>binfmt_misc</emphasis><indexterm>
+                <primary>binfmt_misc</primary>
+              </indexterm> is a pseudo file system used to register executable
+            formats. Through binfmt, the Linux kernel is able to execute
+            arbitrary executable file formats by recognizing the registered
+            executable formats and passing it on to userspace
+            applications.</para>
+          </listitem>
         </itemizedlist>
 
-        <para>Many more special file systems exist, but I leave that to the
+        <para>Many more special file systems exist (some are even mentioned in
+        the <command>mount</command> output above), but I leave that to the
         interested reader to find out more about these file systems.</para>
       </section>
 
@@ -480,6 +543,34 @@ brw-r----- 1 root disk 8, 5 Sep 30 18:11 /dev/sda5
 brw-r----- 1 root disk 8, 6 Sep 30 18:11 /dev/sda6
 brw-r----- 1 root disk 8, 7 Sep 30 18:11 /dev/sda7
 brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
+
+        <para>Inside the /dev location, there are also symbolic links
+        (pointers) towards those device files, which can be used to identify
+        the partitions or disks by other means. For instance, to list the disk
+        devices by their <emphasis>UUID<indexterm>
+            <primary>UUID</primary>
+          </indexterm> (Universally Unique IDentifier)</emphasis>:</para>
+
+        <programlisting>$ <command>ls -l /dev/disk/by-uuid</command>
+total 0
+lrwxrwxrwx. 1 root root 10 Dec 16 20:01 1628b93d-3448-4b8c-b72b-1d68e89bd2fa -&gt; ../../sda2
+lrwxrwxrwx. 1 root root 10 Dec 16 20:01 5550c45f-9660-44f2-8e86-05a612d028a3 -&gt; ../../dm-2
+lrwxrwxrwx. 1 root root 10 Dec 16 20:01 77eb40be-f571-49c6-bbb0-a12677615fe3 -&gt; ../../dm-5
+lrwxrwxrwx. 1 root root 10 Dec 16 20:01 9644f675-6eaf-4974-9e1a-0b8eafa931ae -&gt; ../../sdb2
+lrwxrwxrwx. 1 root root 10 Dec 16 20:01 9beda062-6e15-4323-9ad1-53b6a9e39676 -&gt; ../../dm-0
+lrwxrwxrwx. 1 root root 10 Dec 16 20:01 9e7a1178-b0ad-4cd8-8977-a471a5d2b797 -&gt; ../../dm-4
+lrwxrwxrwx. 1 root root  9 Dec 16 20:01 b06fa545-0d5a-4c9a-97cb-83b4e1799f9a -&gt; ../../md3
+lrwxrwxrwx. 1 root root 10 Dec 16 20:01 b80c76a3-d52f-4006-9bf5-62f4d7edc791 -&gt; ../../dm-3
+lrwxrwxrwx. 1 root root 10 Dec 16 20:01 bdb15de1-3430-47b4-9e63-ee58557f1d17 -&gt; ../../dm-1
+lrwxrwxrwx. 1 root root  9 Dec 16 20:01 c44503ce-e52e-452c-b4bc-767ddd1d3b27 -&gt; ../../md1
+lrwxrwxrwx. 1 root root  9 Dec 16 20:01 d8a2bb27-15da-49bb-b205-3160c307835c -&gt; ../../md4</programlisting>
+
+        <para>The advantage of using UUIDs is that they uniquely identify a
+        partition or disk. If the disks in the system are later juggled
+        around, or we are talking about removable devices, then by using the
+        UUID we know for sure that we are looking at the right partition (and
+        not another disk that got named <filename>/dev/sda2</filename> for
+        instance).</para>
       </section>
 
       <section xml:id="mountsection">
@@ -515,10 +606,10 @@ brw-r----- 1 root disk 8, 8 Sep 30 18:11 /dev/sda8</programlisting>
         could need in order to successfully mount a device. An example fstab
         is shown below:</para>
 
-        <programlisting>/dev/sda8  /          ext3    defaults,noatime      0 0
+        <programlisting>/dev/sda8  /          ext4    defaults,noatime      0 0
 /dev/sda5  none       swap    sw                    0 0
-/dev/sda6  /boot      ext2    noauto,noatime        0 0
-/dev/sda7  /home      ext3    defaults,noatime      0 0
+/dev/sda6  /boot      ext4    noauto,noatime        0 0
+/dev/sda7  /home      ext4    defaults,noatime      0 0
 /dev/sdb1  /media/usb auto    user,noauto,gid=users 0 0</programlisting>
 
         <para>The file is structured as follows:</para>
@@ -811,6 +902,9 @@ Filename     Type      Size    Used  Priority
             <para><filename>/dev</filename> contains device files</para>
           </listitem>
         </itemizedlist>
+
+        <para>These locations will often also have other (pseudo) file systems
+        mounted underneath.</para>
       </section>
     </section>
 
@@ -822,8 +916,8 @@ Filename     Type      Size    Used  Priority
       boots (unless you use an initial ramdisk), and your system will not
       function properly if the kernel detects corruption on this file system.
       Also, due to the nature of the boot process, this file system will
-      eventually become writable (as the boot process needs to store its
-      state information, etc.)</para>
+      eventually become writable (as the boot process needs to store its state
+      information, etc.)</para>
 
       <para>Some locations on the root file system are strongly advised to
       remain on the root file system (i.e. you should never ever mount another
@@ -904,6 +998,11 @@ Filename     Type      Size    Used  Priority
           (writing doesn't require specific response times)</para>
         </listitem>
       </itemizedlist>
+
+      <para>The advantages however are becoming less and less relevant
+      nowadays. Instead, distributions are focusing more towards initial ram
+      file systems (a small, in-memory file system used to boot the system),
+      which will be discussed later in this book.</para>
     </section>
 
     <section>
@@ -1372,9 +1471,9 @@ $ <command>ls -l bar</command>
         <programlisting># <command>lsattr /tmp/foo</command>
 s-S--a---------  /tmp/foo</programlisting>
 
-        <para>Not a big surprise, given the chattr command before. But what
-        does it mean? Well, <command>man chattr</command> gives us the
-        information we need, but here is it in short-hand:</para>
+        <para>Not a big surprise, given the <command>chattr</command> command
+        before. But what does it mean? Well, <command>man chattr</command>
+        gives us the information we need, but here is it in short-hand:</para>
 
         <itemizedlist>
           <listitem>
@@ -1399,6 +1498,76 @@ s-S--a---------  /tmp/foo</programlisting>
         <para>Another very interesting attribute is the immutable flag (i)
         that doesn't allow the file to be deleted, changed, modified, renamed
         or moved.</para>
+      </section>
+
+      <section>
+        <title>POSIX ACLs</title>
+
+        <para>Next to the discretionary access controls applicable to a Linux
+        file (user, group and others), it is possible to add more access
+        controls on files and directories through <emphasis>POSIX
+        ACLs</emphasis><indexterm>
+            <primary>POSIX ACLs</primary>
+          </indexterm>.</para>
+
+        <para>With the <command>getfacl</command><indexterm>
+            <primary>getfacl</primary>
+          </indexterm> command, the access controls on a file or directory are
+        shown, together with the POSIX access controls (if applicable). The
+        <command>setfacl</command><indexterm>
+            <primary>setfacl</primary>
+          </indexterm> command can be used to add or remove POSIX ACLs from
+        the file or directory.</para>
+
+        <para>For instance, to allow the user minidlna read access on a file
+        that he otherwise has no access to:</para>
+
+        <programlisting>$ <command>setfacl -m u:minidlna:r TEMPFILE</command>
+$ <command>getfacl TEMPFILE</command>
+# file: home/swift/TEMPFILE
+# owner: swift
+# group: users
+user::rw-
+group::r--
+other::r--
+user:minidlna:r--</programlisting>
+
+        <para>Supporting POSIX ACLs requires specific file system support, so
+        it might be necessary to enable this in the kernel. Also, the file
+        system should be mounted with the "acl" mount option.</para>
+      </section>
+
+      <section>
+        <title>Generic extended attributes</title>
+
+        <para>Files can have additional extended attributes assigned to them.
+        POSIX ACLs for instance uses an extended attribute called
+        <varname>system.posix_acl_access</varname>, whereas SELinux uses an
+        extended attribute called <varname>security.selinux</varname>.
+        Extended attributes are metadata assigned to files that are used by
+        one or more applications for a particular function.</para>
+
+        <para>When the extended attribute is in the security namespace (the
+        name starts with "<varname>security.</varname>") then this is a
+        security-sensitive attribute and can only be modified by
+        administrators or properly privileged users.</para>
+
+        <para>To list all extended attributes assigned to a file, use
+        <command>getfattr</command><indexterm>
+            <primary>getfattr</primary>
+          </indexterm>:</para>
+
+        <programlisting>$ <command>getfattr -m . -d TEMPFILE</command>
+# file: home/swift/TEMPFILE
+security.selinux="staff_u:object_r:user_home_t"</programlisting>
+
+        <para>Usually users do not need to modify extended attributes
+        directly; instead, the application(s) supporting these extended
+        attributes will take care of this. But it is and remains possible to
+        directly modify extended attributes (again, if you have the proper
+        permissions) using <command>setfattr</command><indexterm>
+            <primary>setfattr</primary>
+          </indexterm>.</para>
       </section>
     </section>
   </section>
