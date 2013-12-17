@@ -312,15 +312,18 @@ media-video/vlc mp3</programlisting>
 
       <para>You can easily configure what mirror <command>emerge</command>
       should use. For this, open up
-      <filename>/etc/portage/make.conf</filename> (Gentoo Portage's main
-      configuration file) and locate the SYNC setting:</para>
+      <filename>/etc/portage/repos.conf</filename> or 
+      <filename>/etc/portage/repos.conf/gentoo.org</filename>
+      and locate the <varname>sync-type</varname> and <varname>sync-uri</varname>
+      settings:</para>
 
-      <programlisting># <command>nano -w /etc/portage/make.conf</command>
+      <programlisting># <command>nano -w /etc/portage/repos.conf/gentoo.conf</command>
 <remark>(...)</remark>
-SYNC="rsync://rsync.us.gentoo.org/gentoo-portage"</programlisting>
+sync-type = uri
+sync-uri = rsync://rsync.us.gentoo.org/gentoo-portage</programlisting>
 
-      <para>The SYNC setting is set to a public Portage mirror. In the
-      example, SYNC is set to a round-robin address which covers all mirrors
+      <para>The <varname>sync-uri</varname> setting is set to a public Portage mirror. In the
+      example, <varname>sync-uri</varname> is set to a round-robin address which covers all mirrors
       in the United States of America. You can substitute the "us" country
       code with your country ("be" for Belgium, for instance) to use the
       round-robin address for the mirrors in your country.</para>
@@ -1793,8 +1796,8 @@ xen          [Subversion] (source: http://overlays....)</programlisting>
 
         <para>If it isn't, check if the problem has been reported or not. You
         can also try synchronising the Portage tree from a different Gentoo
-        mirror (change the value of the <parameter>SYNC</parameter> variable
-        in <filename>/etc/portage/make.conf</filename>) as it might be
+        mirror (change the value of the <parameter>sync-uri</parameter> variable
+        in <filename>/etc/portage/repos.conf/gentoo.org</filename>) as it might be
         possible that the rsync server you are synchronising with is
         corrupt.</para>
 
