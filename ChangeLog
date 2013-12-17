@@ -1,3 +1,7 @@
+** (2013-12-17) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Updated "Linux has little support for games" as suggested
+	  by Johannes Huber (cfr Valve and Steam for Linux)
+
 ** (2013-12-16) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Add ZFS and XFS as filesystems in chapter 5 (Linux file systems)
 	- Add UUID info in file system chapter

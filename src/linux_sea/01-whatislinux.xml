@@ -953,14 +953,18 @@
       weaknesses that Linux still needs to work on.</para>
 
       <section>
-        <title>Linux has little support for games</title>
+        <title>Games support is slowly progressing</title>
 
-        <para>True. Although there are many free software games around, most
+        <para>True. Although there are many free software games around, many
         games are developed for Microsoft Windows exclusively, and not all
         games can be run using emulators or libraries like WINE within Linux
         (luckily, many are). It is hard to ask game developers to develop for
         Linux as most developers focus their endeavours on libraries (like
         DirectX) that are only available for Microsoft Windows.</para>
+
+	<para>Recently though, improvements have been made in this area. Valve
+	has released Steam for Linux, providing gaming experience on Linux
+	desktops. This gave a big boost to "games on Linux".</para>
 
         <para>However, another trend is also emerging: more and more games are
         only being released on consoles, dropping the PC environment
@@ -968,8 +972,6 @@
         future, but I think that real action games will focus on game consoles
         more.</para>
 
-        <para>Still, gaming is a sore weak spot of the Linux operating
-        system.</para>
       </section>
 
       <section>
