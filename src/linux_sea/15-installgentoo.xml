@@ -222,7 +222,7 @@
 
     <programlisting>~# <command>tar xvjpf stage3-*.tar.bz2</command></programlisting>
 
-    <para>Next, edit the <filename>/mnt/gentoo/etc/make.conf</filename> file.
+    <para>Next, edit the <filename>/mnt/gentoo/etc/portage/make.conf</filename> file.
     As discussed previously, this file contains variables that define Portage'
     behaviour. Right now I'm focussing on the variables CFLAGS, CXXFLAGS and
     MAKEOPTS...</para>

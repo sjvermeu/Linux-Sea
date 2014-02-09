@@ -1,3 +1,6 @@
+** (2014-02-09) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- make.conf is in /etc/portage, thanks to Pablo Vázquez
+
 ** (2013-12-17) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Updated "Linux has little support for games" as suggested
 	  by Johannes Huber (cfr Valve and Steam for Linux)

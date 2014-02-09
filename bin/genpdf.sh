@@ -84,7 +84,6 @@ fi
 
 cp ~/Development/build/tmp/linux-sea-build/*.html ~/Sites/swift.siphos.be/linux_sea/;
 cp ~/Development/build/tmp/linux-sea-build/*.css ~/Sites/swift.siphos.be/linux_sea/;
-cp ~/Development/build/tmp/linux-sea-build/css.html ~/Sites/swift.siphos.be/linux_sea/;
 cp ~/Development/build/tmp/linux-sea-build/images/* ~/Sites/swift.siphos.be/linux_sea/images/;
 cp ~/Development/build/tmp/linux-sea-build/linux_sea.pdf ~/Sites/swift.siphos.be/linux_sea/;
 cp ~/Development/build/tmp/linux-sea-build/linux_sea.epub ~/Sites/swift.siphos.be/linux_sea/;
