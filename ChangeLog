@@ -1,3 +1,7 @@
+** (2014-03-29) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Use TODO as filename instead of opentasks.txt to match the image
+	  Thanks to Matteo "Ddevil"
+
 ** (2014-02-09) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- make.conf is in /etc/portage, thanks to Pablo Vázquez
 

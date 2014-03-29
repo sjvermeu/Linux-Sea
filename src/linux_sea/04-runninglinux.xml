@@ -466,7 +466,7 @@ seaheaven login: </programlisting>
 /home/captain
 captain@seaheaven ~ $ <command>ls</command>
 Documents     Movies       Music       Pictures
-opentasks.txt
+TODO
 captain@seaheaven ~ $ <command>cd Documents</command>
 captain@seaheaven Documents $ <command>pwd</command>
 /home/captain/Documents</programlisting>
@@ -571,7 +571,7 @@ drwxr-xr-x 2 captain users 4096 2013-10-31 22:24 Documents
 drwxr-xr-x 2 captain users 4096 2013-10-31 22:24 Movies
 drwxr-xr-x 2 captain users 4096 2013-10-31 22:25 Music
 drwxr-xr-x 2 captain users 4096 2013-10-31 22:24 Pictures
--rw-r--r-- 1 captain users   66 2013-10-31 22:30 opentasks.txt</programlisting>
+-rw-r--r-- 1 captain users   66 2013-10-31 22:30 TODO</programlisting>
 
       <para>The information contains, amongst other things, the permission
       sets (three times three characters: Read, Write and eXecute), the owning
@@ -643,12 +643,12 @@ Documents    Movies    Music    Pictures
         a file name, the file is copied to that file(name).</para>
 
         <programlisting>captain@seaheaven ~ $ <command>ls Documents</command>
-captain@seaheaven ~ $ <command>cp opentasks.txt Documents/tasks.txt</command>
+captain@seaheaven ~ $ <command>cp TODO Documents/tasks.txt</command>
 captain@seaheaven ~ $ <command>ls Documents</command>
 tasks.txt
-captain@seaheaven ~ $ <command>cp opentasks.txt Documents</command>
+captain@seaheaven ~ $ <command>cp TODO Documents</command>
 captain@seaheaven ~ $ <command>ls Documents</command>
-opentasks.txt      tasks.txt</programlisting>
+TODO      tasks.txt</programlisting>
 
         <para>By default, the <command>cp</command> command creates the
         destination file with the privileges and ownership of the user that is
@@ -687,10 +687,10 @@ $ <command>ls -l inittab</command>
         <filename>/media/usb/workdocuments</filename> directory:</para>
 
         <programlisting>captain@seaheaven ~ $ <command>ls Documents/</command>
-opentasks.txt     tasks.txt
+TODO     tasks.txt
 captain@seaheaven ~ $ <command>mv Documents/tasks.txt /media/usb/workdocuments</command>
 captain@seaheaven ~ $ <command>ls Documents/</command>
-opentasks.txt
+TODO
 captain@seaheaven ~ $ <command>ls /media/usb/workdocuments</command>
 tasks.txt</programlisting>
       </section>
@@ -708,7 +708,7 @@ tasks.txt</programlisting>
         recursive: the directory and every file and directory inside
         it).</para>
 
-        <programlisting>captain@seaheaven ~ $ <command>rm Documents/opentasks.txt</command>
+        <programlisting>captain@seaheaven ~ $ <command>rm Documents/TODO</command>
 captain@seaheaven ~ $ <command>rm tasks.txt</command></programlisting>
 
         <para>A popular set of options to <command>rm</command> is
@@ -743,12 +743,12 @@ rm: cannot remove '/etc/passwd': Permission denied</programlisting>
         it shows you the main editor screen for a new file. If you launch nano
         with a file name as its argument, it opens up the text file, ready for
         editing. As an example, I open up the
-        <filename>opentasks.txt</filename> file using nano:</para>
+        <filename>TODO</filename> file using nano:</para>
 
-        <programlisting>captain@seaheaven ~ $ <command>nano opentasks.txt</command></programlisting>
+        <programlisting>captain@seaheaven ~ $ <command>nano TODO</command></programlisting>
 
         <figure float="">
-          <title>nano editor opened with the opentasks.txt file as its working
+          <title>nano editor opened with the TODOfile as its working
           document</title>
 
           <mediaobject>
@@ -768,7 +768,7 @@ rm: cannot remove '/etc/passwd': Permission denied</programlisting>
         files are the most important ones. By default, nano automatically
         wraps lines when you hit the sidebar. To inform nano that you want to
         keep lines as they are, add the "<command>-w</command>" argument:
-        "<command>nano -w opentasks.txt</command>". This is the recommended
+        "<command>nano -w TODO</command>". This is the recommended
         approach when editing configuration files.</para>
       </section>
 
@@ -890,7 +890,7 @@ rm: cannot remove '/etc/passwd': Permission denied</programlisting>
       reference is a location string, which allows the link to be used across
       media and even to files that don't exist (any more). As an example, you
       could have a symbolic link that points to
-      <filename>/home/swift/opentasks.txt</filename>, even when this file
+      <filename>/home/swift/TODO</filename>, even when this file
       doesn't exist (any more).</para>
 
       <para><emphasis>Hard links</emphasis><indexterm>
@@ -930,11 +930,11 @@ $ <command>ln -s targetfilename newfilename</command></programlisting>
       <para>A powerful feature of most Linux shells is file and command
       completion.</para>
 
-      <para>When you want to edit a file called, for instance, opentasks.txt,
+      <para>When you want to edit a file called, for instance, TODO,
       you can start with typing "<command>nano o</command>" followed by the
-      &lt;tab&gt; key. If <filename>opentasks.txt</filename> is the only file
+      &lt;tab&gt; key. If <filename>TODO</filename> is the only file
       or directory that starts with an o, the shell will automatically expand
-      the command to "<filename>nano opentasks.txt</filename>". If there are
+      the command to "<filename>nano TODO</filename>". If there are
       more files or directories that start with o, typing &lt;tab&gt; twice
       will show you a list of candidates.</para>
 
