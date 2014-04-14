@@ -522,11 +522,17 @@ nfsd        on /proc/fs/nfsd            type nfsd        (rw,nodev,noexec,nosuid
 brw-rw---- 1 root disk 8,  1  Nov 12  10:10  /dev/sda1</programlisting>
 
         <para>A regular ATA disk (or DVD-ROM) would be represented by
-        <filename>/dev/hda</filename> (hd stood for hard disk but is now seen
-        as the identification of an ATA device).</para>
+        <filename>/dev/sdc</filename> (sd stood for scsi disk but is now seen
+        as the identification of a ATA device) or <filename>/dev/sr0</filename>.</para>
 
-        <programlisting>$ <command>ls -l /dev/hda</command>
-brw-rw---- 1 root cdrom 3, 0  Apr 23  21:00 /dev/hda</programlisting>
+	<para>The device management software on the system will most likely
+	create symbolic links to <filename>/dev/sdc</filename> called
+	<filename>/dev/cdrom</filename> or <filename>/dev/dvdrom</filename> for
+	the administrator's convenience.
+	</para>
+
+        <programlisting>$ <command>ls -l /dev/sda</command>
+brw-rw---- 1 root cdrom 3, 0  Apr 23  21:00 /dev/sda</programlisting>
 
         <para>On a default Gentoo installation, the device manager (which is
         called <command>udev</command><indexterm>

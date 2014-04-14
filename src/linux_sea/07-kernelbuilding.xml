@@ -2818,8 +2818,8 @@ Please append a correct "root=" boot option; here are the available partitions:
             partition.</para>
 
             <para>This isn't as stupid as it sounds. When you are booted with
-            one kernel, it might list your disks as being /dev/sda whereas
-            your (configured) kernel is expecting it to be /dev/hda. This is
+            one kernel, it might list your partition as being /dev/hda whereas
+            your (configured) kernel is expecting it to be /dev/sda. This is
             not because kernels are inconsistent with each other, but because
             of the drivers used: older drivers use the hda syntax, newer
             sda.</para>

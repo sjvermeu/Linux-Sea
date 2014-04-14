@@ -410,6 +410,10 @@
       </listitem>
 
       <listitem>
+        <para>An excellent <link xl:href="http://www.volkerschatz.com/noise/alsa.html">close look at ALSA</link> by Volker Schatz.</para>
+      </listitem>
+
+      <listitem>
         <para><link
         xl:href="http://www.reactivated.net/writing_udev_rules.html">Writing udev
         rules</link>, written by Daniel Drake</para>

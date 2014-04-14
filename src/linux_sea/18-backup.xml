@@ -254,7 +254,7 @@ sfdisk /dev/sda &lt; /media/usb/full-stage-backup/sfdisk.dat</programlisting>
           <para>Restoration of the boot loader</para>
 
           <programlisting>(Restore: command after restoring /boot content)
-grub-install --root-directory=/mnt/gentoo/boot /dev/hda</programlisting>
+grub-install --root-directory=/mnt/gentoo/boot /dev/sda</programlisting>
         </listitem>
 
         <listitem>

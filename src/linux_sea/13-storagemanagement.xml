@@ -88,7 +88,8 @@
       called <filename>/dev/sdb</filename>, third
       <filename>/dev/sdc</filename>, ...</para>
 
-      <para>IDE disks are called <filename>/dev/hda</filename> (b, c, d, ...).
+      <para>IDE disks are nowadays also called 
+      <filename>/dev/sda</filename> (b, c, d, ...).
       Unlike SCSI/SATA disks, IDE disks are labelled based upon their position
       in the computer. Every IDE controller (which is where the disks are
       attached to) has a certain position in the computer. The first
@@ -97,15 +98,15 @@
       disks: the first two are called the primary disks, the last two are
       called the secondary disks. Every pair of disks has a master (first
       disk) and slave (second disk). So, the primary master disk of the first
-      IDE controller is <filename>/dev/hda</filename>, the secondary slave
+      IDE controller is <filename>/dev/sda</filename>, the secondary slave
       disk of the second IDE controller would be
-      <filename>/dev/hdh</filename>.</para>
+      <filename>/dev/sdh</filename>.</para>
 
       <para>To find out which disk devices are detected on your system, you
       can list the contents of <filename>/dev/disk/by-path</filename>:</para>
 
       <programlisting># <command>ls -l /dev/disk/by-path</command>
-lrwxrwxrwx 1 root root  9 2009-12-05 23:35 pci-0000:00:1f.1 -&gt; ../../hda
+lrwxrwxrwx 1 root root  9 2009-12-05 23:35 pci-0000:00:1f.1 -&gt; ../../sda
 lrwxrwxrwx 1 root root  9 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0 -&gt; ../../sda
 lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part1 -&gt; ../../sda1
 lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part2 -&gt; ../../sda2
@@ -120,7 +121,7 @@ lrwxrwxrwx 1 root root 10 2009-12-05 23:35 pci-0000:00:1f.2-scsi-0:0:0:0-part8 -
       <filename>/sys/block</filename>:</para>
 
       <programlisting># <command>ls /sys/block</command>
-hda  loop0   loop1   loop2   loop3    sda</programlisting>
+sda  loop0   loop1   loop2   loop3    sda</programlisting>
 
       <para>Now, fire up fdisk to edit the partitions on /dev/sda:</para>
 
@@ -485,7 +486,7 @@ Changed system type of partition 4 to 82 (Linux swap)</programlisting>
         to mount the file system (or when the system tries to automatically
         mount the file system for you):</para>
 
-        <programlisting>/dev/hda4:
+        <programlisting>/dev/sda4:
 The superblock could not be read or does not describe a correct ext2
 filesystem. If the device is valid and it really contains an ext2
 filesystem (and not swap or ufs or something else), the the superblock
@@ -498,7 +499,7 @@ is corrupt, and you might try running e2fsck with an alternate superblock:
         and try executing the command that the output gave:</para>
 
         <programlisting>(The proposed command will vary depending on file system used)
-~# <command>e2fsck -b 8193 /dev/hda4</command></programlisting>
+~# <command>e2fsck -b 8193 /dev/sda4</command></programlisting>
 
         <para>If the <command>e2fsck</command><indexterm>
             <primary>e2fsck</primary>
@@ -508,7 +509,7 @@ is corrupt, and you might try running e2fsck with an alternate superblock:
         that means that there are thousands of files corrupt), it might be
         easier to tell e2fsck to just acknowledge them all for you:</para>
 
-        <programlisting>~# <command>e2fsck -y /dev/hda4</command></programlisting>
+        <programlisting>~# <command>e2fsck -y /dev/sda4</command></programlisting>
       </section>
     </section>
 

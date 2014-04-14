@@ -1,3 +1,7 @@
+** (2014-04-12) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Use sda syntax for disks rather than hda.
+	  Thanks to matteo "Ddevil"
+
 ** (2014-03-29) Sven Vermeulen <sven.vermeulen@siphos.be>
 	- Use TODO as filename instead of opentasks.txt to match the image
 	  Thanks to Matteo "Ddevil"
