@@ -264,7 +264,7 @@ log { source(src); filter(f_messages); destination(messages); };</programlisting
             <primary>elog</primary>
           </indexterm>) as defined in the chapter on software management are
         stored in <filename>/var/log/portage/elog</filename>. The variables in
-        <filename>/etc/make.conf</filename> that define the location and the
+        <filename>/etc/portage/make.conf</filename> that define the location and the
         logging aspects are:</para>
 
         <programlisting># Base directory for Portage logging

@@ -49,7 +49,7 @@
 
       <para>Disk space aside, Gentoo Linux can run and install with almost any
       system specification. Of course, the lower the specs, the higher the
-      duration of an installation. Installing Gentoo Linux on a i486 with 32
+      duration of an installation. Installing Gentoo Linux on an i486 with 32
       Mbyte of memory is doable (but not recommended).</para>
     </section>
   </section>
@@ -90,7 +90,7 @@
 
     <para>First, mount all the necessary partitions onto your Linux
     environment. In the rest of this chapter I will assume the partitioning
-    layout as described inthe following table:</para>
+    layout as described in the following table:</para>
 
     <table xml:id="example_partitiontable">
       <title>Example partition layout</title>

@@ -492,7 +492,7 @@ hosts: files dns</programlisting>
       <programlisting># <command>passwd thomas</command>
 New UNIX password: <emphasis>(enter thomas' password)</emphasis>
 Retype new UNIX password: <emphasis>(re-enter thomas' password)</emphasis>
-passwd: password updated succesfully</programlisting>
+passwd: password updated successfully</programlisting>
 
       <para>The root user is always able to alter a users' password. If a user
       wants to change his own password, the passwd command will first ask the

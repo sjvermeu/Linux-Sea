@@ -233,7 +233,7 @@ directory = /var/backups/backupninja</programlisting>
       partitions, reinstall the bootloader, etc.</para>
 
       <para>Compared with the poor man's backup approach described above, this
-      can be seen as a "entire system poor man's backup", with
+      can be seen as an "entire system poor man's backup", with
       optionally</para>
 
       <itemizedlist>
@@ -258,7 +258,7 @@ grub-install --root-directory=/mnt/gentoo/boot /dev/sda</programlisting>
         </listitem>
 
         <listitem>
-          <para>Reformatting of partitions (be carefull here, this is very
+          <para>Reformatting of partitions (be careful here, this is very
           error-prone and specific for your system)</para>
 
           <programlisting>(Backup)

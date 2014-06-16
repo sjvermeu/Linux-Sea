@@ -1008,7 +1008,7 @@ subnet 192.168.20.0 netmask 255.255.255.0 {
 
         <para>With <command>sftp</command><indexterm>
             <primary>sftp</primary>
-          </indexterm> (secure FTP) you have an ftp-alike tool (which supports
+          </indexterm> (secure FTP) you have an ftp-like tool (which supports
         the same commands) but which uses the SSH protocol for all data (and
         command) transfers.</para>
 

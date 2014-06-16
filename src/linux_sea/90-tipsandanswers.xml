@@ -80,7 +80,7 @@
         needed or where the system doesn't have the necessary hardware.</para>
 
         <para>When a kernel built has been thoroughly tested, the kernel build
-        is distributed to the distribution users (or, in case of sourcecode
+        is distributed to the distribution users (or, in case of source code
         based distributions, the patched source code is distributed).</para>
       </listitem>
     </orderedlist>

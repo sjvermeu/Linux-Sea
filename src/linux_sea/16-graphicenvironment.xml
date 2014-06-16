@@ -174,7 +174,7 @@
           </indexterm> and <parameter>INPUT_DEVICES</parameter><indexterm>
             <primary>INPUT_DEVICES</primary>
           </indexterm> variables are set in
-        <filename>/etc/make.conf</filename>:</para>
+        <filename>/etc/portage/make.conf</filename>:</para>
 
         <programlisting>INPUT_DEVICES="evdev keyboard mouse"
 VIDEO_CARDS="vesa intel"</programlisting>

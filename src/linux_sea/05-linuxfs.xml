@@ -234,7 +234,7 @@ usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid
             It has been in use almost since the birth of Linux and is quite
             resilient against file system fragmentation - although this is
             true for almost all Linux file systems. It is however slowly being
-            replaced by journalled file systems.</para>
+            replaced by journaled file systems.</para>
           </listitem>
 
           <listitem>
@@ -242,7 +242,7 @@ usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid
                 <primary>ext3</primary>
               </indexterm> file system is an improvement on the ext2 file
             system, adding, amongst other things, the concept of
-            journalling.</para>
+            journaling.</para>
           </listitem>
 
           <listitem>
@@ -261,7 +261,7 @@ usbfs     on /proc/bus/usb type usbfs      (rw,noexec,nosuid,devmode=0664,devgid
             <para>The <emphasis>reiserfs</emphasis><indexterm>
                 <primary>reiserfs</primary>
               </indexterm> file system is written from scratch. It provides
-            journalling as well, but its main focus is on speed. The file
+            journaling as well, but its main focus is on speed. The file
             system provides quick access to locations with hundreds of files
             inside (ext2 and ext3 are much slower in these situations) and
             keeps the disk footprint for small files small (some other file

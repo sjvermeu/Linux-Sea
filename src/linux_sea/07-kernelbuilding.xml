@@ -2248,7 +2248,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
             </listitem>
 
             <listitem>
-              <para>DOS/FAT/NT FIlesystems</para>
+              <para>DOS/FAT/NT Filesystems</para>
 
               <para>If you are never going to work on FAT/NTFS file systems,
               you don't need this, but I occasionally attach a FAT/NTFS

@@ -90,7 +90,7 @@
 
       <para>IDE disks are nowadays also called 
       <filename>/dev/sda</filename> (b, c, d, ...).
-      Unlike SCSI/SATA disks, IDE disks are labelled based upon their position
+      Unlike SCSI/SATA disks, IDE disks are labeled based upon their position
       in the computer. Every IDE controller (which is where the disks are
       attached to) has a certain position in the computer. The first
       controller manages the disks a, b, c and d; the second controller
@@ -489,7 +489,7 @@ Changed system type of partition 4 to 82 (Linux swap)</programlisting>
         <programlisting>/dev/sda4:
 The superblock could not be read or does not describe a correct ext2
 filesystem. If the device is valid and it really contains an ext2
-filesystem (and not swap or ufs or something else), the the superblock
+filesystem (and not swap or ufs or something else), the superblock
 is corrupt, and you might try running e2fsck with an alternate superblock:
          e2fsck -b 8193 &lt;device&gt;
 
@@ -928,7 +928,7 @@ none         tmpfs    754M     0  754M   0% /dev/shm
         </listitem>
 
         <listitem>
-          <para>the packages location, wheren Gentoo Portage stores the binary
+          <para>the packages location, wherein Gentoo Portage stores the binary
           package builds of the packages you install (this is not on by
           default, but I recommend it if you have sufficient amount of space
           as it can help you recover from certain disasters quickly), can be

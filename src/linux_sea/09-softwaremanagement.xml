@@ -1569,7 +1569,7 @@ package.mask
       environment. You should have gotten a first glance at profiles while
       installing Gentoo (if you didn't, that's okay). As a quick recap:
       profiles are a set of predefined default values made by the Gentoo
-      project to destinguish between particular uses of the distribution.
+      project to distinguish between particular uses of the distribution.
       Whereas other distributions ask you to select a particular type of
       deployment (say desktop or server) in the beginning of, or during the
       initial installation, Gentoo allows you to switch profiles whenever you
