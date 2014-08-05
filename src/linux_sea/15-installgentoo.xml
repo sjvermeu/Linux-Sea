@@ -214,11 +214,10 @@
     instructions nevertheless. At the time of writing, the instructions are
     quite resembling.</para>
 
-    <para>Next, go back a few directories until you can select snapshots.
-    Enter this directory and download the latest
-    <filename>portage-&lt;date&gt;.tar.bz2</filename> you can find. Store it
-    in <filename>/mnt/gentoo</filename> as well. Finally, quit your browser
-    and extract the downloaded files on your installation location.</para>
+    <para>
+    Finally, quit your browser
+    and extract the downloaded files on your installation location.
+    </para>
 
     <programlisting>~# <command>tar xvjpf stage3-*.tar.bz2</command></programlisting>
 

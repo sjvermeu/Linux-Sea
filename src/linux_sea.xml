@@ -42,14 +42,14 @@
         probably need to know to continue working with Gentoo Linux.
       </para>
       <para>
-        The version you are reading currently is v1.18 and has been generated
+        The version you are reading currently is v1.19 and has been generated
 	on 2014/08/05. <link xl:href="http://swift.siphos.be/linux_sea/linux_sea.pdf">PDF</link>
 	and <link xl:href="http://swift.siphos.be/linux_sea/linux_sea.epub">ePUB</link> versions
 	are available as well.
       </para>
     </abstract>
 
-    <edition>Linux Sea v1.18</edition> <!-- Update above paragraph too!! -->
+    <edition>Linux Sea v1.19</edition> <!-- Update above paragraph too!! -->
 
     <copyright>
       <year>2009-2014</year>
