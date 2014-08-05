@@ -267,7 +267,7 @@
       function properly and that both kernel data and device drivers are
       available inside the chroot:</para>
 
-      <programlisting>~# <command>cp -L /etc/resolv.conf /mnt/gentoo/resolv.conf</command>
+      <programlisting>~# <command>cp -L /etc/resolv.conf /mnt/gentoo/etc/resolv.conf</command>
 ~# <command>mount -t proc none /mnt/gentoo/proc</command>
 ~# <command>mount -o bind /dev /mnt/gentoo/dev</command></programlisting>
     </section>
