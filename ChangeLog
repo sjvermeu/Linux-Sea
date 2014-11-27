@@ -1,3 +1,6 @@
+** (2014-11-27) João Alberto <joaoff@REDACTED>
+	- Fix some inconsistenties in file names used as examples in chapter 4
+
 ** (2014-08-05) Gerard Henri Pille <ghpille@gmail.com>
 	- Fix location of resolv.conf in installation instructions
 	- No need to download the Portage snapshot anymore

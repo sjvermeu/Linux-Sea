@@ -919,7 +919,7 @@ $ <command>ln -s targetfilename newfilename</command></programlisting>
       instance, you can have an important text file located inside
       <filename>~/Documents/Work/Thesis/myThesis.txt</filename> but link to it
       from your home directory (<filename>~/myThesis.txt</filename> points to
-      <filename>~/Documents/Work/Thesis/MyThesis.txt</filename>) so that you
+      <filename>~/Documents/Work/Thesis/myThesis.txt</filename>) so that you
       don't have to traverse all these directories every time you want to
       open/edit the file.</para>
     </section>
@@ -931,11 +931,11 @@ $ <command>ln -s targetfilename newfilename</command></programlisting>
       completion.</para>
 
       <para>When you want to edit a file called, for instance, TODO,
-      you can start with typing "<command>nano o</command>" followed by the
+      you can start with typing "<command>nano T</command>" followed by the
       &lt;tab&gt; key. If <filename>TODO</filename> is the only file
-      or directory that starts with an o, the shell will automatically expand
+      or directory that starts with an T, the shell will automatically expand
       the command to "<filename>nano TODO</filename>". If there are
-      more files or directories that start with o, typing &lt;tab&gt; twice
+      more files or directories that start with T, typing &lt;tab&gt; twice
       will show you a list of candidates.</para>
 
       <para>The same is true for commands. If nano is the only command
