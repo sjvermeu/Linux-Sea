@@ -344,20 +344,6 @@ Runlevel: default
       </section>
 
       <section>
-        <title>hald</title>
-
-        <para>The hald<indexterm>
-            <primary>hald</primary>
-
-            <secondary>service</secondary>
-          </indexterm> service is responsible for starting the hardware
-        abstraction layer daemon (see <link linkend="HAL">HAL</link>).</para>
-
-        <para>Once the service has finished starting, you will find the hald
-        process running as the haldaemon user.</para>
-      </section>
-
-      <section>
         <title>host name</title>
 
         <para>The host name<indexterm>

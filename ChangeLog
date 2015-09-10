@@ -1,3 +1,6 @@
+** (2015-09-10) Sven Vermeulen <sven.vermeulen@siphos.be>
+	- Remove HALd service information
+
 ** (2015-09-10) Guenter Theisen <guenter.theisen@REDACTED>
 	- Fix typo in hardware management chapter (Unix & Printing were
 	  swapped in CUPS explanation)
