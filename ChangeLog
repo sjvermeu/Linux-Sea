@@ -1,3 +1,7 @@
+** (2015-09-10) Guenter Theisen <guenter.theisen@REDACTED>
+	- Fix typo in hardware management chapter (Unix & Printing were
+	  swapped in CUPS explanation)
+
 ** (2014-11-27) João Alberto <joaoff@REDACTED>
 	- Fix some inconsistenties in file names used as examples in chapter 4
 
