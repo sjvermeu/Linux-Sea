@@ -26,7 +26,7 @@
 
     <para>An environment variable<indexterm>
         <primary>environment variable</primary>
-      </indexterm> is a simply a key-value pair which a process can read out.
+      </indexterm> is simply a key-value pair which a process can read out.
     For instance, the environment variable <varname>EDITOR</varname> (with, as
     an example, value <filename>/bin/nano</filename>) informs the process who
     reads it that the default text editor is (in this case) nano. These
@@ -190,7 +190,7 @@ Pour en savoir davantage, faites: `ls --help`</programlisting>
         environment variables can be placed. Gentoo offers a nice interface
         for this: inside <filename>/etc/env.d</filename> you can manage
         environment variables in a more structured approach, and the
-        <command>env-update.sh</command> script will then make sure that the
+        <command>env-update</command> script will then make sure that the
         environment variables are stored elsewhere so that
         <filename>/etc/profile</filename> reads them out.</para>
 
@@ -466,7 +466,7 @@ keymap="be-latin1"</programlisting>
     <command>date</command><indexterm>
         <primary>date</primary>
       </indexterm> command. For instance, to set the date to september 30th,
-    2008 and time to 17.34h:</para>
+    2008 and time to 17:34:</para>
 
     <programlisting># <command>date 093017342008</command></programlisting>
 

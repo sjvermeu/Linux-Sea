@@ -47,7 +47,7 @@ boot/    lib/      proc/     sys/
 dev/     media/    root/     tmp/
 etc/     mnt/      sbin/     usr/</programlisting>
 
-    <para>The <command>ls -F</command> commands shows the content of the root
+    <para>The <command>ls -F</command> command shows the content of the root
     location but appends an additional character to special files. For
     instance, it appends a "/" to directories, an "@" to symbolic links and a
     "*" to executable files. The advantage is that, for this book, you can
@@ -1051,19 +1051,18 @@ Filename     Type      Size    Used  Priority
     administrator can force security policies on files and processes.</para>
 
     <para>As most MAC-based security projects (such as <link
-    xlink:href="http://www.rsbac.org">RSBAC</link>, <link
-    xlink:href="http://www.lids.org">LIDS</link> and <link
-    xlink:href="http://www.grsecurity.net">grSecurity</link>) are not part of
+    xlink:href="https://www.rsbac.org">RSBAC</link>, and
+    <link xlink:href="https://www.grsecurity.net">grSecurity</link>) are not part of
     the default Linux kernel yet, I will talk about the standard,
     discretionary access control mechanism used by almost all Linux
     distributions. <link
-    xlink:href="http://www.nsa.gov/selinux">SELinux</link>, which is part of
+    xlink:href="https://selinuxproject.org">SELinux</link>, which is part of
     the default Linux kernel, will also not be discussed. If you are
     interested in running a SELinux powered system, I recommend to use <link
-    xlink:href="http://www.gentoo.org/proj/en/hardened">Gentoo Hardened</link>
+    xlink:href="https://wiki.gentoo.org/wiki/Project:Hardened">Gentoo Hardened</link>
     which supports SELinux. There is also a <link
-    xlink:href="http://www.gentoo.org/proj/en/hardened/selinux/selinux-handbook.xml">Gentoo
-    Hardened SELinux Handbook</link> which is worth reading through.</para>
+    xlink:href="https://wiki.gentoo.org/wiki/SELinux">Gentoo
+    and SELinux</link> resource which is worth reading through.</para>
 
     <section>
       <title>Read, Write and Execute</title>
@@ -1717,7 +1716,7 @@ security.selinux="staff_u:object_r:user_home_t"</programlisting>
         <para>On the Internet, you'll also find the following
         construction:</para>
 
-        <programlisting>$ <command>find /etc -type f -mtime -7 | xargs ls -l '{}' </command></programlisting>
+        <programlisting>$ <command>find /etc -type f -mtime -7 -print0 | xargs -0 ls -l </command></programlisting>
 
         <para>The result is the same, but its behaviour is somewhat
         different.</para>
@@ -1733,6 +1732,10 @@ security.selinux="staff_u:object_r:user_home_t"</programlisting>
         is possible because xargs appends multiple files for a single command
         as it assumes that the command given can cope with multiple
         files.</para>
+
+        <para>
+        The xargs related command also uses the nul character as a separator, allowing
+        files with spaces in their name to be correctly handled.</para>
 
         <para>Example run for find -exec:</para>
 

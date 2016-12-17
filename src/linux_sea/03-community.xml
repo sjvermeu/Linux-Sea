@@ -183,7 +183,7 @@
         <listitem>
           <para>Wiki (online collaboration software for developing
           documentation) software has become quite popular for developing and
-          releasing documentation. The use of wiki's allows users to edit
+          releasing documentation. The use of wikis allows users to edit
           existing documentation or author new documentation online (with a
           simple browser) and the results of their editing is immediately
           visible to others.</para>
@@ -359,8 +359,8 @@
           <primary>hack fest</primary>
         </indexterm> are organized. During these meetings, developers
       aggregate together with a single goal: to develop new features or remove
-      bugs from the software. Although this can well be done offline, hack
-      fests allow developers to communicate freely and help other developers
+      bugs from the software. Although this can well be done online (virtual gatherings),
+      hack fests allow developers to communicate freely and help other developers
       with their problems. Meeting in real life allows developers to easily
       show the problem they have (some problems can be difficult or too time
       consuming to write down).</para>
@@ -456,49 +456,23 @@
 
     <itemizedlist>
       <listitem>
-        <para>The <link xl:href="http://www.linuxsymposium.org">Ottawa Linux
-        Symposium</link> is held every year in Ottawa, Canada during summer
-        break.</para>
-      </listitem>
-
-      <listitem>
-        <para><link xl:href="http://www.linux-kongress.org">Linux
-        Kongress</link> has almost always been held in Germany although a
-        single instance was in Cambridge, England.</para>
-      </listitem>
-
-      <listitem>
-        <para><link xl:href="http://linux.conf.au/">Linux.conf.au</link> is
+        <para><link xl:href="https://linux.conf.au/">Linux.conf.au</link> is
         hosted in Australia in the beginning of every year</para>
       </listitem>
 
       <listitem>
-        <para><link xl:href="http://www.ohiolinux.org/">Ohio Linux Fest</link>
+        <para><link xl:href="https://ohiolinux.org/">Ohio Linux Fest</link>
         is held in Ohio every fall.</para>
       </listitem>
 
       <listitem>
-        <para><link xl:href="http://www.linuxfestnorthwest.org/">Linux Fest
+        <para><link xl:href="https://www.linuxfestnorthwest.org/">Linux Fest
         Northwest</link> is held in Washington every spring.</para>
       </listitem>
 
       <listitem>
-        <para><link xl:href="http://scale7x.socallinuxexpo.org/">SCaLE (Southern
+        <para><link xl:href="https://www.socallinuxexpo.org/scale7x">SCaLE (Southern
         California Linux Expo)</link> is held late winter.</para>
-      </listitem>
-
-      <listitem>
-        <para><link xl:href="http://onlinux.ca/">Ontario Linux
-        Fest</link></para>
-      </listitem>
-
-      <listitem>
-        <para><link xl:href="http://www.linuxworldexpo.com/">LinuxWorld
-        Conference and Expo</link></para>
-      </listitem>
-
-      <listitem>
-        <para><link xl:href="http://freed.in/">Freed.IN</link></para>
       </listitem>
     </itemizedlist>
   </section>

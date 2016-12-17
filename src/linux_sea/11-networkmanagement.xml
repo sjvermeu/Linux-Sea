@@ -435,7 +435,7 @@ eth1      Scan completed :
 
         <para>In this case, two wireless networks are found. The first one has
         ESSID "aaa" and does not require any encryption (so you don't need to
-        know any password or passphraze to access this network) - notice the
+        know any password or passphrase to access this network) - notice the
         "Encryption key:off" setting. The second one has ESSID USR8022 and
         requires an encryption key. However, the second network's signal is
         also less powerful (lower quality and signal level).</para>
@@ -450,7 +450,7 @@ eth1      Scan completed :
         representation.</para>
 
         <programlisting># <command>iwconfig eth1 essid USR8022 key FF83-D9B3-58C4-200F-ADEA-DBEE-F3</command>
-# <command>iwconfig eth1 essid USR8022 key s:MyPassPhraze</command></programlisting>
+# <command>iwconfig eth1 essid USR8022 key s:MyPassPhrase</command></programlisting>
 
         <para>Once you have attached your wireless interface to a particular
         network, you can configure it as if it was a fixed Ethernet
@@ -466,7 +466,7 @@ eth1      Scan completed :
 
         <programlisting>modules="iwconfig"
 key_aaa="key off"
-key_USR8022="s:MyPassPhraze enc open"
+key_USR8022="s:MyPassPhrase enc open"
 preferred_aps="'aaa' 'USR8022'"</programlisting>
 
         <para>Once your wireless interface is connected to a wireless network,
@@ -688,11 +688,11 @@ network={
 }</programlisting>
 
         <para>If you do not like to see your private key in plain text, use
-        <command>wpa_passphraze</command><indexterm>
-            <primary>wpa_passphraze</primary>
+        <command>wpa_passphrase</command><indexterm>
+            <primary>wpa_passphrase</primary>
           </indexterm> to encrypt your key:</para>
 
-        <programlisting>$ <command>wpa_passphraze akkerdjie "highly private key"</command>
+        <programlisting>$ <command>wpa_passphrase akkerdjie "highly private key"</command>
 network={
   ssid="akkerdjie"
   #psk="highly private key"   <remark>&lt;-- Plain comment, can be removed!</remark>
@@ -793,7 +793,7 @@ wpa_supplicant_wlan0="-Dwext"</programlisting>
         </indexterm>. This client will connect with the service and allow you
       to configure your networks (both wired and wireless) more easily.</para>
 
-      <para>I refer you to the <link xl:href="http://wicd.sourceforge.net">Wicd
+      <para>I refer you to the <link xl:href="https://launchpad.net/wicd">Wicd
       homepage</link> for more information / documentation on the
       tool.</para>
     </section>

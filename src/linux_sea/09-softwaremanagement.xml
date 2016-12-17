@@ -177,27 +177,28 @@
       locales in the output to make it more readable):</para>
 
       <programlisting>$ <command>equery uses firefox</command>
- + + alsa                 : Add support for media-libs/alsa-lib (Advanced Linux Sound Architecture)
- - - bindist              : Disable official Firefox branding (icons, name) which are not binary-redistributable according to upstream.
- - - custom-cflags        : Build with user-specified CFLAGS (unsupported)
- - - custom-optimization  : Fine-tune custom compiler optimizations, setting this is not recommended.
- + + dbus                 : Enable dbus support for anything that needs it (gpsd, gnomemeeting, etc)
- - - debug                : Enable extra debug codepaths, like asserts and extra output. If you want to get meaningful backtraces see http://www.gentoo.org/proj/en/qa/backtraces.xml
- - - gstreamer            : Add support for media-libs/gstreamer (Streaming media)
- - - jit                  : Enable just-in-time compilation for improved performance. May prevent use of some PaX memory protection features in Gentoo Hardened.
- - - libnotify            : Enable desktop notification support
- + + minimal              : Prevent sdk and headers from being installed
- - - pulseaudio           : Add support for PulseAudio sound server
- - - startup-notification : Enable application startup event feedback mechanism
- - - system-cairo         : Use the system-wide x11-libs/cairo Use system cairo instead of bundled.
- - - system-jpeg          : Use the system-wide media-libs/libjpeg-turbo Use system jpeg instead of bundled.
- - - system-sqlite        : Use the system-wide dev-db/sqlite installation with secure-delete enabled
- - - wifi                 : Enable wireless network functions
 [ Legend : U - final flag setting for installation]
 [        : I - package is installed with flag     ]
 [ Colors : set, unset                             ]
- * Found these USE flags for www-client/firefox-23.0:
- U I</programlisting>
+ * Found these USE flags for www-client/firefox-45.6.0:
+ U I
+ + + bindist              : Disable official Firefox branding (icons, name) which are not binary-redistributable according to upstream.
+ - - custom-cflags        : Build with user-specified CFLAGS (unsupported)
+ - - custom-optimization  : Build with user-specified compiler optimizations (-Os, -O0, -O1, -O2, -O3) from CFLAGS (unsupported)
+ - - dbus                 : Enable dbus support for anything that needs it (gpsd, gnomemeeting, etc)
+ - - debug                : Enable extra debug codepaths, like asserts and extra output. If you want to get meaningful backtraces see
+                            https://wiki.gentoo.org/wiki/Project:Quality_Assurance/Backtraces
+ - - ffmpeg               : Enable ffmpeg/libav-based audio/video codec support
+ - - gmp-autoupdate       : Allow Gecko Media Plugins (binary blobs) to be automatically downloaded and kept up-to-date in user profiles
+ + - gstreamer            : Add support for media-libs/gstreamer (Streaming media)
+ - - gstreamer-0          : Use gstreamer:0.10 instead of gstreamer:1 for media support
+ + + hardened             : Activate default security enhancements for toolchain (gcc, glibc, binutils)
+ + - hwaccel              : Use hardware-accelerated rendering
+ + - jemalloc3            : Enable or disable jemalloc3 (forced-on when supported prior to 38.0)
+ - - jit                  : Enable just-in-time compilation for improved performance. May prevent use of some PaX memory protection features in
+                            Gentoo Hardened.
+...
+</programlisting>
 
       <para>Other distributions choose what support they want enabled and what
       not when building the software. Because with Gentoo, you build the
@@ -512,8 +513,8 @@ Searching...
         through the portage tree.</para>
 
         <para>Once installed, you will need to run
-        <command>update-eix</command><indexterm>
-            <primary>update-eix</primary>
+        <command>eix-update</command><indexterm>
+            <primary>eix-update</primary>
           </indexterm> (which will index all the information) after every
         <command>emerge --sync</command> (as this pulls in new packages which
         you want to index). You can also use
@@ -753,8 +754,8 @@ Would you like to merge these packages? [Yes/No] </programlisting>
         </indexterm> package) is such a tool. In the next example, it shows
       the build duration averaged over 27 merges:</para>
 
-      <programlisting>$ <command>qlop --time --human mozilla-firefox</command>
-mozilla-firefox: 1 hour, 15 minutes, 22 seconds for 27 merges</programlisting>
+      <programlisting>$ <command>qlop --time --human firefox</command>
+firefox: 18 minutes, 24 seconds for 23 merges</programlisting>
     </section>
 
     <section>
@@ -876,7 +877,7 @@ mozilla-firefox: 1 hour, 15 minutes, 22 seconds for 27 merges</programlisting>
         issues<indexterm>
             <primary>security updates</primary>
           </indexterm> alone. In this case, none of your unaffected software
-        is upgraded (unless requires as a dependency of a security upgrade).
+        is upgraded (unless required as a dependency of a security upgrade).
         Gentoo provides GLSA<indexterm>
             <primary>GLSA</primary>
           </indexterm> (<emphasis>Gentoo Linux Security
@@ -1550,15 +1551,15 @@ package.mask
         errors.</para>
 
         <para>A more automated way of dealing with this is to use
-        <command>autounmask</command><indexterm>
+        <command>emerge --autounmask-write</command><indexterm>
             <primary>autounmask</primary>
-          </indexterm>. <command>autounmask</command> allows you to select the
+          </indexterm>. This option allows you to select the
         main package you want, and it will automatically create a file inside
         <filename>/etc/portage/package.accept_keywords</filename> that unmasks
         all depending packages as well.</para>
 
-        <programlisting># <command>emerge autounmask</command>
-# <command>autounmask x11-misc/googleearth</command></programlisting>
+        <programlisting>
+# <command>emerge --autounmask-write x11-misc/googleearth</command></programlisting>
       </section>
     </section>
 
@@ -1613,21 +1614,30 @@ lrwxrwxrwx 1 root root 57 Dec 2007 make.profile -&gt;
 
       <programlisting># <command>eselect profile list</command>
 Available profile symlink targets:
-  [1]   default/linux/amd64/13.0 *
+  [1]   default/linux/amd64/13.0
   [2]   default/linux/amd64/13.0/selinux
   [3]   default/linux/amd64/13.0/desktop
   [4]   default/linux/amd64/13.0/desktop/gnome
-  [5]   default/linux/amd64/13.0/desktop/kde
-  [6]   default/linux/amd64/13.0/developer
-  [7]   default/linux/amd64/13.0/no-multilib
-  [8]   default/linux/amd64/13.0/x32
-  [9]   hardened/linux/amd64
-  [10]  hardened/linux/amd64/selinux
-  [11]  hardened/linux/amd64/no-multilib
-  [12]  hardened/linux/amd64/no-multilib/selinux
-  [13]  hardened/linux/uclibc/amd64
+  [5]   default/linux/amd64/13.0/desktop/gnome/systemd
+  [6]   default/linux/amd64/13.0/desktop/kde
+  [7]   default/linux/amd64/13.0/desktop/kde/systemd
+  [8]   default/linux/amd64/13.0/desktop/plasma
+  [9]   default/linux/amd64/13.0/desktop/plasma/systemd
+  [10]  default/linux/amd64/13.0/developer
+  [11]  default/linux/amd64/13.0/no-multilib
+  [12]  default/linux/amd64/13.0/systemd
+  [13]  default/linux/amd64/13.0/x32
+  [14]  hardened/linux/amd64
+  [15]  hardened/linux/amd64/selinux *
+  [16]  hardened/linux/amd64/no-multilib
+  [17]  hardened/linux/amd64/no-multilib/selinux
+  [18]  hardened/linux/amd64/x32
+  [19]  hardened/linux/musl/amd64
+  [20]  hardened/linux/musl/amd64/x32
+  [21]  default/linux/uclibc/amd64
+  [22]  hardened/linux/uclibc/amd64
 
-# <command>eselect profile set 10</command></programlisting>
+# <command>eselect profile set 17</command></programlisting>
 
       <para>As you can see from the profile names, one profile can be a child
       of another; if this is the case (for instance, profile number 4 from the
@@ -1965,32 +1975,6 @@ satisfy "&gt;=x11-libs/qt-sql-4.5.0:4[mysql]".
       </section>
 
       <section>
-        <title>Missing .la file</title>
-
-        <para>A .la file is a libtool archive file. Its use is becoming
-        obsolete, so this error is most likely going to disappear in the near
-        future. However, if you have an error similar to the following:</para>
-
-        <programlisting>/bin/sh ../libtool --tag=CC   --mode=link i686-pc-linux-gnu-gcc  -O2 -march=pentium4 -pipe 
--fomit-frame-pointer -Wall -version-info 2600:1:2600 -export-symbols-regex "^pango_.*"   
--Wl,-O1 -o libpangocairo-1.0.la -rpath /usr/lib libpangocairo_1_0_la-pangocairo-context.lo 
-libpangocairo_1_0_la-pangocairo-font.lo libpangocairo_1_0_la-pangocairo-fontmap.lo 
-libpangocairo_1_0_la-pangocairo-render.lo  libpangocairo_1_0_la-pangocairo-fcfont.lo 
-libpangocairo_1_0_la-pangocairo-fcfontmap.lo  libpango-1.0.la -lgobject-2.0 -lgmodule-2.0 
--lglib-2.0   -lcairo   -lm  libpangoft2-1.0.la -lfreetype   -lfontconfig   
-
-grep: /usr/lib/libGL.la: No such file or directory
-/bin/sed: can't read <emphasis>/usr/lib/libGL.la: No such file or directory</emphasis>
-libtool: link: `/usr/lib/libGL.la' is not a valid libtool archive
-make[4]: *** [libpangocairo-1.0.la] Error 1 </programlisting>
-
-        <para>then running the lafilefixer command might help you out:</para>
-
-        <programlisting># <command>emerge lafilefixer</command>
-# <command>lafilefixer --justfixit</command></programlisting>
-      </section>
-
-      <section>
         <title>Compiler errors</title>
 
         <para>Compiler errors are almost always due to a bug in the package
@@ -2172,7 +2156,7 @@ CXXFLAGS="${CFLAGS}"</programlisting>
       a particular architecture, like "core2" or "nocona". A full list of
       supported architectures for the current GCC (make sure you are using the
       current one) is available <link
-      xlink:href="http://gcc.gnu.org/onlinedocs/gcc/i386-and-x86_002d64-Options.html">online</link>.</para>
+      xlink:href="https://gcc.gnu.org/onlinedocs/gcc-4.5.3/gcc/i386-and-x86_002d64-Options.html">online</link>.</para>
 
       <para>With <varname>-O2</varname> (<emphasis>O</emphasis>ptimizations,
       not zero) I ask GCC to use a list of optimization flags (-O2 is

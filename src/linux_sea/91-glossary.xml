@@ -18,7 +18,7 @@
         <para>Reduced Instruction Set Computing, a CPU instruction design that
         attempts to offer a simple list of instructions to use by software
         engineers. By limiting the complexity of the instructions, RISC CPUs
-        can be made faster than more complex CPUs clockwize.</para>
+        can be made faster than more complex CPUs clockwise.</para>
       </glossdef>
     </glossentry>
 

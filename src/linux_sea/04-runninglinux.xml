@@ -19,7 +19,7 @@
     with a ready-to-run operating system on it). Installing Linux is very
     distribution-specific and Gentoo's installation procedure is well
     documented on the <link
-    xl:href="http://www.gentoo.org/doc/en/handbook">Gentoo site</link>. I will
+    xl:href="https://wiki.gentoo.org/wiki/Handbook:Main_Page">Gentoo site</link>. I will
     not discuss the installation procedure yet. Later in this book, I will
     focus on the command-line Gentoo installation because then you'll have a
     much better view on the various installation steps. Right now, I'm going
@@ -75,8 +75,10 @@
 
       <listitem>
         <para>the personal account cannot fill up a partition to the point
-        that the system is endangered: by default, 5% of each partition is
-        reserved for privileged users only</para>
+        that the system is endangered. On several file sysems, 5% of each partition is
+        reserved for privileged users only. Although this is not applicable to all
+        file systems (btrfs comes to mind) such a restriction does come in handy
+        to guarantee the availability of the system.</para>
       </listitem>
 
       <listitem>
@@ -587,8 +589,8 @@ drwxr-xr-x 2 captain users 4096 2013-10-31 22:24 Pictures
       example below shows just a subset of such files.</para>
 
       <programlisting>captain@seaheaven ~ $ <command>ls -a</command>
-Documents    Movies    Music    Pictures
-.history     .maildir  .profile .vimrc</programlisting>
+.            Documents    Movies    Music     Pictures
+..           .history     .maildir  .profile  .vimrc</programlisting>
 
       <para>Hidden files are not meant to really hide the files, but rather
       not to show them using regular listings so they do not clutter the
@@ -748,7 +750,7 @@ rm: cannot remove '/etc/passwd': Permission denied</programlisting>
         <programlisting>captain@seaheaven ~ $ <command>nano TODO</command></programlisting>
 
         <figure float="">
-          <title>nano editor opened with the TODOfile as its working
+          <title>nano editor opened with the TODO file as its working
           document</title>
 
           <mediaobject>

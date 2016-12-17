@@ -644,7 +644,7 @@ $ <command>echo $?</command>
     <itemizedlist>
       <listitem>
         <para><link
-        xl:href="http://www.gnu.org/software/bash/manual/bashref.html#Redirections">Bash
+        xl:href="https://www.gnu.org/software/bash/manual/bashref.html#Redirections">Bash
         redirection</link></para>
       </listitem>
     </itemizedlist>

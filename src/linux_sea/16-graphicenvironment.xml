@@ -96,7 +96,7 @@
       </indexterm>. A window manager manages the layout of the users' screen:
     where are the windows positioned, can he drag windows from one location to
     another, how are buttons rendered, ... Popular window managers are
-    metacity (used by the GNOME desktop environment), KWin (used by the KDE
+    Mutter (used by the GNOME desktop environment), KWin (used by the KDE
     desktop environment), fluxbox, enlightenment, ...</para>
 
     <para>Most window managers are written for specific widget tool kits, but
@@ -242,8 +242,8 @@ VIDEO_CARDS="vesa intel"</programlisting>
 
       <para>For fluxbox, a popular, lightweight window manager, Gentoo even
       has official documentation available: the <link
-      xl:href="http://www.gentoo.org/doc/en/fluxbox-config.xml">Fluxbox
-      Configuration HOWTO</link>.</para>
+      xl:href="https://wiki.gentoo.org/wiki/Fluxbox">Fluxbox
+      article</link>.</para>
     </section>
 
     <section>
@@ -283,7 +283,7 @@ VIDEO_CARDS="vesa intel"</programlisting>
       interface guideline.</para>
 
       <para>Gentoo has a <link
-      xl:href="http://www.gentoo.org/doc/en/gnome-config.xml">GNOME Configuration
+      xl:href="https://wiki.gentoo.org/wiki/GNOME/Guide">GNOME Configuration
       HOWTO</link> available as well.</para>
     </section>
 
@@ -297,8 +297,7 @@ VIDEO_CARDS="vesa intel"</programlisting>
       even development environments.</para>
 
       <para>Gentoo provides a <link
-      xl:href="http://wiki.gentoo.org/wiki/KDE">KDE Configuration
-      HOWTO</link>.</para>
+      xl:href="https://wiki.gentoo.org/wiki/KDE">KDE article</link>.</para>
     </section>
 
     <section>
@@ -310,7 +309,7 @@ VIDEO_CARDS="vesa intel"</programlisting>
       environment.</para>
 
       <para>Gentoo provides an <link
-      xl:href="http://www.gentoo.org/doc/en/xfce-config.xml">XFCE Configuration
+      xl:href="https://wiki.gentoo.org/wiki/Xfce/Guide">XFCE Configuration
       Howto</link>.</para>
     </section>
 

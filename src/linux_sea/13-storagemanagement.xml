@@ -426,7 +426,7 @@ Changed system type of partition 4 to 82 (Linux swap)</programlisting>
         </indexterm><indexterm>
           <primary>label</primary>
         </indexterm> is a simple string of limited length (16 bytes, so 16
-      characters as I don't suspect unicode is supported here) which can allow
+      characters if plain ASCII characters are used) which can allow
       you to find the partition more easily. Say that you label your
       partitions based on their use:</para>
 
@@ -900,6 +900,12 @@ none         tmpfs    754M     0  754M   0% /dev/shm
       days):</para>
 
       <programlisting>$ <command>find . -type f -size +10M -mtime +365</command></programlisting>
+
+      <para>
+      There is also an ncurses interface for the disk usage utility, called
+      <command>ncdu</command>. With it, administrators can browse more easily
+      through the file system searching for the bigger storage consumers. storage consumers.
+      </para>
     </section>
 
     <section>
@@ -956,7 +962,7 @@ none         tmpfs    754M     0  754M   0% /dev/shm
       resizing filesystems.</para>
 
       <section>
-        <title>Resizing xt2/ext3 file systems</title>
+        <title>Resizing ext2/ext3 file systems</title>
 
         <para>To increase the size of an ext3 file system, you first need to
         resize the partition. You can do this with <command>fdisk</command> by
@@ -1093,11 +1099,6 @@ none         tmpfs    754M     0  754M   0% /dev/shm
         with fdisk</link>"</para>
       </listitem>
 
-      <listitem>
-        <para><link
-        xl:href="http://docs.kde.org/stable/en/kdebase-runtime/userguide/multimedia.html">Multimedia
-        with KDE</link>, part of KDE base documentation</para>
-      </listitem>
     </itemizedlist>
   </section>
 </chapter>

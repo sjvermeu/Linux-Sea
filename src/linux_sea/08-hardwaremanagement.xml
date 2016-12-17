@@ -189,29 +189,9 @@
       <para>This is one of the tasks that sound servers do: these programs
       manage access to the sound card (interfaces) and allow multiple software
       processes to use the sound facilities of your system. Some well known
-      sound servers are esd, aRTs (deprecated), JACK and PulseAudio.</para>
+      sound servers are JACK and PulseAudio.</para>
 
       <itemizedlist>
-        <listitem>
-          <para>esd<indexterm>
-              <primary>esd</primary>
-            </indexterm> (Enlightenment Sound Daemon) is GNOME's sound
-          management daemon. esd, also known as ESounD, not only supports the
-          previously mentioned mixing, but can also manage network-transparent
-          audio: audio played on one system can be heard on another. To this
-          end, any application supporting esd can stream its audio to any
-          system running esd on the network.</para>
-        </listitem>
-
-        <listitem>
-          <para>aRTs<indexterm>
-              <primary>aRTs</primary>
-            </indexterm> (Analog RealTime Synthesizer) is KDE's former sound
-          daemon. Although development has been abandoned, you will still find
-          references to aRTs here and there on the Internet. Its main power
-          was its real-time audio streaming capabilities.</para>
-        </listitem>
-
         <listitem>
           <para>JACK<indexterm>
               <primary>JACK</primary>
@@ -224,9 +204,10 @@
         <listitem>
           <para>PulseAudio<indexterm>
               <primary>PulseAudio</primary>
-            </indexterm> (PulseAudio) is another sound daemon. It is meant to
-          be a replacement for esd but with a wider support field (including
-          Microsoft Windows and POSIX-compliant operating systems).</para>
+            </indexterm> (PulseAudio) is another sound daemon. It is a replacement
+            for the Enlightened Sound Daemon, an older sound server project, but
+            has a much wider support field (including
+            Microsoft Windows and POSIX-compliant operating systems).</para>
         </listitem>
       </itemizedlist>
 
@@ -235,13 +216,6 @@
       following packages:</para>
 
       <itemizedlist>
-        <listitem>
-          <para>esd can be installed from
-          <package>media-sound/esound</package>, although most people will
-          already have it installed if they are running GNOME (it is a
-          dependency of the GNOME installation)</para>
-        </listitem>
-
         <listitem>
           <para>JACK can be installed with
           <package>media-sound/jack</package></para>
@@ -253,7 +227,7 @@
         </listitem>
       </itemizedlist>
 
-      <para>Enable the corresponding USE flag (esd, jack or pulseaudio) and
+      <para>Enable the corresponding USE flag (jack or pulseaudio) and
       update your system. Portage will automatically rebuild those packages
       that are influenced by the USE flag change and incorporate support for
       the selected sound daemon in those packages:</para>
@@ -352,15 +326,15 @@
       xl:href="http://localhost:631">http://localhost:631</link>. In the
       Administration page, enter your root login and password information and
       you can get started with the configuration. <link
-      xl:href="http://www.gentoo.org/doc/en/printing-howto.xml">The Gentoo
-      Printing HOWTO</link> offers a great walk through of the
+      xl:href="https://wiki.gentoo.org/wiki/Printing">The Gentoo
+      Printing article</link> offers great resources and walk throughs of the
       configuration.</para>
 
       <para>You probably hoped for a more elaborate discussion on printer
       configuration. Perhaps in the far future I will discuss printer
       configuration more, but for the time being I'm going to limit this and
       refer to Gentoo's guide and the main <link
-      xl:href="http://www.cups.org">CUPS</link> site.</para>
+      xl:href="https://www.cups.org">CUPS</link> site.</para>
     </section>
   </section>
 
@@ -421,8 +395,8 @@
 
       <listitem>
         <para><link
-        xl:href="http://www.gentoo.org/doc/en/printing-howto.xml">Gentoo Printing
-        HOWTO</link>, another excellent resource by Gentoo, now on printer
+        xl:href="https://wiki.gentoo.org/wiki/Printing">Gentoo Printing
+        article</link>, another excellent resource by Gentoo, now on printer
         configuration.</para>
       </listitem>
     </itemizedlist>

@@ -383,10 +383,10 @@
     code) and in popularity. Over the years, its development model stayed the
     same: there are few major players in the development who decide what goes
     in and what stays out of the kernel code, but the majority of
-    contributions happen from several hundreds volunteers (kernel 2.6.21 had
-    contributions from more than 800 individuals).</para>
+    contributions happen from several hundreds of developers (kernel 4.8 had
+    contributions from more than 1500 individuals).</para>
 
-    <para>The latest kernel version at the time of writing is 3.10.7. The first
+    <para>The latest kernel version at the time of writing is 4.8.15. The first
     two numbers play the role of the major version, the third number is the
     minor version (mostly bugfix releases). Sometimes a fourth number is added
     when a one-off bug fix was needed. The Linux kernel development generally
@@ -857,7 +857,7 @@
         features as the software you are referring to. Some software even
         <emphasis>is</emphasis> available for Linux: the popular browsers
         Firefox and Chrome are two examples, the freely available office suite
-        OpenOffice.org is another.</para>
+        LibreOffice.org is another.</para>
 
         <para>There are also Windows emulators and libraries that offer an
         interface allowing Microsoft Windows applications to run within Linux.
@@ -1025,7 +1025,7 @@
       </listitem>
 
       <listitem>
-        <para><link xl:href="http://www.distrowatch.com">Distrowatch</link>, a
+        <para><link xl:href="https://www.distrowatch.com">Distrowatch</link>, a
         popular site that attempts to track all available Linux distributions
         and has weekly news coverage.</para>
       </listitem>

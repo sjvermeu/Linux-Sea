@@ -398,7 +398,7 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
         license, is the USB Video Class driver, ... and supports parameters
         clock, nodrop, quirks, trace and timeout. Of course, it does not give
         you information what these parameters mean, but that is what you have
-        <link xlink:href="http://www.google.com">Google</link> for,
+        <link xlink:href="https://www.google.com">Google</link> for,
         right?</para>
 
         <para>Anyway, suppose you want to load the uvcvideo module with the
@@ -534,36 +534,6 @@ parm:           timeout:Streaming control requests timeout (uint)</programlistin
       saved and reused later on, so subsequent configurations will be much
       faster.</para>
 
-      <para>Even more, Pappy McFae, a vivid Gentoo user, is providing kernel
-      seeds to Gentoo users. A <emphasis>kernel seed</emphasis><indexterm>
-          <primary>kernel seed</primary>
-        </indexterm> is, in his words:</para>
-
-      <blockquote>
-        <para>[a part of a kernel configuration where] all the tough stuff has
-        already been set up. The basics for a standard desktop system
-        configuration, basic network operation, and other settings have been
-        set for stable systemic usability. All you, the user, have left to do
-        is to plug in the required hardware devices, and you have a functional
-        kernel.</para>
-      </blockquote>
-
-      <para>His idea is really worth pursuing, so don't hesitate to take a
-      look at <link
-      xlink:href="http://www.kernel-seeds.org/">http://www.kernel-seeds.org/</link>.
-      On the site, you can then navigate to your architecture (currently only
-      x86 and x86_64 are supported), select the kernel tree you have installed
-      (most likely gentoo if you have installed the gentoo-sources) and
-      download the configuration file for the selected kernel version.</para>
-
-      <para>Next, copy the configuration file to the kernel configuration
-      location:</para>
-
-      <programlisting># <command>cp /path/to/3.8.5-gentoo-r1-x86-07.config /usr/src/linux/.config</command></programlisting>
-
-      <para>This will make sure that the kernel configuration utility uses the
-      settings from the file as the "default".</para>
-
       <section>
         <title>Loading the Kernel Configuration Utility</title>
 
@@ -631,8 +601,8 @@ excludes, &lt;M&gt; modularizes features. Press &lt;Esc&gt;&lt;Esc&gt; to exit,
         kernel (a fits-all kernel that uses kernel modules) as they will
         enable the drivers that are currently loaded (when you execute the
         commands) in the kernel configuration, giving a nice configuration to
-        start from. This is especially true with Pappy's kernel seeds
-        ;-)</para>
+        start from.
+        </para>
 
         <programlisting># <command>make localmodconfig</command></programlisting>
 
@@ -2535,7 +2505,7 @@ Prompt: Initial RAM filesystem and RAM disk (initramfs/initrd) support
 
       <para>First of all, you need to install GRUB:</para>
 
-      <programlisting># <command>emerge grub</command></programlisting>
+      <programlisting># <command>emerge grub:2</command></programlisting>
 
       <para>Next, we install GRUB onto the MBR:</para>
 
@@ -2664,7 +2634,7 @@ done</programlisting>
 
         <para>If a system fails to boot due to a system configuration issue, I
         recommend to boot from a rescue environment (<link
-        xlink:href="http://www.sysresccd.org">SysRescCD</link> comes to mind).
+        xlink:href="https://www.system-rescue-cd.org">SysRescCD</link> comes to mind).
         Since USB sticks are widely spread and easy to work with, I suggest
         that you configure your system to be able to boot from USB
         <emphasis>and test it</emphasis>. It is faster than booting from most

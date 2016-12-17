@@ -24,9 +24,9 @@
     install a Gentoo Linux yourself with the following simple set of
     instructions. However, if you want to do it the official way, do not
     hesitate to read the <link
-    xl:href="http://www.gentoo.org/doc/en/handbook/handbook-x86.xml">Gentoo
+    xl:href="https://wiki.gentoo.org/wiki/Handbook:X86">Gentoo
     Handbook</link>. There are also <link type=""
-    xl:href="http://www.gentoo.org/doc/en/handbook">handbooks</link> available
+    xl:href="https://wiki.gentoo.org/wiki/Handbook:Main_Page">handbooks</link> available
     for other architectures.</para>
 
     <section>
@@ -36,16 +36,16 @@
       Yet unless you deviate from the documented approach, Gentoo Linux
       remains a source-based distribution. Because of that, it has a slightly
       higher disk space requirement than other distributions. A minimal (base)
-      Gentoo Linux installation takes a little less than 2Gbyte of diskspace
+      Gentoo Linux installation takes a little less than 2 Gbyte of diskspace
       (including Linux kernel source code and the Gentoo Portage tree, which
-      take about 640 Mbyte in total). But with 2Gbyte, you don't have room for
+      take about 640 Mbyte in total). But with 2 Gbyte, you don't have room for
       much more than a base installation.</para>
 
       <para>To have a comfortable installation, yet with room to spare for
       additional installations, you should consider a total diskspace of at
       least 20 Gbyte for the applications alone. With current disk sizes, this
       should not be a problem. If you don't install a full-blown KDE or GNOME,
-      you should have enough with 10Gbyte or less.</para>
+      you should have enough with 10 Gbyte or less.</para>
 
       <para>Disk space aside, Gentoo Linux can run and install with almost any
       system specification. Of course, the lower the specs, the higher the
@@ -62,7 +62,7 @@
     LiveCD.</para>
 
     <para>A popular LiveCD to install Gentoo from is <link
-    xl:href="http://www.sysresccd.org">System Rescue CD</link>. All necessary
+    xl:href="https://www.system-rescue-cd.org">System Rescue CD</link>. All necessary
     documentation about booting the CD, including setting up networking (which
     you definitely need to do in order to install Gentoo) is available on the
     site.</para>
@@ -171,7 +171,7 @@
     <programlisting>~# <command>ntpdate pool.ntp.org</command></programlisting>
 
     <para>Next, surf to the <link
-    xl:href="http://www.gentoo.org/main/en/mirrors2.xml">Gentoo mirror
+    xl:href="https://www.gentoo.org/downloads/mirrors">Gentoo mirror
     list</link> and pick a mirror close to you. On most LiveCDs browsers are
     available. On the sysresccd you can use links or lynx (command-line
     browsers). Navigate to releases, select your architecture, autobuilds, the
@@ -179,7 +179,7 @@
     files.</para>
 
     <programlisting>~# <command>cd /mnt/gentoo</command>
-~# <command>links http://www.gentoo.org/main/en/mirrors2.xml</command></programlisting>
+~# <command>links https://www.gentoo.org/downloads/mirrors</command></programlisting>
 
     <itemizedlist>
       <listitem>
@@ -444,7 +444,8 @@ none       /dev/shm tmpfs defaults          0 0</programlisting>
 
       <programlisting>~# <command>emerge xfsprogs</command>
 ~# <command>emerge reiserfsprogs</command>
-~# <command>emerge jfsutils</command></programlisting>
+~# <command>emerge jfsutils</command>
+~# <command>emerge btrfs-progs</command></programlisting>
 
       <para>Install the necessary networking tools, like a DHCP client:</para>
 
@@ -455,17 +456,16 @@ none       /dev/shm tmpfs defaults          0 0</programlisting>
   <section>
     <title>Configuring the Boot Loader</title>
 
-    <para>Now, we install the GRUB boot loader (remember to use grub-static if
-    you are using an amd64 (x86_64) system with no-multilib):</para>
+    <para>Now, we install the GRUB boot loader:</para>
 
-    <programlisting>~# <command>emerge grub</command></programlisting>
+    <programlisting>~# <command>emerge grub:2</command></programlisting>
 
     <para>Once installed, edit the grub configuration file
-    (<filename>/boot/grub/grub.conf</filename>) as we've seen before. Finally,
+    (<filename>/etc/default/grub</filename>). Finally,
     install GRUB on the master boot record:</para>
 
-    <programlisting>~# <command>grep -v rootfs /proc/mounts &gt; /etc/mtab</command>
-~# <command>grub-install --no-floppy /dev/sda</command></programlisting>
+    <programlisting>~# <command>grub-install /dev/sda</command>
+~# <command>grub-mkconfig -o /boot/grub/grub.cfg</command></programlisting>
   </section>
 
   <section>

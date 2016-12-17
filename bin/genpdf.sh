@@ -50,7 +50,7 @@ echo "done";
 
 # Fix oasis-open.org URLs 
 echo -n "Fixing oasis-open.org link... ";
-grep -v "oasis-open.org/docbook" index.html > T;
+grep -av "oasis-open.org/docbook" index.html > T;
 mv T index.html;
 echo "done";
 
